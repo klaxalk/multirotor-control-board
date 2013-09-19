@@ -4,6 +4,8 @@
 
 #include "controllers.h"
 
+#if ATOM_DATA_RECEIVE == ENABLED
+
 // aileron position controller using surfnav
 void controllerAileron_surfnav() {
 
@@ -36,10 +38,12 @@ void controllerElevator_surfnav() {
 	}
 }
 
+#endif
+
 // aileron speed controller using px4flow data
 void controllerAileronSpeed() {
 
-	float KP = AILERON_SPEED_KP;
+	float KP = AILERON_SPEED_KP*constant2;
 	float KD = AILERON_SPEED_KD;
 
 	float error = aileronSpeedSetPoint-aileronSpeed;
@@ -68,7 +72,7 @@ void controllerAileronSpeed() {
 // elevator speed controller using px4flow data
 void controllerElevatorSpeed() {
 
-	float KP = ELEVATOR_SPEED_KP;
+	float KP = ELEVATOR_SPEED_KP*constant2;
 	float KD = ELEVATOR_SPEED_KD;
 
 	float error = (elevatorSpeedSetpoint+elevatorSpeed);
@@ -93,6 +97,42 @@ void controllerElevatorSpeed() {
 		controllerElevatorOutput = -CONTROLLER_ELEVATOR_SATURATION;
 	}
 }
+
+#if GUMSTIX_DATA_RECEIVE == ENABLED
+
+// aileron position controller using surfnav
+void controllerAileron_gumstix() {
+
+	float KP = AILERON_POSITION_KP_GUMSTIX*constant1;
+
+	float error = yPosGumstix - aileronSetPoint;
+
+	aileronSpeedSetPoint = KP*error;
+
+	if (aileronSpeedSetPoint > GUMSTIX_CONTROLLER_SATURATION) {
+		aileronSpeedSetPoint = GUMSTIX_CONTROLLER_SATURATION;
+	} else if (aileronSpeedSetPoint < -GUMSTIX_CONTROLLER_SATURATION) {
+		aileronSpeedSetPoint = -GUMSTIX_CONTROLLER_SATURATION;
+	}
+}
+
+// elevator position controller using surfnav
+void controllerElevator_gumstix() {
+
+	float KP = ELEVATOR_POSITION_KP_GUMSTIX*constant1;
+
+	float error =  elevatorSetPoint - xPosGumstix;
+
+	elevatorSpeedSetpoint = -KP*error;
+
+	if (elevatorSpeedSetpoint > GUMSTIX_CONTROLLER_SATURATION) {
+		elevatorSpeedSetpoint = GUMSTIX_CONTROLLER_SATURATION;
+	} else if (elevatorSpeedSetpoint < -GUMSTIX_CONTROLLER_SATURATION) {
+		elevatorSpeedSetpoint = -GUMSTIX_CONTROLLER_SATURATION;
+	}
+}
+
+#endif // GUMSTIX_DATA_RECEIVE == ENABLED
 
 // altitude controller
 void controllerThrottle() {

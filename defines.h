@@ -21,6 +21,10 @@
 #define UART0 1
 #define UART1 2
 
+// gumstix camera pointing
+#define FORWARD 1
+#define DOWNWARD 2
+
 #endif // _DEFINES_H
 
 

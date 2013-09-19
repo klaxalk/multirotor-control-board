@@ -149,4 +149,24 @@ void Decode64(void);
 
 #endif
 
+//~ --------------------------------------------------------------------
+//~ if data processing from gumstix is on
+//~ --------------------------------------------------------------------
+
+#if GUMSTIX_DATA_RECEIVE == ENABLED
+
+extern volatile unsigned char gumstixParseCharState;
+extern volatile unsigned char gumstixParseCharByte;
+extern volatile unsigned char gumstixParseCharCrc;
+extern volatile int16_t gumstixParseTempInt;
+extern volatile int16_t xPosGumstixNew;
+extern volatile int16_t yPosGumstixNew;
+extern volatile int16_t zPosGumstixNew;
+extern volatile int8_t validGumstix;
+extern volatile int8_t gumstixDataFlag;
+
+void gumstixParseChar(unsigned char incomingChar);
+
+#endif // GUMSTIX_DATA_RECEIVE == ENABLED
+
 #endif // COMMUNICATION_H

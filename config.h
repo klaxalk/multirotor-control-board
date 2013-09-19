@@ -20,6 +20,18 @@
 */
 
 //~ --------------------------------------------------------------------
+//~ Choose a where is the Gumstix camera pointing
+//~ --------------------------------------------------------------------
+
+// Choose the multirotor frame orientation
+#define GUMSTIX_CAMERA_POINTING FORWARD
+/*
+	FORWARD
+	DOWNWARD
+
+*/
+
+//~ --------------------------------------------------------------------
 //~ Receiving data from FlightCTRL configuration
 //~ --------------------------------------------------------------------
 
@@ -42,7 +54,7 @@
 //~ --------------------------------------------------------------------
 
 // on/off the receiving of data from the GumStix
-#define GUMSTIX_DATA_RECEIVE DISABLED
+#define GUMSTIX_DATA_RECEIVE ENABLED
 /*
 	ENABLED
 	DISABLED
@@ -78,7 +90,7 @@
 //~ --------------------------------------------------------------------
 
 // on/off the receiving of data from the atom computer
-#define ATOM_DATA_RECEIVE ENABLED
+#define ATOM_DATA_RECEIVE DISABLED
 /*
 	ENABLED
 	DISABLED
@@ -141,6 +153,15 @@
 #define BAUD1 115200
 #endif
 
+#endif
+
+// default BAUDs
+#ifndef BAUD0
+#define BAUD0 57600
+#endif
+
+#ifndef BAUD1
+#define BAUD1 57600
 #endif
 
 //~ --------------------------------------------------------------------

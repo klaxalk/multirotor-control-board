@@ -153,6 +153,26 @@ volatile int8_t atomDataFlag = 0;
 
 #endif
 
+#if GUMSTIX_DATA_RECEIVE == ENABLED
+
+// variables for gumstix
+volatile unsigned char gumstixParseCharState = 0;
+volatile unsigned char gumstixParseCharByte = 0;
+volatile int16_t gumstixParseTempInt;
+volatile int16_t xPosGumstixNew = 0;
+volatile int16_t yPosGumstixNew = 0;
+volatile int16_t zPosGumstixNew = 0;
+volatile int16_t xPosGumstix = 0;
+volatile int16_t yPosGumstix = 0;
+volatile int16_t zPosGumstix = 0;
+volatile int8_t validGumstix = 0;
+volatile int8_t gumstixDataFlag = 0;
+volatile int16_t aileronSetPoint = 0;
+volatile int16_t elevatorSetPoint = 1500;
+volatile unsigned char gumstixParseCharCrc = 0;
+
+#endif
+
 // variables for communication with FlightCtrl
 volatile int8_t flightCtrlDataReceived = 0;
 
@@ -175,45 +195,48 @@ void debug() {
 
 	char num[20];
 
-	sprintf(num, "%i", ((int16_t) pitchAngle));
-	Uart0_write_string(num, strlen(num));
-	Uart0_write_char(' ');
-
-	sprintf(num, "%i", ((int16_t) rollAngle));
-	Uart0_write_string(num, strlen(num));
-	Uart0_write_char(' ');
-
-	sprintf(num, "%i", ((int16_t) yPosSurfNew));
-	Uart0_write_string(num, strlen(num));
-	Uart0_write_char(' ');
-
-	sprintf(num, "%i", ((int16_t) xPosSurfNew));
+	sprintf(num, "%f", ((double) groundDistance));
 	Uart0_write_string(num, strlen(num));
 	Uart0_write_char(' ');
 	
-	sprintf(num, "%i", ((int16_t) headingSurf));
-	Uart0_write_string(num, strlen(num));
-	Uart0_write_char(' ');
-	
-	sprintf(num, "%i", ((int16_t) scaleSurf));
-	Uart0_write_string(num, strlen(num));
-	Uart0_write_char(' ');
-
-	sprintf(num, "%f", ((double) -opticalFlowData.flow_comp_m_x));
-	Uart0_write_string(num, strlen(num));
-	Uart0_write_char(' ');
-
-	sprintf(num, "%f", ((double) opticalFlowData.flow_comp_m_x));
-	Uart0_write_string(num, strlen(num));
-	Uart0_write_char(' ');
-
-	sprintf(num, "%f", ((double) opticalFlowData.ground_distance));
-	Uart0_write_string(num, strlen(num));
-	Uart0_write_char(' ');
-	
-	sprintf(num, "%4.3f", ((double) timeStamp));
-	Uart0_write_string(num, strlen(num));
 	Uart0_write_char('\n');
+
+//~ 
+	//~ sprintf(num, "%i", ((int16_t) rollAngle));
+	//~ Uart0_write_string(num, strlen(num));
+	//~ Uart0_write_char(' ');
+//~ 
+	//~ sprintf(num, "%i", ((int16_t) yPosSurfNew));
+	//~ Uart0_write_string(num, strlen(num));
+	//~ Uart0_write_char(' ');
+//~ 
+	//~ sprintf(num, "%i", ((int16_t) xPosSurfNew));
+	//~ Uart0_write_string(num, strlen(num));
+	//~ Uart0_write_char(' ');
+	//~ 
+	//~ sprintf(num, "%i", ((int16_t) headingSurf));
+	//~ Uart0_write_string(num, strlen(num));
+	//~ Uart0_write_char(' ');
+	//~ 
+	//~ sprintf(num, "%i", ((int16_t) scaleSurf));
+	//~ Uart0_write_string(num, strlen(num));
+	//~ Uart0_write_char(' ');
+//~ 
+	//~ sprintf(num, "%f", ((double) -opticalFlowData.flow_comp_m_x));
+	//~ Uart0_write_string(num, strlen(num));
+	//~ Uart0_write_char(' ');
+//~ 
+	//~ sprintf(num, "%f", ((double) opticalFlowData.flow_comp_m_x));
+	//~ Uart0_write_string(num, strlen(num));
+	//~ Uart0_write_char(' ');
+//~ 
+	//~ sprintf(num, "%f", ((double) opticalFlowData.ground_distance));
+	//~ Uart0_write_string(num, strlen(num));
+	//~ Uart0_write_char(' ');
+	//~ 
+	//~ sprintf(num, "%4.3f", ((double) timeStamp));
+	//~ Uart0_write_string(num, strlen(num));
+	//~ Uart0_write_char('\n');
 }
 
 int main() {
@@ -229,19 +252,28 @@ int main() {
 
 			if (positionControllerEnabled == 1) {
 
+#if ATOM_DATA_RECEIVE == ENABLED
 				controllerElevator_surfnav();
 				controllerAileron_surfnav();
+#endif
+
+#if GUMSTIX_DATA_RECEIVE == ENABLED
+
+				controllerElevator_gumstix();
+				controllerAileron_gumstix();
+#endif
 				//~ led_Y_on();
 			} else {
 				//~ led_Y_off();
+				aileronSpeedSetPoint = 0;
+				elevatorSpeedSetpoint = 0;
 			}
 
 			controllerElevatorSpeed();
 			controllerAileronSpeed();
 			controllerThrottle();
 
-			if (constant1 > 1.5)
-				debug();
+			debug();
 
 			controllersFlag = 0;
 		}
@@ -283,6 +315,8 @@ int main() {
 		constant1 = (float)((RCchannel[AUX1] - 2304))/1152;
 		constant2 = (float)((RCchannel[AUX2] - 2304))/1152;
 
+		#if ATOM_DATA_RECEIVE == ENABLED
+		
 		// sends r char to the surfnav computer
 		if (constant2 > 1.3) {
 
@@ -313,6 +347,8 @@ int main() {
 			previousConstant1 = 0;
 		}
 
+		#endif
+
 		// filter the optical flow velocity data
 		if (opticalFlowDataFlag == 1) {
 
@@ -330,11 +366,13 @@ int main() {
 			//~ elevatorSpeed = opticalFlowData.flow_comp_m_x;
 			//~ aileronSpeed = opticalFlowData.flow_comp_m_y;
 
-			//~ led_Y_toggle();
+			led_Y_toggle();
 
 			opticalFlowDataFlag = 0;
 		}
 
+		#if ATOM_DATA_RECEIVE == ENABLED
+	
 		// filter the surfnav position data
 		if (atomDataFlag == 1) {
 
@@ -355,12 +393,14 @@ int main() {
 
 			atomDataFlag = 0;
 		}
+		
+		#endif
+		
+		#if (ATOM_DATA_RECEIVE == ENABLED) || (FLIGHTCTRL_DATA_RECEIVE == ENABLED)
 
 		if (flightCtrlDataFlag == 1) {
 
 			Decode64();
-			
-			led_Y_toggle();
 
 			char* dummy;
 			int16_t tempAngle;
@@ -395,6 +435,26 @@ int main() {
 
 			flightCtrlDataFlag = 0;
 		}
+		
+		#endif
+
+#if GUMSTIX_DATA_RECEIVE == ENABLED
+
+		if (gumstixDataFlag == 1) {
+	
+		// rotate the coordinates
+#if GUMSTIX_CAMERA_POINTING == FORWARD
+
+		xPosGumstix = xPosGumstixNew;
+		yPosGumstix = zPosGumstixNew;
+		zPosGumstix = yPosGumstixNew;
+
+#endif
+		
+			gumstixDataFlag = 0;
+		}
+
+#endif
 
 		// set outputs signals for MK only if it should be
 		mergeSignalsToOutput();
@@ -457,18 +517,17 @@ int main() {
 
 // interrupt fired by Uart1
 ISR(USART0_RX_vect) {
-
+	
 	char incomingChar = UDR0;
 
 #if (PX4FLOW_DATA_RECEIVE == ENABLED) && (PX4FLOW_RECEIVE_PORT == UART0)
 
-	px4flowParseChar(uart0char);
 
 #endif
 
 #if (GUMSTIX_DATA_RECEIVE == ENABLED) && (GUMSTIX_RECEIVE_PORT == UART0)
 
-
+	gumstixParseChar(incomingChar);
 
 #endif
 

@@ -546,3 +546,75 @@ void Decode64(void) {
 }
 
 #endif
+
+#if GUMSTIX_DATA_RECEIVE == ENABLED
+
+void gumstixParseChar(unsigned char incomingChar) {
+	
+	//~ if (gumstixParseCharByte == 4) {
+	    //~ gumstixParseCharByte++;
+	//~ } else {
+		//~ gumstixParseCharCrc += incomingChar;
+	//~ }
+
+	if (gumstixParseCharState == 0) {
+
+		switch (incomingChar) {
+
+		case 'x':
+			gumstixParseCharState = 1;
+			break;
+		case 'y':
+			gumstixParseCharState = 2;
+			break;
+		case 'z':
+			gumstixParseCharState = 3;
+			break;
+		case 'v':
+			gumstixParseCharState = 4;
+			break;
+		}
+
+		gumstixParseCharByte = 0;
+		gumstixParseTempInt = 0;
+		gumstixParseCharCrc = incomingChar;
+
+	} else if (gumstixParseCharByte < 2) {
+
+			char* gumstixParseTempIntPointer = (char*) &gumstixParseTempInt;
+			*(gumstixParseTempIntPointer+gumstixParseCharByte) = incomingChar;
+
+		gumstixParseCharByte++;
+	}
+
+	if ((gumstixParseCharByte == 2) && (gumstixParseCharCrc == incomingChar)) { // we have the whole int ret
+
+		switch (gumstixParseCharState) {
+
+		case 1:
+			xPosGumstixNew = gumstixParseTempInt;
+			break;
+		case 2:
+			yPosGumstixNew = gumstixParseTempInt;
+			break;
+		case 3:
+			zPosGumstixNew = gumstixParseTempInt;
+			break;
+		case 4:
+			validGumstix = gumstixParseTempInt;
+			
+			if (validGumstix == 1) {
+				led_control_on();
+			} else {
+				led_control_off();
+			}
+
+			gumstixDataFlag = 1;
+			break;
+		}
+
+		gumstixParseCharState = 0;
+	}
+}
+
+#endif // GUMSTIX_DATA_RECEIVE == ENABLED
