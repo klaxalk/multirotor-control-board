@@ -15,6 +15,8 @@ void enableController() {
 
 	if (controllerEnabled == 0) {
 		throttleIntegration = 0;
+		gumstixElevatorIntegral = 0;
+		gumstixAileronIntegral = 0;
 	}
 	controllerEnabled = 1;
 }
@@ -38,7 +40,6 @@ void enablePositionController() {
 // rudder -> left
 void disarmVehicle() {
 
-	disableController();
 	disarmingToggled = 1;
 	outputChannels[0] = PULSE_MIN;
 	outputChannels[1] = PULSE_MAX;

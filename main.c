@@ -168,8 +168,10 @@ volatile int16_t zPosGumstix = 0;
 volatile int8_t validGumstix = 0;
 volatile int8_t gumstixDataFlag = 0;
 volatile int16_t aileronSetPoint = 0;
-volatile int16_t elevatorSetPoint = 1500;
+volatile int16_t elevatorSetPoint = 2000;
 volatile unsigned char gumstixParseCharCrc = 0;
+volatile float gumstixElevatorIntegral = 0;
+volatile float gumstixAileronIntegral = 0;
 
 #endif
 
@@ -195,7 +197,19 @@ void debug() {
 
 	char num[20];
 
-	sprintf(num, "%f", ((double) groundDistance));
+	sprintf(num, "%i", ((int16_t) xPosGumstix));
+	Uart0_write_string(num, strlen(num));
+	Uart0_write_char(' ');
+	
+	sprintf(num, "%i", ((int16_t) yPosGumstix));
+	Uart0_write_string(num, strlen(num));
+	Uart0_write_char(' ');
+	
+	sprintf(num, "%f", ((double) constant1*ELEVATOR_SPEED_KP));
+	Uart0_write_string(num, strlen(num));
+	Uart0_write_char(' ');
+	
+	sprintf(num, "%f", ((double) gumstixAileronIntegral));
 	Uart0_write_string(num, strlen(num));
 	Uart0_write_char(' ');
 	
@@ -259,8 +273,8 @@ int main() {
 
 #if GUMSTIX_DATA_RECEIVE == ENABLED
 
-				controllerElevator_gumstix();
-				controllerAileron_gumstix();
+				//~ controllerElevator_gumstix();
+				//~ controllerAileron_gumstix();
 #endif
 				//~ led_Y_on();
 			} else {
@@ -286,7 +300,7 @@ int main() {
 			previous_throttle = 1;
 		} else {
 			if (previous_throttle == 1) {
-				disableController();
+				//~ disableController();
 				disarmVehicle();
 			}
 			previous_throttle = 0;
@@ -445,9 +459,13 @@ int main() {
 		// rotate the coordinates
 #if GUMSTIX_CAMERA_POINTING == FORWARD
 
+		if (validGumstix == 1) {
+
 		xPosGumstix = xPosGumstixNew;
 		yPosGumstix = zPosGumstixNew;
 		zPosGumstix = yPosGumstixNew;
+
+		}
 
 #endif
 		

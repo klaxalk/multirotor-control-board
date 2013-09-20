@@ -551,11 +551,11 @@ void Decode64(void) {
 
 void gumstixParseChar(unsigned char incomingChar) {
 	
-	//~ if (gumstixParseCharByte == 4) {
-	    //~ gumstixParseCharByte++;
-	//~ } else {
-		//~ gumstixParseCharCrc += incomingChar;
-	//~ }
+	if (gumstixParseCharByte == 2) {
+	    gumstixParseCharByte++;
+	} else {
+		gumstixParseCharCrc += incomingChar;
+	}
 
 	if (gumstixParseCharState == 0) {
 
@@ -587,7 +587,7 @@ void gumstixParseChar(unsigned char incomingChar) {
 		gumstixParseCharByte++;
 	}
 
-	if ((gumstixParseCharByte == 2) && (gumstixParseCharCrc == incomingChar)) { // we have the whole int ret
+	if ((gumstixParseCharByte == 3) && (gumstixParseCharCrc == incomingChar)) { // we have the whole int ret
 
 		switch (gumstixParseCharState) {
 
@@ -605,11 +605,10 @@ void gumstixParseChar(unsigned char incomingChar) {
 			
 			if (validGumstix == 1) {
 				led_control_on();
+				gumstixDataFlag = 1;
 			} else {
 				led_control_off();
 			}
-
-			gumstixDataFlag = 1;
 			break;
 		}
 
