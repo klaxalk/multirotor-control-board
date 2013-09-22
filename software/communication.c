@@ -49,49 +49,6 @@ void Uart0_write_string(char* array, int len) {
 	}
 }
 
-#if FLIGHTCTRL_DATA_RECEIVE == ENABLED
-
-// decode the base64 encoded data from the Flight-CTRL
-void Decode64(void) {
-
-	unsigned char a,b,c,d;
-	unsigned char x,y,z;
-	unsigned char ptrIn = 3; // start at begin of data block
-	unsigned char ptrOut = 3;
-	unsigned char len = BytesReceiving - 6;
-
-	while (len) {
-
-		a = RxdBuffer[ptrIn++] - '=';
-		b = RxdBuffer[ptrIn++] - '=';
-		c = RxdBuffer[ptrIn++] - '=';
-		d = RxdBuffer[ptrIn++] - '=';
-
-		x = (a << 2) | (b >> 4);
-		y = ((b & 0x0f) << 4) | (c >> 2);
-		z = ((c & 0x03) << 6) | d;
-
-		if (len--) {
-			RxdBuffer[ptrOut++] = x;
-		} else {
-			break;
-		}
-		if (len--) {
-			RxdBuffer[ptrOut++] = y;
-		} else {
-			break;
-		}
-		if (len--) {
-			RxdBuffer[ptrOut++] = z;
-		} else {
-			break;
-		}
-	}
-
-	pRxData = (signed char*) &RxdBuffer[3]; // decoding starts with 4th byte
-	RxDataLen = ptrOut - 3;  // how many bytes was decoded ?
-}
-
 #endif // FLIGHTCTRL_DATA_RECEIVE == ENABLED
 
 // merge RC channels with controller output

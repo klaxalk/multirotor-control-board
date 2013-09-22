@@ -1,0 +1,242 @@
+\documentclass[11pt, a4paper]{article}
+
+\usepackage[czech]{babel}
+\usepackage[IL2]{fontenc} % pro iso8859-2
+\usepackage[utf8]{inputenc}   % pro unicode UTF-8
+
+\newcommand{\Author}{Tomáš Báča}
+\newcommand{\Title}{Řídicí deska multikopter}
+\newcommand{\Acronym}{Acronym}
+\newcommand{\WorkPackage}{WorkPackage}
+\newcommand{\DocName}{Technický manuál}
+\newcommand{\Subject}{\WorkPackage - \DocName}
+\newcommand{\Keywords}{mobile robotics}
+\newcommand{\Date}{11/07/2011}
+\newcommand{\DOCVersion}{0.1}
+
+\input{src/doc_head}
+
+\newcommand{\jed}[1]{\ensuremath{~\mathrm{#1}}} %příkaz pro sazbu fyzikálních jednotek
+\newcommand{\dd}[1]{\ensuremath{\mathrm{d}#1}} %příkaz pro sazbu diferenciálu
+\newcommand{\EE}[1]{\ensuremath{ \cdot 10^{#1}}} %příkaz pro sazbu *10^x
+
+\newcommand{\pd}[2]{\ensuremath{\frac{\partial #1}{\partial #2}}} %parc. derivačka
+
+\begin{document}
+
+\begin{titlepage}
+
+\begin{center}
+
+\textsc{\LARGE České vysoké učení technické v Praze }\\[1.0cm]
+\textsc{\LARGE Fakulta elektrotechnická }\\[1.0cm]
+\textsc{\large Skupina inteligentní a mobilní robotiky }\\[0.5cm]
+
+% Title
+%\HRule \\[5.0cm]
+{ \huge \bfseries Technický manuál\\[0.5cm] řídicí deska multicopter }\\[1.0cm]
+%\HRule \\[1.5cm]
+
+% Author and supervisor
+\large
+\textsc{\Author}
+
+\vfill
+
+\end{center}
+
+\end{titlepage}
+
+\newpage
+
+\tableofcontents
+
+\newpage
+
+\setlength{\parskip}{0.35cm}
+\pagenumbering{arabic}
+\lhead{\emph{\leftmark}}
+\rhead{}
+\cfoot{}
+\rfoot{\thepage$/$\pageref{LastPage}}
+
+\section{Hardware desky}
+
+Řídicí deska plní funkci komunikačního uzlu mezi moduly a malé výpočetní jednotky pro stabilizaci a řízení letounu. Je osazena mikrokontrolerem ATmega164p s 1kb RAM a 16kb ROM (pro program). Procesor kontroleru trpí absencí FPU (floating point unit). Ke komunikaci jsou zde 2 porty UART. Programování mikrokontroleru probíhá přes SPI.
+
+Deska má 9 vstupů pro PWM. Použity jsou pro příjem signálů z RC přijímače. Dále jsou zde dva volitelné výstupy, z nichž jeden je použit pro PPM výstup do stabilizační desky letounu a druhý je volitelný.
+
+Pro signalizaci jsou k dispozici 2 LED, žlutá a červená, třetí se dá případně připojit do volitelného výstupu.
+
+Deska je osazena dvěma volitelnými tlačítky a jedním tlačítkem \textbf{reset}.
+
+\section{Software}
+
+\subsection{Struktura software}
+
+Software pro kontroler je napsán v programovacím jazyce C. Hlavním souborem je \textbf{main.c}. Zde je hlavní smyčka programu a předpis funkcí pro přerušení přerušeními procesoru.
+
+Většinu času tráví procesor v nekonečné smyčce ve funkci \textbf{main()}. Zde čeká na asynchronní obsluhu komunikace, nebo periodické volání řídicích funkcí apod. Je velmi důležité, aby co možná všechny výpočty, zpracování a volání funkcí probíhaly voláním z funkce \textbf{main()}. Jinak bude procesor zablokován (přerušení nebude vyvoláno, pokud procesor vykonává funkci jiného přerušení) a nebude zpracovávat komunikaci, což může vést k neovladatelnosti letounu.
+
+Kód je strukturován pomocí podmínek preprocesoru. Pokud např. nebudete potřebovat kamerový modul s počítačem gumstix, lze v souboru \textbf{config.h} definovat \texttt{GUMSTIX\_DATA\_REVEICE} na hodnotu \texttt{DISABLED}. Všechen kód a proměnné týkající se příjmu dat a volání funkcí, s tímto modulem spojených, bude vyřazeno z kompilace.
+
+\subsubsection{main.c}
+
+Kód \textbf{main.c} obsahuje definici globálních proměnných. Všechny proměnné, které si mají uchovat hodnotu, musí být deklarovány zde. Všechny proměnné doporučuji definovat jako \textbf{volatile}, předejdete nečekaným problémům s jejich měnícím se obsahem.
+
+Je zde definována funkce \textbf{main()} v níž probíhá konfigurace procesoru po spuštění a následně zanoření do nekonečné smyčky.
+
+Dále se zde nachází obsluha přerušení, viz. Tabulka~\ref{tab:interrupts}.
+
+V nekonečné smyčce jsou kontrolovány vlajky pro asynchronní volání funkcí. Např., poté, co přijde poslední znak zprávy z px4flow, nastaví se vlajka \textbf{px4flowDataFlag} na hodnotu 1. Ta je poté v nekonečné smyčce odchycena a jsou vykonány potřebné úkony spojené s příjmem dat - filtrace, uložení aktuálních hodnot do stavových proměnných, apod.
+
+\begin{table}
+\begin{center}
+\begin{tabular}{| c | p{8cm} |}
+\hline
+ISR(USART0\_RX\_vect) & příjem z UART0 \\
+\hline
+ISR(USART1\_RX\_vect) & příjem z UART1 \\
+\hline
+ISR(TIMER1\_COMPA\_vect) & Komparační přerušení A k 16bit čítači. Používá se pro generování vstupního PPM signálu (start pulzu).
+\newline \textbf{Neupravovat, pokud nevím, co dělám!!}\\
+\hline
+ISR(TIMER1\_COMPB\_vect) & Komparační přerušení B k 16bit čítači. Používá se pro generování vstupního PPM signálu (konec pulzu).
+\newline \textbf{Neupravovat, pokud nevím, co dělám!!}\\
+\hline
+ISR(PCINT0\_vect) & Zpracování změny na vstupních PWM pinech 1..4
+\newline \textbf{Neupravovat, pokud nevím, co dělám!!}\\
+\hline
+ISR(PCINT1\_vect) & Zpracování změny na vstupních PWM pinech 5..9
+\newline \textbf{Neupravovat, pokud nevím, co dělám!!}\\
+\hline
+ISR(TIMER0\_OVF\_vect) & Zpracování přetečení 8bit čitače (hrubé měření času). \\
+\hline
+\end{tabular}
+\caption{Použitá přerušení}
+\label{tab:interrupts}
+\end{center}
+\end{table}
+
+\subsubsection{controllers.c}
+
+\textbf{controllers.c} obsahuje funkce pro řízení letounu.
+
+\subsubsection{system.c}
+
+\textbf{system.c} obsahuje funkce pro obsluhu kontroleru a letounu. Viz. Tabulka~\ref{tab:system.c}.
+
+\begin{table}
+\begin{center}
+\begin{tabular}{| c | p{8cm} |}
+\hline
+initializeMCU() & Volá se jednou, po zapnutí. Provede nastavení mikrokontroleru.
+\newline \textbf{Neupravovat, pokud nevím, co dělám!!}\\
+\hline
+enableController() & Zapne automatickou stabilizaci letounu.\\
+\hline
+disableController() & Vypne automatickou stabilizaci letounu.\\
+\hline
+armVehicle() & Provede automatické "armování" letounu. NEPOUŽÍVAT!.\\
+\hline
+disarmVehicle() & Provede automatické "disarmování" letounu.\\
+\hline
+button1check() & Kontrola stisku tlačítka 1.\\
+\hline
+button2check() & Kontrola stisku tlačítka 2.\\
+\hline
+\end{tabular}
+\caption{Funkce v system.c}
+\label{tab:system.c}
+\end{center}
+\end{table}
+
+\subsubsection{communication.c}
+
+\textbf{communication.c} obsahuje funkce pro obsluhu a zpracování komunikace s externími moduly. Některé funkce zpracovávají jednotlivé příchozí bajty a jsou tedy určeny pro volání zevnitř přerušení. Jiné zpracovávají celou komunikační zprávu a musejí být volání asynchronně, zevnitř smyčky, po přijetí posledního bajtu.
+
+\begin{table}
+\begin{center}
+\begin{tabular}{| c | p{8cm} |}
+\hline
+USART0\_init() & inicializace UART0\\
+\hline
+USART1\_init() & inicializace UART1\\
+\hline
+Uart0\_write\_char() & zapíše bajt na UART0\\
+\hline
+Uart0\_write\_string() & zapíše string na UART1\\
+\hline
+atomParseChar() & zpracuje příchozí znak z "Atomového" počítače (použití pro surfnav)\\
+\hline
+gumstixParseChar() & zpracuje příchozí znak z Gumstixu\\
+\hline
+flightCtrlParseChar() & zpracuje příchozí znak z FlightCTRL stabilizační desky\\
+\hline
+Decode64() & dekóduje zprávu z FlightCTRL\\
+\hline
+parseFlightCtrlMessage() & zpracuje zprávu z FlightCTRL stabilizační desky\\
+\hline
+mergeSignalsToOutput() & provádí míchání signálů regulátorů a RC vysílače. \newline \textbf{Neupravovat, pokud nevím, co dělám!!}\\
+\hline
+px4flowParseChar() & zpracuje příchozí znak ze senzoru px4flow\\
+\hline
+my\_mavlink\_parse\_char() & upravená funkce z knihovny MavLink. zpracuje znak ze senzoru px4flow.\\
+\hline
+capturePWMInput() & měří délku PWM pulzů z RC soupravy.\newline \textbf{Neupravovat, pokud nevím, co dělám!!}\\
+\hline
+\end{tabular}
+\caption{Funkce v communication.c}
+\label{tab:communication.c}
+\end{center}
+\end{table}
+
+\subsubsection{config.h}
+
+\textbf{config.h} obsahuje direktivy preprocesoru pro konfiguraci celého firmwaru. Lze zde zapínat jednotlivé moduly (px4flow, gumstix, atomový PC, FligthCTRL) a nastavovat chování firmwaru. Dále se zde konfigurují seriové linky (jejich BAUD rate) a jejich přiřazení k modulům.
+
+Důležité je nastavení konstant pro PWM a PPM. Jsou zde hodnoty délek pulzů (min, střední, max), délka PPM rámce a délka dělícího pulzu v PPM.
+
+Dále je zde namapování kanálů z RC na jednotlivé PWM vstupy.
+
+\begin{table}
+\begin{center}
+\begin{tabular}{| c | p{8cm} |}
+\hline
+FRAME\_ORIENTATION & Nastavení orientace letounu (PLUS\_COPTER, nebo X\_COPTER). Má vliv na úhly vyčítané z FlightCTRL, ty jsou vždy relativně k desce FlightCTRL. \\
+\hline
+GUMSTIX\_CAMERA\_POINTING & Kam míří kamera Gumstix počítače (FORWARD, nebo DOWNWARD), důležité pro rotaci souřadnic.\\
+\hline
+disableController() & Vypne automatickou stabilizaci letounu.\\
+\hline
+armVehicle() & Provede automatické "armování" letounu. NEPOUŽÍVAT!.\\
+\hline
+disarmVehicle() & Provede automatické "disarmování" letounu.\\
+\hline
+button1check() & Kontrola stisku tlačítka 1.\\
+\hline
+button2check() & Kontrola stisku tlačítka 2.\\
+\hline
+\end{tabular}
+\caption{Obsah config.h}
+\label{tab:config.h}
+\end{center}
+\end{table}
+
+\subsection{Kompilace pro ATmega164p}
+
+Ke kompilaci je třeba mít nainstalovaný kompilátor \textbf{avr-gcc}. Pro windows je obsažen v balíčku \textbf{WinAVR}, ke stažení na adrese \url{http://winavr.sourceforge.net/}. Pro Linux je potřeba balíčky \textbf{gcc-avr}, \textbf{binutils-avr}, \textbf{avr-libc}, \textbf{avrdude}, \textbf{gdb-avr}.
+
+\texttt{sudo apt-get install gcc-avr binutils-avr gdb-avr avr-libc avrdude}
+
+Pro samotnou kompilaci je přítomen soubor Makefile, který obsahuje předpis pro všechny výše popsané soubory. Výstupem kompilace je soubor \textbf{main.hex}, který je vstupním parametrem pro upload do mikrokontroleru. V Linuxu je kompilace prostá - zavoláním příkazu \texttt{make~all} ve složce se zdrojovými soubory. Ve Windows je postup stejný, pokud jste si nainstalovali výše zmíněný toolchain. Ten do windows doinstaloval program make, který umí interpretovat Makefile stejně, jako v Linuxu.
+
+\subsection{Upload progamu do ATmega164p}
+
+Po úspěšné kompilaci máte ve složce se zdrojovými soubory soubor \textbf{main.hex}. K jeho nahrání do kontroleru potřebujete programátor (např. USBasp) a program \textbf{avrdude}. Příkaz pro upload souboru je shodný pro Windows i Linux, pouze v Linuxu je nutné volat ho s právy superuživatele.
+
+\texttt{avrdude -p m164P -c usbasp -U flash:w:main.hex}
+
+\textbf{POZOR!} Před nahráváním si vždy zkontrolujte, zdali je do řídicí desky řádně přivedeno napájení. Pokud je deska bez napájení, může nahrávání firmwaru nenávratně poškodit kontroler.
+
+\end{document}
