@@ -34,10 +34,6 @@
 #define GUMSTIX_CONTROLLER_SATURATION 0.2
 #define POSITION_KI_GUMSTIX 0.02
 
-// variables for altitude controller
-extern volatile int16_t throttlePreviousError;
-extern volatile float throttleIntegration;
-
 // common global variables
 // controllers output variables
 extern volatile int16_t controllerElevatorOutput;
@@ -54,19 +50,12 @@ extern volatile float constant3;
 #define CONTROLLER_AILERON_SATURATION 150
 #define CONTROLLER_THROTTLE_SATURATION 150
 
-// variables for px4flow speed controller
-extern volatile float aileronSpeedSetPoint;
+#if (PX4FLOW_DATA_RECEIVE == ENABLED) || (ATOM_DATA_RECEIVE == ENABLED) || (GUMSTIX_DATA_RECEIVE == ENABLED)
+
 extern volatile float elevatorSpeedSetpoint;
-extern mavlink_optical_flow_t opticalFlowData;
-extern volatile float elevatorSpeedPreviousError;
-extern volatile float aileronSpeedPreviousError;
-extern volatile float elevatorSpeed;
-extern volatile float aileronSpeed;
-extern volatile float groundDistance;
+extern volatile float aileronSpeedSetPoint;
 
-void controllerAileronSpeed();
-
-void controllerElevatorSpeed();
+#endif
 
 #if GUMSTIX_DATA_RECEIVE == ENABLED
 
@@ -92,12 +81,29 @@ extern volatile int16_t yPosSurf;
 extern volatile int16_t headingSurf;
 
 void controllerAileron_surfnav();
-
 void controllerElevator_surfnav();
 
 #endif
 
+#if PX4FLOW_DATA_RECEIVE == ENABLED
+
+// variables for px4flow speed controller
+extern mavlink_optical_flow_t opticalFlowData;
+extern volatile float elevatorSpeedPreviousError;
+extern volatile float aileronSpeedPreviousError;
+extern volatile float elevatorSpeed;
+extern volatile float aileronSpeed;
+extern volatile float groundDistance;
+
+// variables for altitude controller
+extern volatile int16_t throttlePreviousError;
+extern volatile float throttleIntegration;
+
+void controllerAileronSpeed();
+void controllerElevatorSpeed();
 void controllerThrottle();
+
+#endif // PX4FLOW_DATA_RECEIVE == ENABLED
 
 #endif // _CONTROLLERS_H
 

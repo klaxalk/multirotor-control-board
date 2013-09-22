@@ -15,8 +15,13 @@ void enableController() {
 
 	if (controllerEnabled == 0) {
 		throttleIntegration = 0;
+		
+		#if GUMSTIX_DATA_RECEIVE == ENABLED
+		
 		gumstixElevatorIntegral = 0;
 		gumstixAileronIntegral = 0;
+		
+		#endif // GUMSTIX_DATA_RECEIVE == ENABLED
 	}
 	controllerEnabled = 1;
 }

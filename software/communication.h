@@ -98,10 +98,11 @@ void capturePWMInput();
 extern unsigned volatile char atomParseCharState;
 extern unsigned volatile char atomParseCharByte;
 extern volatile int16_t atomParseTempInt;
-extern volatile int16_t xPosSurf;
-extern volatile int16_t yPosSurf;
+extern volatile int16_t xPosSurfNew;
+extern volatile int16_t yPosSurfNew;
 extern volatile int16_t headingSurf;
 extern volatile int16_t scaleSurf;
+extern volatile int8_t atomDataFlag;
 
 extern unsigned volatile char Uart0state;
 extern unsigned volatile char Uart0byte;

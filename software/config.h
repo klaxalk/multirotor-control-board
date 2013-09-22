@@ -54,7 +54,7 @@
 //~ --------------------------------------------------------------------
 
 // on/off the receiving of data from the GumStix
-#define GUMSTIX_DATA_RECEIVE ENABLED
+#define GUMSTIX_DATA_RECEIVE DISABLED
 /*
 	ENABLED
 	DISABLED
@@ -90,7 +90,7 @@
 //~ --------------------------------------------------------------------
 
 // on/off the receiving of data from the atom computer
-#define ATOM_DATA_RECEIVE DISABLED
+#define ATOM_DATA_RECEIVE ENABLED
 /*
 	ENABLED
 	DISABLED

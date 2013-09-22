@@ -58,33 +58,6 @@ volatile char buttonChangeEnable = 0;
 volatile uint8_t armingToggled = 0;
 volatile uint8_t disarmingToggled = 0;
 
-//~ --------------------------------------------------------------------
-//~ Variables for communication with flightCTRL
-//~ --------------------------------------------------------------------
-
-#if (FLIGHTCTRL_DATA_RECEIVE == ENABLED) || (ATOM_DATA_RECEIVE == ENABLED)
-
-// variables used by the Mikrokopters functions itself
-unsigned volatile char flightCtrlDataFlag = 0;
-unsigned volatile char CntCrcError = 0;
-unsigned volatile char BytesReceiving = 0;
-signed volatile char TxdBuffer[MAX_SENDE_BUFF];
-signed volatile char RxdBuffer[MAX_EMPFANGS_BUFF];
-unsigned volatile char transfereUart1done = 1;
-unsigned char interval = 1;
-
-signed char *pRxData = 0;
-unsigned char RxDataLen = 0;
-
-// aux variables
-int8_t volatile flightCtrlDataBeingReceived = 0;
-// tracks how much bytes it has been received
-// if it is more than 15, shut down the
-// receiving (flightCtrlDataBeingReceived %= 0)
-int8_t volatile flightCtrlByteReceive = 0;
-
-#endif
-
 // flag to run the controllers
 volatile int8_t controllersFlag = 0;
 
@@ -116,6 +89,19 @@ int8_t previous_AUX3 = 0;
 // for auto on-off by throttle stick
 volatile int8_t previous_throttle = 0;
 
+//~ --------------------------------------------------------------------
+//~ Variables used with the px4flow sensor
+//~ --------------------------------------------------------------------
+
+#if (PX4FLOW_DATA_RECEIVE == ENABLED) || (ATOM_DATA_RECEIVE == ENABLED) || (GUMSTIX_DATA_RECEIVE == ENABLED)
+
+volatile float elevatorSpeedSetpoint = 0;
+volatile float aileronSpeedSetPoint = 0;
+
+#endif
+
+#if PX4FLOW_DATA_RECEIVE == ENABLED
+
 // variables used by the mavlink library
 mavlink_message_t mavlinkMessage;
 mavlink_status_t mavlinkStatus;
@@ -126,13 +112,13 @@ int8_t opticalFlowDataFlag = 0;
 volatile float groundDistance = 0;
 
 // speed controller variables
-volatile float elevatorSpeedSetpoint = 0;
-volatile float aileronSpeedSetPoint = 0;
 volatile float elevatorSpeedPreviousError = 0;
 volatile float aileronSpeedPreviousError = 0;
 
+#endif // PX4FLOW_DATA_RECEIVE == ENABLED
+
 //~ --------------------------------------------------------------------
-//~ Variables used with the surfnav
+//~ Variables used with the Atom computer
 //~ --------------------------------------------------------------------
 
 #if ATOM_DATA_RECEIVE == ENABLED
@@ -152,6 +138,10 @@ volatile int16_t scaleSurf = 0;
 volatile int8_t atomDataFlag = 0;
 
 #endif
+
+//~ --------------------------------------------------------------------
+//~ Variables for communication with Gumstix
+//~ --------------------------------------------------------------------
 
 #if GUMSTIX_DATA_RECEIVE == ENABLED
 
@@ -175,8 +165,33 @@ volatile float gumstixAileronIntegral = 0;
 
 #endif
 
-// variables for communication with FlightCtrl
+//~ --------------------------------------------------------------------
+//~ Variables for communication with flightCTRL
+//~ --------------------------------------------------------------------
+
+#if (FLIGHTCTRL_DATA_RECEIVE == ENABLED) || (ATOM_DATA_RECEIVE == ENABLED)
+
+// variables used by the Mikrokopters functions itself
+unsigned volatile char flightCtrlDataFlag = 0;
+unsigned volatile char CntCrcError = 0;
+unsigned volatile char BytesReceiving = 0;
+signed volatile char TxdBuffer[MAX_SENDE_BUFF];
+signed volatile char RxdBuffer[MAX_EMPFANGS_BUFF];
+unsigned volatile char transfereUart1done = 1;
+unsigned char interval = 1;
+
+signed char *pRxData = 0;
+unsigned char RxDataLen = 0;
+
+// aux variables
+int8_t volatile flightCtrlDataBeingReceived = 0;
+// tracks how much bytes it has been received
+// if it is more than 15, shut down the
+// receiving (flightCtrlDataBeingReceived %= 0)
+int8_t volatile flightCtrlByteReceive = 0;
 volatile int8_t flightCtrlDataReceived = 0;
+
+#endif
 
 // STATE VARIABLES
 // angles with respect to the board
@@ -189,11 +204,11 @@ volatile int16_t rollAngle = 0;
 volatile float elevatorSpeed = 0;
 volatile float aileronSpeed = 0;
 
-volatile char uart0char = 0;
-volatile char uart1char = 0;
-
 // write debug message to Uart0 serial output
 void debug() {
+	
+	// logging with gumstix
+	#if GUMSTIX_DATA_RECEIVE == ENABLED
 
 	char num[20];
 
@@ -214,6 +229,8 @@ void debug() {
 	Uart0_write_char(' ');
 	
 	Uart0_write_char('\n');
+	
+	#endif // GUMSTIX_DATA_RECEIVE == ENABLED
 
 //~ 
 	//~ sprintf(num, "%i", ((int16_t) rollAngle));
@@ -279,13 +296,19 @@ int main() {
 				//~ led_Y_on();
 			} else {
 				//~ led_Y_off();
+				#if PX4FLOW_DATA_RECEIVE == ENABLED
 				aileronSpeedSetPoint = 0;
 				elevatorSpeedSetpoint = 0;
+				#endif
 			}
+
+			#if PX4FLOW_DATA_RECEIVE == ENABLED
 
 			controllerElevatorSpeed();
 			controllerAileronSpeed();
 			controllerThrottle();
+			
+			#endif
 
 			debug();
 
@@ -363,6 +386,8 @@ int main() {
 
 		#endif
 
+		#if PX4FLOW_DATA_RECEIVE == ENABLED
+
 		// filter the optical flow velocity data
 		if (opticalFlowDataFlag == 1) {
 
@@ -384,6 +409,8 @@ int main() {
 
 			opticalFlowDataFlag = 0;
 		}
+		
+		#endif // PX4FLOW_DATA_RECEIVE == ENABLED
 
 		#if ATOM_DATA_RECEIVE == ENABLED
 	
@@ -540,6 +567,7 @@ ISR(USART0_RX_vect) {
 
 #if (PX4FLOW_DATA_RECEIVE == ENABLED) && (PX4FLOW_RECEIVE_PORT == UART0)
 
+	px4flowParseChar(incomingChar);
 
 #endif
 
@@ -551,93 +579,13 @@ ISR(USART0_RX_vect) {
 
 #if (FLIGHTCTRL_DATA_RECEIVE == ENABLED) && (FLIGHTCTRL_RECEIVE_PORT == UART0)
 
-
+	flightCtrlParseChar(incomingChar);
 
 #endif
 
 #if (ATOM_DATA_RECEIVE == ENABLED) && (ATOM_RECEIVE_PORT == UART0)
 
-	if (flightCtrlDataBeingReceived == 1) {
-		
-		flightCtrlByteReceive++;
-
-		flightCtrlParseChar(incomingChar);
-		
-		// safety shutdown of the receiver
-		if (flightCtrlByteReceive >= 15) {
-			flightCtrlDataBeingReceived = 0;
-			flightCtrlByteReceive = 0;
-		}
-		
-	} else {
-
-		if (atomParseCharState == 0) {
-
-			switch (incomingChar) {
-
-			case 'x':
-				atomParseCharState = 1;
-				break;
-			case 'y':
-				atomParseCharState = 2;
-				break;
-			case 'h':
-				atomParseCharState = 3;
-				break;
-			case 's':
-				atomParseCharState = 4;
-				break;
-			case '#':
-				flightCtrlParseChar(incomingChar);
-				flightCtrlDataBeingReceived = 1;
-				flightCtrlByteReceive = 1;
-				break;
-			}
-
-			atomParseCharByte = 0;
-			atomParseTempInt = 0;
-
-		} else if (atomParseCharByte < 2) {
-
-			char* atomParseTempIntPointer = (char*) &atomParseTempInt;
-			*(atomParseTempIntPointer+atomParseCharByte) = incomingChar;
-
-			atomParseCharByte++;
-		}
-
-		//~ if (atomParseCharByte == 2) { // reading checksum
-		//~ if (Uart0crc == tempChar) {
-		//~
-		//~ led_control_toggle();
-		//~ }
-		//~ atomParseCharByte++;
-		//~ }
-
-		if (atomParseCharByte == 2) { // we have the whole int ret
-
-			switch (atomParseCharState) {
-
-			case 1:
-				xPosSurfNew = atomParseTempInt;
-				break;
-			case 2:
-				yPosSurfNew = atomParseTempInt;
-				atomDataFlag = 1;
-				break;
-			case 3:
-				headingSurf = atomParseTempInt;
-				break;
-			case 4:
-				scaleSurf = atomParseTempInt;
-				break;
-			}
-
-			atomParseCharState = 0;
-		}
-
-	}
-
-	//~ atomParseChar(uart0char);
+	atomParseChar(incomingChar);
 
 #endif
 
@@ -646,29 +594,29 @@ ISR(USART0_RX_vect) {
 // interrupt fired by Uart1
 ISR(USART1_RX_vect) {
 
-	uart1char = UDR1;
+	int incomingChar = UDR1;
 
 #if (PX4FLOW_DATA_RECEIVE == ENABLED) && (PX4FLOW_RECEIVE_PORT == UART1)
 
-	px4flowParseChar(uart1char);
+	px4flowParseChar(incomingChar);
 
 #endif
 
 #if (GUMSTIX_DATA_RECEIVE == ENABLED) && (GUMSTIX_RECEIVE_PORT == UART1)
 
-
+	gumstixParseChar(incomingChar);
 
 #endif
 
 #if (FLIGHTCTRL_DATA_RECEIVE == ENABLED) && (FLIGHTCTRL_RECEIVE_PORT == UART1)
 
-
+	flightCtrlParseChar(incomingChar);
 
 #endif
 
 #if (ATOM_DATA_RECEIVE == ENABLED) && (ATOM_RECEIVE_PORT == UART1)
 
-	atomParseChar(uart1char);
+	atomParseChar(incomingChar);
 
 #endif
 }

@@ -49,8 +49,6 @@ void Uart0_write_string(char* array, int len) {
 	}
 }
 
-#endif // FLIGHTCTRL_DATA_RECEIVE == ENABLED
-
 // merge RC channels with controller output
 // the most important function, do not modify
 // unless you know what you are doing!
@@ -170,77 +168,84 @@ void capturePWMInput() {
 
 void atomParseChar(char incomingChar) {
 
-	if (atomParseCharState == 0) {
+	if (flightCtrlDataBeingReceived == 1) {
+		
+		flightCtrlByteReceive++;
 
-		switch (incomingChar) {
+		flightCtrlParseChar(incomingChar);
+		
+		// safety shutdown of the receiver
+		if (flightCtrlByteReceive >= 15) {
+			flightCtrlDataBeingReceived = 0;
+			flightCtrlByteReceive = 0;
+		}
+		
+	} else {
 
-		case 'x':
-			atomParseCharState = 1;
-			break;
-		case 'y':
-			atomParseCharState = 2;
-			break;
-		case 'h':
-			atomParseCharState = 3;
-			break;
-		case 's':
-			atomParseCharState = 4;
-			break;
-		case 'X':
-			atomParseCharState = 5;
-			break;
-		case 'Y':
-			atomParseCharState = 6;
-			break;
+		if (atomParseCharState == 0) {
+
+			switch (incomingChar) {
+
+			case 'x':
+				atomParseCharState = 1;
+				break;
+			case 'y':
+				atomParseCharState = 2;
+				break;
+			case 'h':
+				atomParseCharState = 3;
+				break;
+			case 's':
+				atomParseCharState = 4;
+				break;
+			case '#':
+				flightCtrlParseChar(incomingChar);
+				flightCtrlDataBeingReceived = 1;
+				flightCtrlByteReceive = 1;
+				break;
+			}
+
+			atomParseCharByte = 0;
+			atomParseTempInt = 0;
+
+		} else if (atomParseCharByte < 2) {
+
+			char* atomParseTempIntPointer = (char*) &atomParseTempInt;
+			*(atomParseTempIntPointer+atomParseCharByte) = incomingChar;
+
+			atomParseCharByte++;
 		}
 
-		atomParseCharByte = 0;
-		atomParseTempInt = 0;
+		//~ if (atomParseCharByte == 2) { // reading checksum
+		//~ if (Uart0crc == tempChar) {
+		//~
+		//~ led_control_toggle();
+		//~ }
+		//~ atomParseCharByte++;
+		//~ }
 
-	} else if (atomParseCharByte < 2) {
+		if (atomParseCharByte == 2) { // we have the whole int ret
 
-		char* atomParseTempIntPointer = (char*) &atomParseTempInt;
-		*(atomParseTempIntPointer+atomParseCharByte) = incomingChar;
+			switch (atomParseCharState) {
 
-		atomParseCharByte++;
-	}
+			case 1:
+				xPosSurfNew = atomParseTempInt;
+				break;
+			case 2:
+				yPosSurfNew = atomParseTempInt;
+				atomDataFlag = 1;
+				break;
+			case 3:
+				headingSurf = atomParseTempInt;
+				break;
+			case 4:
+				scaleSurf = atomParseTempInt;
+				break;
+			}
 
-	//~ if (atomParseCharByte == 2) { // reading checksum
-	//~ if (Uart0crc == tempChar) {
-	//~
-	//~ led_control_toggle();
-	//~ }
-	//~ atomParseCharByte++;
-	//~ }
-
-	if (atomParseCharByte == 2) { // we have the whole int ret
-
-		switch (atomParseCharState) {
-
-		case 1:
-			xPosSurf = xPosSurf*SURFNAV_FILTER_WEIGHT + atomParseTempInt*(1 - SURFNAV_FILTER_WEIGHT);
-			//~ xPosSurf = atomParseTempInt;
-			led_control_toggle();
-			break;
-		case 2:
-			yPosSurf =  yPosSurf*SURFNAV_FILTER_WEIGHT + atomParseTempInt*(1 - SURFNAV_FILTER_WEIGHT);
-			//~ yPosSurf = atomParseTempInt;
-			break;
-		case 3:
-			headingSurf = atomParseTempInt;
-			break;
-		case 4:
-			scaleSurf = atomParseTempInt;
-			break;
-		case 5:
-			pitchAngle = atomParseTempInt;
-			break;
-		case 6:
-			rollAngle = atomParseTempInt;
-			break;
+			atomParseCharState = 0;
 		}
 
-		atomParseCharState = 0;
 	}
 }
 

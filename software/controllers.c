@@ -40,6 +40,8 @@ void controllerElevator_surfnav() {
 
 #endif
 
+#if PX4FLOW_DATA_RECEIVE == ENABLED
+
 // aileron speed controller using px4flow data
 void controllerAileronSpeed() {
 
@@ -48,6 +50,9 @@ void controllerAileronSpeed() {
 
 	//~ float error = aileronSpeedSetPoint-aileronSpeed;
 	float error = -aileronSpeed;
+		
+	// position control
+	#if GUMSTIX_DATA_RECEIVE == ENABLED
 
 	float positionError = yPosGumstix;
 	
@@ -56,21 +61,23 @@ void controllerAileronSpeed() {
 	else if (positionError < -2000)
 		positionError = -2000;
 
-	// calculate P
-	float proportional = KP*error;
-
 	// calculate position P
 	float positionProportional = POSITION_KP_GUMSTIX*positionError;
 	
-	  // calculate adaptive offset
-	  int8_t smer;
-	  if (positionError > 0)
-	    smer = 1;
-	  else
-	    smer = -1;
+	// calculate adaptive offset
+	int8_t smer;
+	if (positionError > 0)
+		smer = 1;
+	else
+		smer = -1;
 	
 	// calculate position I
 	gumstixAileronIntegral += POSITION_KI_GUMSTIX*smer*constant2;
+		
+	#endif // GUMSTIX_DATA_RECEIVE == ENABLED
+
+	// calculate P
+	float proportional = KP*error;
 
 	//~ // calculate angular
 	//~ float angular = -rollAngle;
@@ -79,11 +86,19 @@ void controllerAileronSpeed() {
 	float derivative = KD*(error-aileronSpeedPreviousError);
 
 	aileronSpeedPreviousError = error;
+	
+	#if GUMSTIX_DATA_RECEIVE == ENABLED
 
 	if (validGumstix == 1 && (abs(aileronSpeed) < GUMSTIX_CONTROLLER_SATURATION))
 		controllerAileronOutput = proportional + derivative + positionProportional + gumstixAileronIntegral;
 	else
 		controllerAileronOutput = proportional + derivative;
+		
+	#else
+	
+	controllerAileronOutput = proportional + derivative;
+	
+	#endif
 
 	// controller saturation
 	if (controllerAileronOutput > CONTROLLER_AILERON_SATURATION) {
@@ -102,28 +117,32 @@ void controllerElevatorSpeed() {
 	//~ float error = elevatorSpeedSetpoint+elevatorSpeed;
 	float error = elevatorSpeed;
 
+	#if GUMSTIX_DATA_RECEIVE == ENABLED
+
 	float positionError = xPosGumstix - elevatorSetPoint*constant1;
 
 	if (positionError > 2000)
 		positionError = 2000;
 	else if (positionError < -2000)
 		positionError = -2000;
-
-	// calculate P
-	float proportional = KP*error;
 	
 	// calculate position P
 	float positionProportional = POSITION_KP_GUMSTIX*positionError;
-	
-	  // calculate adaptive offset
-	  int8_t smer;
-	  if (positionError > 0)
-	    smer = 1;
-	  else
-	    smer = -1;
-	
+
+	// calculate adaptive offset
+	int8_t smer;
+	if (positionError > 0)
+		smer = 1;
+	else
+		smer = -1;
+
 	// calculate position I
 	gumstixElevatorIntegral += POSITION_KI_GUMSTIX*smer*constant2;
+
+	#endif // GUMSTIX_DATA_RECEIVE == ENABLED
+
+	// calculate P
+	float proportional = KP*error;	
 
 	//~ // calculate angular
 	//~ float angular = -pitchAngle;
@@ -133,10 +152,18 @@ void controllerElevatorSpeed() {
 
 	elevatorSpeedPreviousError = error;
 
+	#if GUMSTIX_DATA_RECEIVE == ENABLED
+
 	if (validGumstix == 1 && (abs(elevatorSpeed) < GUMSTIX_CONTROLLER_SATURATION))
 		controllerElevatorOutput = proportional + derivative + positionProportional + gumstixElevatorIntegral;	
 	else
 		controllerElevatorOutput = proportional + derivative;
+		
+	#else
+	
+	controllerElevatorOutput = proportional + derivative;
+	
+	#endif
 
 	// controller saturation
 	if (controllerElevatorOutput > CONTROLLER_ELEVATOR_SATURATION) {
@@ -145,42 +172,6 @@ void controllerElevatorSpeed() {
 		controllerElevatorOutput = -CONTROLLER_ELEVATOR_SATURATION;
 	}
 }
-
-#if GUMSTIX_DATA_RECEIVE == ENABLED
-
-// aileron position controller using surfnav
-void controllerAileron_gumstix() {
-
-	float KP = POSITION_KP_GUMSTIX;
-
-	float error = yPosGumstix - aileronSetPoint;
-
-	aileronSpeedSetPoint = KP*error;
-
-	if (aileronSpeedSetPoint > GUMSTIX_CONTROLLER_SATURATION) {
-		aileronSpeedSetPoint = GUMSTIX_CONTROLLER_SATURATION;
-	} else if (aileronSpeedSetPoint < -GUMSTIX_CONTROLLER_SATURATION) {
-		aileronSpeedSetPoint = -GUMSTIX_CONTROLLER_SATURATION;
-	}
-}
-
-// elevator position controller using surfnav
-void controllerElevator_gumstix() {
-
-	float KP = POSITION_KP_GUMSTIX;
-
-	float error =  elevatorSetPoint - xPosGumstix;
-
-	elevatorSpeedSetpoint = -KP*error;
-
-	if (elevatorSpeedSetpoint > GUMSTIX_CONTROLLER_SATURATION) {
-		elevatorSpeedSetpoint = GUMSTIX_CONTROLLER_SATURATION;
-	} else if (elevatorSpeedSetpoint < -GUMSTIX_CONTROLLER_SATURATION) {
-		elevatorSpeedSetpoint = -GUMSTIX_CONTROLLER_SATURATION;
-	}
-}
-
-#endif // GUMSTIX_DATA_RECEIVE == ENABLED
 
 // altitude controller
 void controllerThrottle() {
@@ -235,3 +226,42 @@ void controllerThrottle() {
 		controllerThrottleOutput = (int16_t)((float) controllerThrottleOutput)*1.5;  // 1.5
 	}
 }
+
+
+#endif // PX4FLOW_DATA_RECEIVE == ENABLED
+
+#if GUMSTIX_DATA_RECEIVE == ENABLED
+
+// aileron position controller using surfnav
+void controllerAileron_gumstix() {
+
+	float KP = POSITION_KP_GUMSTIX;
+
+	float error = yPosGumstix - aileronSetPoint;
+
+	aileronSpeedSetPoint = KP*error;
+
+	if (aileronSpeedSetPoint > GUMSTIX_CONTROLLER_SATURATION) {
+		aileronSpeedSetPoint = GUMSTIX_CONTROLLER_SATURATION;
+	} else if (aileronSpeedSetPoint < -GUMSTIX_CONTROLLER_SATURATION) {
+		aileronSpeedSetPoint = -GUMSTIX_CONTROLLER_SATURATION;
+	}
+}
+
+// elevator position controller using surfnav
+void controllerElevator_gumstix() {
+
+	float KP = POSITION_KP_GUMSTIX;
+
+	float error =  elevatorSetPoint - xPosGumstix;
+
+	elevatorSpeedSetpoint = -KP*error;
+
+	if (elevatorSpeedSetpoint > GUMSTIX_CONTROLLER_SATURATION) {
+		elevatorSpeedSetpoint = GUMSTIX_CONTROLLER_SATURATION;
+	} else if (elevatorSpeedSetpoint < -GUMSTIX_CONTROLLER_SATURATION) {
+		elevatorSpeedSetpoint = -GUMSTIX_CONTROLLER_SATURATION;
+	}
+}
+
+#endif // GUMSTIX_DATA_RECEIVE == ENABLED
