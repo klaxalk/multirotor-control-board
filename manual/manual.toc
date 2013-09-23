@@ -1,11 +1,13 @@
 \select@language {czech}
-\contentsline {section}{\numberline {1}Hardware desky}{1}{section.2}
-\contentsline {section}{\numberline {2}Software}{1}{section.3}
-\contentsline {subsection}{\numberline {2.1}Struktura software}{1}{subsection.4}
-\contentsline {subsubsection}{\numberline {2.1.1}main.c}{1}{subsubsection.5}
-\contentsline {subsubsection}{\numberline {2.1.2}controllers.c}{2}{subsubsection.7}
-\contentsline {subsubsection}{\numberline {2.1.3}system.c}{2}{subsubsection.8}
-\contentsline {subsubsection}{\numberline {2.1.4}communication.c}{2}{subsubsection.10}
-\contentsline {subsubsection}{\numberline {2.1.5}config.h}{4}{subsubsection.12}
-\contentsline {subsection}{\numberline {2.2}Kompilace pro ATmega164p}{4}{subsection.14}
-\contentsline {subsection}{\numberline {2.3}Upload progamu do ATmega164p}{5}{subsection.15}
+\contentsline {section}{\numberline {1}Hardware}{1}{section.2}
+\contentsline {subsection}{\numberline {1.1}Letoun}{1}{subsection.3}
+\contentsline {subsection}{\numberline {1.2}\IeC {\v R}\IeC {\'\i }dic\IeC {\'\i } deska}{2}{subsection.5}
+\contentsline {section}{\numberline {2}Software}{3}{section.7}
+\contentsline {subsection}{\numberline {2.1}Struktura software}{3}{subsection.8}
+\contentsline {subsubsection}{\numberline {2.1.1}main.c}{3}{subsubsection.9}
+\contentsline {subsubsection}{\numberline {2.1.2}controllers.c}{3}{subsubsection.11}
+\contentsline {subsubsection}{\numberline {2.1.3}system.c}{3}{subsubsection.12}
+\contentsline {subsubsection}{\numberline {2.1.4}communication.c}{5}{subsubsection.14}
+\contentsline {subsubsection}{\numberline {2.1.5}config.h}{5}{subsubsection.16}
+\contentsline {subsection}{\numberline {2.2}Kompilace pro ATmega164p}{6}{subsection.18}
+\contentsline {subsection}{\numberline {2.3}Upload progamu do ATmega164p}{6}{subsection.19}

@@ -206,65 +206,65 @@ volatile float aileronSpeed = 0;
 
 // write debug message to Uart0 serial output
 void debug() {
-	
+
 	// logging with gumstix
-	#if GUMSTIX_DATA_RECEIVE == ENABLED
+#if GUMSTIX_DATA_RECEIVE == ENABLED
 
 	char num[20];
 
 	sprintf(num, "%i", ((int16_t) xPosGumstix));
 	Uart0_write_string(num, strlen(num));
 	Uart0_write_char(' ');
-	
+
 	sprintf(num, "%i", ((int16_t) yPosGumstix));
 	Uart0_write_string(num, strlen(num));
 	Uart0_write_char(' ');
-	
+
 	sprintf(num, "%f", ((double) constant1*ELEVATOR_SPEED_KP));
 	Uart0_write_string(num, strlen(num));
 	Uart0_write_char(' ');
-	
+
 	sprintf(num, "%f", ((double) gumstixAileronIntegral));
 	Uart0_write_string(num, strlen(num));
 	Uart0_write_char(' ');
-	
-	Uart0_write_char('\n');
-	
-	#endif // GUMSTIX_DATA_RECEIVE == ENABLED
 
-//~ 
+	Uart0_write_char('\n');
+
+#endif // GUMSTIX_DATA_RECEIVE == ENABLED
+
+	//~
 	//~ sprintf(num, "%i", ((int16_t) rollAngle));
 	//~ Uart0_write_string(num, strlen(num));
 	//~ Uart0_write_char(' ');
-//~ 
+	//~
 	//~ sprintf(num, "%i", ((int16_t) yPosSurfNew));
 	//~ Uart0_write_string(num, strlen(num));
 	//~ Uart0_write_char(' ');
-//~ 
+	//~
 	//~ sprintf(num, "%i", ((int16_t) xPosSurfNew));
 	//~ Uart0_write_string(num, strlen(num));
 	//~ Uart0_write_char(' ');
-	//~ 
+	//~
 	//~ sprintf(num, "%i", ((int16_t) headingSurf));
 	//~ Uart0_write_string(num, strlen(num));
 	//~ Uart0_write_char(' ');
-	//~ 
+	//~
 	//~ sprintf(num, "%i", ((int16_t) scaleSurf));
 	//~ Uart0_write_string(num, strlen(num));
 	//~ Uart0_write_char(' ');
-//~ 
+	//~
 	//~ sprintf(num, "%f", ((double) -opticalFlowData.flow_comp_m_x));
 	//~ Uart0_write_string(num, strlen(num));
 	//~ Uart0_write_char(' ');
-//~ 
+	//~
 	//~ sprintf(num, "%f", ((double) opticalFlowData.flow_comp_m_x));
 	//~ Uart0_write_string(num, strlen(num));
 	//~ Uart0_write_char(' ');
-//~ 
+	//~
 	//~ sprintf(num, "%f", ((double) opticalFlowData.ground_distance));
 	//~ Uart0_write_string(num, strlen(num));
 	//~ Uart0_write_char(' ');
-	//~ 
+	//~
 	//~ sprintf(num, "%4.3f", ((double) timeStamp));
 	//~ Uart0_write_string(num, strlen(num));
 	//~ Uart0_write_char('\n');
@@ -296,19 +296,19 @@ int main() {
 				//~ led_Y_on();
 			} else {
 				//~ led_Y_off();
-				#if PX4FLOW_DATA_RECEIVE == ENABLED
+#if PX4FLOW_DATA_RECEIVE == ENABLED
 				aileronSpeedSetPoint = 0;
 				elevatorSpeedSetpoint = 0;
-				#endif
+#endif
 			}
 
-			#if PX4FLOW_DATA_RECEIVE == ENABLED
+#if PX4FLOW_DATA_RECEIVE == ENABLED
 
 			controllerElevatorSpeed();
 			controllerAileronSpeed();
 			controllerThrottle();
-			
-			#endif
+
+#endif
 
 			debug();
 
@@ -337,7 +337,7 @@ int main() {
 			disablePositionController();
 			previous_AUX3 = 1;
 		} else if (RCchannel[AUX3] > (PULSE_MIDDLE + 200)) {
-			if (previous_AUX3 == 1) {	
+			if (previous_AUX3 == 1) {
 				enablePositionController();
 			}
 			previous_AUX3 = 2;
@@ -352,8 +352,8 @@ int main() {
 		constant1 = (float)((RCchannel[AUX1] - 2304))/1152;
 		constant2 = (float)((RCchannel[AUX2] - 2304))/1152;
 
-		#if ATOM_DATA_RECEIVE == ENABLED
-		
+#if ATOM_DATA_RECEIVE == ENABLED
+
 		// sends r char to the surfnav computer
 		if (constant2 > 1.3) {
 
@@ -377,16 +377,16 @@ int main() {
 			previousConstant1 = 1;
 		} else if (constant1 < 0.5) {
 			if (previousConstant1 == 1) {
-					
+
 				Uart0_write_char('!');
 			}
-			
+
 			previousConstant1 = 0;
 		}
 
-		#endif
+#endif
 
-		#if PX4FLOW_DATA_RECEIVE == ENABLED
+#if PX4FLOW_DATA_RECEIVE == ENABLED
 
 		// filter the optical flow velocity data
 		if (opticalFlowDataFlag == 1) {
@@ -396,9 +396,9 @@ int main() {
 
 			elevatorSpeed = elevatorSpeed*PX4FLOW_FILTER_WEIGHT + opticalFlowData.flow_comp_m_x*(1 - PX4FLOW_FILTER_WEIGHT);
 			aileronSpeed = aileronSpeed*PX4FLOW_FILTER_WEIGHT + opticalFlowData.flow_comp_m_y*(1 - PX4FLOW_FILTER_WEIGHT);
-			
+
 			if (opticalFlowData.ground_distance < 2) {
-			
+
 				groundDistance = opticalFlowData.ground_distance;
 			}
 
@@ -409,11 +409,11 @@ int main() {
 
 			opticalFlowDataFlag = 0;
 		}
-		
-		#endif // PX4FLOW_DATA_RECEIVE == ENABLED
 
-		#if ATOM_DATA_RECEIVE == ENABLED
-	
+#endif // PX4FLOW_DATA_RECEIVE == ENABLED
+
+#if ATOM_DATA_RECEIVE == ENABLED
+
 		// filter the surfnav position data
 		if (atomDataFlag == 1) {
 
@@ -421,9 +421,9 @@ int main() {
 
 				xPosSurf = xPosSurf*SURFNAV_FILTER_WEIGHT + xPosSurfNew*(1 - SURFNAV_FILTER_WEIGHT);
 			}
-			
+
 			if (abs(yPosSurfNew) < 2000) {
-				
+
 				yPosSurf =  yPosSurf*SURFNAV_FILTER_WEIGHT + yPosSurfNew*(1 - SURFNAV_FILTER_WEIGHT);
 			}
 
@@ -434,10 +434,10 @@ int main() {
 
 			atomDataFlag = 0;
 		}
-		
-		#endif
-		
-		#if (ATOM_DATA_RECEIVE == ENABLED) || (FLIGHTCTRL_DATA_RECEIVE == ENABLED)
+
+#endif
+
+#if (ATOM_DATA_RECEIVE == ENABLED) || (FLIGHTCTRL_DATA_RECEIVE == ENABLED)
 
 		if (flightCtrlDataFlag == 1) {
 
@@ -476,26 +476,26 @@ int main() {
 
 			flightCtrlDataFlag = 0;
 		}
-		
-		#endif
+
+#endif
 
 #if GUMSTIX_DATA_RECEIVE == ENABLED
 
 		if (gumstixDataFlag == 1) {
-	
-		// rotate the coordinates
+
+			// rotate the coordinates
 #if GUMSTIX_CAMERA_POINTING == FORWARD
 
-		if (validGumstix == 1) {
+			if (validGumstix == 1) {
 
-		xPosGumstix = xPosGumstixNew;
-		yPosGumstix = zPosGumstixNew;
-		zPosGumstix = yPosGumstixNew;
+				xPosGumstix = xPosGumstixNew;
+				yPosGumstix = zPosGumstixNew;
+				zPosGumstix = yPosGumstixNew;
 
-		}
+			}
 
 #endif
-		
+
 			gumstixDataFlag = 0;
 		}
 
@@ -562,7 +562,7 @@ int main() {
 
 // interrupt fired by Uart1
 ISR(USART0_RX_vect) {
-	
+
 	char incomingChar = UDR0;
 
 #if (PX4FLOW_DATA_RECEIVE == ENABLED) && (PX4FLOW_RECEIVE_PORT == UART0)

@@ -1,7 +1,7 @@
 \documentclass[11pt, a4paper]{article}
 
 \usepackage[czech]{babel}
-\usepackage[IL2]{fontenc} % pro iso8859-2
+% \usepackage[IL2]{fontenc} % pro iso8859-2
 \usepackage[utf8]{inputenc}   % pro unicode UTF-8
 
 \newcommand{\Author}{Tomáš Báča}
@@ -60,15 +60,55 @@
 \cfoot{}
 \rfoot{\thepage$/$\pageref{LastPage}}
 
-\section{Hardware desky}
+\section{Hardware}
 
-Řídicí deska plní funkci komunikačního uzlu mezi moduly a malé výpočetní jednotky pro stabilizaci a řízení letounu. Je osazena mikrokontrolerem ATmega164p s 1kb RAM a 16kb ROM (pro program). Procesor kontroleru trpí absencí FPU (floating point unit). Ke komunikaci jsou zde 2 porty UART. Programování mikrokontroleru probíhá přes SPI.
+\subsection{Letoun}
 
-Deska má 9 vstupů pro PWM. Použity jsou pro příjem signálů z RC přijímače. Dále jsou zde dva volitelné výstupy, z nichž jeden je použit pro PPM výstup do stabilizační desky letounu a druhý je volitelný.
+Letoun, jinak běžně nazývaný kvadrukoptera, je helikoptera se čtyřmi rotory. Listy mají pevný úhel náběhu a jejich tah se řídí změnu rychlosti jejich otáčení. Díky tomu je stroj konstrukčně jednoduchý a relativně odolný proti poškození (v porovnání s běžnou helikopterou). Z toho důvodu je vhodný pro experimentální použití. Stroj je napájen z Li-Poly (Lithium-Polymerová) baterie. Doba letu se pohybuje od 5 do 15 minut v závislosti na zatížení.
+
+Samotný letoun je nestabilní systém vyžadující stabilizaci. O tu se stará výrobcem dodaná stabilizační deska FlightCTRL (Obrázek~\ref{fig:flightctrl}). Ta je osazená 3-osými MEMS gyroskopy a akcelerometry, ze kterých syntetizuje údaj o úhlu náklonu v ose Pitch a Roll. Ty potom používá pro stabilizaci letounu. Dále se deska stará o mixování vstupních signálů (výroba virtuálních vstupů) a řízení jednotlivých vrtulí.
+
+Vstupními řídicími signály do desky jsou:
+\\
+\\
+\textbf{THROTTLE} - Kolektivní tah všech rotorů v procentech jejich max. otáček\\
+\textbf{ELEVATOR} - Náklon letounu v ose dopředu/dozadu (pitch, výškovka), úhlový rozměr\\
+\textbf{AILERON} - Náklon letounu v ose doleva/doprava (roll, křidélka), úhlový rozměr\\
+\textbf{RUDDER} - Rotace kolem svislé osy (yaw, směrovka), rozměr úhlové rychlosti
+
+Vstupní signál se do FlightCTRL zavádí po jednom vodiči pomocí Pulze Poziční Modulace (PPM). V desce je stabilizace implementována formou \textbf{úhlového regulátoru}. Všechny tři osy (yaw, pitch, roll) jsou stabilizovány na nulový úhel. Před startem je vždy třeba provést kalibraci na rovné zemi, kde si jednotka nastaví referenční nulový úhel.
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[width=0.4\textwidth]{fig/flightctrl.jpg}
+\caption{Stabilizační deska FlightCTRL}
+\label{fig:flightctrl}
+\end{center}
+\end{figure}
+
+\newpage
+
+\subsection{Řídicí deska}
+
+Řídicí deska plní funkci komunikačního uzlu mezi moduly a malé výpočetní jednotky pro další stabilizaci a řízení letounu. Je osazena mikrokontrolerem ATmega164p s 1kb RAM a 16kb ROM (pro program). Procesor kontroleru trpí absencí FPU (floating point unit). Ke komunikaci jsou zde 2 porty UART. Programování mikrokontroleru probíhá přes SPI.
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[width=0.4\textwidth]{fig/control_board.jpg}
+\caption{Řídicí deska kvadrukoptery}
+\label{fig:flightctrl}
+\end{center}
+\end{figure}
+
+Deska má 9 vstupů pro Pulzně Šířkovou Modulaci (PWM). Použity jsou pro příjem signálů z RC přijímače. Dále jsou zde dva volitelné výstupy, z nichž jeden je použit pro PPM výstup do stabilizační desky FlightCTRL a druhý je volitelný.
 
 Pro signalizaci jsou k dispozici 2 LED, žlutá a červená, třetí se dá případně připojit do volitelného výstupu.
 
 Deska je osazena dvěma volitelnými tlačítky a jedním tlačítkem \textbf{reset}.
+
+V minimální konfiguraci plní funkci konvertoru signálů z RC soupravy. Převádí PWM z přijímače na PPM pro FlightCTRL a umožňuje tedy ruční řízení letounu. Z důvodu bezpečnosti doporučuji vždy \textbf{zachovat majoritní vliv ručního řízení} a vyvíjené regulátory mixovat se signály z RC soupravy se značnou saturací. Zamezíte tím případné neovladatelnosti stroje. Více viz kapitola \ref{cap:controllers}.
+
+\newpage
 
 \section{Software}
 
@@ -118,7 +158,7 @@ ISR(TIMER0\_OVF\_vect) & Zpracování přetečení 8bit čitače (hrubé měřen
 \end{center}
 \end{table}
 
-\subsubsection{controllers.c}
+\subsubsection{controllers.c}\label{cap:controllers}
 
 \textbf{controllers.c} obsahuje funkce pro řízení letounu.
 

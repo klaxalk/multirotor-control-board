@@ -169,17 +169,17 @@ void capturePWMInput() {
 void atomParseChar(char incomingChar) {
 
 	if (flightCtrlDataBeingReceived == 1) {
-		
+
 		flightCtrlByteReceive++;
 
 		flightCtrlParseChar(incomingChar);
-		
+
 		// safety shutdown of the receiver
 		if (flightCtrlByteReceive >= 15) {
 			flightCtrlDataBeingReceived = 0;
 			flightCtrlByteReceive = 0;
 		}
-		
+
 	} else {
 
 		if (atomParseCharState == 0) {
@@ -512,9 +512,9 @@ void Decode64(void) {
 #if GUMSTIX_DATA_RECEIVE == ENABLED
 
 void gumstixParseChar(unsigned char incomingChar) {
-	
+
 	if (gumstixParseCharByte == 2) {
-	    gumstixParseCharByte++;
+		gumstixParseCharByte++;
 	} else {
 		gumstixParseCharCrc += incomingChar;
 	}
@@ -543,8 +543,8 @@ void gumstixParseChar(unsigned char incomingChar) {
 
 	} else if (gumstixParseCharByte < 2) {
 
-			char* gumstixParseTempIntPointer = (char*) &gumstixParseTempInt;
-			*(gumstixParseTempIntPointer+gumstixParseCharByte) = incomingChar;
+		char* gumstixParseTempIntPointer = (char*) &gumstixParseTempInt;
+		*(gumstixParseTempIntPointer+gumstixParseCharByte) = incomingChar;
 
 		gumstixParseCharByte++;
 	}
@@ -564,7 +564,7 @@ void gumstixParseChar(unsigned char incomingChar) {
 			break;
 		case 4:
 			validGumstix = gumstixParseTempInt;
-			
+
 			if (validGumstix == 1) {
 				led_control_on();
 				gumstixDataFlag = 1;
