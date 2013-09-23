@@ -27,7 +27,7 @@
 #define ALTITUDE_KP 0.1
 #define ALTITUDE_KD 110
 #define ALTITUDE_KI 0.0002
-#define ALTITUDE_SETPOINT 800
+#define ALTITUDE_SETPOINT 1500
 
 // constants for gumstix position controller
 #define POSITION_KP_GUMSTIX 0.05

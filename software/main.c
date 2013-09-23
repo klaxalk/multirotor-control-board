@@ -232,42 +232,59 @@ void debug() {
 
 #endif // GUMSTIX_DATA_RECEIVE == ENABLED
 
-	//~
-	//~ sprintf(num, "%i", ((int16_t) rollAngle));
-	//~ Uart0_write_string(num, strlen(num));
-	//~ Uart0_write_char(' ');
-	//~
-	//~ sprintf(num, "%i", ((int16_t) yPosSurfNew));
-	//~ Uart0_write_string(num, strlen(num));
-	//~ Uart0_write_char(' ');
-	//~
-	//~ sprintf(num, "%i", ((int16_t) xPosSurfNew));
-	//~ Uart0_write_string(num, strlen(num));
-	//~ Uart0_write_char(' ');
-	//~
-	//~ sprintf(num, "%i", ((int16_t) headingSurf));
-	//~ Uart0_write_string(num, strlen(num));
-	//~ Uart0_write_char(' ');
-	//~
-	//~ sprintf(num, "%i", ((int16_t) scaleSurf));
-	//~ Uart0_write_string(num, strlen(num));
-	//~ Uart0_write_char(' ');
-	//~
-	//~ sprintf(num, "%f", ((double) -opticalFlowData.flow_comp_m_x));
-	//~ Uart0_write_string(num, strlen(num));
-	//~ Uart0_write_char(' ');
-	//~
-	//~ sprintf(num, "%f", ((double) opticalFlowData.flow_comp_m_x));
-	//~ Uart0_write_string(num, strlen(num));
-	//~ Uart0_write_char(' ');
-	//~
-	//~ sprintf(num, "%f", ((double) opticalFlowData.ground_distance));
-	//~ Uart0_write_string(num, strlen(num));
-	//~ Uart0_write_char(' ');
-	//~
-	//~ sprintf(num, "%4.3f", ((double) timeStamp));
-	//~ Uart0_write_string(num, strlen(num));
-	//~ Uart0_write_char('\n');
+	#if ATOM_DATA_RECEIVE == ENABLED
+
+	char num[20];
+
+	sprintf(num, "%i", ((int16_t) pitchAngle));
+	Uart0_write_string(num, strlen(num));
+	Uart0_write_char(' ');
+	
+	sprintf(num, "%i", ((int16_t) rollAngle));
+	Uart0_write_string(num, strlen(num));
+	Uart0_write_char(' ');
+	
+	sprintf(num, "%i", ((int16_t) outputChannels[2])); // elevator
+	Uart0_write_string(num, strlen(num));
+	Uart0_write_char(' ');
+	
+	sprintf(num, "%i", ((int16_t) outputChannels[3])); // aileron
+	Uart0_write_string(num, strlen(num));
+	Uart0_write_char(' ');
+
+	sprintf(num, "%i", ((int16_t) outputChannels[0])); // throttle
+	Uart0_write_string(num, strlen(num));
+	Uart0_write_char(' ');
+	
+	sprintf(num, "%i", ((int16_t) yPosSurfNew));
+	Uart0_write_string(num, strlen(num));
+	Uart0_write_char(' ');
+	
+	sprintf(num, "%i", ((int16_t) xPosSurfNew));
+	Uart0_write_string(num, strlen(num));
+	Uart0_write_char(' ');
+	
+	sprintf(num, "%i", ((int16_t) headingSurf));
+	Uart0_write_string(num, strlen(num));
+	Uart0_write_char(' ');
+	
+	sprintf(num, "%f", ((double) -opticalFlowData.flow_comp_m_x));
+	Uart0_write_string(num, strlen(num));
+	Uart0_write_char(' ');
+	
+	sprintf(num, "%f", ((double) opticalFlowData.flow_comp_m_y));
+	Uart0_write_string(num, strlen(num));
+	Uart0_write_char(' ');
+	
+	sprintf(num, "%f", ((double) opticalFlowData.ground_distance));
+	Uart0_write_string(num, strlen(num));
+	Uart0_write_char(' ');
+	
+	sprintf(num, "%4.3f", ((double) timeStamp));
+	Uart0_write_string(num, strlen(num));
+	Uart0_write_char('\n');
+	
+	#endif
 }
 
 int main() {
