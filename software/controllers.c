@@ -45,8 +45,9 @@ void controllerElevator_surfnav() {
 // aileron speed controller using px4flow data
 void controllerAileronSpeed() {
 
-	float KP = AILERON_SPEED_KP;
+	float KP = AILERON_SPEED_KP*constant1;
 	float KD = AILERON_SPEED_KD;
+	float KI = AILERON_SPEED_KI;
 
 	//~ float error = aileronSpeedSetPoint-aileronSpeed;
 	float error = aileronSpeedSetPoint-aileronSpeed;
@@ -74,7 +75,7 @@ void controllerAileronSpeed() {
 	}
 
 	// calculate position I
-	gumstixAileronIntegral += POSITION_KI_GUMSTIX*smer*constant2;
+	gumstixAileronIntegral += POSITION_KI_GUMSTIX*smer;
 
 #endif // GUMSTIX_DATA_RECEIVE == ENABLED
 
@@ -86,6 +87,12 @@ void controllerAileronSpeed() {
 
 	// calculate D
 	float derivative = KD*(error-aileronSpeedPreviousError);
+	
+	// calculate I
+	float integrational = -KI*aileronSpeedIntegration;
+	
+	if (constant2 < 1)
+		integrational = 0;
 
 	aileronSpeedPreviousError = error;
 
@@ -114,15 +121,16 @@ void controllerAileronSpeed() {
 // elevator speed controller using px4flow data
 void controllerElevatorSpeed() {
 
-	float KP = ELEVATOR_SPEED_KP;
+	float KP = ELEVATOR_SPEED_KP*constant1;
 	float KD = ELEVATOR_SPEED_KD;
+	float KI = ELEVATOR_SPEED_KI;
 
 	//~ float error = elevatorSpeedSetpoint+elevatorSpeed;
 	float error = elevatorSpeedSetpoint + elevatorSpeed;
 
 #if GUMSTIX_DATA_RECEIVE == ENABLED
 
-	float positionError = xPosGumstix - elevatorSetPoint*constant1;
+	float positionError = xPosGumstix - elevatorSetPoint*constant2;
 
 	if (positionError > 2000) {
 		positionError = 2000;
@@ -142,7 +150,7 @@ void controllerElevatorSpeed() {
 	}
 
 	// calculate position I
-	gumstixElevatorIntegral += POSITION_KI_GUMSTIX*smer*constant2;
+	gumstixElevatorIntegral += POSITION_KI_GUMSTIX*smer;
 
 #endif // GUMSTIX_DATA_RECEIVE == ENABLED
 
@@ -154,6 +162,12 @@ void controllerElevatorSpeed() {
 
 	// calulate D
 	float derivative = KD*(error-elevatorSpeedPreviousError);
+	
+	// calculate I
+	float integrational = KI*elevatorSpeedIntegration;
+	
+	if (constant2 < 1)
+		integrational = 0;
 
 	elevatorSpeedPreviousError = error;
 
@@ -241,16 +255,35 @@ void controllerThrottle() {
 // aileron position controller using surfnav
 void controllerAileron_gumstix() {
 
-	float KP = POSITION_KP_GUMSTIX;
+	float KP = 0.07;
+	float KD = 10.08;
+	float KI = 0.01;
 
 	float error = yPosGumstix - aileronSetPoint;
 
-	aileronSpeedSetPoint = KP*error;
+	int8_t smer;
+	if (error > 0)
+		smer = 1;
+	else
+		smer = -1;
+		
+	// calculate offset
+	gumstixAileronIntegral += KI*smer;
 
-	if (aileronSpeedSetPoint > GUMSTIX_CONTROLLER_SATURATION) {
-		aileronSpeedSetPoint = GUMSTIX_CONTROLLER_SATURATION;
-	} else if (aileronSpeedSetPoint < -GUMSTIX_CONTROLLER_SATURATION) {
-		aileronSpeedSetPoint = -GUMSTIX_CONTROLLER_SATURATION;
+	// calculate proportional
+	float proportional = KP*error;
+
+	// calculate derivative
+	float derivative = (error - yGumstixPreviousError)*KD;
+	
+	yGumstixPreviousError = error;
+	
+	controllerAileronOutput = proportional + derivative + gumstixAileronIntegral;
+
+	if (controllerAileronOutput > CONTROLLER_AILERON_SATURATION) {
+		controllerAileronOutput = CONTROLLER_AILERON_SATURATION;
+	} else if (controllerAileronOutput < -CONTROLLER_AILERON_SATURATION) {
+		controllerAileronOutput = -CONTROLLER_AILERON_SATURATION;
 	}
 }
 

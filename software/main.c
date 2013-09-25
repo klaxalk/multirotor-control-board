@@ -97,6 +97,8 @@ volatile int8_t previous_throttle = 0;
 
 volatile float elevatorSpeedSetpoint = 0;
 volatile float aileronSpeedSetPoint = 0;
+volatile float elevatorSpeedIntegration = 0;
+volatile float aileronSpeedIntegration = 0;
 
 #endif
 
@@ -162,6 +164,8 @@ volatile int16_t elevatorSetPoint = 2000;
 volatile unsigned char gumstixParseCharCrc = 0;
 volatile float gumstixElevatorIntegral = 0;
 volatile float gumstixAileronIntegral = 0;
+volatile int16_t xGumstixPreviousError = 0;
+volatile int16_t yGumstixPreviousError = 0;
 
 #endif
 
@@ -304,15 +308,11 @@ int main() {
 				controllerElevator_surfnav();
 				controllerAileron_surfnav();
 #endif
-
-#if GUMSTIX_DATA_RECEIVE == ENABLED
-
-				//~ controllerElevator_gumstix();
-				//~ controllerAileron_gumstix();
-#endif
-				//~ led_Y_on();
+				led_Y_on();
+				
 			} else {
-				//~ led_Y_off();
+				led_Y_off();
+				
 #if PX4FLOW_DATA_RECEIVE == ENABLED
 				aileronSpeedSetPoint = 0;
 				elevatorSpeedSetpoint = 0;
@@ -327,7 +327,7 @@ int main() {
 
 #endif
 
-			debug();
+			// debug();
 
 			controllersFlag = 0;
 		}
@@ -419,6 +419,10 @@ int main() {
 				groundDistance = opticalFlowData.ground_distance;
 			}
 
+			// integrate velocities
+			elevatorSpeedIntegration = elevatorSpeedIntegration*0.99 + elevatorSpeed*0.01428;
+			aileronSpeedIntegration = aileronSpeedIntegration*0.99 + aileronSpeed*0.01428;
+
 			//~ elevatorSpeed = opticalFlowData.flow_comp_m_x;
 			//~ aileronSpeed = opticalFlowData.flow_comp_m_y;
 
@@ -505,9 +509,9 @@ int main() {
 
 			if (validGumstix == 1) {
 
-				xPosGumstix = xPosGumstixNew;
-				yPosGumstix = zPosGumstixNew;
-				zPosGumstix = yPosGumstixNew;
+				xPosGumstix = xPosGumstix*0.4 + xPosGumstixNew*0.6;
+				yPosGumstix = yPosGumstix*0.4 + zPosGumstixNew*0.6;
+				zPosGumstix = zPosGumstix*0.4 + yPosGumstixNew*0.6;
 
 			}
 

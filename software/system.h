@@ -26,6 +26,13 @@ extern volatile char button2pressed;
 extern volatile char button2pressedMap;
 extern volatile char buttonChangeEnable;
 
+#if PX4FLOW_DATA_RECEIVE == ENABLED
+
+extern volatile float elevatorSpeedIntegration;
+extern volatile float aileronSpeedIntegration;
+
+#endif
+
 void disableController();
 
 void enableController();

@@ -12,6 +12,14 @@
 //~ --------------------------------------------------------------------
 
 // Choose the multirotor frame orientation
+#define DEVELOPMENT_MODE ENABLED
+/*
+	ENABLED
+	DISABLED
+
+*/
+
+// Choose the multirotor frame orientation
 #define FRAME_ORIENTATION PLUS_COPTER
 /*
 	PLUS_COPTER
@@ -54,7 +62,7 @@
 //~ --------------------------------------------------------------------
 
 // on/off the receiving of data from the GumStix
-#define GUMSTIX_DATA_RECEIVE DISABLED
+#define GUMSTIX_DATA_RECEIVE ENABLED
 /*
 	ENABLED
 	DISABLED
@@ -90,7 +98,7 @@
 //~ --------------------------------------------------------------------
 
 // on/off the receiving of data from the atom computer
-#define ATOM_DATA_RECEIVE ENABLED
+#define ATOM_DATA_RECEIVE DISABLED
 /*
 	ENABLED
 	DISABLED

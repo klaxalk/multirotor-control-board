@@ -22,6 +22,13 @@ void enableController() {
 		gumstixAileronIntegral = 0;
 
 #endif // GUMSTIX_DATA_RECEIVE == ENABLED
+
+#if PX4FLOW_DATA_RECEIVE == ENABLED
+
+		elevatorSpeedIntegration = 0;
+		aileronSpeedIntegration = 0;
+
+#endif
 	}
 	controllerEnabled = 1;
 }
