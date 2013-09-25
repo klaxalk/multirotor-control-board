@@ -78,6 +78,8 @@ Vstupními řídicími signály do desky jsou:
 
 Vstupní signál se do FlightCTRL zavádí po jednom vodiči pomocí Pulze Poziční Modulace (PPM). V desce je stabilizace implementována formou \textbf{úhlového regulátoru}. Všechny tři osy (yaw, pitch, roll) jsou stabilizovány na nulový úhel. Před startem je vždy třeba provést kalibraci na rovné zemi, kde si jednotka nastaví referenční nulový úhel.
 
+Srdcem FlightCTRL je mikrokontroler ATmega, software je napsán v C. Zdrojové kódy jsou k dispozici a je možnost je upravit a nahrát do kontroleru. Toho bylo využito pro získávání hodnot úhlů náklonu po seriové lince.
+
 \begin{figure}[h]
 \begin{center}
 \includegraphics[width=0.4\textwidth]{fig/flightctrl.jpg}
@@ -107,6 +109,16 @@ Pro signalizaci jsou k dispozici 2 LED, žlutá a červená, třetí se dá př�
 Deska je osazena dvěma volitelnými tlačítky a jedním tlačítkem \textbf{reset}.
 
 V minimální konfiguraci plní funkci konvertoru signálů z RC soupravy. Převádí PWM z přijímače na PPM pro FlightCTRL a umožňuje tedy ruční řízení letounu. Z důvodu bezpečnosti doporučuji vždy \textbf{zachovat majoritní vliv ručního řízení} a vyvíjené regulátory mixovat se signály z RC soupravy se značnou saturací. Zamezíte tím případné neovladatelnosti stroje. Více viz kapitola \ref{cap:controllers}.
+
+Deska je napájena z FlightCTRL pomocí komunikačního 3-žilové kabelu. Je to standardní modelářské uspořádání s \textbf{+VCC} na prostředním pinu a \textbf{GND} a \textbf{DATA} na krajních pinech. \textbf{GND} a \textbf{+VCC} jsou na celé desce propojené. Stejným způsobem se přenáší napájení do RC přijímače. 
+
+\subsection{Připojitelné externí moduly}
+
+Zde uvedu další zařízení, pro která je v řídicí desce vytvořena komunikační podpora a dají se s nimi tedy relativně snadno pracovat.
+
+\subsubsection{FlightCTRL}
+
+V první řadě je to stabilizační deska FlightCTRL. V řídicí desce jsou funkce pro dekódování zpráv ve formátu Base64, které FlightCTRL posílá po seriové lince. Dají se tedy snadno přijímat údaje o úhlu náklonu helikoptéry a použít je dále pro řízení. Pro správnou funkčnost je však nutné mít ve FlightCTRL nahrán modifikovaný firmware, který automaticky posílá čerstvé údaje vždy, když jsou k dispozici.
 
 \newpage
 

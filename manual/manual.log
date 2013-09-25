@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012/Debian) (format=pdflatex 2013.9.23)  23 SEP 2013 17:49
+This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012/Debian) (format=pdflatex 2013.9.23)  25 SEP 2013 11:06
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -741,108 +741,113 @@ Underfull \hbox (badness 10000) in paragraph at lines 71--78
 
  []
 
-<fig/flightctrl.jpg, id=80, 451.6875pt x 258.9675pt>
+<fig/flightctrl.jpg, id=90, 451.6875pt x 258.9675pt>
 File: fig/flightctrl.jpg Graphic file (type jpg)
  <use fig/flightctrl.jpg>
-Package pdftex.def Info: fig/flightctrl.jpg used on input line 83.
+Package pdftex.def Info: fig/flightctrl.jpg used on input line 85.
 (pdftex.def)             Requested size: 177.05879pt x 101.51456pt.
 
 [1 <./fig/flightctrl.jpg>]
 
 Package hyperref Warning: Composite letter `\textasciicaron+R'
 (hyperref)                not defined in PD1 encoding,
-(hyperref)                removing `\textasciicaron' on input line 91.
+(hyperref)                removing `\textasciicaron' on input line 93.
 
-<fig/control_board.jpg, id=91, 2055.68pt x 1541.76pt>
+<fig/control_board.jpg, id=101, 2055.68pt x 1541.76pt>
 File: fig/control_board.jpg Graphic file (type jpg)
 
 <use fig/control_board.jpg>
-Package pdftex.def Info: fig/control_board.jpg used on input line 97.
+Package pdftex.def Info: fig/control_board.jpg used on input line 99.
 (pdftex.def)             Requested size: 177.05879pt x 132.77698pt.
 
-Overfull \hbox (4.19447pt too wide) in paragraph at lines 109--110
+Overfull \hbox (4.19447pt too wide) in paragraph at lines 111--112
 \OT1/cmr/m/n/10.95 p^^Trij^^S^^Pma^^Tce na PPM pro FlightC-TRL a umo^^Tz^^Tnuje
  tedy ru^^Tcn^^S^^P ^^Tr^^S^^Pzen^^S^^P letounu. Z d^^Wuvodu bezpe^^Tcnosti
  []
 
-[2 <./fig/control_board.jpg>]
-Overfull \hbox (5.53964pt too wide) in paragraph at lines 121--122
+
+Package hyperref Warning: Composite letter `\textasciicaron+r'
+(hyperref)                not defined in PD1 encoding,
+(hyperref)                removing `\textasciicaron' on input line 115.
+
+[2 <./fig/control_board.jpg>] [3]
+Overfull \hbox (5.53964pt too wide) in paragraph at lines 133--134
 \OT1/cmr/m/n/10.95 kamerov^^Sy modul s po^^Tc^^S^^Pta^^Tcem gum-stix, lze v sou
 boru \OT1/cmr/bx/n/10.95 con-fig.h \OT1/cmr/m/n/10.95 defi-no-vat \OT1/cmtt/m/n
 /10.95 GUMSTIX[]DATA[]REVEICE
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 180--181
+Underfull \hbox (badness 10000) in paragraph at lines 192--193
 []|\OT1/cmr/m/n/10.95 Provede au-to-mat-ick^^Se "ar-mov^^San^^S^^P"letounu.
  []
 
-[3] [4]
-Underfull \hbox (badness 2980) in paragraph at lines 218--219
+[4] [5]
+Underfull \hbox (badness 2980) in paragraph at lines 230--231
 []|\OT1/cmr/m/n/10.95 zpracuje zpr^^Savu z FlightC-TRL sta-bi-liza^^Tcn^^S^^P
  []
 
 
-Underfull \hbox (badness 4316) in paragraph at lines 220--221
+Underfull \hbox (badness 4316) in paragraph at lines 232--233
 []|\OT1/cmr/m/n/10.95 prov^^Sad^^S^^P m^^S^^Pch^^San^^S^^P sign^^Sal^^Wu regul^
 ^Sator^^Wu a RC
  []
 
 
-Overfull \hbox (0.33401pt too wide) in paragraph at lines 236--237
+Overfull \hbox (0.33401pt too wide) in paragraph at lines 248--249
 \OT1/cmr/m/n/10.95 zap^^S^^Pnat jed-notliv^^Se mod-uly (px4flow, gum-stix, ato-
 mov^^Sy PC, Fligth-C-TRL) a nas-tavo-vat chov^^San^^S^^P
  []
 
 
-Overfull \hbox (3.13226pt too wide) in paragraph at lines 236--237
+Overfull \hbox (3.13226pt too wide) in paragraph at lines 248--249
 \OT1/cmr/m/n/10.95 firmwaru. D^^Sale se zde kon-fig-u-ruj^^S^^P se-riov^^Se lin
 ky (je-jich BAUD rate) a je-jich p^^Tri^^Trazen^^S^^P k modul^^Wum. 
  []
 
 
-Underfull \hbox (badness 1147) in paragraph at lines 248--249
+Underfull \hbox (badness 1147) in paragraph at lines 260--261
 []|\OT1/cmr/m/n/10.95 Kam m^^S^^P^^Tr^^S^^P kam-era Gum-stix po^^Tc^^S^^Pta^^Tc
 e (FOR-
  []
 
 
-Underfull \hbox (badness 2556) in paragraph at lines 248--249
+Underfull \hbox (badness 2556) in paragraph at lines 260--261
 \OT1/cmr/m/n/10.95 WARD, nebo DOWN-WARD), d^^Wule^^Tzit^^Se pro
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 252--253
+Underfull \hbox (badness 10000) in paragraph at lines 264--265
 []|\OT1/cmr/m/n/10.95 Provede au-to-mat-ick^^Se "ar-mov^^San^^S^^P"letounu.
  []
 
-[5]
-Overfull \hbox (2.23413pt too wide) in paragraph at lines 272--273
+[6]
+Overfull \hbox (2.23413pt too wide) in paragraph at lines 284--285
 []\OT1/cmr/m/n/10.95 Pro samot-nou kom-pi-laci je p^^Tr^^S^^Ptomen sou-bor Make
 -file, kter^^Sy ob-sahuje p^^Tredpis pro v^^Tsechny
  []
 
 
 AED: lastpage setting LastPage
-[6]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 282.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 282.
+[7]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 294.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 294.
  (./manual.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 282.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 282.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 294.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 294.
 Package rerunfilecheck Info: File `manual.out' has not changed.
-(rerunfilecheck)             Checksum: C0E39757B792D677328EA545D39C3BFC;739.
+(rerunfilecheck)             Checksum: C61B2CCD8762241356BBB89CFE25E439;891.
 
 
 LaTeX Warning: There were multiply-defined labels.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 282.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 294.
  ) 
 Here is how much of TeX's memory you used:
- 9636 strings out of 495059
- 143096 string characters out of 3182030
+ 9642 strings out of 495059
+ 143172 string characters out of 3182030
  249486 words of memory out of 3000000
- 12601 multiletter control sequences out of 15000+200000
+ 12604 multiletter control sequences out of 15000+200000
  11281 words of font info for 41 fonts, out of 3000000 for 9000
  14 hyphenation exceptions out of 8191
  44i,11n,43p,554b,355s stack positions out of 5000i,500n,10000p,200000b,50000s
@@ -854,10 +859,10 @@ exmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-di
 st/fonts/type1/public/amsfonts/cm/cmsl10.pfb></usr/share/texlive/texmf-dist/fon
 ts/type1/public/amsfonts/cm/cmti10.pfb></usr/share/texlive/texmf-dist/fonts/typ
 e1/public/amsfonts/cm/cmtt10.pfb>
-Output written on manual.pdf (8 pages, 948540 bytes).
+Output written on manual.pdf (9 pages, 951984 bytes).
 PDF statistics:
- 162 PDF objects out of 1000 (max. 8388607)
- 140 compressed objects within 2 object streams
- 28 named destinations out of 1000 (max. 500000)
- 107 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 178 PDF objects out of 1000 (max. 8388607)
+ 155 compressed objects within 2 object streams
+ 31 named destinations out of 1000 (max. 500000)
+ 123 words of extra memory for PDF output out of 10000 (max. 10000000)
 
