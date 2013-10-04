@@ -11,8 +11,8 @@
 //~ Choose a orientation of the quadcopter frame
 //~ --------------------------------------------------------------------
 
-// Choose the multirotor frame orientation
-#define DEVELOPMENT_MODE ENABLED
+// if the logging in on
+#define LOGGING_ON ENABLED
 /*
 	ENABLED
 	DISABLED
@@ -62,7 +62,7 @@
 //~ --------------------------------------------------------------------
 
 // on/off the receiving of data from the GumStix
-#define GUMSTIX_DATA_RECEIVE ENABLED
+#define GUMSTIX_DATA_RECEIVE DISABLED
 /*
 	ENABLED
 	DISABLED
@@ -98,7 +98,7 @@
 //~ --------------------------------------------------------------------
 
 // on/off the receiving of data from the atom computer
-#define ATOM_DATA_RECEIVE DISABLED
+#define ATOM_DATA_RECEIVE ENABLED
 /*
 	ENABLED
 	DISABLED
@@ -230,6 +230,9 @@
 #define led_control_on() PORTA |= _BV(5)
 #define led_control_off() PORTA &= ~_BV(5)
 #define led_control_toggle() PORTA ^= _BV(5)
+
+#define PITCH_BUFFER_SIZE 8
+#define ROLL_BUFFER_SIZE 8
 
 #endif // _CONFIG_H
 

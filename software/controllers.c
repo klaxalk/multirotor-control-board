@@ -10,8 +10,10 @@
 void controllerAileron_surfnav() {
 
 	float KP = AILERON_POSITION_KP_SURFNAV;
+	
+	float correctedPos = xPosSurf - tan((((float) delayedRollAngle)/1800)*3.141592)*groundDistance*1000;
 
-	float error = xPosSurf;
+	float error = correctedPos;
 
 	aileronSpeedSetPoint = KP*error;
 
@@ -27,7 +29,9 @@ void controllerElevator_surfnav() {
 
 	float KP = ELEVATOR_POSITION_KP_SURFNAV;
 
-	float error = yPosSurf;
+	float correctedPos = yPosSurf - tan((((float) delayedPitchAngle)/1800)*3.141592)*groundDistance*1000;
+
+	float error = correctedPos;
 
 	elevatorSpeedSetpoint = KP*error;
 
@@ -47,7 +51,7 @@ void controllerAileronSpeed() {
 
 	float KP = AILERON_SPEED_KP*constant1;
 	float KD = AILERON_SPEED_KD;
-	float KI = AILERON_SPEED_KI;
+	//~ float KI = AILERON_SPEED_KI;
 
 	//~ float error = aileronSpeedSetPoint-aileronSpeed;
 	float error = aileronSpeedSetPoint-aileronSpeed;
@@ -87,12 +91,13 @@ void controllerAileronSpeed() {
 
 	// calculate D
 	float derivative = KD*(error-aileronSpeedPreviousError);
-	
-	// calculate I
-	float integrational = -KI*aileronSpeedIntegration;
-	
-	if (constant2 < 1)
-		integrational = 0;
+
+	//~ // calculate I
+	//~ float integrational = -KI*aileronSpeedIntegration;
+//~ 
+	//~ if (constant2 < 1) {
+		//~ integrational = 0;
+	//~ }
 
 	aileronSpeedPreviousError = error;
 
@@ -103,6 +108,10 @@ void controllerAileronSpeed() {
 	} else {
 		controllerAileronOutput = proportional + derivative;
 	}
+
+#elseif ATOM_DATA_RECEIVE == ENABLED
+
+	controllerAileronOutput = proportional + derivative - rollAngle;
 
 #else
 
@@ -123,7 +132,7 @@ void controllerElevatorSpeed() {
 
 	float KP = ELEVATOR_SPEED_KP*constant1;
 	float KD = ELEVATOR_SPEED_KD;
-	float KI = ELEVATOR_SPEED_KI;
+	//~ float KI = ELEVATOR_SPEED_KI;
 
 	//~ float error = elevatorSpeedSetpoint+elevatorSpeed;
 	float error = elevatorSpeedSetpoint + elevatorSpeed;
@@ -162,12 +171,13 @@ void controllerElevatorSpeed() {
 
 	// calulate D
 	float derivative = KD*(error-elevatorSpeedPreviousError);
-	
-	// calculate I
-	float integrational = KI*elevatorSpeedIntegration;
-	
-	if (constant2 < 1)
-		integrational = 0;
+
+	//~ // calculate I
+	//~ float integrational = KI*elevatorSpeedIntegration;
+//~ 
+	//~ if (constant2 < 1) {
+		//~ integrational = 0;
+	//~ }
 
 	elevatorSpeedPreviousError = error;
 
@@ -178,6 +188,10 @@ void controllerElevatorSpeed() {
 	} else {
 		controllerElevatorOutput = proportional + derivative;
 	}
+
+#elseif ATOM_DATA_RECEIVE == ENABLED
+
+	controllerElevatorOutput = proportional + derivative - pitchAngle;
 
 #else
 
@@ -262,11 +276,12 @@ void controllerAileron_gumstix() {
 	float error = yPosGumstix - aileronSetPoint;
 
 	int8_t smer;
-	if (error > 0)
+	if (error > 0) {
 		smer = 1;
-	else
+	} else {
 		smer = -1;
-		
+	}
+
 	// calculate offset
 	gumstixAileronIntegral += KI*smer;
 
@@ -275,9 +290,9 @@ void controllerAileron_gumstix() {
 
 	// calculate derivative
 	float derivative = (error - yGumstixPreviousError)*KD;
-	
+
 	yGumstixPreviousError = error;
-	
+
 	controllerAileronOutput = proportional + derivative + gumstixAileronIntegral;
 
 	if (controllerAileronOutput > CONTROLLER_AILERON_SATURATION) {

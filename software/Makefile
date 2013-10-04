@@ -12,8 +12,8 @@ CXXDEFINE=-DF_CPU=18432000
 CXX=avr-gcc
 OBJCOPY=avr-objcopy
 
-CXXFLAGS=-Wall -O2 -funsigned-char -fshort-enums -lm
-AVRFLAGS=-mmcu=$(CPU) -Wl,-u,vfprintf -lprintf_flt -lm
+CXXFLAGS=-Wall -O2 -funsigned-char -fshort-enums
+AVRFLAGS=-mmcu=$(CPU) -Wl,-u,vfprintf -lprintf_flt
 
 CXXOBJFLAGS=$(CXXFLAGS) $(AVRFLAGS) $(CXXDEFINE) -c
 
@@ -25,7 +25,7 @@ obj: $(OBJS)
 	$(CXX) $(CXXOBJFLAGS) $<
 
 elf: obj
-	$(CXX) $(AVRFLAGS) $(OBJS) -o $(ELF)
+	$(CXX) $(AVRFLAGS) $(OBJS) -lm -o $(ELF)
 
 hex: elf
 	$(OBJCOPY) -O ihex -R .eeprom $(ELF) $(HEX)

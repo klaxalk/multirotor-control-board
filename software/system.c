@@ -202,3 +202,69 @@ void initializeMCU() {
 	// turn all interupts on
 	sei();
 }
+
+#if ATOM_DATA_RECEIVE == ENABLED
+
+// functions for pitch buffer
+
+uint8_t bufferSucc(uint8_t ptr, const uint8_t size) {
+	ptr++;
+	if (ptr==size) {
+		ptr=0;
+	}
+	return ptr;
+}
+
+uint8_t pitchBufferEmpty() {
+
+	return (pitchBufferFirst == pitchBufferLast);
+}
+
+void pitchBufferPut(int16_t c) {
+	uint8_t last = bufferSucc(pitchBufferLast, PITCH_BUFFER_SIZE);
+	if (last == pitchBufferFirst) {
+		return;
+	}
+	pitchBuffer[last] = c;
+	pitchBufferNum++;
+	pitchBufferLast = last;
+}
+
+int16_t pitchBufferGet() {
+	if (pitchBufferEmpty()) {
+		return 0;
+	}
+	uint8_t first = bufferSucc(pitchBufferFirst, PITCH_BUFFER_SIZE);
+	int16_t result = pitchBuffer[first];
+	pitchBufferFirst = first;
+	pitchBufferNum--;
+	return result;
+}
+
+uint8_t rollBufferEmpty() {
+
+	return (rollBufferFirst == rollBufferLast);
+}
+
+void rollBufferPut(int16_t c) {
+	uint8_t last = bufferSucc(rollBufferLast, ROLL_BUFFER_SIZE);
+	if (last == rollBufferFirst) {
+		return;
+	}
+	rollBuffer[last] = c;
+	rollBufferNum++;
+	rollBufferLast = last;
+}
+
+int16_t rollBufferGet() {
+	if (rollBufferEmpty()) {
+		return 0;
+	}
+	uint8_t first = bufferSucc(rollBufferFirst, ROLL_BUFFER_SIZE);
+	int16_t result = rollBuffer[first];
+	rollBufferFirst = first;
+	rollBufferNum--;
+	return result;
+}
+
+#endif

@@ -17,10 +17,21 @@
 #define SURFNAV_FILTER_WEIGHT 0.3
 
 // constants for px4flow speed controllers
+
+#if ATOM_DATA_RECEIVE == ENABLED
+
 #define AILERON_SPEED_KP 235
+#define ELEVATOR_SPEED_KP 235
+
+#else
+
+#define AILERON_SPEED_KP 235
+#define ELEVATOR_SPEED_KP 235
+
+#endif
+
 #define AILERON_SPEED_KD 2
 #define AILERON_SPEED_KI 10
-#define ELEVATOR_SPEED_KP 235
 #define ELEVATOR_SPEED_KD 2
 #define ELEVATOR_SPEED_KI 10
 #define PX4FLOW_FILTER_WEIGHT 0.2
@@ -29,7 +40,7 @@
 #define ALTITUDE_KP 0.1
 #define ALTITUDE_KD 130
 #define ALTITUDE_KI 0.0002
-#define ALTITUDE_SETPOINT 1000
+#define ALTITUDE_SETPOINT 1500
 
 // constants for gumstix position controller
 #define POSITION_KP_GUMSTIX 0.05
@@ -83,6 +94,9 @@ void controllerElevator_gumstix();
 extern volatile int16_t xPosSurf;
 extern volatile int16_t yPosSurf;
 extern volatile int16_t headingSurf;
+
+extern volatile int16_t delayedPitchAngle;
+extern volatile int16_t delayedRollAngle;
 
 void controllerAileron_surfnav();
 void controllerElevator_surfnav();

@@ -139,6 +139,21 @@ volatile int16_t headingSurf = 0;
 volatile int16_t scaleSurf = 0;
 volatile int8_t atomDataFlag = 0;
 
+// buffers for angle synchronization
+
+volatile int16_t pitchBuffer[PITCH_BUFFER_SIZE];
+volatile uint8_t pitchBufferNum = 0;
+volatile uint8_t pitchBufferLast = 0;
+volatile uint8_t pitchBufferFirst = 0;
+
+volatile int16_t rollBuffer[ROLL_BUFFER_SIZE];
+volatile uint8_t rollBufferNum = 0;
+volatile uint8_t rollBufferLast = 0;
+volatile uint8_t rollBufferFirst = 0;
+
+volatile int16_t delayedPitchAngle = 0;
+volatile int16_t delayedRollAngle = 0;
+
 #endif
 
 //~ --------------------------------------------------------------------
@@ -236,59 +251,63 @@ void debug() {
 
 #endif // GUMSTIX_DATA_RECEIVE == ENABLED
 
-	#if ATOM_DATA_RECEIVE == ENABLED
+#if ATOM_DATA_RECEIVE == ENABLED
 
 	char num[20];
 
-	sprintf(num, "%i", ((int16_t) pitchAngle));
-	Uart0_write_string(num, strlen(num));
-	Uart0_write_char(' ');
-	
-	sprintf(num, "%i", ((int16_t) rollAngle));
-	Uart0_write_string(num, strlen(num));
-	Uart0_write_char(' ');
-	
-	sprintf(num, "%i", ((int16_t) outputChannels[2])); // elevator
-	Uart0_write_string(num, strlen(num));
-	Uart0_write_char(' ');
-	
-	sprintf(num, "%i", ((int16_t) outputChannels[3])); // aileron
-	Uart0_write_string(num, strlen(num));
-	Uart0_write_char(' ');
+	//~ sprintf(num, "%i", ((int16_t) pitchAngle));
+	//~ Uart0_write_string(num, strlen(num));
+	//~ Uart0_write_char(' ');
 
-	sprintf(num, "%i", ((int16_t) outputChannels[0])); // throttle
-	Uart0_write_string(num, strlen(num));
-	Uart0_write_char(' ');
-	
-	sprintf(num, "%i", ((int16_t) yPosSurfNew));
-	Uart0_write_string(num, strlen(num));
-	Uart0_write_char(' ');
-	
-	sprintf(num, "%i", ((int16_t) xPosSurfNew));
-	Uart0_write_string(num, strlen(num));
-	Uart0_write_char(' ');
-	
+	//~ sprintf(num, "%i", ((int16_t) rollAngle));
+	//~ Uart0_write_string(num, strlen(num));
+	//~ Uart0_write_char(' ');
+//~ 
+	//~ sprintf(num, "%i", ((int16_t) outputChannels[2])); // elevator
+	//~ Uart0_write_string(num, strlen(num));
+	//~ Uart0_write_char(' ');
+//~ 
+	//~ sprintf(num, "%i", ((int16_t) outputChannels[3])); // aileron
+	//~ Uart0_write_string(num, strlen(num));
+	//~ Uart0_write_char(' ');
+//~ 
+	//~ sprintf(num, "%i", ((int16_t) outputChannels[0])); // throttle
+	//~ Uart0_write_string(num, strlen(num));
+	//~ Uart0_write_char(' ');
+//~ 
+	//~ sprintf(num, "%i", ((int16_t) ((yPosSurf))));
+	//~ Uart0_write_string(num, strlen(num));
+	//~ Uart0_write_char(' ');
+//~ 
+	//~ sprintf(num, "%i", ((int16_t) ((float) yPosSurf - tan((((float) delayedPitchAngle)/1800)*3.141592)*groundDistance*1000)));
+	//~ Uart0_write_string(num, strlen(num));
+	//~ Uart0_write_char(' ');
+
+	//~ sprintf(num, "%i", ((int16_t) ((float) xPosSurfNew - tan((((float) delayedRollAngle)/1800)*3.141592)*groundDistance*1000)));
+	//~ Uart0_write_string(num, strlen(num));
+	//~ Uart0_write_char(' ');
+//~ 
 	sprintf(num, "%i", ((int16_t) headingSurf));
 	Uart0_write_string(num, strlen(num));
 	Uart0_write_char(' ');
-	
-	sprintf(num, "%f", ((double) -opticalFlowData.flow_comp_m_x));
-	Uart0_write_string(num, strlen(num));
-	Uart0_write_char(' ');
-	
-	sprintf(num, "%f", ((double) opticalFlowData.flow_comp_m_y));
-	Uart0_write_string(num, strlen(num));
-	Uart0_write_char(' ');
-	
-	sprintf(num, "%f", ((double) opticalFlowData.ground_distance));
-	Uart0_write_string(num, strlen(num));
-	Uart0_write_char(' ');
-	
-	sprintf(num, "%4.3f", ((double) timeStamp));
-	Uart0_write_string(num, strlen(num));
+//~ 
+	//~ sprintf(num, "%f", ((double) -opticalFlowData.flow_comp_m_x));
+	//~ Uart0_write_string(num, strlen(num));
+	//~ Uart0_write_char(' ');
+//~ 
+	//~ sprintf(num, "%f", ((double) opticalFlowData.flow_comp_m_y));
+	//~ Uart0_write_string(num, strlen(num));
+	//~ Uart0_write_char(' ');
+//~ 
+	//~ sprintf(num, "%f", ((double) opticalFlowData.ground_distance));
+	//~ Uart0_write_string(num, strlen(num));
+	//~ Uart0_write_char(' ');
+//~ 
+	//~ sprintf(num, "%4.3f", ((double) timeStamp));
+	//~ Uart0_write_string(num, strlen(num));
 	Uart0_write_char('\n');
-	
-	#endif
+
+#endif
 }
 
 int main() {
@@ -309,10 +328,10 @@ int main() {
 				controllerAileron_surfnav();
 #endif
 				led_Y_on();
-				
+
 			} else {
 				led_Y_off();
-				
+
 #if PX4FLOW_DATA_RECEIVE == ENABLED
 				aileronSpeedSetPoint = 0;
 				elevatorSpeedSetpoint = 0;
@@ -327,8 +346,11 @@ int main() {
 
 #endif
 
-			// debug();
+#if LOGGING_ON == ENABLED
 
+			debug();
+
+#endif
 			controllersFlag = 0;
 		}
 
@@ -383,23 +405,23 @@ int main() {
 			previousConstant2 = 0;
 		}
 
-		// sends l char to the surfnav computer
-		if (constant1 > 1.3) {
-
-			if (previousConstant1 == 0) {
-				Uart0_write_char('l');
-				timeStamp = 0;
-			}
-
-			previousConstant1 = 1;
-		} else if (constant1 < 0.5) {
-			if (previousConstant1 == 1) {
-
-				Uart0_write_char('!');
-			}
-
-			previousConstant1 = 0;
-		}
+		//~ // sends l char to the surfnav computer
+		//~ if (constant1 > 1.3) {
+//~ 
+			//~ if (previousConstant1 == 0) {
+				//~ Uart0_write_char('l');
+				//~ timeStamp = 0;
+			//~ }
+//~ 
+			//~ previousConstant1 = 1;
+		//~ } else if (constant1 < 0.5) {
+			//~ if (previousConstant1 == 1) {
+//~ 
+				//~ Uart0_write_char('!');
+			//~ }
+//~ 
+			//~ previousConstant1 = 0;
+		//~ }
 
 #endif
 
@@ -489,6 +511,17 @@ int main() {
 #endif
 
 #if FRAME_ORIENTATION == PLUS_COPTER
+
+// zpožďování dat o úhlu
+#if ATOM_DATA_RECEIVE == ENABLED
+
+			pitchBufferPut(pitchBoardAngle);
+			rollBufferPut(rollBoardAngle);
+			
+			delayedPitchAngle = pitchBufferGet();
+			delayedRollAngle = rollBufferGet();
+
+#endif
 
 			pitchAngle = pitchBoardAngle;
 			rollAngle = rollBoardAngle;
