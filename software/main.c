@@ -231,6 +231,10 @@ void debug() {
 
 	char num[20];
 
+	sprintf(num, "%f", ((float) groundDistance));
+	Uart0_write_string(num, strlen(num));
+	Uart0_write_char(' ');
+
 	sprintf(num, "%i", ((int16_t) xPosGumstix));
 	Uart0_write_string(num, strlen(num));
 	Uart0_write_char(' ');
@@ -239,11 +243,7 @@ void debug() {
 	Uart0_write_string(num, strlen(num));
 	Uart0_write_char(' ');
 
-	sprintf(num, "%f", ((double) constant1*ELEVATOR_SPEED_KP));
-	Uart0_write_string(num, strlen(num));
-	Uart0_write_char(' ');
-
-	sprintf(num, "%f", ((double) gumstixAileronIntegral));
+	sprintf(num, "%f", ((double) timeStamp));
 	Uart0_write_string(num, strlen(num));
 	Uart0_write_char(' ');
 
