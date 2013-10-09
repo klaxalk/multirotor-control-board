@@ -109,7 +109,7 @@ void controllerAileronSpeed() {
 		controllerAileronOutput = proportional + derivative;
 	}
 
-#elseif ATOM_DATA_RECEIVE == ENABLED
+#elif ATOM_DATA_RECEIVE == ENABLED
 
 	controllerAileronOutput = proportional + derivative - rollAngle;
 
@@ -189,7 +189,7 @@ void controllerElevatorSpeed() {
 		controllerElevatorOutput = proportional + derivative;
 	}
 
-#elseif ATOM_DATA_RECEIVE == ENABLED
+#elif ATOM_DATA_RECEIVE == ENABLED
 
 	controllerElevatorOutput = proportional + derivative - pitchAngle;
 

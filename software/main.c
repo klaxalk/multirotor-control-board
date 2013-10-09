@@ -231,7 +231,7 @@ void debug() {
 
 	char num[20];
 
-	sprintf(num, "%f", ((float) groundDistance));
+	sprintf(num, "%f", ((double) groundDistance));
 	Uart0_write_string(num, strlen(num));
 	Uart0_write_char(' ');
 
