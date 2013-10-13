@@ -120,6 +120,60 @@ Zde uvedu další zařízení, pro která je v řídicí desce vytvořena komuni
 
 V první řadě je to stabilizační deska FlightCTRL. V řídicí desce jsou funkce pro dekódování zpráv ve formátu Base64, které FlightCTRL posílá po seriové lince. Dají se tedy snadno přijímat údaje o úhlu náklonu helikoptéry a použít je dále pro řízení. Pro správnou funkčnost je však nutné mít ve FlightCTRL nahrán modifikovaný firmware, který automaticky posílá čerstvé údaje vždy, když jsou k dispozici.
 
+\subsubsection{Počítač Gumstix}
+
+Tento modul se obvykle stará o rozpoznávání kruhového detekčního vzoru. Dále je používán pro logování dat během letu. Modul je tvořen malým počítač s procesorem architektury ARM. Počítač disponuje wifi konektivitou, jedním UART ve funkci konzole (b.r. 115 200), druhým UART pro komunikaci s řídicí deskou (b.r. 57 600). Gumstix se automaticky připojuje na síť s SSID uKopter. V laboratoři je připraven router (bílý), který takovou síť vyrábí. IP Gumstixe je pevná - \texttt{192.168.1.103}.
+
+Připojení přes \textbf{SSH} k bílému Gumstix: \texttt{root@192.168.1.103}, heslo prázdné
+
+O logování dat do Gumstixe se dočtete v kapitole \ref{chap:logovani-gumstix}.
+
+\subsection{Příprava před letem}
+
+Po připojení napájení je potřeba provést kalibrační rutinu, bez které letoun nevzlétne. Je potřeba letoun \textbf{postavit na vodorovnou zem} a poté nastavit páčky vysílače do následujících poloh:
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[width=0.6\textwidth]{fig/kalibrace1.png}
+\caption{Kalibrace, část 1.}
+\label{fig:flightctrl}
+\end{center}
+\end{figure}
+
+Poté je potřeba letounu říci, aby si data uložil do paměti, to se provádí obdobným "gestem":
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[width=0.6\textwidth]{fig/kalibrace2.png}
+\caption{Kalibrace, část 2.}
+\label{fig:flightctrl}
+\end{center}
+\end{figure}
+
+\subsection{Aktivace k letu}
+
+Pokud je letoun nakalibrovaný, je potřeba ho aktivovat (lidově "naArmovat"). To se provádí obdobným gestem. Letoun poté roztočí vrtule na minimální otáčky a je připraven k letu.
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[width=0.6\textwidth]{fig/arm.png}
+\caption{Armování letounu}
+\label{fig:flightctrl}
+\end{center}
+\end{figure}
+
+\subsection{Deaktivace - vypnutí}
+
+\textbf{Velmi důležité} gesto pro disarmování letounu. Bez něj se vrtule nevypnou. Je možné zapnout automatické volání gesta řídicí jednotkou. Např. v případě vypnutí plynu na minimum.
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[width=0.6\textwidth]{fig/disarm.png}
+\caption{Disarmování letounu}
+\label{fig:flightctrl}
+\end{center}
+\end{figure}
+
 \newpage
 
 \section{Software}
@@ -290,5 +344,50 @@ Po úspěšné kompilaci máte ve složce se zdrojovými soubory soubor \textbf{
 \texttt{avrdude -p m164P -c usbasp -U flash:w:main.hex}
 
 \textbf{POZOR!} Před nahráváním si vždy zkontrolujte, zdali je do řídicí desky řádně přivedeno napájení. Pokud je deska bez napájení, může nahrávání firmwaru nenávratně poškodit kontroler.
+
+\subsection{Logování letových dat do Gumstixe}\label{chap:logovani-gumstix}
+
+Pro loggování dat z řídicí desky do Gumstixe je potřeba dvě věci. Připravit příjem na straně Gumstixe a připravit vysílání na straně řídicí desky.
+
+\subsubsection{Strana řídicí desky}
+
+K logování slouží funkce \texttt{debug()} v souboru \texttt{main.c}. Ve funkci připravte proměnné do formátu k odeslání (lidsky čitelný text, či jiný zápis) a předejte je funkci \texttt{uart0\_write\_string()} která zařídí jejich předání na UART. Funkce \texttt{debug()} je pravidelně volaná, typicky po vykonání výpočtů regulátorů. Ale umístění volání je vhodné zvolit individuálně na základě požadované frekvence volání a náročnosti (množství posílaných informací). V případě velkého množství posílaných dat doporučuji rozdělit data do několi separátních funkcí, které budou volané vždy v jiném průchodu hlavní smyčky.
+
+\subsubsection{Strana Gumstixe}
+
+V Gumstixu je nutné data ukládat na Ramdisk, z důvodu pomalé hlavní paměti počítače. Ramdisk vytvoříte zavoláním skriptu \texttt{ramdisk.sh} v domovské složce.
+
+\begin{lstlisting}
+root@192.168.1.103:~$ ./ramdisk.sh
+\end{lstlisting}
+
+Poté se přesuňte do složky ramdisku, která se nachází v \texttt{/tmp/ramdisk}:
+
+\begin{lstlisting}
+root@192.168.1.103:~$ cd /tmp/ramdisk
+\end{lstlisting}
+
+Čtení dat ze seriové linky se prování výpisem dat ze zařízení seriové linky \texttt{ttyS0}:
+
+\begin{lstlisting}
+root@192.168.1.103:/tmp/ramdisk$ cat /dev/ttyS0
+\end{lstlisting}
+
+Pokud chcete data uložit, přesměrujte výstup do souboru:
+
+\begin{lstlisting}
+root@192.168.1.103:/tmp/ramdisk$ cat /dev/ttyS0 > data.txt
+\end{lstlisting}
+
+Pokud budete mít špatné wifi spojení s Gumstixem a terminák Vám bude padat, doporučuji volat poslední příkaz na pozadí:
+
+\begin{lstlisting}
+root@192.168.1.103:/tmp/ramdisk$ nohup cat /dev/ttyS0 > data.txt &
+\end{lstlisting}
+
+Potom je samozřejmě nutné příkaz ukončit pomocí \texttt{kill}, číslo procesu zjistíte pomocí \texttt{ps -au}.
+
+\textbf{Ihned po skončení logování} si data skopírujte z ramdisku do normálního pevného uložiště! Po vypnutí Gumstixu budou data v ramdisku ztracena.
+
 
 \end{document}
