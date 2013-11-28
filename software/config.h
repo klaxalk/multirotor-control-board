@@ -214,7 +214,8 @@
 #define AUX1 4			//PB0
 #define AUX2 5			//PB1
 #define AUX3 6			//PB2
-#define AUX4 7			//PB2
+#define AUX4 7			//PB3
+#define AUX5 8			//PB4
 
 //~ --------------------------------------------------------------------
 //~ Basic macros configuration

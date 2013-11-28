@@ -75,6 +75,8 @@ volatile float throttleIntegration;
 volatile float constant1 = 0;
 volatile float constant2 = 0;
 volatile float constant3 = 0;
+volatile float constant4 = 0;
+volatile float constant5 = 0;
 
 // timestamp for debug and logging
 volatile double timeStamp = 0;
@@ -390,6 +392,8 @@ int main() {
 		// <0.2; 1.8>
 		constant1 = (float)((RCchannel[AUX1] - 2304))/1152;
 		constant2 = (float)((RCchannel[AUX2] - 2304))/1152;
+		constant4 = (float)((RCchannel[AUX4] - 2304))/1152;
+		constant5 = (float)((RCchannel[AUX5] - 2304))/1152;
 
 #if ATOM_DATA_RECEIVE == ENABLED
 

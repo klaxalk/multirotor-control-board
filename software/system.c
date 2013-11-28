@@ -132,7 +132,7 @@ void initializeMCU() {
 	DDRA |= 0b11110000;
 
 	// set ports PB0 .. PB4 as aux inputs
-	DDRB |= 0b11111000;
+	DDRB |= 0b11100000;
 
 	// button1 pullup
 	PORTD |= (1<<PD7);
@@ -144,7 +144,7 @@ void initializeMCU() {
 	PORTA |= 0b11110000;
 
 	// set pull ups for ports PB0 .. PB4
-	PORTB |= 0b11111000;
+	PORTB |= 0b11100000;
 
 	// enables 16timer
 	TIMSK1 |= _BV(OCIE1A)|_BV(OCIE1B);

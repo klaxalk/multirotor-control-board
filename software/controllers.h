@@ -57,6 +57,8 @@ extern volatile int16_t controllerThrottleOutput;
 extern volatile float constant1;
 extern volatile float constant2;
 extern volatile float constant3;
+extern volatile float constant4;
+extern volatile float constant5;
 
 // controllers saturations
 #define CONTROLLER_ELEVATOR_SATURATION 150
