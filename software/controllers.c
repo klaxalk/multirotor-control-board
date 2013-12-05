@@ -49,7 +49,7 @@ void controllerElevator_surfnav() {
 // aileron speed controller using px4flow data
 void controllerAileronSpeed() {
 
-	float KP = AILERON_SPEED_KP*constant1;
+	float KP = AILERON_SPEED_KP;
 	float KD = AILERON_SPEED_KD;
 	//~ float KI = AILERON_SPEED_KI;
 
@@ -130,7 +130,7 @@ void controllerAileronSpeed() {
 // elevator speed controller using px4flow data
 void controllerElevatorSpeed() {
 
-	float KP = ELEVATOR_SPEED_KP*constant1;
+	float KP = ELEVATOR_SPEED_KP;
 	float KD = ELEVATOR_SPEED_KD;
 	//~ float KI = ELEVATOR_SPEED_KI;
 
@@ -139,7 +139,7 @@ void controllerElevatorSpeed() {
 
 #if GUMSTIX_DATA_RECEIVE == ENABLED
 
-	float positionError = xPosGumstix - elevatorSetPoint*constant2;
+	float positionError = xPosGumstix - elevatorSetPoint;
 
 	if (positionError > 2000) {
 		positionError = 2000;
