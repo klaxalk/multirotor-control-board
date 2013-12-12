@@ -37,10 +37,10 @@
 #define PX4FLOW_FILTER_WEIGHT 0.2
 
 // constants for altitude controller
-#define ALTITUDE_KP 0.1
-#define ALTITUDE_KD 130
-#define ALTITUDE_KI 0.0002
-#define ALTITUDE_SETPOINT 1500
+#define ALTITUDE_KP 180
+#define ALTITUDE_KI 120
+#define ALTITUDE_KD 200
+#define ALTITUDE_SETPOINT 1.0
 
 // constants for gumstix position controller
 #define POSITION_KP_GUMSTIX 0.05
@@ -62,7 +62,7 @@ extern volatile float constant5;
 
 // controllers saturations
 #define CONTROLLER_ELEVATOR_SATURATION 150
-#define CONTROLLER_AILERON_SATURATION 150
+#define CONTROLLER_AILERON_SATURATION  150
 #define CONTROLLER_THROTTLE_SATURATION 150
 
 #if (PX4FLOW_DATA_RECEIVE == ENABLED) || (ATOM_DATA_RECEIVE == ENABLED) || (GUMSTIX_DATA_RECEIVE == ENABLED)
@@ -118,8 +118,14 @@ extern volatile float aileronSpeedIntegration;
 extern volatile float elevatorSpeedIntegration;
 
 // variables for altitude controller
-extern volatile int16_t throttlePreviousError;
 extern volatile float throttleIntegration;
+extern volatile float estimator_cycle;
+extern volatile float estimated_position;
+extern volatile float estimated_pos_prev;
+extern volatile float estimated_velocity;
+extern volatile float altitudeSetpoint;
+
+void controllerThrottleEstimator();
 
 void controllerAileronSpeed();
 void controllerElevatorSpeed();

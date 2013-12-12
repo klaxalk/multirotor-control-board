@@ -207,58 +207,77 @@ void controllerElevatorSpeed() {
 	}
 }
 
+
+// altitude controller - estimator
+void controllerThrottleEstimator() {
+
+   //new cycle 
+   estimator_cycle++;
+
+    if(groundDistance != estimated_pos_prev) {//input data changed
+
+        // extreme filter
+        if(abs(groundDistance - estimated_pos_prev) <= 0.3) {//limitation cca 3m/s
+
+           // compute new values 
+           estimated_velocity = (groundDistance - estimated_pos_prev) / 7;
+           estimated_position = groundDistance;
+           estimated_pos_prev = groundDistance;
+           estimator_cycle = 0;
+
+        }
+
+    } else {
+
+        if (estimator_cycle >= 8) { //safety reset
+
+             estimated_velocity = 0;
+             estimated_position = groundDistance;
+             estimated_pos_prev = groundDistance;
+             estimator_cycle = 0;
+
+        } else { //estimate position
+
+            estimated_position += estimated_velocity;
+
+        }
+    }
+}
+
 // altitude controller
 void controllerThrottle() {
 
 	float KP = ALTITUDE_KP;
 	float KD = ALTITUDE_KD;
-	float KI = ALTITUDE_KI;
-	float error;
+	float KI = ALTITUDE_KI;	
 
-	//~ if (cameraConfiguration == 0) // dolu
-	//~ error = -(cameraZ-controllerThrottleSetPoint); // pro sledovani dolu
-	//~ else // dopredu
-	//~ error = -cameraX+altitudeSetPoint; // pro sledovani dopredu
-
-	error = (ALTITUDE_SETPOINT - ((groundDistance)*((float) 1000)));
+	float error = (altitudeSetpoint - estimated_position); //in meters!
 
 	// calculate proportional
-
-	float proportional = KP*error;
+	float proportional = KP * error;
 
 	// calculate derivative
-
-	float derivative = KD*(error-throttlePreviousError);
-
-	throttlePreviousError = error;
+	float derivative = -1 * KD * estimated_velocity / 0.0142222;
 
 	// calculate integrational
-
-	float integrational = throttleIntegration;
-
-	controllerThrottleOutput = proportional + derivative + integrational;
-
-	// integrate
-	throttleIntegration += KI*error;
-
+	throttleIntegration += KI * error * 0.0142222;
 	if (throttleIntegration > CONTROLLER_THROTTLE_SATURATION) {
 		throttleIntegration = CONTROLLER_THROTTLE_SATURATION;
 	}
 	if (throttleIntegration <  -CONTROLLER_THROTTLE_SATURATION) {
 		throttleIntegration = -CONTROLLER_THROTTLE_SATURATION;
 	}
-
-	// saturace regulatoru
-	if (controllerThrottleOutput > 3*CONTROLLER_THROTTLE_SATURATION) {
-		controllerThrottleOutput = 3*CONTROLLER_THROTTLE_SATURATION;
+	float integrational = throttleIntegration;
+	
+	//total output
+	controllerThrottleOutput = proportional + derivative + integrational;
+	if (controllerThrottleOutput > 2*CONTROLLER_THROTTLE_SATURATION) {
+		controllerThrottleOutput = 2*CONTROLLER_THROTTLE_SATURATION;
+	}
+	if (controllerThrottleOutput < -2*CONTROLLER_THROTTLE_SATURATION) {
+		controllerThrottleOutput = -2*CONTROLLER_THROTTLE_SATURATION;
 	}
 
-	// nelinearita
-	if (controllerThrottleOutput < 0) {
-		controllerThrottleOutput = (int16_t)((float) controllerThrottleOutput)*0.1;  //0.2
-	} else {
-		controllerThrottleOutput = (int16_t)((float) controllerThrottleOutput)*1.5;  // 1.5
-	}
 }
 
 

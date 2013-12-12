@@ -68,8 +68,12 @@ volatile int16_t controllerThrottleOutput = 0;
 volatile int16_t controllerRudderOutput = 0;
 
 // variables for altitude controller
-volatile int16_t throttlePreviousError;
-volatile float throttleIntegration;
+volatile float throttleIntegration = 0;
+volatile float estimator_cycle = 0;
+volatile float estimated_position = 0;
+volatile float estimated_pos_prev = 0;
+volatile float estimated_velocity = 0;
+volatile float altitudeSetpoint = ALTITUDE_SETPOINT;
 
 // constants from RC transmitter
 volatile float constant1 = 0;
@@ -80,6 +84,7 @@ volatile float constant5 = 0;
 
 // timestamp for debug and logging
 volatile double timeStamp = 0;
+volatile int    debug_cycle = 0;
 
 // controller on/off
 volatile unsigned char controllerEnabled = 0;
@@ -228,88 +233,157 @@ volatile float aileronSpeed = 0;
 // write debug message to Uart0 serial output
 void debug() {
 
-	// logging with gumstix
-#if GUMSTIX_DATA_RECEIVE == ENABLED
-
 	char num[20];
+	static double  dbg_start;
+	double dbg_duration;
+	
+	static float   dbg_elevatorSpeed_raw;
+	static float   dbg_elevatorSpeed;
+	static int16_t dbg_xPosGumstix_raw;
+	static int16_t dbg_xPosGumstix;
+	static int16_t dbg_pitchAngle;
+	static int16_t dbg_elevator_auto;
+	static int16_t dbg_elevator_man;
 
-	sprintf(num, "%f", ((double) groundDistance));
-	Uart0_write_string(num, strlen(num));
-	Uart0_write_char(' ');
+	static float   dbg_aileronSpeed_raw;
+	static float   dbg_aileronSpeed;
+	static int16_t dbg_yPosGumstix_raw;
+	static int16_t dbg_yPosGumstix;
+	static int16_t dbg_rollAngle;
+	static int16_t dbg_aileron_auto;
+	static int16_t dbg_aileron_man;
 
-	sprintf(num, "%i", ((int16_t) xPosGumstix));
-	Uart0_write_string(num, strlen(num));
-	Uart0_write_char(' ');
 
-	sprintf(num, "%i", ((int16_t) yPosGumstix));
-	Uart0_write_string(num, strlen(num));
-	Uart0_write_char(' ');
+	if(debug_cycle == 0) {
 
-	sprintf(num, "%f", ((double) timeStamp));
-	Uart0_write_string(num, strlen(num));
-	Uart0_write_char(' ');
+		//start time trace
+		dbg_start = timeStamp;
+		sprintf(num, "%f", ((double) dbg_start));
+		Uart0_write_string(num, strlen(num));
+		Uart0_write_char(' ');
 
-	Uart0_write_char('\n');
+	} else if(debug_cycle == 1)  { //1+7 values (cycle 0+1)
 
-#endif // GUMSTIX_DATA_RECEIVE == ENABLED
+		//throttle trace
+		sprintf(num, "%f", ((double) groundDistance));
+		Uart0_write_string(num, strlen(num));
+		Uart0_write_char(' ');
 
-#if ATOM_DATA_RECEIVE == ENABLED
+		sprintf(num, "%f", ((double) estimated_position));
+		Uart0_write_string(num, strlen(num));
+		Uart0_write_char(' ');
 
-	char num[20];
+		sprintf(num, "%f", ((double) estimated_velocity));
+		Uart0_write_string(num, strlen(num));
+		Uart0_write_char(' ');
 
-	//~ sprintf(num, "%i", ((int16_t) pitchAngle));
-	//~ Uart0_write_string(num, strlen(num));
-	//~ Uart0_write_char(' ');
+		sprintf(num, "%f", ((double) altitudeSetpoint)); //altitude
+		Uart0_write_string(num, strlen(num));
+		Uart0_write_char(' ');
 
-	//~ sprintf(num, "%i", ((int16_t) rollAngle));
-	//~ Uart0_write_string(num, strlen(num));
-	//~ Uart0_write_char(' ');
-//~ 
-	//~ sprintf(num, "%i", ((int16_t) outputChannels[2])); // elevator
-	//~ Uart0_write_string(num, strlen(num));
-	//~ Uart0_write_char(' ');
-//~ 
-	//~ sprintf(num, "%i", ((int16_t) outputChannels[3])); // aileron
-	//~ Uart0_write_string(num, strlen(num));
-	//~ Uart0_write_char(' ');
-//~ 
-	//~ sprintf(num, "%i", ((int16_t) outputChannels[0])); // throttle
-	//~ Uart0_write_string(num, strlen(num));
-	//~ Uart0_write_char(' ');
-//~ 
-	//~ sprintf(num, "%i", ((int16_t) ((yPosSurf))));
-	//~ Uart0_write_string(num, strlen(num));
-	//~ Uart0_write_char(' ');
-//~ 
-	//~ sprintf(num, "%i", ((int16_t) ((float) yPosSurf - tan((((float) delayedPitchAngle)/1800)*3.141592)*groundDistance*1000)));
-	//~ Uart0_write_string(num, strlen(num));
-	//~ Uart0_write_char(' ');
+		sprintf(num, "%i", ((int16_t) controllerThrottleOutput));
+		Uart0_write_string(num, strlen(num));
+		Uart0_write_char(' ');
 
-	//~ sprintf(num, "%i", ((int16_t) ((float) xPosSurfNew - tan((((float) delayedRollAngle)/1800)*3.141592)*groundDistance*1000)));
-	//~ Uart0_write_string(num, strlen(num));
-	//~ Uart0_write_char(' ');
-//~ 
-	sprintf(num, "%i", ((int16_t) headingSurf));
-	Uart0_write_string(num, strlen(num));
-	Uart0_write_char(' ');
-//~ 
-	//~ sprintf(num, "%f", ((double) -opticalFlowData.flow_comp_m_x));
-	//~ Uart0_write_string(num, strlen(num));
-	//~ Uart0_write_char(' ');
-//~ 
-	//~ sprintf(num, "%f", ((double) opticalFlowData.flow_comp_m_y));
-	//~ Uart0_write_string(num, strlen(num));
-	//~ Uart0_write_char(' ');
-//~ 
-	//~ sprintf(num, "%f", ((double) opticalFlowData.ground_distance));
-	//~ Uart0_write_string(num, strlen(num));
-	//~ Uart0_write_char(' ');
-//~ 
-	//~ sprintf(num, "%4.3f", ((double) timeStamp));
-	//~ Uart0_write_string(num, strlen(num));
-	Uart0_write_char('\n');
+		sprintf(num, "%f", ((double) throttleIntegration));
+		Uart0_write_string(num, strlen(num));
+		Uart0_write_char(' ');
 
-#endif
+		sprintf(num, "%i", ((int16_t) RCchannel[THROTTLE])); //man
+		Uart0_write_string(num, strlen(num));
+		Uart0_write_char(' ');
+
+		//elevator snapshot
+		dbg_elevatorSpeed_raw = opticalFlowData.flow_comp_m_x;
+		dbg_elevatorSpeed = elevatorSpeed;
+		dbg_xPosGumstix_raw = xPosGumstixNew;
+		dbg_xPosGumstix = xPosGumstix;
+		dbg_pitchAngle = pitchAngle;
+		dbg_elevator_auto = controllerElevatorOutput;
+		dbg_elevator_man = RCchannel[ELEVATOR];
+
+		//aileron snapshot
+		dbg_aileronSpeed_raw = opticalFlowData.flow_comp_m_y;
+		dbg_aileronSpeed = aileronSpeed;
+		dbg_yPosGumstix_raw = yPosGumstixNew;
+		dbg_yPosGumstix = yPosGumstix;
+		dbg_rollAngle = rollAngle;
+		dbg_aileron_auto = controllerAileronOutput;
+		dbg_aileron_man = RCchannel[AILERON];
+
+	} else if(debug_cycle == 2)  { //1+7 values
+
+		//controllers enabled
+		sprintf(num, "%i", ((int16_t) controllerEnabled)); //may be ahead
+		Uart0_write_string(num, strlen(num));
+		Uart0_write_char(' ');
+
+		//elevator trace
+		sprintf(num, "%f", ((double) dbg_elevatorSpeed_raw)); //px4flow
+		Uart0_write_string(num, strlen(num));
+		Uart0_write_char(' ');
+
+		sprintf(num, "%f", ((double) dbg_elevatorSpeed)); //px4flow
+		Uart0_write_string(num, strlen(num));
+		Uart0_write_char(' ');
+
+		sprintf(num, "%i", ((int16_t) dbg_xPosGumstix_raw)); //px4flow
+		Uart0_write_string(num, strlen(num));
+		Uart0_write_char(' ');
+
+		sprintf(num, "%i", ((int16_t) dbg_xPosGumstix)); //px4flow
+		Uart0_write_string(num, strlen(num));
+		Uart0_write_char(' ');
+
+		sprintf(num, "%i", ((int16_t) dbg_pitchAngle)); //stab.board
+		Uart0_write_string(num, strlen(num));
+		Uart0_write_char(' ');
+
+		sprintf(num, "%i", ((int16_t) dbg_elevator_auto));
+		Uart0_write_string(num, strlen(num));
+		Uart0_write_char(' ');
+
+		sprintf(num, "%i", ((int16_t) dbg_elevator_man));
+		Uart0_write_string(num, strlen(num));
+		Uart0_write_char(' ');
+
+	} else if(debug_cycle == 3)  { //1+7 values
+
+		//aileron trace
+		sprintf(num, "%f", ((double) dbg_aileronSpeed_raw)); //px4flow
+		Uart0_write_string(num, strlen(num));
+		Uart0_write_char(' ');
+
+		sprintf(num, "%f", ((double) dbg_aileronSpeed)); //px4flow
+		Uart0_write_string(num, strlen(num));
+		Uart0_write_char(' ');
+
+		sprintf(num, "%i", ((int16_t) dbg_yPosGumstix_raw)); //px4flow
+		Uart0_write_string(num, strlen(num));
+		Uart0_write_char(' ');
+
+		sprintf(num, "%i", ((int16_t) dbg_yPosGumstix)); //px4flow
+		Uart0_write_string(num, strlen(num));
+		Uart0_write_char(' ');
+
+		sprintf(num, "%i", ((int16_t) dbg_rollAngle)); //stab.board
+		Uart0_write_string(num, strlen(num));
+		Uart0_write_char(' ');
+
+		sprintf(num, "%i", ((int16_t) dbg_aileron_auto));
+		Uart0_write_string(num, strlen(num));
+		Uart0_write_char(' ');
+
+		sprintf(num, "%i", ((int16_t) dbg_aileron_man));
+		Uart0_write_string(num, strlen(num));
+		Uart0_write_char(' ');
+
+		//duration trace
+		dbg_duration = (timeStamp - dbg_start) / 0.0142222;
+		sprintf(num, "%f", ((double) dbg_duration));
+		Uart0_write_string(num, strlen(num));
+		Uart0_write_char('\n');
+	}
 }
 
 int main() {
@@ -322,6 +396,8 @@ int main() {
 
 		// runs controllers
 		if (controllersFlag == 1) {
+		
+			controllersFlag = 0;
 
 			if (positionControllerEnabled == 1) {
 
@@ -339,8 +415,21 @@ int main() {
 				elevatorSpeedSetpoint = 0;
 #endif
 			}
+			
+#if LOGGING_ON == ENABLED
+
+			if(debug_cycle == 0) {
+				debug();
+				debug_cycle++;
+			}
+
+#endif
 
 #if PX4FLOW_DATA_RECEIVE == ENABLED
+
+			altitudeSetpoint = ALTITUDE_SETPOINT + ((constant1-0.2)/1.6)/2; // c1=<0.2; 1.8>
+
+			controllerThrottleEstimator();
 
 			controllerElevatorSpeed();
 			controllerAileronSpeed();
@@ -351,9 +440,11 @@ int main() {
 #if LOGGING_ON == ENABLED
 
 			debug();
+			
+			debug_cycle = (debug_cycle+1)%4;
 
 #endif
-			controllersFlag = 0;
+
 		}
 
 		// PWM input capture
