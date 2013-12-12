@@ -10,6 +10,9 @@
 #include "config.h"
 #include <stdlib.h>
 
+// controllers period
+#define DT	0.0142222;
+
 // constants for surfnav position controllers
 #define ELEVATOR_POSITION_KP_SURFNAV 0.001
 #define AILERON_POSITION_KP_SURFNAV 0.001
@@ -40,7 +43,12 @@
 #define ALTITUDE_KP 180
 #define ALTITUDE_KI 120
 #define ALTITUDE_KD 200
-#define ALTITUDE_SETPOINT 1.0
+
+#define ALTITUDE_MAXIMUM        3.0 //used to crop values from PX4Flow
+#define ALTITUDE_SETPOINT_HIGH  2.0
+#define ALTITUDE_SETPOINT_LOW   1.0
+
+
 
 // constants for gumstix position controller
 #define POSITION_KP_GUMSTIX 0.05
@@ -118,12 +126,12 @@ extern volatile float aileronSpeedIntegration;
 extern volatile float elevatorSpeedIntegration;
 
 // variables for altitude controller
-extern volatile float throttleIntegration;
-extern volatile float estimator_cycle;
-extern volatile float estimated_position;
-extern volatile float estimated_pos_prev;
-extern volatile float estimated_velocity;
-extern volatile float altitudeSetpoint;
+extern volatile float  throttleIntegration;
+extern volatile uint8_t estimator_cycle;
+extern volatile float  estimated_position;
+extern volatile float  estimated_pos_prev;
+extern volatile float  estimated_velocity;
+extern volatile float  altitudeSetpoint;
 
 void controllerThrottleEstimator();
 

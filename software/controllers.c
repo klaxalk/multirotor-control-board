@@ -257,10 +257,10 @@ void controllerThrottle() {
 	float proportional = KP * error;
 
 	// calculate derivative
-	float derivative = -1 * KD * estimated_velocity / 0.0142222;
+	float derivative = -1 * KD * estimated_velocity / DT;
 
 	// calculate integrational
-	throttleIntegration += KI * error * 0.0142222;
+	throttleIntegration += KI * error * DT;
 	if (throttleIntegration > CONTROLLER_THROTTLE_SATURATION) {
 		throttleIntegration = CONTROLLER_THROTTLE_SATURATION;
 	}
