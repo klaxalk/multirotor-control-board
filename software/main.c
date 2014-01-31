@@ -238,21 +238,21 @@ void debug() {
 	static double  dbg_start;
 	double dbg_duration;
 
-	static int16_t dbg_yPosGumstix_raw;
-	static int16_t dbg_yPosGumstix;
+	static float dbg_yPosGumstix_raw;
+	static float dbg_yPosGumstix;
 	
 	static float   dbg_elevatorSpeed_raw;
 	static float   dbg_elevatorSpeed;
-	static int16_t dbg_xPosGumstix_raw;
-	static int16_t dbg_xPosGumstix;
+	static float   dbg_xPosGumstix_raw;
+	static float   dbg_xPosGumstix;
 	static int16_t dbg_pitchAngle;
 	static int16_t dbg_elevator_auto;
 	static int16_t dbg_elevator_man;
 
 	static float   dbg_aileronSpeed_raw;
 	static float   dbg_aileronSpeed;
-	static int16_t dbg_zPosGumstix_raw;
-	static int16_t dbg_zPosGumstix;
+	static float   dbg_zPosGumstix_raw;
+	static float   dbg_zPosGumstix;
 	static int16_t dbg_rollAngle;
 	static int16_t dbg_aileron_auto;
 	static int16_t dbg_aileron_man;
@@ -298,35 +298,35 @@ void debug() {
 		Uart0_write_char(' ');
 
 		//gustix Y snapshot
-		dbg_yPosGumstix_raw = yPosGumstixNew;
-		dbg_yPosGumstix = yPosGumstix;
+		dbg_yPosGumstix_raw = ((float)yPosGumstixNew)/1000;
+		dbg_yPosGumstix = ((float)yPosGumstix)/1000;
 
 		//elevator snapshot
 		dbg_elevatorSpeed_raw = opticalFlowData.flow_comp_m_x;
 		dbg_elevatorSpeed = elevatorSpeed;
-		dbg_xPosGumstix_raw = xPosGumstixNew;
-		dbg_xPosGumstix = xPosGumstix;
+		dbg_xPosGumstix_raw = ((float)xPosGumstixNew)/-1000; //invert el. axis to match control signal
+		dbg_xPosGumstix = ((float)xPosGumstix)/-1000;
 		dbg_pitchAngle = pitchAngle;
-		dbg_elevator_auto = controllerElevatorOutput * controllerEnabled;
+		dbg_elevator_auto = controllerElevatorOutput * positionControllerEnabled;
 		dbg_elevator_man = RCchannel[ELEVATOR];
 
 		//aileron snapshot
 		dbg_aileronSpeed_raw = opticalFlowData.flow_comp_m_y;
 		dbg_aileronSpeed = aileronSpeed;
-		dbg_zPosGumstix_raw = zPosGumstixNew;
-		dbg_zPosGumstix = zPosGumstix;
+		dbg_zPosGumstix_raw = ((float)zPosGumstixNew)/1000;
+		dbg_zPosGumstix = ((float)zPosGumstix)/1000;
 		dbg_rollAngle = rollAngle;
-		dbg_aileron_auto = controllerAileronOutput * controllerEnabled;
+		dbg_aileron_auto = controllerAileronOutput * positionControllerEnabled;
 		dbg_aileron_man = RCchannel[AILERON];
 
 	} else if(debug_cycle == 2)  { //2+7 values
 
 		//gumstix Y pos (height?!)
-		sprintf(num, "%i", ((int16_t) dbg_yPosGumstix_raw)); //px4flow
+		sprintf(num, "%f", ((double) dbg_yPosGumstix_raw));
 		Uart0_write_string(num, strlen(num));
 		Uart0_write_char(' ');
 
-            sprintf(num, "%i", ((int16_t) dbg_yPosGumstix)); //px4flow
+            sprintf(num, "%f", ((double) dbg_yPosGumstix));
 		Uart0_write_string(num, strlen(num));
 		Uart0_write_char(' ');
 
@@ -339,11 +339,11 @@ void debug() {
 		Uart0_write_string(num, strlen(num));
 		Uart0_write_char(' ');
 
-		sprintf(num, "%i", ((int16_t) dbg_xPosGumstix_raw)); //px4flow
+		sprintf(num, "%f", ((double) dbg_xPosGumstix_raw));
 		Uart0_write_string(num, strlen(num));
 		Uart0_write_char(' ');
 
-		sprintf(num, "%i", ((int16_t) dbg_xPosGumstix)); //px4flow
+		sprintf(num, "%f", ((double) dbg_xPosGumstix));
 		Uart0_write_string(num, strlen(num));
 		Uart0_write_char(' ');
 
@@ -370,11 +370,11 @@ void debug() {
 		Uart0_write_string(num, strlen(num));
 		Uart0_write_char(' ');
 
-		sprintf(num, "%i", ((int16_t) dbg_zPosGumstix_raw)); //px4flow
+		sprintf(num, "%f", ((double) dbg_zPosGumstix_raw));
 		Uart0_write_string(num, strlen(num));
 		Uart0_write_char(' ');
 
-		sprintf(num, "%i", ((int16_t) dbg_zPosGumstix)); //px4flow
+		sprintf(num, "%f", ((double) dbg_zPosGumstix));
 		Uart0_write_string(num, strlen(num));
 		Uart0_write_char(' ');
 
@@ -393,7 +393,7 @@ void debug() {
 		//main cycles per controller cycle
 		sprintf(num, "%f", ((double)main_cycle)/3);
 		Uart0_write_string(num, strlen(num));
-		Uart0_write_char('\n');
+		Uart0_write_char(' ');
 		main_cycle = 0;
 
 		//duration trace
@@ -425,10 +425,8 @@ int main() {
 				controllerElevator_surfnav();
 				controllerAileron_surfnav();
 #endif
-				led_Y_on();
 
 			} else {
-				led_Y_off();
 
 #if PX4FLOW_DATA_RECEIVE == ENABLED
 				aileronSpeedSetPoint = 0;
