@@ -10,50 +10,43 @@
 #include "config.h"
 #include <stdlib.h>
 
-// controllers period
-#define DT	0.0142222;
+// controllers period (do not change!)
+#define DT	0.0142222
 
-// constants for surfnav position controllers
-#define ELEVATOR_POSITION_KP_SURFNAV 0.001
-#define AILERON_POSITION_KP_SURFNAV 0.001
-#define SURFNAV_CONTROLLER_SATURATION 0.2
-#define SURFNAV_FILTER_WEIGHT 0.3
+// time constants for data filters (must be >= DT)
+#define GUMSTIX_FILTER_CONST    0.05
+#define PX4FLOW_FILTER_CONST    0.05
+#define SETPOINT_FILTER_CONST   0.10
 
-// constants for px4flow speed controllers
+// constants for position and velocity controllers
+#define ELEVATOR_SP_HIGH  -1.5
+#define ELEVATOR_SP_LOW   -2.5
 
-#if ATOM_DATA_RECEIVE == ENABLED
+#define AILERON_SP_HIGH   +0.5
+#define AILERON_SP_LOW    -0.5
 
-#define AILERON_SPEED_KP 235
-#define ELEVATOR_SPEED_KP 235
+#define VELOCITY_KP 250
+#define VELOCITY_KI 10
+#define VELOCITY_KD 30
 
-#else
+#define POSITION_KP 100
+#define POSITION_KI 10
+#define POSITION_KD 200
 
-#define AILERON_SPEED_KP 235
-#define ELEVATOR_SPEED_KP 235
+// constants for altitude and landing controllers
+#define ALTITUDE_MAXIMUM  3.00 //used to crop values from PX4Flow
+#define ALTITUDE_MINIMUM  0.35 //used for landing (must be > 0.3)
+#define LANDING_SPEED     -0.4 //in m/s, must be negative!
 
-#endif
+#define THROTTLE_SP_HIGH  2.0
+#define THROTTLE_SP_LOW   1.0
 
-#define AILERON_SPEED_KD 2
-#define AILERON_SPEED_KI 10
-#define ELEVATOR_SPEED_KD 2
-#define ELEVATOR_SPEED_KI 10
-#define PX4FLOW_FILTER_WEIGHT 0.2
-
-// constants for altitude controller
 #define ALTITUDE_KP 180
 #define ALTITUDE_KI 120
 #define ALTITUDE_KD 200
 
-#define ALTITUDE_MAXIMUM        3.0 //used to crop values from PX4Flow
-#define ALTITUDE_SETPOINT_HIGH  2.0
-#define ALTITUDE_SETPOINT_LOW   1.0
-
-
-
-// constants for gumstix position controller
-#define POSITION_KP_GUMSTIX 0.05
-#define GUMSTIX_CONTROLLER_SATURATION 0.2
-#define POSITION_KI_GUMSTIX 0.02
+#define LANDING_KP 180
+#define LANDING_KI 120
 
 // common global variables
 // controllers output variables
@@ -69,75 +62,60 @@ extern volatile float constant4;
 extern volatile float constant5;
 
 // controllers saturations
-#define CONTROLLER_ELEVATOR_SATURATION 150
-#define CONTROLLER_AILERON_SATURATION  150
-#define CONTROLLER_THROTTLE_SATURATION 150
-
-#if (PX4FLOW_DATA_RECEIVE == ENABLED) || (ATOM_DATA_RECEIVE == ENABLED) || (GUMSTIX_DATA_RECEIVE == ENABLED)
-
-extern volatile float elevatorSpeedSetpoint;
-extern volatile float aileronSpeedSetPoint;
-
-#endif
-
-#if GUMSTIX_DATA_RECEIVE == ENABLED
-
-// variables for surfnav position controller
-extern volatile int16_t xPosGumstix;
-extern volatile int16_t yPosGumstix;
-extern volatile int16_t aileronSetPoint;
-extern volatile int16_t elevatorSetPoint;
-extern volatile int8_t validGumstix;
-extern volatile float gumstixElevatorIntegral;
-extern volatile float gumstixAileronIntegral;
-extern volatile int16_t yGumstixPreviousError;
-extern volatile int16_t yGumstixPreviousError;
-
-void controllerAileron_gumstix();
-void controllerElevator_gumstix();
-
-#endif // GUMSTIX_DATA_RECEIVE == ENABLED
-
-#if ATOM_DATA_RECEIVE == ENABLED
-
-// variables for surfnav position controller
-extern volatile int16_t xPosSurf;
-extern volatile int16_t yPosSurf;
-extern volatile int16_t headingSurf;
-
-extern volatile int16_t delayedPitchAngle;
-extern volatile int16_t delayedRollAngle;
-
-void controllerAileron_surfnav();
-void controllerElevator_surfnav();
-
-#endif
+#define CONTROLLER_ELEVATOR_SATURATION 100
+#define CONTROLLER_AILERON_SATURATION  100
+#define CONTROLLER_THROTTLE_SATURATION 300
 
 #if PX4FLOW_DATA_RECEIVE == ENABLED
 
-// variables for px4flow speed controller
-extern mavlink_optical_flow_t opticalFlowData;
-extern volatile float elevatorSpeedPreviousError;
-extern volatile float aileronSpeedPreviousError;
+//px4flow values
+extern volatile float groundDistance;
 extern volatile float elevatorSpeed;
 extern volatile float aileronSpeed;
-extern volatile float groundDistance;
-extern volatile float aileronSpeedIntegration;
-extern volatile float elevatorSpeedIntegration;
 
-// variables for altitude controller
-extern volatile float  throttleIntegration;
-extern volatile uint8_t estimator_cycle;
-extern volatile float  estimated_position;
-extern volatile float  estimated_pos_prev;
-extern volatile float  estimated_velocity;
-extern volatile float  altitudeSetpoint;
+#if GUMSTIX_DATA_RECEIVE == ENABLED
 
-void controllerThrottleEstimator();
+//gumstix values
+extern volatile float elevatorGumstix;
+extern volatile float aileronGumstix;
+extern volatile float throttleGumstix;
+extern volatile int8_t validGumstix;
 
-void controllerAileronSpeed();
-void controllerElevatorSpeed();
-void controllerThrottle();
+//TODO remove
+extern volatile float gumstixElevatorIntegral;
+extern volatile float elevatorSpeedPreviousError;
+
+#endif
+
+//vars for estimators
+extern volatile float estimatedElevatorPos;
+extern volatile float estimatedAileronPos;
+extern volatile float estimatedThrottlePos;
+extern volatile float estimatedElevatorVel;
+extern volatile float estimatedAileronVel;
+extern volatile float estimatedThrottleVel;
+
+//vars for controllers
+extern volatile float elevatorIntegration;
+extern volatile float aileronIntegration;
+extern volatile float throttleIntegration;
+extern volatile float elevatorSetpoint;
+extern volatile float aileronSetpoint;
+extern volatile float throttleSetpoint;
+
+//setpoint handling
+void setpoints();
+
+//position estimator and controllers
+void positionEstimator();
+void velocityController();
+void positionController();
+
+//altitude estimator and controllers
+void altitudeEstimator();
+void altitudeController();
+void landingController();
+
 
 #endif // PX4FLOW_DATA_RECEIVE == ENABLED
 

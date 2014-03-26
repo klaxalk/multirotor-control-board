@@ -7,11 +7,7 @@
 
 #include "defines.h"
 
-//~ --------------------------------------------------------------------
-//~ Choose a orientation of the quadcopter frame
-//~ --------------------------------------------------------------------
-
-// if the logging in on
+// Choose if the logging is on
 #define LOGGING_ON ENABLED
 /*
 	ENABLED
@@ -19,8 +15,12 @@
 
 */
 
+//~ --------------------------------------------------------------------
+//~ Choose a orientation of the quadcopter frame
+//~ --------------------------------------------------------------------
+
 // Choose the multirotor frame orientation
-#define FRAME_ORIENTATION PLUS_COPTER
+#define FRAME_ORIENTATION X_COPTER
 /*
 	PLUS_COPTER
 	X_COPTER
@@ -36,6 +36,18 @@
 /*
 	FORWARD
 	DOWNWARD
+
+*/
+
+//~ --------------------------------------------------------------------
+//~ Choose the PX4Flow camera orientation
+//~ --------------------------------------------------------------------
+
+// Choose where the XP4Flow's X axis is pointing
+#define PX4_CAMERA_ORIENTATION BACKWARD
+/*
+	FORWARD
+	BACKWARD
 
 */
 
