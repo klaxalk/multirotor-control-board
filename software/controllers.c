@@ -14,6 +14,9 @@ void setpoints() {
 	float sp_new;
 
 	//setpoint setting from RC transmitter
+	//sp_new = ELEVATOR_SP_HIGH * constant2 + ELEVATOR_SP_LOW * (1-constant2);
+	//elevatorSetpoint += (sp_new-elevatorSetpoint) * (DT/SETPOINT_FILTER_CONST);
+
 	sp_new = AILERON_SP_HIGH * constant2 + AILERON_SP_LOW * (1-constant2);
 	aileronSetpoint += (sp_new-aileronSetpoint) * (DT/SETPOINT_FILTER_CONST);
 
@@ -32,7 +35,7 @@ void positionEstimator() {
 
 	//gustix valid delay - filters faulty values
 	static uint8_t gumstix_counter = 0;
-      uint8_t gumstix_delay = 7;
+	uint8_t gumstix_delay = 7;
 
 	if(validGumstix) {
 		if(gumstix_counter < gumstix_delay) gumstix_counter++;
@@ -51,7 +54,7 @@ void positionEstimator() {
 		estimatedElevatorPos += (elevatorGumstix-estimatedElevatorPos) * (DT/GUMSTIX_FILTER_CONST);
 	}else{
 #endif
-            estimatedElevatorPos += estimatedElevatorVel * DT;
+		estimatedElevatorPos += estimatedElevatorVel * DT;
 #if GUMSTIX_DATA_RECEIVE == ENABLED
 	}
 #endif
@@ -73,120 +76,73 @@ void positionEstimator() {
 }
 
 //~ ------------------------------------------------------------------------ ~//
-//TODO remove
+//~ Position Controller - stabilizes Elevator and Aileron                    ~//
 //~ ------------------------------------------------------------------------ ~//
-// elevator speed controller using px4flow data
-#define ELEVATOR_SPEED_KP 235
-#define ELEVATOR_SPEED_KD 2
-#define POSITION_KP_GUMSTIX 0.05
-#define GUMSTIX_CONTROLLER_SATURATION 0.2
-#define POSITION_KI_GUMSTIX 0.02
-void controllerElevatorSpeed() {
+void positionController() {
 
-	float KP = ELEVATOR_SPEED_KP;
-	float KD = ELEVATOR_SPEED_KD;
-	//~ float KI = ELEVATOR_SPEED_KI;
+	static float elevatorSpeed_prev = 0;
+	static float elevatorAcc_filt  = 0;
+	static float aileronSpeed_prev = 0;
+	static float aileronAcc_filt  = 0;
+	float acc_new;
 
-	//~ float error = elevatorSpeedSetpoint+elevatorSpeed;
-	float error = - elevatorSpeed;
+	float error;
+	float proportional;
+	float derivative1;
+	float derivative2;
+	//float integrational;
 
-#if GUMSTIX_DATA_RECEIVE == ENABLED
+	float KP, KI, KV, KA;
 
-	float positionError = (elevatorSetpoint - elevatorGumstix)*1000;
+	if(positionControllerEnabled) {
+		KP = POSITION_KP;
+		KI = POSITION_KI;
+		KV = POSITION_KV;
+		KA = POSITION_KA;
 
-	if (positionError > 2000) {
-		positionError = 2000;
-	} else if (positionError < -2000) {
-		positionError = -2000;
+	} else { //velocity controller
+		KP = VELOCITY_KP;
+		KI = VELOCITY_KI;
+		KV = 0;
+		KA = VELOCITY_KD;
 	}
 
-	// calculate position P
-	float positionProportional = POSITION_KP_GUMSTIX*positionError;
-
-	// calculate adaptive offset
-	int8_t smer;
-	if (positionError > 0) {
-		smer = 1;
+	//elevator controller
+	if(positionControllerEnabled) {
+		error = elevatorSetpoint - estimatedElevatorPos;
 	} else {
-		smer = -1;
+		error = - estimatedElevatorVel;
+	}
+	proportional = KP * error;
+
+	elevatorIntegration += KI * error * DT;
+	if (elevatorIntegration > CONTROLLER_ELEVATOR_SATURATION/2) {
+		elevatorIntegration = CONTROLLER_ELEVATOR_SATURATION/2;
+	} else if (elevatorIntegration < -CONTROLLER_ELEVATOR_SATURATION/2) {
+		elevatorIntegration = -CONTROLLER_ELEVATOR_SATURATION/2;
 	}
 
-	// calculate position I
-	gumstixElevatorIntegral += POSITION_KI_GUMSTIX*smer;
+	derivative1 = -1 * KV * estimatedElevatorVel;
 
-#endif // GUMSTIX_DATA_RECEIVE == ENABLED
+	acc_new = (estimatedElevatorVel - elevatorSpeed_prev) / DT;
+	elevatorSpeed_prev = estimatedElevatorVel;
+	elevatorAcc_filt += (acc_new - elevatorAcc_filt) * (DT/PX4FLOW_FILTER_CONST);
+	derivative2 = -1 * KA * elevatorAcc_filt;
 
-	// calculate P
-	float proportional = KP*error;
-
-	//~ // calculate angular
-	//~ float angular = -pitchAngle;
-
-	// calulate D
-	float derivative = KD*(error-elevatorSpeedPreviousError);
-
-	//~ // calculate I
-	//~ float integrational = KI*elevatorSpeedIntegration;
-//~
-	//~ if (constant2 < 1) {
-		//~ integrational = 0;
-	//~ }
-
-	elevatorSpeedPreviousError = error;
-
-#if GUMSTIX_DATA_RECEIVE == ENABLED
-
-	if (validGumstix == 1 && (abs(elevatorSpeed) < GUMSTIX_CONTROLLER_SATURATION)) {
-		controllerElevatorOutput = proportional + derivative + positionProportional + gumstixElevatorIntegral;
-	} else {
-		controllerElevatorOutput = proportional + derivative;
-	}
-
-#elif ATOM_DATA_RECEIVE == ENABLED
-
-	controllerElevatorOutput = proportional + derivative - pitchAngle;
-
-#else
-
-	controllerElevatorOutput = proportional + derivative;
-
-#endif
-
-	// controller saturation
+	controllerElevatorOutput = proportional + elevatorIntegration + derivative1 + derivative2;
 	if (controllerElevatorOutput > CONTROLLER_ELEVATOR_SATURATION) {
 		controllerElevatorOutput = CONTROLLER_ELEVATOR_SATURATION;
 	} else if (controllerElevatorOutput < -CONTROLLER_ELEVATOR_SATURATION) {
 		controllerElevatorOutput = -CONTROLLER_ELEVATOR_SATURATION;
 	}
-}
 
-//~ ------------------------------------------------------------------------ ~//
-//~ Velocity Controller - stabilizes Elevator and Aileron to zero speed      ~//
-//~ ------------------------------------------------------------------------ ~//
-void velocityController() {
-
-	static float elevatorSpeed_prev = 0;
-      static float elevatorAcc_filt  = 0;
-      static float aileronSpeed_prev = 0;
-      static float aileronAcc_filt  = 0;
-	float acc_new;
-
-	float error;
-	float proportional;
-	float derivative;
-	//float integrational;
-
-	float KP = VELOCITY_KP;
-	float KI = VELOCITY_KI;
-	float KD = VELOCITY_KD;
-
-	//TODO elevator controller
-
-      //TODO remove
-	controllerElevatorSpeed();
 
 	//aileron controller
-	error = - estimatedAileronVel;
+	if(positionControllerEnabled) {
+		error = aileronSetpoint - estimatedAileronPos;
+	} else {
+		error = - estimatedAileronVel;
+	}
 	proportional = KP * error;
 	
 	aileronIntegration += KI * error * DT;
@@ -196,53 +152,14 @@ void velocityController() {
 		aileronIntegration = -CONTROLLER_AILERON_SATURATION/2;
 	} 
 
-      acc_new = (estimatedAileronVel - aileronSpeed_prev) / DT;
-      aileronSpeed_prev = estimatedAileronVel;
+	derivative1 = -1 * KV * estimatedAileronVel;
+
+	acc_new = (estimatedAileronVel - aileronSpeed_prev) / DT;
+	aileronSpeed_prev = estimatedAileronVel;
 	aileronAcc_filt += (acc_new - aileronAcc_filt) * (DT/PX4FLOW_FILTER_CONST);
-	derivative = -1 * KD * aileronAcc_filt;
+	derivative2 = -1 * KA * aileronAcc_filt;
 
-	controllerAileronOutput = proportional + aileronIntegration + derivative;
-	if (controllerAileronOutput > CONTROLLER_AILERON_SATURATION) {
-		controllerAileronOutput = CONTROLLER_AILERON_SATURATION;
-	} else if (controllerAileronOutput < -CONTROLLER_AILERON_SATURATION) {
-		controllerAileronOutput = -CONTROLLER_AILERON_SATURATION;
-	}
-
-}
-
-//~ ------------------------------------------------------------------------ ~//
-//~ Position Controller - stabilizes Elevator and Aileron to a fixed point   ~//
-//~ ------------------------------------------------------------------------ ~//
-void positionController() {
-
-	float error;
-	float proportional;
-	float derivative;
-	//float integrational;
-
-	float KP = POSITION_KP;
-	float KI = POSITION_KI;
-	float KD = POSITION_KD;
-
-	//TODO elevator controller
-
-      //TODO remove
-	controllerElevatorSpeed();
-
-	//aileron controller
-	error = aileronSetpoint - estimatedAileronPos;
-	proportional = KP * error;
-
-	aileronIntegration += KI * error * DT;
-	if (aileronIntegration > CONTROLLER_AILERON_SATURATION/2) {
-		aileronIntegration = CONTROLLER_AILERON_SATURATION/2;
-	} else if (aileronIntegration < -CONTROLLER_AILERON_SATURATION/2) {
-		aileronIntegration = -CONTROLLER_AILERON_SATURATION/2;
-	}
-
-	derivative = -1 * KD * estimatedAileronVel;
-
-	controllerAileronOutput = proportional + aileronIntegration + derivative;
+	controllerAileronOutput = proportional + aileronIntegration + derivative1 + derivative2;
 	if (controllerAileronOutput > CONTROLLER_AILERON_SATURATION) {
 		controllerAileronOutput = CONTROLLER_AILERON_SATURATION;
 	} else if (controllerAileronOutput < -CONTROLLER_AILERON_SATURATION) {
@@ -308,11 +225,11 @@ void altitudeController() {
 
 	// calculate integrational
 	throttleIntegration += KI * error * DT;
-	if (throttleIntegration > CONTROLLER_THROTTLE_SATURATION/2) {
-		throttleIntegration = CONTROLLER_THROTTLE_SATURATION/2;
+	if (throttleIntegration > CONTROLLER_THROTTLE_SATURATION*2/3) {
+		throttleIntegration = CONTROLLER_THROTTLE_SATURATION*2/3;
 	}
-	if (throttleIntegration <  -CONTROLLER_THROTTLE_SATURATION/2) {
-		throttleIntegration = -CONTROLLER_THROTTLE_SATURATION/2;
+	if (throttleIntegration <  -CONTROLLER_THROTTLE_SATURATION*2/3) {
+		throttleIntegration = -CONTROLLER_THROTTLE_SATURATION*2/3;
 	}
 
 	// calculate derivative
@@ -353,14 +270,14 @@ void landingController() {
 
 		// calculate integrational
 		throttleIntegration += KI * error * DT;
-		if (throttleIntegration > CONTROLLER_THROTTLE_SATURATION/2) {
-			throttleIntegration = CONTROLLER_THROTTLE_SATURATION/2;
+		if (throttleIntegration > CONTROLLER_THROTTLE_SATURATION*2/3) {
+			throttleIntegration = CONTROLLER_THROTTLE_SATURATION*2/3;
 		}
-		if (throttleIntegration <  -CONTROLLER_THROTTLE_SATURATION/2) {
-			throttleIntegration = -CONTROLLER_THROTTLE_SATURATION/2;
+		if (throttleIntegration <  -CONTROLLER_THROTTLE_SATURATION*2/3) {
+			throttleIntegration = -CONTROLLER_THROTTLE_SATURATION*2/3;
 		}
 
-            //total output
+		//total output
 		controllerThrottleOutput = proportional + throttleIntegration;
 	}
 	else if(controllerThrottleOutput > -CONTROLLER_THROTTLE_SATURATION)

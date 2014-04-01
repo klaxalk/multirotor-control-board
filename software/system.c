@@ -15,11 +15,6 @@ void enableController() {
 
 	if (controllerEnabled == 0) {
 
-//TODO remove
-#if GUMSTIX_DATA_RECEIVE == ENABLED
-		gumstixElevatorIntegral = 0;
-#endif // GUMSTIX_DATA_RECEIVE == ENABLED
-
 #if PX4FLOW_DATA_RECEIVE == ENABLED
 
 		elevatorIntegration = 0;

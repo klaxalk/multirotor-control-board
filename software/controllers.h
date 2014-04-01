@@ -29,14 +29,15 @@
 #define VELOCITY_KI 10
 #define VELOCITY_KD 30
 
-#define POSITION_KP 100
-#define POSITION_KI 10
-#define POSITION_KD 200
+#define POSITION_KP 110
+#define POSITION_KI 5
+#define POSITION_KV 212
+#define POSITION_KA 20
 
 // constants for altitude and landing controllers
 #define ALTITUDE_MAXIMUM  3.00 //used to crop values from PX4Flow
 #define ALTITUDE_MINIMUM  0.35 //used for landing (must be > 0.3)
-#define LANDING_SPEED     -0.3 //in m/s, must be negative!
+#define LANDING_SPEED     -0.4 //in m/s, must be negative!
 
 #define THROTTLE_SP_HIGH  1.5
 #define THROTTLE_SP_LOW   0.5
@@ -53,6 +54,11 @@
 extern volatile int16_t controllerElevatorOutput;
 extern volatile int16_t controllerAileronOutput;
 extern volatile int16_t controllerThrottleOutput;
+
+// controller on/off
+extern volatile unsigned char controllerEnabled;
+extern volatile unsigned char positionControllerEnabled;
+extern volatile unsigned char landingMode;
 
 // constants from RC transmitter
 extern volatile float constant1;
@@ -80,10 +86,6 @@ extern volatile float elevatorGumstix;
 extern volatile float aileronGumstix;
 extern volatile float throttleGumstix;
 extern volatile int8_t validGumstix;
-
-//TODO remove
-extern volatile float gumstixElevatorIntegral;
-extern volatile float elevatorSpeedPreviousError;
 
 #endif
 

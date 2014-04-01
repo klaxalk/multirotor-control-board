@@ -183,10 +183,6 @@ volatile int8_t validGumstix = 0;
 volatile int8_t gumstixDataFlag = 0;
 volatile unsigned char gumstixParseCharCrc = 0;
 
-//TODO remove
-volatile float gumstixElevatorIntegral = 0;
-volatile float elevatorSpeedPreviousError;
-
 #endif
 
 //~ --------------------------------------------------------------------
@@ -454,15 +450,7 @@ int main() {
 
 			setpoints();
 
-			if (positionControllerEnabled == 1) {
-
-				positionController();
-
-			} else {
-
-				velocityController();
-
-			}
+			positionController();
 
 			if (landingMode == 1) {
 
