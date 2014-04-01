@@ -92,7 +92,7 @@ void controllerElevatorSpeed() {
 
 #if GUMSTIX_DATA_RECEIVE == ENABLED
 
-	float positionError = elevatorGumstix - elevatorSetpoint;
+	float positionError = (elevatorSetpoint - elevatorGumstix)*1000;
 
 	if (positionError > 2000) {
 		positionError = 2000;

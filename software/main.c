@@ -234,7 +234,7 @@ volatile int16_t rollAngle = 0;
 void debug() {
 
 	char num[20];
-      static uint8_t debug_cycle = 0;
+	static uint8_t debug_cycle = 0;
 
 	static float   dbg_elevatorPos_raw;
 	static float   dbg_elevatorPos;
@@ -243,7 +243,7 @@ void debug() {
 	static float   dbg_elevator_sp;
 	static int16_t dbg_elevator_man;
 	static int16_t dbg_elevator_auto;
-      static int16_t dbg_elevator_int;
+	static float   dbg_elevator_int;
 	
 	static float   dbg_aileronPos_raw;
 	static float   dbg_aileronPos;
@@ -252,14 +252,14 @@ void debug() {
 	static float   dbg_aileron_sp;
 	static int16_t dbg_aileron_man;
 	static int16_t dbg_aileron_auto;
-      static int16_t dbg_aileron_int;
+	static float   dbg_aileron_int;
 
-      static int8_t  dbg_gumstix_valid;
+	static int8_t  dbg_gumstix_valid;
 	static uint8_t dbg_px4flow_confidence;
-      static uint8_t dbg_position_enabled;
+	static uint8_t dbg_position_enabled;
 
 	//perform 3 debug cycles per 10 values
-      if(++debug_cycle >= 3) debug_cycle = 0;
+	if(++debug_cycle >= 3) debug_cycle = 0;
 
 	if(debug_cycle == 0) {
 
@@ -307,34 +307,34 @@ void debug() {
 		Uart0_write_char(' ');
 
 		//elevator snapshot
-            dbg_elevatorPos_raw = elevatorGumstix;
-            dbg_elevatorPos     = estimatedElevatorPos;
-            dbg_elevatorVel_raw = elevatorSpeed;
+		dbg_elevatorPos_raw = elevatorGumstix;
+		dbg_elevatorPos     = estimatedElevatorPos;
+		dbg_elevatorVel_raw = elevatorSpeed;
 		dbg_elevatorVel     = estimatedElevatorVel;
 		dbg_elevator_sp     = elevatorSetpoint;
-            dbg_elevator_man    = RCchannel[ELEVATOR];
+		dbg_elevator_man    = RCchannel[ELEVATOR];
 		dbg_elevator_auto   = controllerElevatorOutput * controllerEnabled;
-            dbg_elevator_int    = elevatorIntegration * controllerEnabled;
+		dbg_elevator_int    = elevatorIntegration * controllerEnabled;
 		
-		//elevator snapshot
-            dbg_elevatorPos_raw = elevatorGumstix;
-            dbg_elevatorPos     = estimatedElevatorPos;
-            dbg_elevatorVel_raw = elevatorSpeed;
-		dbg_elevatorVel     = estimatedElevatorVel;
-		dbg_elevator_sp     = elevatorSetpoint;
-            dbg_elevator_man    = RCchannel[ELEVATOR];
-		dbg_elevator_auto   = controllerElevatorOutput * controllerEnabled;
-            dbg_elevator_int    = elevatorIntegration * controllerEnabled;
+		//aileron snapshot
+		dbg_aileronPos_raw = aileronGumstix;
+		dbg_aileronPos     = estimatedAileronPos;
+		dbg_aileronVel_raw = aileronSpeed;
+		dbg_aileronVel     = estimatedAileronVel;
+		dbg_aileron_sp     = aileronSetpoint;
+		dbg_aileron_man    = RCchannel[AILERON];
+		dbg_aileron_auto   = controllerAileronOutput * controllerEnabled;
+		dbg_aileron_int    = aileronIntegration * controllerEnabled;
 
 		//other values snapshot
-            dbg_gumstix_valid      = validGumstix;
+		dbg_gumstix_valid      = validGumstix;
 		dbg_px4flow_confidence = px4Confidence;
 		dbg_position_enabled   = positionControllerEnabled;
 
 	} else if(debug_cycle == 1)  {
 
-            //gumstix and px4flow confidences
-            sprintf(num, "%i", ((int16_t) dbg_gumstix_valid)); //11 Gumstix vaid
+		//gumstix and px4flow confidences
+		sprintf(num, "%i", ((int16_t) dbg_gumstix_valid)); //11 Gumstix vaid
 		Uart0_write_string(num, strlen(num));
 		Uart0_write_char(' ');
 
@@ -360,6 +360,7 @@ void debug() {
 		Uart0_write_char(' ');
 
 		sprintf(num, "%.3f", ((double) dbg_elevator_sp)); //17 EL setpoint
+		Uart0_write_string(num, strlen(num));
 		Uart0_write_char(' ');
 
 		sprintf(num, "%i", ((int16_t) dbg_elevator_man)); //18 EL manual
@@ -377,11 +378,11 @@ void debug() {
 	} else if(debug_cycle == 2)  {
 
 		//position enabled
-            sprintf(num, "%i", ((int16_t) dbg_position_enabled)); //21 Position enabled
+		sprintf(num, "%i", ((int16_t) dbg_position_enabled)); //21 Position enabled
 		Uart0_write_string(num, strlen(num));
 		Uart0_write_char(' ');
 
-		sprintf(num, "%i", 0);                               //22 (nothing)
+		sprintf(num, "%i", ((int16_t) 0)); //22 (nothing)
 		Uart0_write_string(num, strlen(num));
 		Uart0_write_char(' ');
 
@@ -403,6 +404,7 @@ void debug() {
 		Uart0_write_char(' ');
 
 		sprintf(num, "%.3f", ((double) dbg_aileron_sp)); //27 AIL setpoint
+		Uart0_write_string(num, strlen(num));
 		Uart0_write_char(' ');
 
 		sprintf(num, "%i", ((int16_t) dbg_aileron_man)); //28 AIL manual
@@ -523,9 +525,17 @@ int main() {
 
 		// load the constant values from the RC
 		// <0; 1>
-		constant1 = (float)((RCchannel[AUX1] - 2534))/1844;
-		constant2 = (float)((RCchannel[AUX2] - 2534))/1844;
-		constant5 = (float)((RCchannel[AUX5] - 2534))/1844;
+		constant1 = ((float)(RCchannel[AUX1] - PULSE_MIN))/(PULSE_MAX - PULSE_MIN);
+		if(constant1 > 1) constant1 = 1;
+		if(constant1 < 0) constant1 = 0;
+
+		constant2 = ((float)(RCchannel[AUX2] - PULSE_MIN))/(PULSE_MAX - PULSE_MIN);
+		if(constant2 > 1) constant2 = 1;
+		if(constant2 < 0) constant2 = 0;
+
+		constant5 = ((float)(RCchannel[AUX5] - PULSE_MIN))/(PULSE_MAX - PULSE_MIN);
+		if(constant5 > 1) constant5 = 1;
+		if(constant5 < 0) constant5 = 0;
 
 #if ATOM_DATA_RECEIVE == ENABLED
 

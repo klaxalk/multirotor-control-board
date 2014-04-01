@@ -19,8 +19,8 @@
 #define SETPOINT_FILTER_CONST   0.10
 
 // constants for position and velocity controllers
-#define ELEVATOR_SP_HIGH  -1.5
-#define ELEVATOR_SP_LOW   -2.5
+#define ELEVATOR_SP_HIGH  -1.0
+#define ELEVATOR_SP_LOW   -2.0
 
 #define AILERON_SP_HIGH   +0.5
 #define AILERON_SP_LOW    -0.5
@@ -36,10 +36,10 @@
 // constants for altitude and landing controllers
 #define ALTITUDE_MAXIMUM  3.00 //used to crop values from PX4Flow
 #define ALTITUDE_MINIMUM  0.35 //used for landing (must be > 0.3)
-#define LANDING_SPEED     -0.4 //in m/s, must be negative!
+#define LANDING_SPEED     -0.3 //in m/s, must be negative!
 
-#define THROTTLE_SP_HIGH  2.0
-#define THROTTLE_SP_LOW   1.0
+#define THROTTLE_SP_HIGH  1.5
+#define THROTTLE_SP_LOW   0.5
 
 #define ALTITUDE_KP 180
 #define ALTITUDE_KI 120
