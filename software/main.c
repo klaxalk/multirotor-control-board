@@ -487,17 +487,6 @@ int main() {
 		// PWM input capture
 		capturePWMInput();
 
-		// autooff throttle when the RC throttle stick went down
-		if (RCchannel[THROTTLE] > 2700) {
-			previous_throttle = 1;
-		} else {
-			if (previous_throttle == 1) {
-				//~ disableController();
-				disarmVehicle();
-			}
-			previous_throttle = 0;
-		}
-
 		// controller on/off
 		if (abs(RCchannel[AUX3] - PULSE_MIDDLE) < 200) {
 			if (previous_AUX3 == 0) {
@@ -727,53 +716,6 @@ int main() {
 		// set outputs signals for MK only if it should be
 		mergeSignalsToOutput();
 
-		// button1 was pressed
-		//~ if (button1check()) {}
-
-		// button2 was pressed
-		//~ if (button2check()) {}
-
-		// gets triggered every second
-		// handles slow periodic events
-		if (myTimer >= 61) {
-
-			buttonChangeEnable = 1;
-
-			myTimer = 0;
-
-			// arming procedure
-			if ((armingToggled >= 1) && (armingToggled <= 4)) {
-
-				armingToggled++;
-			} else if (armingToggled == 5) {
-
-				outputChannels[0] = PULSE_MIN;
-				outputChannels[1] = PULSE_MIDDLE;
-				armingToggled++;
-			} else if (armingToggled == 6) {
-
-				outputChannels[0] = PULSE_MIN;
-				outputChannels[1] = PULSE_MIN;
-				armingToggled++;
-			} else if (armingToggled == 7) {
-
-				outputChannels[0] = PULSE_MIN;
-				outputChannels[1] = PULSE_MIDDLE;
-				armingToggled = 0;
-				// enableController();
-			}
-
-			// disarming procedure
-			if ((disarmingToggled >= 1) && (disarmingToggled <= 3)) {
-
-				disarmingToggled++;
-			} else if (disarmingToggled == 4) {
-
-				outputChannels[0] = PULSE_MIN;
-				outputChannels[1] = PULSE_MIDDLE;
-				disarmingToggled = 0;
-			}
-		}
 	}
 
 	return 0;
