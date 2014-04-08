@@ -451,17 +451,8 @@ int main() {
 			setpoints();
 
 			positionController();
+			altitudeController();
 
-			if (landingMode == 1) {
-
-				landingController();
-
-			} else {
-
-				altitudeController();
-
-			}
-			
 #endif // PX4FLOW_DATA_RECEIVE == ENABLED
 
 #if LOGGING_ON == ENABLED

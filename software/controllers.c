@@ -87,33 +87,35 @@ void positionController() {
 	float acc_new;
 
 	float error;
-	float proportional;
-	float derivative1;
 	float derivative2;
-	//float integrational;
+	float vd; //desired velocity
 
-	float KP, KI, KV, KA;
+	float KX, KI, KV, KA;
 
+	//set controller constants
 	if(positionControllerEnabled) {
-		KP = POSITION_KP;
+		KX = (POSITION_KP / POSITION_KV);
 		KI = POSITION_KI;
 		KV = POSITION_KV;
 		KA = POSITION_KA;
 
 	} else { //velocity controller
-		KP = VELOCITY_KP;
 		KI = VELOCITY_KI;
-		KV = 0;
-		KA = VELOCITY_KD;
+		KV = VELOCITY_KV;
+		KA = VELOCITY_KA;
+ 
 	}
 
 	//elevator controller
 	if(positionControllerEnabled) {
 		error = elevatorSetpoint - estimatedElevatorPos;
-	} else {
+		vd = KX * error;
+		if(vd > +POSITION_SPEED_MAX) vd = +POSITION_SPEED_MAX;
+		if(vd < -POSITION_SPEED_MAX) vd = -POSITION_SPEED_MAX;
+	} else { //velocity controller
+		vd = 0;
 		error = - estimatedElevatorVel;
 	}
-	proportional = KP * error;
 
 	elevatorIntegration += KI * error * DT;
 	if (elevatorIntegration > CONTROLLER_ELEVATOR_SATURATION/2) {
@@ -122,14 +124,13 @@ void positionController() {
 		elevatorIntegration = -CONTROLLER_ELEVATOR_SATURATION/2;
 	}
 
-	derivative1 = -1 * KV * estimatedElevatorVel;
-
 	acc_new = (estimatedElevatorVel - elevatorSpeed_prev) / DT;
 	elevatorSpeed_prev = estimatedElevatorVel;
 	elevatorAcc_filt += (acc_new - elevatorAcc_filt) * (DT/PX4FLOW_FILTER_CONST);
 	derivative2 = -1 * KA * elevatorAcc_filt;
 
-	controllerElevatorOutput = proportional + elevatorIntegration + derivative1 + derivative2;
+	controllerElevatorOutput =
+		KV * (vd - estimatedElevatorVel) + elevatorIntegration + derivative2;
 	if (controllerElevatorOutput > CONTROLLER_ELEVATOR_SATURATION) {
 		controllerElevatorOutput = CONTROLLER_ELEVATOR_SATURATION;
 	} else if (controllerElevatorOutput < -CONTROLLER_ELEVATOR_SATURATION) {
@@ -140,11 +141,14 @@ void positionController() {
 	//aileron controller
 	if(positionControllerEnabled) {
 		error = aileronSetpoint - estimatedAileronPos;
-	} else {
+		vd = KX * error;
+		if(vd > +POSITION_SPEED_MAX) vd = +POSITION_SPEED_MAX;
+		if(vd < -POSITION_SPEED_MAX) vd = -POSITION_SPEED_MAX;
+	} else { //velocity controller
+		vd = 0;
 		error = - estimatedAileronVel;
 	}
-	proportional = KP * error;
-	
+
 	aileronIntegration += KI * error * DT;
 	if (aileronIntegration > CONTROLLER_AILERON_SATURATION/2) {
 		aileronIntegration = CONTROLLER_AILERON_SATURATION/2;
@@ -152,14 +156,13 @@ void positionController() {
 		aileronIntegration = -CONTROLLER_AILERON_SATURATION/2;
 	} 
 
-	derivative1 = -1 * KV * estimatedAileronVel;
-
 	acc_new = (estimatedAileronVel - aileronSpeed_prev) / DT;
 	aileronSpeed_prev = estimatedAileronVel;
 	aileronAcc_filt += (acc_new - aileronAcc_filt) * (DT/PX4FLOW_FILTER_CONST);
 	derivative2 = -1 * KA * aileronAcc_filt;
 
-	controllerAileronOutput = proportional + aileronIntegration + derivative1 + derivative2;
+	controllerAileronOutput =
+		KV * (vd - estimatedAileronVel) + aileronIntegration + derivative2;
 	if (controllerAileronOutput > CONTROLLER_AILERON_SATURATION) {
 		controllerAileronOutput = CONTROLLER_AILERON_SATURATION;
 	} else if (controllerAileronOutput < -CONTROLLER_AILERON_SATURATION) {
@@ -210,18 +213,33 @@ void altitudeEstimator() {
 }
 
 //~ ------------------------------------------------------------------------ ~//
-//~ Altitude Controller - stabilizes throttle to a fixed altitude            ~//
+//~ Altitude Controller - stabilizes throttle                                ~//
 //~ ------------------------------------------------------------------------ ~//
 void altitudeController() {
 
-	float KP = ALTITUDE_KP;
-	float KD = ALTITUDE_KD;
-	float KI = ALTITUDE_KI;	
+	float error;
+	float vd; //desired velocity
 
-	float error = throttleSetpoint - estimatedThrottlePos;
+	float KX, KI, KV;
 
-	// calculate proportional
-	float proportional = KP * error;
+	if(landingMode) {
+		KI = LANDING_KI;
+		KV = LANDING_KV;
+
+		error = LANDING_SPEED - estimatedThrottleVel;
+		vd = LANDING_SPEED;
+
+	} else { //altitude controller
+		KX = (ALTITUDE_KP / ALTITUDE_KV);
+		KI = ALTITUDE_KI;
+		KV = ALTITUDE_KV;
+
+		error =(throttleSetpoint - estimatedThrottlePos);
+		vd = KX * error;
+		if(vd > +ALTITUDE_SPEED_MAX) vd = +ALTITUDE_SPEED_MAX;
+		if(vd < -ALTITUDE_SPEED_MAX) vd = -ALTITUDE_SPEED_MAX;
+
+	}
 
 	// calculate integrational
 	throttleIntegration += KI * error * DT;
@@ -232,63 +250,9 @@ void altitudeController() {
 		throttleIntegration = -CONTROLLER_THROTTLE_SATURATION*2/3;
 	}
 
-	// calculate derivative
-	float derivative = -1 * KD * estimatedThrottleVel;
-	
 	//total output
-	controllerThrottleOutput = proportional + throttleIntegration + derivative;
-	if (controllerThrottleOutput > CONTROLLER_THROTTLE_SATURATION) {
-		controllerThrottleOutput = CONTROLLER_THROTTLE_SATURATION;
-	}
-	if (controllerThrottleOutput < -CONTROLLER_THROTTLE_SATURATION) {
-		controllerThrottleOutput = -CONTROLLER_THROTTLE_SATURATION;
-	}
-
-}
-
-//~ ------------------------------------------------------------------------ ~//
-//~ Landing Controller - performs autonomous landing                         ~//
-//~ ------------------------------------------------------------------------ ~//
-void landingController() {
-
-	float KP = ALTITUDE_KP;
-	float KI = ALTITUDE_KI;
-
-	//float landingSpeed = - 0.4; //m/s
-	//float landingDecrease = 25; //cmd/s
-
-	static float landing_counter = 0;
-
-	if(estimatedThrottlePos > ALTITUDE_MINIMUM)
-	{
-		landing_counter = 0;
-
-		float error = (LANDING_SPEED - estimatedThrottleVel);
-
-		// calculate proportional
-		float proportional = KP * error;
-
-		// calculate integrational
-		throttleIntegration += KI * error * DT;
-		if (throttleIntegration > CONTROLLER_THROTTLE_SATURATION*2/3) {
-			throttleIntegration = CONTROLLER_THROTTLE_SATURATION*2/3;
-		}
-		if (throttleIntegration <  -CONTROLLER_THROTTLE_SATURATION*2/3) {
-			throttleIntegration = -CONTROLLER_THROTTLE_SATURATION*2/3;
-		}
-
-		//total output
-		controllerThrottleOutput = proportional + throttleIntegration;
-	}
-	else if(controllerThrottleOutput > -CONTROLLER_THROTTLE_SATURATION)
-	{
-		//final landing stage
-		if(++landing_counter >= 8){
-			controllerThrottleOutput = -CONTROLLER_THROTTLE_SATURATION;
-		}
-	}
-
-	//output saturation
+	controllerThrottleOutput =
+		KV * (vd - estimatedThrottleVel) + throttleIntegration;
 	if (controllerThrottleOutput > CONTROLLER_THROTTLE_SATURATION) {
 		controllerThrottleOutput = CONTROLLER_THROTTLE_SATURATION;
 	}
@@ -299,4 +263,3 @@ void landingController() {
 }
 
 #endif // PX4FLOW_DATA_RECEIVE == ENABLED
-

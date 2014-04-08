@@ -41,15 +41,7 @@ void disablePositionController();
 
 void enablePositionController();
 
-void disarmVehicle();
-
-void armVehicle();
-
 void initializeMCU();
-
-int8_t button1check();
-
-int8_t button2check();
 
 #if ATOM_DATA_RECEIVE == ENABLED
 

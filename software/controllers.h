@@ -25,9 +25,11 @@
 #define AILERON_SP_HIGH   +0.5
 #define AILERON_SP_LOW    -0.5
 
-#define VELOCITY_KP 250
+#define POSITION_SPEED_MAX 0.6 //in m/s, must be positive!
+
+#define VELOCITY_KV 250
 #define VELOCITY_KI 10
-#define VELOCITY_KD 30
+#define VELOCITY_KA 30
 
 #define POSITION_KP 110
 #define POSITION_KI 5
@@ -37,6 +39,7 @@
 // constants for altitude and landing controllers
 #define ALTITUDE_MAXIMUM  3.00 //used to crop values from PX4Flow
 #define ALTITUDE_MINIMUM  0.35 //used for landing (must be > 0.3)
+#define ALTITUDE_SPEED_MAX 0.8 //in m/s, must be positive!
 #define LANDING_SPEED     -0.4 //in m/s, must be negative!
 
 #define THROTTLE_SP_HIGH  1.5
@@ -44,9 +47,9 @@
 
 #define ALTITUDE_KP 180
 #define ALTITUDE_KI 120
-#define ALTITUDE_KD 200
+#define ALTITUDE_KV 200
 
-#define LANDING_KP 180
+#define LANDING_KV 180
 #define LANDING_KI 120
 
 // common global variables
@@ -116,10 +119,7 @@ void positionController();
 //altitude estimator and controllers
 void altitudeEstimator();
 void altitudeController();
-void landingController();
-
 
 #endif // PX4FLOW_DATA_RECEIVE == ENABLED
 
 #endif // _CONTROLLERS_H
-
