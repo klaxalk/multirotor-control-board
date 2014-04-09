@@ -214,6 +214,34 @@ volatile int16_t rollAngle = 0;
 
 #if LOGGING_ON == ENABLED
 
+int num2str(int16_t num, char* str){
+
+	int16_t divider = 1;
+	int16_t i = 0;
+
+	if(num < 0){
+		str[i++] = '-';
+		num = - num;
+	}
+
+	if(num >= 10000){
+		num = 9999;
+		divider = 1000;
+	}else{
+		while(num/divider > 10) divider *= 10;
+	}
+
+	while(num > 9){
+		str[i++] = (num/divider) + '0';
+		num %= divider;
+		divider /= 10;
+	}
+	str[i++] = num + '0';
+	str[i] = '\0';
+	return i;
+
+}
+
 void debug() {
 
 	char num[20];
@@ -277,16 +305,13 @@ void debug() {
 		Uart0_write_string(num, strlen(num));
 		Uart0_write_char(' ');
 
-		sprintf(num, "%i", ((int16_t) RCchannel[THROTTLE])); //8 TH manual
-		Uart0_write_string(num, strlen(num));
+		Uart0_write_string(num, num2str(RCchannel[THROTTLE], num)); //8 TH manual
 		Uart0_write_char(' ');
 
-		sprintf(num, "%i", ((int16_t) (controllerThrottleOutput * controllerEnabled))); //9 TH controller
-		Uart0_write_string(num, strlen(num));
+		Uart0_write_string(num, num2str((controllerThrottleOutput * controllerEnabled), num)); //9 TH controller
 		Uart0_write_char(' ');
 
-		sprintf(num, "%i", ((int16_t) (throttleIntegration * controllerEnabled))); //10 TH integration
-		Uart0_write_string(num, strlen(num));
+		Uart0_write_string(num, num2str((throttleIntegration * controllerEnabled), num)); //10 TH integration
 		Uart0_write_char(' ');
 
 		//elevator snapshot
@@ -317,12 +342,10 @@ void debug() {
 	} else if(debug_cycle == 1)  {
 
 		//gumstix and px4flow confidences
-		sprintf(num, "%i", ((int16_t) dbg_gumstix_valid)); //11 Gumstix vaid
-		Uart0_write_string(num, strlen(num));
+		Uart0_write_string(num, num2str(dbg_gumstix_valid, num)); //11 Gumstix vaid
 		Uart0_write_char(' ');
 
-		sprintf(num, "%i", ((int16_t) dbg_px4flow_confidence)); //12 XP4 confidence
-		Uart0_write_string(num, strlen(num));
+		Uart0_write_string(num, num2str(dbg_px4flow_confidence, num)); //12 XP4 confidence
 		Uart0_write_char(' ');
 
 		//elevator values
@@ -346,27 +369,24 @@ void debug() {
 		Uart0_write_string(num, strlen(num));
 		Uart0_write_char(' ');
 
-		sprintf(num, "%i", ((int16_t) dbg_elevator_man)); //18 EL manual
-		Uart0_write_string(num, strlen(num));
+		Uart0_write_string(num, num2str(dbg_elevator_man, num)); //18 EL manual
 		Uart0_write_char(' ');
 
-		sprintf(num, "%i", ((int16_t) dbg_elevator_auto)); //19 EL controller
-		Uart0_write_string(num, strlen(num));
+		Uart0_write_string(num, num2str(dbg_elevator_auto, num)); //19 EL controller
 		Uart0_write_char(' ');
 
-		sprintf(num, "%i", ((int16_t) dbg_elevator_int)); //20 EL integration
-		Uart0_write_string(num, strlen(num));
+		Uart0_write_string(num, num2str(dbg_elevator_int, num)); //20 EL integration
 		Uart0_write_char(' ');
 
 	} else if(debug_cycle == 2)  {
 
 		//position enabled
-		sprintf(num, "%i", ((int16_t) dbg_position_enabled)); //21 Position enabled
-		Uart0_write_string(num, strlen(num));
+		Uart0_write_string(num, num2str(dbg_position_enabled, num)); //21 Position enabled
 		Uart0_write_char(' ');
 
-		sprintf(num, "%i", ((int16_t) 0)); //22 (nothing)
-		Uart0_write_string(num, strlen(num));
+		//sprintf(num, "%i", ((int16_t) 0)); //22 (nothing)
+		//Uart0_write_string(num, strlen(num));
+		Uart0_write_char('0');
 		Uart0_write_char(' ');
 
 		//aileron values
@@ -390,16 +410,13 @@ void debug() {
 		Uart0_write_string(num, strlen(num));
 		Uart0_write_char(' ');
 
-		sprintf(num, "%i", ((int16_t) dbg_aileron_man)); //28 AIL manual
-		Uart0_write_string(num, strlen(num));
+		Uart0_write_string(num, num2str(dbg_aileron_man, num)); //28 AIL manual
 		Uart0_write_char(' ');
 
-		sprintf(num, "%i", ((int16_t) dbg_aileron_auto)); //29 AIL controller
-		Uart0_write_string(num, strlen(num));
+		Uart0_write_string(num, num2str(dbg_aileron_auto, num)); //29 AIL controller
 		Uart0_write_char(' ');
 
-		sprintf(num, "%i", ((int16_t) dbg_aileron_int)); //30 AIL integration
-		Uart0_write_string(num, strlen(num));
+		Uart0_write_string(num, num2str(dbg_aileron_int, num)); //30 AIL integration
 		Uart0_write_char(' ');
 
 		//end of line
