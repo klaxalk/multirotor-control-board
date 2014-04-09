@@ -11,7 +11,8 @@
 //~ ------------------------------------------------------------------------ ~//
 void setpoints() {
 
-	float sp_new, dTime, dValue;
+	float sp_new, dTime;
+	int16_t dValue;
 	static float aileronIncrement;
 	static float elevatorIncrement;
 
@@ -34,10 +35,10 @@ void setpoints() {
 		if(trajIndex < 0 || trajTimer >= trajectory[trajIndex].time) {
 			trajIndex++;
 			dTime  = (trajectory[trajIndex].time - trajTimer);
-                  dValue = (trajectory[trajIndex].elevatorPos - elevatorSetpoint);
-			elevatorIncrement = (dValue / dTime);
-                  dValue = (trajectory[trajIndex].aileronPos - aileronSetpoint);
-			aileronIncrement = (dValue / dTime);
+			dValue = (trajectory[trajIndex].elevatorPos - elevatorSetpoint);
+			elevatorIncrement = ((float)dValue) / 1000 / dTime;
+			dValue = (trajectory[trajIndex].aileronPos - aileronSetpoint);
+			aileronIncrement = ((float)dValue) / 1000 / dTime;
 		}
 
 		trajTimer  += DT;
