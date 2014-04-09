@@ -64,6 +64,9 @@ void Uart0_write_char(unsigned char c);
 // write string to Uart0 (debug) serial output
 void Uart0_write_string(char* array, int len);
 
+// write num to Uart0 (debug) serial output
+void Uart0_write_num(int16_t num);
+
 #if FLIGHTCTRL_DATA_RECEIVE == ENABLED
 
 // decode the base64 encoded data from the Flight-CTRL

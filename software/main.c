@@ -214,34 +214,6 @@ volatile int16_t rollAngle = 0;
 
 #if LOGGING_ON == ENABLED
 
-int num2str(int16_t num, char* str){
-
-	int16_t divider = 1;
-	int16_t i = 0;
-
-	if(num < 0){
-		str[i++] = '-';
-		num = - num;
-	}
-
-	if(num >= 10000){
-		num = 9999;
-		divider = 1000;
-	}else{
-		while(num/divider > 10) divider *= 10;
-	}
-
-	while(num > 9){
-		str[i++] = (num/divider) + '0';
-		num %= divider;
-		divider /= 10;
-	}
-	str[i++] = num + '0';
-	str[i] = '\0';
-	return i;
-
-}
-
 void debug() {
 
 	char num[20];
@@ -279,39 +251,33 @@ void debug() {
 		Uart0_write_string(num, strlen(num));
 		Uart0_write_char(' ');
 
-		sprintf(num, "%.2f", ((double)main_cycle)/3); //2 Main cycles
-		Uart0_write_string(num, strlen(num));
+		Uart0_write_num(main_cycle/3); //2 Main cycles
 		Uart0_write_char(' ');
 		main_cycle = 0;
 
 		//Throttle values
-		sprintf(num, "%.3f", ((double) groundDistance)); //3 PX4 raw altitude (from ground)
-		Uart0_write_string(num, strlen(num));
+		Uart0_write_num(groundDistance*1000); //3 PX4 raw altitude (from ground)
 		Uart0_write_char(' ');
 
-		sprintf(num, "%.3f", ((double) estimatedThrottlePos)); //4 Estimated TH position
-		Uart0_write_string(num, strlen(num));
+		Uart0_write_num(estimatedThrottlePos*1000); //4 Estimated TH position
 		Uart0_write_char(' ');
 
-		sprintf(num, "%.3f", ((double) throttleGumstix)); //5 Gumstix raw altitude (from blob)
-		Uart0_write_string(num, strlen(num));
+		Uart0_write_num(throttleGumstix*1000); //5 Gumstix raw altitude (from blob)
 		Uart0_write_char(' ');
 
-		sprintf(num, "%.3f", ((double) estimatedThrottleVel)); //6 Estimated TH velocity
-		Uart0_write_string(num, strlen(num));
+		Uart0_write_num(estimatedThrottleVel*1000); //6 Estimated TH velocity
 		Uart0_write_char(' ');
 
-		sprintf(num, "%.3f", ((double) throttleSetpoint)); //7 TH setpoint
-		Uart0_write_string(num, strlen(num));
+		Uart0_write_num(throttleSetpoint*1000); //7 TH setpoint
 		Uart0_write_char(' ');
 
-		Uart0_write_string(num, num2str(RCchannel[THROTTLE], num)); //8 TH manual
+		Uart0_write_num(RCchannel[THROTTLE]); //8 TH manual
 		Uart0_write_char(' ');
 
-		Uart0_write_string(num, num2str((controllerThrottleOutput * controllerEnabled), num)); //9 TH controller
+		Uart0_write_num(controllerThrottleOutput * controllerEnabled); //9 TH controller
 		Uart0_write_char(' ');
 
-		Uart0_write_string(num, num2str((throttleIntegration * controllerEnabled), num)); //10 TH integration
+		Uart0_write_num(throttleIntegration * controllerEnabled); //10 TH integration
 		Uart0_write_char(' ');
 
 		//elevator snapshot
@@ -342,46 +308,41 @@ void debug() {
 	} else if(debug_cycle == 1)  {
 
 		//gumstix and px4flow confidences
-		Uart0_write_string(num, num2str(dbg_gumstix_valid, num)); //11 Gumstix vaid
+		Uart0_write_num(dbg_gumstix_valid); //11 Gumstix vaid
 		Uart0_write_char(' ');
 
-		Uart0_write_string(num, num2str(dbg_px4flow_confidence, num)); //12 XP4 confidence
+		Uart0_write_num(dbg_px4flow_confidence); //12 XP4 confidence
 		Uart0_write_char(' ');
 
 		//elevator values
-		sprintf(num, "%.3f", ((double) dbg_elevatorPos_raw)); //13 EL raw gumstix position
-		Uart0_write_string(num, strlen(num));
+		Uart0_write_num(dbg_elevatorPos_raw*1000); //13 EL raw gumstix position
 		Uart0_write_char(' ');
 
-		sprintf(num, "%.3f", ((double) dbg_elevatorPos)); //14 EL estimated position
-		Uart0_write_string(num, strlen(num));
+		Uart0_write_num(dbg_elevatorPos*1000); //14 EL estimated position
 		Uart0_write_char(' ');
 
-		sprintf(num, "%.3f", ((double) dbg_elevatorVel_raw)); //15 EL PX4 raw velocity
-		Uart0_write_string(num, strlen(num));
+		Uart0_write_num(dbg_elevatorVel_raw*1000); //15 EL PX4 raw velocity
 		Uart0_write_char(' ');
 
-		sprintf(num, "%.3f", ((double) dbg_elevatorVel)); //16 EL estimated velocity
-		Uart0_write_string(num, strlen(num));
+		Uart0_write_num(dbg_elevatorVel*1000); //16 EL estimated velocity
 		Uart0_write_char(' ');
 
-		sprintf(num, "%.3f", ((double) dbg_elevator_sp)); //17 EL setpoint
-		Uart0_write_string(num, strlen(num));
+		Uart0_write_num(dbg_elevator_sp*1000); //17 EL setpoint
 		Uart0_write_char(' ');
 
-		Uart0_write_string(num, num2str(dbg_elevator_man, num)); //18 EL manual
+		Uart0_write_num(dbg_elevator_man); //18 EL manual
 		Uart0_write_char(' ');
 
-		Uart0_write_string(num, num2str(dbg_elevator_auto, num)); //19 EL controller
+		Uart0_write_num(dbg_elevator_auto); //19 EL controller
 		Uart0_write_char(' ');
 
-		Uart0_write_string(num, num2str(dbg_elevator_int, num)); //20 EL integration
+		Uart0_write_num(dbg_elevator_int); //20 EL integration
 		Uart0_write_char(' ');
 
 	} else if(debug_cycle == 2)  {
 
 		//position enabled
-		Uart0_write_string(num, num2str(dbg_position_enabled, num)); //21 Position enabled
+		Uart0_write_num(dbg_position_enabled); //21 Position enabled
 		Uart0_write_char(' ');
 
 		//sprintf(num, "%i", ((int16_t) 0)); //22 (nothing)
@@ -390,33 +351,28 @@ void debug() {
 		Uart0_write_char(' ');
 
 		//aileron values
-		sprintf(num, "%.3f", ((double) dbg_aileronPos_raw)); //23 AIL raw gumstix position
-		Uart0_write_string(num, strlen(num));
+		Uart0_write_num(dbg_aileronPos_raw*1000); //23 AIL raw gumstix position
 		Uart0_write_char(' ');
 
-		sprintf(num, "%.3f", ((double) dbg_aileronPos)); //24 AIL estimated position
-		Uart0_write_string(num, strlen(num));
+		Uart0_write_num(dbg_aileronPos*1000); //24 AIL estimated position
 		Uart0_write_char(' ');
 
-		sprintf(num, "%.3f", ((double) dbg_aileronVel_raw)); //25 AIL PX4 raw velocity
-		Uart0_write_string(num, strlen(num));
+		Uart0_write_num(dbg_aileronVel_raw*1000); //25 AIL PX4 raw velocity
 		Uart0_write_char(' ');
 
-		sprintf(num, "%.3f", ((double) dbg_aileronVel)); //26 AIL estimated velocity
-		Uart0_write_string(num, strlen(num));
+		Uart0_write_num(dbg_aileronVel*1000); //26 AIL estimated velocity
 		Uart0_write_char(' ');
 
-		sprintf(num, "%.3f", ((double) dbg_aileron_sp)); //27 AIL setpoint
-		Uart0_write_string(num, strlen(num));
+		Uart0_write_num( dbg_aileron_sp*1000); //27 AIL setpoint
 		Uart0_write_char(' ');
 
-		Uart0_write_string(num, num2str(dbg_aileron_man, num)); //28 AIL manual
+		Uart0_write_num(dbg_aileron_man); //28 AIL manual
 		Uart0_write_char(' ');
 
-		Uart0_write_string(num, num2str(dbg_aileron_auto, num)); //29 AIL controller
+		Uart0_write_num(dbg_aileron_auto); //29 AIL controller
 		Uart0_write_char(' ');
 
-		Uart0_write_string(num, num2str(dbg_aileron_int, num)); //30 AIL integration
+		Uart0_write_num(dbg_aileron_int); //30 AIL integration
 		Uart0_write_char(' ');
 
 		//end of line
