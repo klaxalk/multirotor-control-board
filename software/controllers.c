@@ -11,17 +11,40 @@
 //~ ------------------------------------------------------------------------ ~//
 void setpoints() {
 
-	float sp_new;
+	float sp_new, dTime, dValue;
+	static float aileronIncrement;
+	static float elevatorIncrement;
 
-	//setpoint setting from RC transmitter
-	//sp_new = ELEVATOR_SP_HIGH * constant2 + ELEVATOR_SP_LOW * (1-constant2);
-	//elevatorSetpoint += (sp_new-elevatorSetpoint) * (DT/SETPOINT_FILTER_CONST);
+      //manual setpoints
+	if(!trajectoryEnabled){
 
-	sp_new = AILERON_SP_HIGH * constant2 + AILERON_SP_LOW * (1-constant2);
-	aileronSetpoint += (sp_new-aileronSetpoint) * (DT/SETPOINT_FILTER_CONST);
+		//setpoint setting from RC transmitter
+		//sp_new = ELEVATOR_SP_HIGH * constant2 + ELEVATOR_SP_LOW * (1-constant2);
+		//elevatorSetpoint += (sp_new-elevatorSetpoint) * (DT/SETPOINT_FILTER_CONST);
 
-	sp_new = THROTTLE_SP_HIGH * constant1 + THROTTLE_SP_LOW * (1-constant1);
-	throttleSetpoint += (sp_new-throttleSetpoint) * (DT/SETPOINT_FILTER_CONST);
+		sp_new = AILERON_SP_HIGH * constant2 + AILERON_SP_LOW * (1-constant2);
+		aileronSetpoint += (sp_new-aileronSetpoint) * (DT/SETPOINT_FILTER_CONST);
+
+		sp_new = THROTTLE_SP_HIGH * constant1 + THROTTLE_SP_LOW * (1-constant1);
+		throttleSetpoint += (sp_new-throttleSetpoint) * (DT/SETPOINT_FILTER_CONST);
+
+      //trajectory following
+	}else if(trajIndex < TRAJECTORY_LENGTH){
+
+		if(trajIndex < 0 || trajTimer >= trajectory[trajIndex].time) {
+			trajIndex++;
+			dTime  = (trajectory[trajIndex].time - trajTimer);
+                  dValue = (trajectory[trajIndex].elevatorPos - elevatorSetpoint);
+			elevatorIncrement = (dValue / dTime);
+                  dValue = (trajectory[trajIndex].aileronPos - aileronSetpoint);
+			aileronIncrement = (dValue / dTime);
+		}
+
+		trajTimer  += DT;
+		elevatorSetpoint += elevatorIncrement;
+		aileronSetpoint  += aileronIncrement;
+
+	}
 
 }
 

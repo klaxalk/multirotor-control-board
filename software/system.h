@@ -15,17 +15,6 @@ extern volatile uint8_t portMask2;
 extern volatile float throttleIntegration;
 extern volatile unsigned char positionControllerEnabled;
 
-extern volatile uint8_t vehicleArmed;
-extern volatile uint8_t armingToggled;
-extern volatile uint8_t disarmingToggled;
-
-// buttons variables
-extern volatile char button1pressed;
-extern volatile char button1pressedMap;
-extern volatile char button2pressed;
-extern volatile char button2pressedMap;
-extern volatile char buttonChangeEnable;
-
 #if PX4FLOW_DATA_RECEIVE == ENABLED
 
 extern volatile float elevatorSpeedIntegration;

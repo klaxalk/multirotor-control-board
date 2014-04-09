@@ -108,8 +108,25 @@ extern volatile float elevatorSetpoint;
 extern volatile float aileronSetpoint;
 extern volatile float throttleSetpoint;
 
-//setpoint handling
+//auto-trajectory vars
+extern volatile unsigned char trajectoryEnabled;
+extern volatile float trajTimer;
+extern volatile int trajIndex;
+typedef struct {
+	float time;
+	float elevatorPos;
+	float aileronPos;
+} trajectoryPoint_t;
+extern volatile trajectoryPoint_t trajectory[];
+#define TRAJECTORY_LENGTH	10
+#define TRAJ_POINT(i,t,e,a) \
+	trajectory[i].time = t; \
+      trajectory[i].elevatorPos = e; \
+      trajectory[i].aileronPos = a
+
+//setpoint and trajectory handling
 void setpoints();
+
 
 //position estimator and controllers
 void positionEstimator();

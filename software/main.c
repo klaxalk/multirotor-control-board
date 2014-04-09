@@ -42,22 +42,6 @@ volatile uint8_t currentChannelOut = 0;
 // temporary var for current time preservation
 volatile uint16_t currentTime = 0;
 
-// the slow timer variable
-volatile uint8_t myTimer = 0;
-
-// the quadcopter armed state
-volatile uint8_t vehicleArmed = 0;
-
-// buttons variables
-volatile char button1pressed = 0;
-volatile char button1pressedMap = 0;
-volatile char button2pressed = 0;
-volatile char button2pressedMap = 0;
-volatile char buttonChangeEnable = 0;
-
-volatile uint8_t armingToggled = 0;
-volatile uint8_t disarmingToggled = 0;
-
 // flag to run the controllers
 volatile int8_t controllersFlag = 0;
 
@@ -85,9 +69,6 @@ volatile unsigned char landingMode = 0;
 
 // for on-off by AUX3 channel
 int8_t previous_AUX3 = 0;
-
-// for auto on-off by throttle stick
-volatile int8_t previous_throttle = 0;
 
 //~ --------------------------------------------------------------------
 //~ Variables used with the px4flow sensor
@@ -123,6 +104,12 @@ volatile float throttleIntegration = 0;
 volatile float elevatorSetpoint = (ELEVATOR_SP_LOW + ELEVATOR_SP_HIGH)/2;
 volatile float aileronSetpoint  = (AILERON_SP_LOW  + AILERON_SP_HIGH )/2;
 volatile float throttleSetpoint = (THROTTLE_SP_LOW + THROTTLE_SP_HIGH)/2;
+
+//auto-trajectory vars
+volatile unsigned char trajectoryEnabled = 0;
+volatile float trajTimer = 0;
+volatile int trajIndex = -1;
+volatile trajectoryPoint_t trajectory[TRAJECTORY_LENGTH];
 
 #endif // PX4FLOW_DATA_RECEIVE == ENABLED
 
@@ -424,10 +411,31 @@ void debug() {
 
 #endif // LOGGING_ON == ENABLED
 
+void writeTrajectory1(){
+	float ELEVATOR_SP_MIDDLE = (ELEVATOR_SP_LOW + ELEVATOR_SP_HIGH)/2;
+      float AILERON_SP_MIDDLE  = (AILERON_SP_LOW  + AILERON_SP_HIGH)/2;
+
+	TRAJ_POINT(0,  2, ELEVATOR_SP_HIGH,   AILERON_SP_MIDDLE);
+      TRAJ_POINT(1,  4, ELEVATOR_SP_MIDDLE, AILERON_SP_MIDDLE);
+
+      TRAJ_POINT(2,  6, ELEVATOR_SP_MIDDLE, AILERON_SP_LOW);
+      TRAJ_POINT(3,  8, ELEVATOR_SP_MIDDLE, AILERON_SP_MIDDLE);
+
+	TRAJ_POINT(4, 10, ELEVATOR_SP_LOW,    AILERON_SP_MIDDLE);
+      TRAJ_POINT(5, 12, ELEVATOR_SP_MIDDLE, AILERON_SP_MIDDLE);
+
+	TRAJ_POINT(6, 14, ELEVATOR_SP_MIDDLE, AILERON_SP_HIGH);
+      TRAJ_POINT(7, 16, ELEVATOR_SP_MIDDLE, AILERON_SP_MIDDLE);
+
+	TRAJ_POINT(8,999, ELEVATOR_SP_MIDDLE, AILERON_SP_MIDDLE);
+}
+
 int main() {
 
 	// initialize the MCU (timers, uarts and so on)
 	initializeMCU();
+
+	writeTrajectory1();
 
 	// the main while cycle
 	while (1) {
@@ -487,8 +495,15 @@ int main() {
 		// landing on/off
 		if (RCchannel[AUX4] < (PULSE_MIDDLE - 200)) {
 			landingMode = 1;
-		} else {
+		} else if(RCchannel[AUX4] > (PULSE_MIDDLE + 200)) {
+			if(!trajectoryEnabled){
+				trajectoryEnabled = 1;
+				trajIndex = -1;
+				trajTimer = 0;
+			}
+		}else{
 			landingMode = 0;
+			trajectoryEnabled = 0;
 		}
 
 		// load the constant values from the RC
@@ -866,7 +881,6 @@ ISR(PCINT1_vect) {
 // fires onterrupt on 8bit timer overflow (aprox 70x in second)
 ISR(TIMER0_OVF_vect) {
 
-	myTimer++;
 	timeStamp += DT;
 	controllersFlag = 1;
 }
