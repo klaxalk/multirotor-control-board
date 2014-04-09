@@ -108,7 +108,17 @@ extern volatile float elevatorSetpoint;
 extern volatile float aileronSetpoint;
 extern volatile float throttleSetpoint;
 
-//auto-trajectory vars
+//auto-landing variables and state defines
+extern volatile unsigned char landingRequest;
+extern volatile unsigned char landingState;
+extern volatile uint8_t landingCounter;
+#define LS_ON_GROUND          0
+#define LS_STABILIZATION      1
+#define LS_LANDING            2
+#define LS_TAKEOFF            3
+#define LS_FLIGHT             4
+
+//auto-trajectory variables and types
 extern volatile unsigned char trajectoryEnabled;
 extern volatile float trajTimer;
 extern volatile int trajIndex;
@@ -127,7 +137,6 @@ extern volatile trajectoryPoint_t trajectory[];
 //setpoint and trajectory handling
 void setpoints();
 
-
 //position estimator and controllers
 void positionEstimator();
 void velocityController();
@@ -136,6 +145,7 @@ void positionController();
 //altitude estimator and controllers
 void altitudeEstimator();
 void altitudeController();
+void landingStateAutomat();
 
 #endif // PX4FLOW_DATA_RECEIVE == ENABLED
 

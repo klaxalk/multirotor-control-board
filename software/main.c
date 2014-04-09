@@ -65,7 +65,6 @@ volatile uint16_t main_cycle = 0;
 // controller on/off
 volatile unsigned char controllerEnabled = 0;
 volatile unsigned char positionControllerEnabled = 0;
-volatile unsigned char landingMode = 0;
 
 // for on-off by AUX3 channel
 int8_t previous_AUX3 = 0;
@@ -105,7 +104,12 @@ volatile float elevatorSetpoint = (ELEVATOR_SP_LOW + ELEVATOR_SP_HIGH)/2;
 volatile float aileronSetpoint  = (AILERON_SP_LOW  + AILERON_SP_HIGH )/2;
 volatile float throttleSetpoint = (THROTTLE_SP_LOW + THROTTLE_SP_HIGH)/2;
 
-//auto-trajectory vars
+//auto-landing variables
+volatile unsigned char landingRequest = 0;
+volatile unsigned char landingState = 0;
+volatile uint8_t landingCounter = 0;
+
+//auto-trajectory variables
 volatile unsigned char trajectoryEnabled = 0;
 volatile float trajTimer = 0;
 volatile int trajIndex = -1;
@@ -463,9 +467,11 @@ int main() {
 			previous_AUX3 = 0;
 		}
 
-		// landing on/off
+#if PX4FLOW_DATA_RECEIVE == ENABLED
+
+		// landing on/off, trajectory on/off
 		if (RCchannel[AUX4] < (PULSE_MIDDLE - 200)) {
-			landingMode = 1;
+			landingRequest = 1;
 		} else if(RCchannel[AUX4] > (PULSE_MIDDLE + 200)) {
 			if(!trajectoryEnabled){
 				trajectoryEnabled = 1;
@@ -473,9 +479,14 @@ int main() {
 				trajTimer = 0;
 			}
 		}else{
-			landingMode = 0;
+			landingRequest = 0;
 			trajectoryEnabled = 0;
 		}
+
+		//auto-landing state automat
+		landingStateAutomat();
+
+#endif // PX4FLOW_DATA_RECEIVE == ENABLED
 
 		// load the constant values from the RC
 		// <0; 1>

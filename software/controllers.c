@@ -246,7 +246,11 @@ void altitudeController() {
 
 	float KX, KI, KV;
 
-	if(landingMode) {
+	if(landingState == LS_ON_GROUND){
+		controllerThrottleOutput = -CONTROLLER_THROTTLE_SATURATION;
+		return;
+
+	}else if(landingState == LS_LANDING) {
 		KI = LANDING_KI;
 		KV = LANDING_KV;
 
@@ -283,6 +287,73 @@ void altitudeController() {
 	if (controllerThrottleOutput < -CONTROLLER_THROTTLE_SATURATION) {
 		controllerThrottleOutput = -CONTROLLER_THROTTLE_SATURATION;
 	}
+
+}
+
+//~ ------------------------------------------------------------------------ ~//
+//~ LandingStateAutomat - handles stabilized landing and takeoff             ~//
+//~ ------------------------------------------------------------------------ ~//
+void landingStateAutomat(){
+
+	switch(landingState){
+
+		case LS_ON_GROUND:
+			if(!landingRequest){
+				landingCounter = 0;
+				landingState = LS_TAKEOFF;
+			} break;
+
+		case LS_TAKEOFF:
+			if(landingRequest){
+				landingCounter = 0;
+				landingState = LS_LANDING;
+			}else{
+				//stabilize altitude for 0.5s
+				if(fabs(throttleSetpoint - estimatedThrottlePos) < 0.1
+				&& fabs(estimatedThrottleVel )< 0.2){
+					landingCounter++;
+				}else{
+					landingCounter = 0;
+				}
+				if(landingCounter >= 35){
+					landingState = LS_FLIGHT;
+				}
+			} break;
+
+		case LS_FLIGHT:
+			if(landingRequest){
+				landingCounter = 0;
+				landingState = LS_STABILIZATION;
+			} break;
+
+		case LS_STABILIZATION:
+			if(!landingRequest){
+				landingState = LS_FLIGHT;
+			}else{
+				//stabilize position for 1s
+				if(++landingCounter >= 70){
+					landingCounter = 0;
+					landingState = LS_LANDING;
+				}
+			} break;
+
+		default: //LS_LANDING
+			if(!landingRequest){
+				landingCounter = 0;
+				landingState = LS_TAKEOFF;
+			}else{
+				//filter wrong sonar readings
+				if(estimatedThrottlePos < ALTITUDE_MINIMUM){
+					landingCounter++;
+				}else{
+					landingCounter = 0;
+				}
+				if(landingCounter >= 7){
+					landingState = LS_ON_GROUND;
+				}
+			}
+
+	} //endswitch
 
 }
 
