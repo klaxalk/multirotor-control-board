@@ -11,15 +11,40 @@
 //~ ------------------------------------------------------------------------ ~//
 void setpoints() {
 
-	float sp_new, dTime;
+	float sp_new;
+
+#if TRAJECTORY_FOLLOWING == ENABLED
+
+	float dTime;
 	int16_t dValue;
 	static float aileronIncrement;
 	static float elevatorIncrement;
 
-      //manual setpoints
-	if(!trajectoryEnabled){
+      //trajectory following
+	if(trajectoryEnabled && positionControllerEnabled){
 
-		//setpoint setting from RC transmitter
+            if(trajIndex < TRAJECTORY_LENGTH){
+
+                  if(trajIndex < 0 || trajTimer >= trajectory[trajIndex].time) {
+				trajIndex++;
+				dTime  = (trajectory[trajIndex].time - trajTimer);
+				dValue = (trajectory[trajIndex].elevatorPos - elevatorSetpoint);
+				elevatorIncrement = ((float)dValue) / 1000 / dTime;
+				dValue = (trajectory[trajIndex].aileronPos - aileronSetpoint);
+				aileronIncrement = ((float)dValue) / 1000 / dTime;
+			}
+
+			trajTimer  += DT;
+			elevatorSetpoint += elevatorIncrement;
+			aileronSetpoint  += aileronIncrement;
+
+		} //else End of Trajectory - do nothing
+
+	//manual setpoints from RC transmitter
+	}else{
+
+#endif //TRAJECTORY_FOLLOWING == ENABLED
+
 		//sp_new = ELEVATOR_SP_HIGH * constant2 + ELEVATOR_SP_LOW * (1-constant2);
 		//elevatorSetpoint += (sp_new-elevatorSetpoint) * (DT/SETPOINT_FILTER_CONST);
 
@@ -29,23 +54,14 @@ void setpoints() {
 		sp_new = THROTTLE_SP_HIGH * constant1 + THROTTLE_SP_LOW * (1-constant1);
 		throttleSetpoint += (sp_new-throttleSetpoint) * (DT/SETPOINT_FILTER_CONST);
 
-      //trajectory following
-	}else if(trajIndex < TRAJECTORY_LENGTH){
+#if TRAJECTORY_FOLLOWING == ENABLED
 
-		if(trajIndex < 0 || trajTimer >= trajectory[trajIndex].time) {
-			trajIndex++;
-			dTime  = (trajectory[trajIndex].time - trajTimer);
-			dValue = (trajectory[trajIndex].elevatorPos - elevatorSetpoint);
-			elevatorIncrement = ((float)dValue) / 1000 / dTime;
-			dValue = (trajectory[trajIndex].aileronPos - aileronSetpoint);
-			aileronIncrement = ((float)dValue) / 1000 / dTime;
-		}
-
-		trajTimer  += DT;
-		elevatorSetpoint += elevatorIncrement;
-		aileronSetpoint  += aileronIncrement;
-
+		//reset trajectory vars
+		trajIndex = -1;
+		trajTimer = 0;
 	}
+
+#endif //TRAJECTORY_FOLLOWING == ENABLED
 
 }
 
@@ -61,7 +77,7 @@ void positionEstimator() {
 	static uint8_t gumstix_counter = 0;
 	uint8_t gumstix_delay = 7;
 
-	if(validGumstix) {
+	if(validGumstix == 1) {
 		if(gumstix_counter < gumstix_delay) gumstix_counter++;
 	} else {
 		gumstix_counter = 0;
@@ -117,8 +133,8 @@ void positionController() {
 	float KX, KI, KV, KA;
 
 	//set controller constants
-	if(positionControllerEnabled) {
-		KX = (POSITION_KP / POSITION_KV);
+	if(positionControllerEnabled && landingState == LS_FLIGHT) {
+		KX = ((float)POSITION_KP / POSITION_KV);
 		KI = POSITION_KI;
 		KV = POSITION_KV;
 		KA = POSITION_KA;
@@ -131,7 +147,7 @@ void positionController() {
 	}
 
 	//elevator controller
-	if(positionControllerEnabled) {
+	if(positionControllerEnabled && landingState == LS_FLIGHT) {
 		error = elevatorSetpoint - estimatedElevatorPos;
 		vd = KX * error;
 		if(vd > +POSITION_SPEED_MAX) vd = +POSITION_SPEED_MAX;
@@ -163,7 +179,7 @@ void positionController() {
 
 
 	//aileron controller
-	if(positionControllerEnabled) {
+	if(positionControllerEnabled && landingState == LS_FLIGHT) {
 		error = aileronSetpoint - estimatedAileronPos;
 		vd = KX * error;
 		if(vd > +POSITION_SPEED_MAX) vd = +POSITION_SPEED_MAX;
@@ -258,7 +274,7 @@ void altitudeController() {
 		vd = LANDING_SPEED;
 
 	} else { //altitude controller
-		KX = (ALTITUDE_KP / ALTITUDE_KV);
+		KX = ((float)ALTITUDE_KP / ALTITUDE_KV);
 		KI = ALTITUDE_KI;
 		KV = ALTITUDE_KV;
 
@@ -266,7 +282,6 @@ void altitudeController() {
 		vd = KX * error;
 		if(vd > +ALTITUDE_SPEED_MAX) vd = +ALTITUDE_SPEED_MAX;
 		if(vd < -ALTITUDE_SPEED_MAX) vd = -ALTITUDE_SPEED_MAX;
-
 	}
 
 	// calculate integrational

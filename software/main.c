@@ -243,7 +243,7 @@ void debug() {
 
 	static int8_t  dbg_gumstix_valid;
 	static uint8_t dbg_px4flow_confidence;
-	static uint8_t dbg_position_enabled;
+	static int16_t dbg_state_vars;
 
 	//perform 3 debug cycles per 10 values
 	if(++debug_cycle >= 3) debug_cycle = 0;
@@ -307,7 +307,12 @@ void debug() {
 		//other values snapshot
 		dbg_gumstix_valid      = validGumstix;
 		dbg_px4flow_confidence = px4Confidence;
-		dbg_position_enabled   = positionControllerEnabled;
+		dbg_state_vars =
+			 1 * controllerEnabled +
+			 2 * positionControllerEnabled +
+			 4 * trajectoryEnabled +
+			 8 * landingRequest +
+			16 * landingState;
 
 	} else if(debug_cycle == 1)  {
 
@@ -346,12 +351,10 @@ void debug() {
 	} else if(debug_cycle == 2)  {
 
 		//position enabled
-		Uart0_write_num(dbg_position_enabled); //21 Position enabled
+		Uart0_write_num(dbg_state_vars); //21 State variables
 		Uart0_write_char(' ');
 
-		//sprintf(num, "%i", ((int16_t) 0)); //22 (nothing)
-		//Uart0_write_string(num, strlen(num));
-		Uart0_write_char('0');
+		Uart0_write_num(0); //22 (nothing-reserve)
 		Uart0_write_char(' ');
 
 		//aileron values
@@ -388,6 +391,8 @@ void debug() {
 
 #endif // LOGGING_ON == ENABLED
 
+#if TRAJECTORY_FOLLOWING == ENABLED
+
 void writeTrajectory1(){
 
 	TRAJ_POINT(0,  2, -1000,    0);
@@ -402,15 +407,21 @@ void writeTrajectory1(){
 	TRAJ_POINT(6, 14, -1500, +500);
 	TRAJ_POINT(7, 16, -1500,    0);
 
-	TRAJ_POINT(8,999, -1500,    0);
+	//unused points
+	TRAJ_POINT(8, 18, -1500,    0);
+	TRAJ_POINT(9, 20, -1500,    0);
 }
+
+#endif //TRAJECTORY_FOLLOWING == ENABLED
 
 int main() {
 
 	// initialize the MCU (timers, uarts and so on)
 	initializeMCU();
 
+#if TRAJECTORY_FOLLOWING == ENABLED
 	writeTrajectory1();
+#endif
 
 	// the main while cycle
 	while (1) {
@@ -472,12 +483,10 @@ int main() {
 		// landing on/off, trajectory on/off
 		if (RCchannel[AUX4] < (PULSE_MIDDLE - 200)) {
 			landingRequest = 1;
+			trajectoryEnabled = 0;
 		} else if(RCchannel[AUX4] > (PULSE_MIDDLE + 200)) {
-			if(!trajectoryEnabled){
-				trajectoryEnabled = 1;
-				trajIndex = -1;
-				trajTimer = 0;
-			}
+			landingRequest = 0;
+			trajectoryEnabled = 1;
 		}else{
 			landingRequest = 0;
 			trajectoryEnabled = 0;
@@ -667,6 +676,16 @@ int main() {
 			// +elevator = front
 			// +aileron  = left
 			// +throttle = up
+
+			//saturation
+			if(xPosGumstixNew > 2*POSITION_MAXIMUM) xPosGumstixNew = 2*POSITION_MAXIMUM;
+			if(xPosGumstixNew < 0) xPosGumstixNew = 0; //distance from the blob (positive)
+
+			if(yPosGumstixNew > +POSITION_MAXIMUM) yPosGumstixNew = +POSITION_MAXIMUM;
+			if(yPosGumstixNew < -POSITION_MAXIMUM) yPosGumstixNew = -POSITION_MAXIMUM;
+
+			if(zPosGumstixNew > +POSITION_MAXIMUM) zPosGumstixNew = +POSITION_MAXIMUM;
+			if(zPosGumstixNew < -POSITION_MAXIMUM) zPosGumstixNew = -POSITION_MAXIMUM;
 
 #if GUMSTIX_CAMERA_POINTING == FORWARD //camera led on up side
 

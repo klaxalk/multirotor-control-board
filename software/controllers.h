@@ -19,6 +19,7 @@
 #define SETPOINT_FILTER_CONST   0.10
 
 // constants for position and velocity controllers
+#define POSITION_MAXIMUM   2000 //in mm, must be positive! crops Gumstix values
 #define ELEVATOR_SP_HIGH  -1.0
 #define ELEVATOR_SP_LOW   -2.0
 

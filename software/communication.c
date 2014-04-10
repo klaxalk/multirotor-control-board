@@ -44,17 +44,12 @@ void Uart0_write_char(unsigned char c) {
 void Uart0_write_num(int16_t num){
 	int16_t divider = 1;
 	if(num < 0){
-            while (!(UCSR0A & (1 << UDRE0))) {}
+		while (!(UCSR0A & (1 << UDRE0))) {}
 		UDR0 = '-';
 		num = - num;
 	}
-	if(num >= 10000){
-		num = 9999;
-		divider = 1000;
-	}else{
-		while(num/divider > 10) divider *= 10;
-	}
-	while(num > 9){
+	while(num/divider >= 10) divider *= 10;
+	while(divider > 1){
 		while (!(UCSR0A & (1 << UDRE0))) {}
 		UDR0 = (num/divider) + '0';
 		num %= divider;

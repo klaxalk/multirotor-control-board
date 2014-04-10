@@ -15,6 +15,14 @@
 
 */
 
+// Choose if trajectory following is on
+#define TRAJECTORY_FOLLOWING ENABLED
+/*
+	ENABLED
+	DISABLED
+
+*/
+
 //~ --------------------------------------------------------------------
 //~ Choose a orientation of the quadcopter frame
 //~ --------------------------------------------------------------------
