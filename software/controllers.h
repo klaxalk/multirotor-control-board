@@ -26,16 +26,16 @@
 #define AILERON_SP_HIGH   +0.5
 #define AILERON_SP_LOW    -0.5
 
-#define POSITION_SPEED_MAX 0.6 //in m/s, must be positive!
+#define POSITION_SPEED_MAX 0.25 //in m/s, must be positive!
 
 #define VELOCITY_KV 250
 #define VELOCITY_KI 10
 #define VELOCITY_KA 30
 
-#define POSITION_KP 110
+#define POSITION_KP 80
 #define POSITION_KI 5
-#define POSITION_KV 212
-#define POSITION_KA 20
+#define POSITION_KV 200
+#define POSITION_KA 10
 
 // constants for altitude and landing controllers
 #define ALTITUDE_MAXIMUM  3.00 //used to crop values from PX4Flow
@@ -113,9 +113,9 @@ extern volatile float throttleSetpoint;
 extern volatile unsigned char landingRequest;
 extern volatile unsigned char landingState;
 extern volatile uint8_t landingCounter;
+#define LS_STABILIZATION      2
+#define LS_LANDING            1
 #define LS_ON_GROUND          0
-#define LS_STABILIZATION      1
-#define LS_LANDING            2
 #define LS_TAKEOFF            3
 #define LS_FLIGHT             4
 

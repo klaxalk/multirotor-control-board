@@ -106,7 +106,7 @@ volatile float throttleSetpoint = (THROTTLE_SP_LOW + THROTTLE_SP_HIGH)/2;
 
 //auto-landing variables
 volatile unsigned char landingRequest = 0;
-volatile unsigned char landingState = 0;
+volatile unsigned char landingState = LS_ON_GROUND;
 volatile uint8_t landingCounter = 0;
 
 //auto-trajectory variables
@@ -370,7 +370,7 @@ void debug() {
 		Uart0_write_num(dbg_aileronVel*1000); //26 AIL estimated velocity
 		Uart0_write_char(' ');
 
-		Uart0_write_num( dbg_aileron_sp*1000); //27 AIL setpoint
+		Uart0_write_num(dbg_aileron_sp*1000); //27 AIL setpoint
 		Uart0_write_char(' ');
 
 		Uart0_write_num(dbg_aileron_man); //28 AIL manual
@@ -395,21 +395,22 @@ void debug() {
 
 void writeTrajectory1(){
 
-	TRAJ_POINT(0,  2, -1000,    0);
-	TRAJ_POINT(1,  4, -1500,    0);
+	TRAJ_POINT(0,  5, -1500,    0);
+	TRAJ_POINT(1, 10, -1500, -1500);
 
-	TRAJ_POINT(2,  6, -1500, -500);
-	TRAJ_POINT(3,  8, -1500,    0);
+	TRAJ_POINT(2, 15, -1500,    0);
+	TRAJ_POINT(3, 20, -1500,    0);
 
-	TRAJ_POINT(4, 10, -2000,    0);
-	TRAJ_POINT(5, 12, -1500,    0);
+	TRAJ_POINT(4, 25, -1500, +1500);
+	TRAJ_POINT(5, 30, -1500,    0);
 
-	TRAJ_POINT(6, 14, -1500, +500);
-	TRAJ_POINT(7, 16, -1500,    0);
+	TRAJ_POINT(6, 35, -1500,    0);
+
+	TRAJ_POINT(7, 40, -3000,    0);
+	TRAJ_POINT(8, 45, -1500,    0);
 
 	//unused points
-	TRAJ_POINT(8, 18, -1500,    0);
-	TRAJ_POINT(9, 20, -1500,    0);
+	TRAJ_POINT(9, 99, -1500,    0);
 }
 
 #endif //TRAJECTORY_FOLLOWING == ENABLED
@@ -443,6 +444,8 @@ int main() {
 			altitudeEstimator();
 
 			setpoints();
+
+			landingStateAutomat();
 
 			positionController();
 			altitudeController();
@@ -491,9 +494,6 @@ int main() {
 			landingRequest = 0;
 			trajectoryEnabled = 0;
 		}
-
-		//auto-landing state automat
-		landingStateAutomat();
 
 #endif // PX4FLOW_DATA_RECEIVE == ENABLED
 

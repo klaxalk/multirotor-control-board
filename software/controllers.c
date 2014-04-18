@@ -16,22 +16,22 @@ void setpoints() {
 #if TRAJECTORY_FOLLOWING == ENABLED
 
 	float dTime;
-	int16_t dValue;
+	float dValue;
 	static float aileronIncrement;
 	static float elevatorIncrement;
 
-      //trajectory following
+	//trajectory following
 	if(trajectoryEnabled && positionControllerEnabled){
 
-            if(trajIndex < TRAJECTORY_LENGTH){
+		if(trajIndex < TRAJECTORY_LENGTH){
 
-                  if(trajIndex < 0 || trajTimer >= trajectory[trajIndex].time) {
+			if(trajIndex < 0 || trajTimer >= trajectory[trajIndex].time) {
 				trajIndex++;
 				dTime  = (trajectory[trajIndex].time - trajTimer);
-				dValue = (trajectory[trajIndex].elevatorPos - elevatorSetpoint);
-				elevatorIncrement = ((float)dValue) / 1000 / dTime;
-				dValue = (trajectory[trajIndex].aileronPos - aileronSetpoint);
-				aileronIncrement = ((float)dValue) / 1000 / dTime;
+				dValue = ((float)trajectory[trajIndex].elevatorPos/1000 - elevatorSetpoint);
+				elevatorIncrement = dValue / dTime * DT;
+				dValue = ((float)trajectory[trajIndex].aileronPos/1000 - aileronSetpoint);
+				aileronIncrement = dValue / dTime * DT;
 			}
 
 			trajTimer  += DT;
@@ -46,12 +46,15 @@ void setpoints() {
 #endif //TRAJECTORY_FOLLOWING == ENABLED
 
 		//sp_new = ELEVATOR_SP_HIGH * constant2 + ELEVATOR_SP_LOW * (1-constant2);
-		//elevatorSetpoint += (sp_new-elevatorSetpoint) * (DT/SETPOINT_FILTER_CONST);
+		sp_new = (ELEVATOR_SP_LOW + ELEVATOR_SP_HIGH)/2;
+		elevatorSetpoint += (sp_new-elevatorSetpoint) * (DT/SETPOINT_FILTER_CONST);
 
-		sp_new = AILERON_SP_HIGH * constant2 + AILERON_SP_LOW * (1-constant2);
+		//sp_new = AILERON_SP_HIGH * constant2 + AILERON_SP_LOW * (1-constant2);
+		sp_new = (AILERON_SP_LOW  + AILERON_SP_HIGH )/2;
 		aileronSetpoint += (sp_new-aileronSetpoint) * (DT/SETPOINT_FILTER_CONST);
 
-		sp_new = THROTTLE_SP_HIGH * constant1 + THROTTLE_SP_LOW * (1-constant1);
+		//sp_new = THROTTLE_SP_HIGH * constant1 + THROTTLE_SP_LOW * (1-constant1);
+		sp_new = (THROTTLE_SP_LOW + THROTTLE_SP_HIGH)/2;
 		throttleSetpoint += (sp_new-throttleSetpoint) * (DT/SETPOINT_FILTER_CONST);
 
 #if TRAJECTORY_FOLLOWING == ENABLED
@@ -325,7 +328,7 @@ void landingStateAutomat(){
 			}else{
 				//stabilize altitude for 0.5s
 				if(fabs(throttleSetpoint - estimatedThrottlePos) < 0.1
-				&& fabs(estimatedThrottleVel )< 0.2){
+				&& fabs(estimatedThrottleVel ) < 0.2){
 					landingCounter++;
 				}else{
 					landingCounter = 0;

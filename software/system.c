@@ -21,6 +21,13 @@ void enableController() {
 		aileronIntegration = 0;
 		throttleIntegration = 0;
 
+		if(validGumstix != 1) {
+
+			estimatedElevatorPos = elevatorSetpoint;
+			estimatedAileronPos  = aileronSetpoint;
+
+		}
+
 #endif
 	}
 	controllerEnabled = 1;
