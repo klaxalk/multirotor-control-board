@@ -54,8 +54,6 @@ volatile int16_t controllerRudderOutput = 0;
 // constants from RC transmitter
 volatile float constant1 = 0;
 volatile float constant2 = 0;
-volatile float constant3 = 0;
-volatile float constant4 = 0;
 volatile float constant5 = 0;
 
 // timestamp for debug and logging
@@ -395,22 +393,22 @@ void debug() {
 
 void writeTrajectory1(){
 
-	TRAJ_POINT(0,  5, -1500,    0);
-	TRAJ_POINT(1, 10, -1500, -1500);
+	//TRAJ_POINT(0,  0, -1500,     0);
 
-	TRAJ_POINT(2, 15, -1500,    0);
-	TRAJ_POINT(3, 20, -1500,    0);
+	TRAJ_POINT(0,  5,  -500,  -50, 1000);
+	TRAJ_POINT(1, 10,  +500, -360, 1120);
+	TRAJ_POINT(2, 15, +1500, -740, 1250);
+	TRAJ_POINT(3, 20, +2500, -880,  980);
+	TRAJ_POINT(4, 25, +3500, -820,  690);
 
-	TRAJ_POINT(4, 25, -1500, +1500);
-	TRAJ_POINT(5, 30, -1500,    0);
+	TRAJ_POINT(5, 30, +4500, -550,  630);
+	TRAJ_POINT(6, 35, +5500, -150,  690);
+	TRAJ_POINT(7, 40, +6500, +280,  790);
+	TRAJ_POINT(8, 45, +7500, +220,  930);
+	TRAJ_POINT(9, 50, +8500,    0, 1000);
 
-	TRAJ_POINT(6, 35, -1500,    0);
+	//TRAJ_POINT(9,999, 0, -1500,     0);
 
-	TRAJ_POINT(7, 40, -3000,    0);
-	TRAJ_POINT(8, 45, -1500,    0);
-
-	//unused points
-	TRAJ_POINT(9, 99, -1500,    0);
 }
 
 #endif //TRAJECTORY_FOLLOWING == ENABLED

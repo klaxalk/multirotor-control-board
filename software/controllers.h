@@ -26,16 +26,16 @@
 #define AILERON_SP_HIGH   +0.5
 #define AILERON_SP_LOW    -0.5
 
-#define POSITION_SPEED_MAX 0.25 //in m/s, must be positive!
+#define POSITION_SPEED_MAX 0.33 //in m/s, must be positive!
 
 #define VELOCITY_KV 250
 #define VELOCITY_KI 10
 #define VELOCITY_KA 30
 
-#define POSITION_KP 80
+#define POSITION_KP 85
 #define POSITION_KI 5
-#define POSITION_KV 200
-#define POSITION_KA 10
+#define POSITION_KV 180
+#define POSITION_KA 9
 
 // constants for altitude and landing controllers
 #define ALTITUDE_MAXIMUM  3.00 //used to crop values from PX4Flow
@@ -67,8 +67,6 @@ extern volatile unsigned char landingMode;
 // constants from RC transmitter
 extern volatile float constant1;
 extern volatile float constant2;
-extern volatile float constant3;
-extern volatile float constant4;
 extern volatile float constant5;
 
 // controllers saturations
@@ -127,13 +125,15 @@ typedef struct {
 	float time;
 	int16_t elevatorPos; //position in mm
 	int16_t aileronPos;  //position in mm
+	int16_t throttlePos; //position in mm
 } trajectoryPoint_t;
 extern volatile trajectoryPoint_t trajectory[];
 #define TRAJECTORY_LENGTH	10
-#define TRAJ_POINT(i,t,e,a) \
+#define TRAJ_POINT(i,t,e,a,th) \
 	trajectory[i].time = t; \
-      trajectory[i].elevatorPos = e; \
-      trajectory[i].aileronPos = a
+	trajectory[i].elevatorPos = e; \
+	trajectory[i].aileronPos = a; \
+	trajectory[i].throttlePos = th
 
 //setpoint and trajectory handling
 void setpoints();

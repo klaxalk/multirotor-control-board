@@ -19,6 +19,8 @@ void setpoints() {
 	float dValue;
 	static float aileronIncrement;
 	static float elevatorIncrement;
+	static float throttleIncrement;
+
 
 	//trajectory following
 	if(trajectoryEnabled && positionControllerEnabled){
@@ -32,11 +34,15 @@ void setpoints() {
 				elevatorIncrement = dValue / dTime * DT;
 				dValue = ((float)trajectory[trajIndex].aileronPos/1000 - aileronSetpoint);
 				aileronIncrement = dValue / dTime * DT;
+				dValue = ((float)trajectory[trajIndex].throttlePos/1000 - throttleSetpoint);
+				throttleIncrement = dValue / dTime * DT;
 			}
 
 			trajTimer  += DT;
 			elevatorSetpoint += elevatorIncrement;
 			aileronSetpoint  += aileronIncrement;
+			throttleSetpoint  += throttleIncrement;
+
 
 		} //else End of Trajectory - do nothing
 
@@ -133,19 +139,25 @@ void positionController() {
 	float derivative2;
 	float vd; //desired velocity
 
-	float KX, KI, KV, KA;
+	float KX, KI, KP, KV, KA;
 
 	//set controller constants
 	if(positionControllerEnabled && landingState == LS_FLIGHT) {
-		KX = ((float)POSITION_KP / POSITION_KV);
 		KI = POSITION_KI;
-		KV = POSITION_KV;
-		KA = POSITION_KA;
+		KP = POSITION_KP * (0.5 + constant1);
+		KV = POSITION_KV * (0.5 + constant2);
+		KA = POSITION_KA * (0.5 + constant5);
+		//KP = POSITION_KP;
+		//KV = POSITION_KV;
+		//KA = POSITION_KA;
+		KX = KP / KV;
+
 
 	} else { //velocity controller
 		KI = VELOCITY_KI;
 		KV = VELOCITY_KV;
 		KA = VELOCITY_KA;
+		KX = 0;
  
 	}
 
@@ -161,10 +173,10 @@ void positionController() {
 	}
 
 	elevatorIntegration += KI * error * DT;
-	if (elevatorIntegration > CONTROLLER_ELEVATOR_SATURATION/2) {
-		elevatorIntegration = CONTROLLER_ELEVATOR_SATURATION/2;
-	} else if (elevatorIntegration < -CONTROLLER_ELEVATOR_SATURATION/2) {
-		elevatorIntegration = -CONTROLLER_ELEVATOR_SATURATION/2;
+	if (elevatorIntegration > CONTROLLER_ELEVATOR_SATURATION/4) {
+		elevatorIntegration = CONTROLLER_ELEVATOR_SATURATION/4;
+	} else if (elevatorIntegration < -CONTROLLER_ELEVATOR_SATURATION/4) {
+		elevatorIntegration = -CONTROLLER_ELEVATOR_SATURATION/4;
 	}
 
 	acc_new = (estimatedElevatorVel - elevatorSpeed_prev) / DT;
@@ -193,10 +205,10 @@ void positionController() {
 	}
 
 	aileronIntegration += KI * error * DT;
-	if (aileronIntegration > CONTROLLER_AILERON_SATURATION/2) {
-		aileronIntegration = CONTROLLER_AILERON_SATURATION/2;
-	} else if (aileronIntegration < -CONTROLLER_AILERON_SATURATION/2) {
-		aileronIntegration = -CONTROLLER_AILERON_SATURATION/2;
+	if (aileronIntegration > CONTROLLER_AILERON_SATURATION/4) {
+		aileronIntegration = CONTROLLER_AILERON_SATURATION/4;
+	} else if (aileronIntegration < -CONTROLLER_AILERON_SATURATION/4) {
+		aileronIntegration = -CONTROLLER_AILERON_SATURATION/4;
 	} 
 
 	acc_new = (estimatedAileronVel - aileronSpeed_prev) / DT;
