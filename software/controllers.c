@@ -60,7 +60,13 @@ void setpoints() {
 		aileronSetpoint += (sp_new-aileronSetpoint) * (DT/SETPOINT_FILTER_CONST);
 
 		//sp_new = THROTTLE_SP_HIGH * constant1 + THROTTLE_SP_LOW * (1-constant1);
-		sp_new = (THROTTLE_SP_LOW + THROTTLE_SP_HIGH)/2;
+		
+		
+		// zakomentovano, Tomáš Báča, 24.6.2014
+		// sp_new = (THROTTLE_SP_LOW + THROTTLE_SP_HIGH)/2;
+		
+		sp_new = 0.75;
+		
 		throttleSetpoint += (sp_new-throttleSetpoint) * (DT/SETPOINT_FILTER_CONST);
 
 #if TRAJECTORY_FOLLOWING == ENABLED

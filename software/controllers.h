@@ -26,7 +26,8 @@
 #define AILERON_SP_HIGH   +0.5
 #define AILERON_SP_LOW    -0.5
 
-#define POSITION_SPEED_MAX 0.33 //in m/s, must be positive!
+// changed 0.33 -> 0.4, Tomáš Báča, 24.6.2014
+#define POSITION_SPEED_MAX 0.4 // in m/s, must be positive!
 
 #define VELOCITY_KV 250
 #define VELOCITY_KI 10

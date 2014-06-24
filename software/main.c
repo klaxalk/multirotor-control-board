@@ -98,9 +98,12 @@ volatile float estimatedThrottleVel = 0;
 volatile float elevatorIntegration = 0;
 volatile float aileronIntegration  = 0;
 volatile float throttleIntegration = 0;
-volatile float elevatorSetpoint = (ELEVATOR_SP_LOW + ELEVATOR_SP_HIGH)/2;
+//~ volatile float elevatorSetpoint = (ELEVATOR_SP_LOW + ELEVATOR_SP_HIGH)/2;
+volatile float elevatorSetpoint = -1.5;
 volatile float aileronSetpoint  = (AILERON_SP_LOW  + AILERON_SP_HIGH )/2;
-volatile float throttleSetpoint = (THROTTLE_SP_LOW + THROTTLE_SP_HIGH)/2;
+//~ volatile float throttleSetpoint = (THROTTLE_SP_LOW + THROTTLE_SP_HIGH)/2;
+volatile float throttleSetpoint = 0.75;
+
 
 //auto-landing variables
 volatile unsigned char landingRequest = 0;
@@ -395,17 +398,26 @@ void writeTrajectory1(){
 
 	//TRAJ_POINT(0,  0, -1500,     0);
 
-	TRAJ_POINT(0,  5,  -500,  -50, 1000);
-	TRAJ_POINT(1, 10,  +500, -360, 1120);
-	TRAJ_POINT(2, 15, +1500, -740, 1250);
-	TRAJ_POINT(3, 20, +2500, -880,  980);
-	TRAJ_POINT(4, 25, +3500, -820,  690);
+	// (i, time (s), x (+ forward), y (+ leftward), z (altitude))
 
-	TRAJ_POINT(5, 30, +4500, -550,  630);
-	TRAJ_POINT(6, 35, +5500, -150,  690);
-	TRAJ_POINT(7, 40, +6500, +280,  790);
-	TRAJ_POINT(8, 45, +7500, +220,  930);
-	TRAJ_POINT(9, 50, +8500,    0, 1000);
+	TRAJ_POINT(0,  8,  -1500,  -300, 750);
+	TRAJ_POINT(1,  16,  -2100,  -300, 750);
+	TRAJ_POINT(2,  24,  -2100,  +300, 750);
+	TRAJ_POINT(3,  32,  -1500,  +300, 750);
+	TRAJ_POINT(4,  40,  -1500,  0, 750);
+
+	//~ Experimetn TV
+	//~ TRAJ_POINT(0,  5,  -500,  -50, 1000);
+	//~ TRAJ_POINT(1, 10,  +500, -360, 1120);
+	//~ TRAJ_POINT(2, 15, +1500, -740, 1250);
+	//~ TRAJ_POINT(3, 20, +2500, -880,  980);
+	//~ TRAJ_POINT(4, 25, +3500, -820,  690);
+	//~ 
+	//~ TRAJ_POINT(5, 30, +4500, -550,  630);
+	//~ TRAJ_POINT(6, 35, +5500, -150,  690);
+	//~ TRAJ_POINT(7, 40, +6500, +280,  790);
+	//~ TRAJ_POINT(8, 45, +7500, +220,  930);
+	//~ TRAJ_POINT(9, 50, +8500,    0, 1000);
 
 	//TRAJ_POINT(9,999, 0, -1500,     0);
 
@@ -687,15 +699,21 @@ int main() {
 
 #if GUMSTIX_CAMERA_POINTING == FORWARD //camera led on up side
 
-				elevatorGumstix = - (float)xPosGumstixNew / 1000;
-				aileronGumstix  = - (float)zPosGumstixNew / 1000;
-				throttleGumstix = + (float)yPosGumstixNew / 1000;
+				//~ Camera pointing forward and being PORTRAIT oriented
+				//~ elevatorGumstix = - (float)xPosGumstixNew / 1000;
+				//~ aileronGumstix  = - (float)zPosGumstixNew / 1000;
+				//~ throttleGumstix = + (float)yPosGumstixNew / 1000;
+
+				//~ Camera pointing forward and being LANDSCAPE oriented
+				elevatorGumstix = - (float) xPosGumstixNew / 1000;
+				aileronGumstix  = - (float) yPosGumstixNew / 1000;
+				throttleGumstix = - (float) zPosGumstixNew / 1000;
 
 #elif GUMSTIX_CAMERA_POINTING == DOWNWARD //camera led on front side
 
-				elevatorGumstix = + (float)yPosGumstixNew / 1000;
-				aileronGumstix  = - (float)zPosGumstixNew / 1000;
-				throttleGumstix = + (float)xPosGumstixNew / 1000;
+				elevatorGumstix = + (float) yPosGumstixNew / 1000;
+				aileronGumstix  = - (float) zPosGumstixNew / 1000;
+				throttleGumstix = + (float) xPosGumstixNew / 1000;
 
 #endif
 
