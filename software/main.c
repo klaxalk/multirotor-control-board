@@ -400,12 +400,52 @@ void writeTrajectory1(){
 
 	// (i, time (s), x (+ forward), y (+ leftward), z (altitude))
 
-	TRAJ_POINT(0,  8,  -1500,  -300, 750);
-	TRAJ_POINT(1,  16,  -2100,  -300, 750);
-	TRAJ_POINT(2,  24,  -2100,  +300, 750);
-	TRAJ_POINT(3,  32,  -1500,  +300, 750);
-	TRAJ_POINT(4,  40,  -1500,  0, 750);
+	//~ Square
+	//~ TRAJ_POINT(0,  8,  -1500,  -300, 750);
+	//~ TRAJ_POINT(1,  16,  -2100,  -300, 750);
+	//~ TRAJ_POINT(2,  24,  -2100,  +300, 750);
+	//~ TRAJ_POINT(3,  32,  -1500,  +300, 750);
+	//~ TRAJ_POINT(4,  40,  -1500,  0, 750);
+	
+	//~ Zuzeni Follower Experiment Telocvicna 
+	//~  Puvodni*3 - 0.5
+	//~ TRAJ_POINT(0,  3,  -1900,  0, 1000); 
+	//~ TRAJ_POINT(1,  6,  -1902,  0, 1000); 
+	//~ TRAJ_POINT(2,  9,  -1660,  0, 1000); 
+	//~ TRAJ_POINT(3,  12,  -1136,  0, 1000); 
+	//~ TRAJ_POINT(4,  15,  -1380,  0, 1000); 
+	//~ TRAJ_POINT(5,  18,  -1993,  0, 1000); 
+	//~ TRAJ_POINT(6,  21,  -2063,  0, 1000); 
+	//~ TRAJ_POINT(7,  24,  -1897,  0, 1000); 
+	//~ TRAJ_POINT(8,  27,  -1826,  0, 1000); 
+	//~ TRAJ_POINT(9,  30,  -1846,  0, 1000);
 
+	//~ Zuzeni LEADER Experiment Telocvicna 
+	//~  Aileron: Puvodni*3 - 0.5
+	//~ TRAJ_POINT(0,  3,  -900,  0, 1000); 
+	//~ TRAJ_POINT(1,  6,  -300,  0, 1000); 
+	//~ TRAJ_POINT(2,  9,  +300,  0, 1000); 
+	//~ TRAJ_POINT(3,  12,  +900,  0, 1000); 
+	//~ TRAJ_POINT(4,  15,  +1500,  0, 1000); 
+	//~ TRAJ_POINT(5,  18,  +2100,  0, 1000); 
+	//~ TRAJ_POINT(6,  21,  +2700,  0, 1000); 
+	//~ TRAJ_POINT(7,  24,  +3300,  0, 1000); 
+	//~ TRAJ_POINT(8,  27,  +3900,  0, 1000);
+	//~ TRAJ_POINT(9,  30,  -1500,  0, 1000); 
+
+	//~ Preplanovani LEADER Experiment Telocvicna 
+	//~  Aileron: Původní*2
+	TRAJ_POINT(0,  3,  -900,  0, 1000); 
+	TRAJ_POINT(1,  6,  -300,  0, 1000); 
+	TRAJ_POINT(2,  9,  +300,  -344, 1000); 
+	TRAJ_POINT(3,  12,  +900,  -860, 1000); 
+	TRAJ_POINT(4,  15,  +1500,  -984, 1000); 
+	TRAJ_POINT(5,  18,  +2100,  -917, 1000); 
+	TRAJ_POINT(6,  21,  +2700,  -735, 1000); 
+	TRAJ_POINT(7,  24,  +3300,  -439, 1000); 
+	TRAJ_POINT(8,  27,  +3900,  -60, 1000);
+	TRAJ_POINT(9,  30,  -1500,  0, 1000); 
+	
 	//~ Experimetn TV
 	//~ TRAJ_POINT(0,  5,  -500,  -50, 1000);
 	//~ TRAJ_POINT(1, 10,  +500, -360, 1120);

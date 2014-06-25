@@ -61,11 +61,10 @@ void setpoints() {
 
 		//sp_new = THROTTLE_SP_HIGH * constant1 + THROTTLE_SP_LOW * (1-constant1);
 		
-		
 		// zakomentovano, Tomáš Báča, 24.6.2014
 		// sp_new = (THROTTLE_SP_LOW + THROTTLE_SP_HIGH)/2;
 		
-		sp_new = 0.75;
+		sp_new = 1;
 		
 		throttleSetpoint += (sp_new-throttleSetpoint) * (DT/SETPOINT_FILTER_CONST);
 
