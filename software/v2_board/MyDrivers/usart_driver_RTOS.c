@@ -63,6 +63,7 @@
 //Structures, representing uart and its buffer. for internal use.
 //Memory allocated dynamically
 UsartBuffer * usartBufferC;
+UsartBuffer * usartBufferC1;
 UsartBuffer * usartBufferD;
 UsartBuffer * usartBufferE;
 UsartBuffer * usartBufferF;
@@ -76,6 +77,7 @@ signed char USART_DataRegEmpty(UsartBuffer *);
  *  as argument.
  */
 ISR(USARTC0_RXC_vect){ if( USART_RXComplete(usartBufferC) ) taskYIELD(); }
+ISR(USARTC1_RXC_vect){ if( USART_RXComplete(usartBufferC1) ) taskYIELD(); }
 ISR(USARTD0_RXC_vect){ if( USART_RXComplete(usartBufferD) ) taskYIELD(); }
 ISR(USARTE0_RXC_vect){ if( USART_RXComplete(usartBufferE) ) taskYIELD(); }
 ISR(USARTF0_RXC_vect){ if( USART_RXComplete(usartBufferF) ) taskYIELD(); }
@@ -86,6 +88,7 @@ ISR(USARTF0_RXC_vect){ if( USART_RXComplete(usartBufferF) ) taskYIELD(); }
  *  correct USART as argument.
  */
 ISR(USARTC0_DRE_vect){USART_DataRegEmpty(usartBufferC);}
+ISR(USARTC1_DRE_vect){USART_DataRegEmpty(usartBufferC1);}
 ISR(USARTD0_DRE_vect){USART_DataRegEmpty(usartBufferD);}
 ISR(USARTE0_DRE_vect){USART_DataRegEmpty(usartBufferE);}
 ISR(USARTF0_DRE_vect){USART_DataRegEmpty(usartBufferF);}
@@ -113,6 +116,14 @@ UsartBuffer * usartBufferInitialize(USART_t * usart, Baudrate_enum baudrate ,cha
 			usartBuffer = ( UsartBuffer * ) pvPortMalloc( sizeof( UsartBuffer ) );
 			//copy pointer pUsartBuffer to global pUsartBufferC, which is use to handle interrupts
 			usartBufferC = usartBuffer;
+			//Since usart is on the port C, we will need to use PORTC
+			port = &PORTC;
+			break;
+		case (int)&USARTC1:
+			//Allocate memory for usart structure and store the pointer
+			usartBuffer = ( UsartBuffer * ) pvPortMalloc( sizeof( UsartBuffer ) );
+			//copy pointer pUsartBuffer to global pUsartBufferC, which is use to handle interrupts
+			usartBufferC1 = usartBuffer;
 			//Since usart is on the port C, we will need to use PORTC
 			port = &PORTC;
 			break;
@@ -149,6 +160,15 @@ UsartBuffer * usartBufferInitialize(USART_t * usart, Baudrate_enum baudrate ,cha
 	port->DIRSET = PIN3_bm;
 	/* (RX0) as input. */
 	port->DIRCLR = PIN2_bm;
+	
+	if (((int)usart) == ((int)&USARTC1)) {
+		
+		/* (TX0) as output. */
+		port->DIRSET = PIN7_bm;
+		/* (RX0) as input. */
+		port->DIRCLR = PIN6_bm;	
+	}
+	
 	//totempole and pullup
 	PORT_ConfigurePins( port,PIN3_bm,false,false,PORT_OPC_PULLUP_gc,PORT_ISC_BOTHEDGES_gc );
 	/* Initialize buffers. Create a queue (allocate memory) and store queue handle in usart_struct

@@ -26,6 +26,7 @@
 #define	YELLOW	IOPORT_CREATE_PIN(PORTB, 7)
 
 #define PC_USART	USARTF0
+#define STM_USART	USARTC1
 
 /*! Defining an example slave address. */
 #define SLAVE_ADDRESS    0x55
@@ -49,15 +50,6 @@ void blikej(void *p) {
 
 		ioport_toggle_pin_level(YELLOW);
 		vTaskDelay(100);
-	}
-}
-
-void blikej2(void *p) {
-	
-	while (1) {
-
-		ioport_toggle_pin_level(BLUE);
-		vTaskDelay(1000);
 	}
 }
 
@@ -138,6 +130,49 @@ void uartTest(void *p) {
 	}
 }
 
+void performanceTest(void *p) {
+	
+		uint16_t baf;
+		uint16_t max;
+		float lek;
+		float nahodne;
+		
+		max = 30000;
+		
+		while (1) {
+			
+			for (baf = 0; baf < max; baf++) {
+				
+				lek = sqrt((float) rand());
+			}
+			
+			ioport_toggle_pin_level(RED);
+		}
+}
+
+void stm(void *p) {
+	
+	unsigned char inChar;
+	
+	UsartBuffer * stm_usart_buffer = usartBufferInitialize(&STM_USART, BAUD9600, 128);
+	usartBufferPutString(stm_usart_buffer, "\n\n\rXMEGA ready", 10);
+	
+	UsartBuffer * pc_usart_buffer = usartBufferInitialize(&PC_USART, BAUD19200, 128);
+	usartBufferPutString(stm_usart_buffer, "\n\n\rXMEGA ready", 10);
+	
+	while (1) {
+		
+		if (usartBufferGetByte(stm_usart_buffer, &inChar, 0)) {
+			
+			usartBufferPutByte(pc_usart_buffer, inChar, 10);
+		}
+		if (usartBufferGetByte(pc_usart_buffer, &inChar, 0)) {
+		
+			usartBufferPutByte(stm_usart_buffer, inChar, 10);
+		}
+	}
+}
+
 int main(void)
 {	
 	
@@ -166,10 +201,11 @@ int main(void)
 	sysclk_enable_module(SYSCLK_PORT_F, 0xff);
 	
 	xTaskCreate(blikej, (signed char*) "blikej", 1024, NULL, 2, NULL);
-	xTaskCreate(blikej2, (signed char*) "blikej2", 1024, NULL, 2, NULL);
-	xTaskCreate(twi_loopback, (signed char*) "twi", 1024, NULL, 2, NULL);
+	// xTaskCreate(twi_loopback, (signed char*) "twi", 1024, NULL, 2, NULL);
 	// xTaskCreate(uartTest, (signed char*) "uartTest", 1024, NULL, 2, NULL);
-		
+	xTaskCreate(stm, (signed char*) "stm", 1024, NULL, 2, NULL);
+	// xTaskCreate(performanceTest, (signed char*) "perf", 1024, NULL, 2, NULL);
+	
 	vTaskStartScheduler();
 	
 	return 0;
