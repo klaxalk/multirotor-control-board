@@ -128,12 +128,11 @@ void USART_puts(USART_TypeDef* USARTx, volatile char *s) {
 
 	while(*s){
 		// wait until data register is empty
-		while( !(USARTx->SR & 0x00000080) );
+		while( !(USARTx->SR & 0x00000040) );
 		USART_SendData(USARTx, *s);
 		*s++;
 	}
 }
-
 
 int main(void)
 {
@@ -240,24 +239,23 @@ int main(void)
     while(1)
     {
 
-        // USART_puts(UART4, "Init complete! Hello World!rn"); // just send a message to indicate that it works
+        USART_puts(UART4, "done\n\r"); // just send a message to indicate that it works
 
         GPIO_ToggleBits(GPIOC, GPIO_Pin_2);
-    	/*
 
     	for (lek = 0; lek < max; ++lek) {
 
     		baf = baf * ((float) 1.02);
-		}*/
+		}
 
     } //End of while(1) loop
 } //End of main loop
 
 // this is the interrupt request handler (IRQ) for ALL USART4 interrupts
-void USART4_IRQHandler(void){
+void UART4_IRQHandler(void){
 
 	// check if the USART4 receive interrupt flag was set
-	if( USART_GetITStatus(UART4, USART_IT_RXNE) ){
+	if (USART_GetITStatus(UART4, USART_IT_RXNE)) {
 
 		static uint8_t cnt = 0; // this counter is used to determine the string length
 		char t = UART4->DR; // the character from the USART4 data register is saved in t

@@ -28,3 +28,74 @@ java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
 java.lang.Thread.run(Unknown Source)
 
 
+23:09:51.260 [Worker-0] INFO  org.coocox.codb.common.log.ErrorLog - [C:/CooCox/CoIDE/bin\fossil.exe,clone,-A,admin,http://admin:fa772c@data.coocox.org:9090/cgi-bin/repo/eaf5d8c2-98d5-4e6c-a68c-d2b206ee4233,C:/CooCox/CoIDE/repo\.rn\fossils\eaf5d8c2-98d5-4e6c-a68c-d2b206ee4233.fossil] executed OK 
+Bytes      Cards  Artifacts     Deltas
+Sent:              53          1          0          0
+waiting for server...
+processed: 2%         
+processed: 8%         
+processed: 11%         
+processed: 36%         
+processed: 38%         
+processed: 41%         
+processed: 43%         
+processed: 79%         
+processed: 82%         
+processed: 94%         
+processed: 98%         
+Received:        2356         13          5          0
+Sent:              58          2          0          0
+waiting for server...
+processed: 3%         
+processed: 89%         
+Received:         694          3          0          0
+Total network traffic: 644 bytes sent, 3235 bytes received
+Rebuilding repository meta-data...
+  0.0% complete...
+  20.0% complete...
+  40.0% complete...
+  60.0% complete...
+  80.0% complete...
+  100.0% complete...
+project-id: bacddc3d0b6d2794076df8267bc539ab34cf696d
+server-id:  03d6cce02bdb16b3eda9b5fc3e87a17159207b85
+admin-user: admin (password is "e94844")
+
+23:09:51.364 [Worker-0] INFO  org.coocox.codb.common.log.ErrorLog - [C:/CooCox/CoIDE/bin\fossil.exe,open,C:/CooCox/CoIDE/repo\.rn\fossils\eaf5d8c2-98d5-4e6c-a68c-d2b206ee4233.fossil,-latest] executed OK 
+Bytes      Cards  Artifacts     Deltas
+Sent:              53          1          0          0
+waiting for server...
+processed: 2%         
+processed: 8%         
+processed: 11%         
+processed: 36%         
+processed: 38%         
+processed: 41%         
+processed: 43%         
+processed: 79%         
+processed: 82%         
+processed: 94%         
+processed: 98%         
+Received:        2356         13          5          0
+Sent:              58          2          0          0
+waiting for server...
+processed: 3%         
+processed: 89%         
+Received:         694          3          0          0
+Total network traffic: 644 bytes sent, 3235 bytes received
+Rebuilding repository meta-data...
+  0.0% complete...
+  20.0% complete...
+  40.0% complete...
+  60.0% complete...
+  80.0% complete...
+  100.0% complete...
+project-id: bacddc3d0b6d2794076df8267bc539ab34cf696d
+server-id:  03d6cce02bdb16b3eda9b5fc3e87a17159207b85
+admin-user: admin (password is "e94844")
+
+23:09:51.384 [Worker-0] INFO  org.coocox.codb.common.log.ErrorLog - [C:/CooCox/CoIDE/bin\fossil.exe,close,-force] executed OK 
+
+
+23:09:51.637 [Worker-0] INFO  org.coocox.codb.common.log.ProcessTimeLog - 47`54`freshExamplesByCompId`2992
+23:09:53.916 [Worker-3] INFO  org.coocox.codb.common.log.ProcessTimeLog - 47`54`freshExamplesByCompId`501
