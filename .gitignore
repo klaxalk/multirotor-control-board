@@ -64,3 +64,5 @@ Debug/
 *.msi
 *.msm
 *.msp
+*.cogui
+*.atsuo
