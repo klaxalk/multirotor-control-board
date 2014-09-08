@@ -27,4 +27,8 @@
 
 GPIO_InitTypeDef  GPIO_InitStruct;
 
+
+// Initialization of GPIO ports
+void gpio_init();
+
 #endif /* INIT_BOARD_H_ */

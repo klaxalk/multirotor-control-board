@@ -50,8 +50,10 @@ int main(void)
     USART_puts(UART4, "Init complete! Hello World!rn"); // just send a message to indicate that it works
     gpio_init();
 
-	xTaskCreate(blikej, (signed char*) "blikej", 1024, NULL, 2, NULL);
-	xTaskCreate(pocitej, (signed char*) "pocitej", 1024, NULL, 2, NULL);
+	xTaskCreate(blikej, (char*) "blikej", 1024, NULL, 2, NULL);
+	xTaskCreate(pocitej, (char*) "pocitej", 1024, NULL, 2, NULL);
 
 	vTaskStartScheduler();
+
+	return 0;
 }
