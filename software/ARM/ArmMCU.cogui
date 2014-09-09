@@ -11,13 +11,28 @@
 <folder appearance="1" expanded="2">
 <presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
 <part id="0"/>
+<part id="1"/>
+<part id="2"/>
+<part id="3"/>
 </presentation>
 </folder>
 </info>
 </editorArea>
 <editor activePart="true" focus="true" id="org.eclipse.cdt.ui.editor.CEditor" name="main.c" partName="main.c" path="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/main.c" title="main.c" tooltip="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/main.c" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/ArmMCU/main.c"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="438" selectionTopPixel="0"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="703" selectionTopPixel="112"/>
+</editor>
+<editor id="org.eclipse.cdt.ui.editor.CEditor" name="init_board.c" partName="init_board.c" path="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/FreeRTOS/Port/init_board.c" title="init_board.c" tooltip="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/FreeRTOS/Port/init_board.c" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/ArmMCU/init_board.c"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="558" selectionTopPixel="0"/>
+</editor>
+<editor id="org.eclipse.cdt.ui.editor.CEditor" name="init_board.h" partName="init_board.h" path="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/FreeRTOS/Port/init_board.h" title="init_board.h" tooltip="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/FreeRTOS/Port/init_board.h" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/ArmMCU/init_board.h"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="958" selectionTopPixel="0"/>
+</editor>
+<editor id="org.eclipse.cdt.ui.editor.CEditor" name="task.h" partName="task.h" path="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/FreeRTOS/Source/include/task.h" title="task.h" tooltip="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/FreeRTOS/Source/include/task.h" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/ArmMCU/FreeRTOS/Source/include/task.h"/>
+<editorState selectionHorizontalPixel="0" selectionLength="6" selectionOffset="5694" selectionTopPixel="1905"/>
 </editor>
 </editors>
 <views>
@@ -27,7 +42,7 @@
 <element path="/ArmMCU"/>
 </expanded>
 <selection>
-<element path="/ArmMCU/main.c"/>
+<element path="/ArmMCU/init_board.h"/>
 </selection>
 </viewState>
 </view>
@@ -101,7 +116,7 @@
 <page content="org.eclipse.ui.internal.introview" label="LabelNotFound"/>
 </folder>
 </info>
-<info folder="true" part="org.eclipse.ui.internal.ViewStack@586ac6" ratio="0.772098" ratioLeft="725" ratioRight="214" relationship="4" relative="org.eclipse.ui.internal.ViewStack@493b65">
+<info folder="true" part="org.eclipse.ui.internal.ViewStack@586ac6" ratio="0.8881789" ratioLeft="834" ratioRight="105" relationship="4" relative="org.eclipse.ui.internal.ViewStack@493b65">
 <folder activePageID="org.eclipse.ui.console.ConsoleView" appearance="2" expanded="2">
 <page content="org.eclipse.ui.console.ConsoleView" label="Console"/>
 <presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
@@ -237,10 +252,55 @@
 <org.coocox.welcome.ui.WelcomePage/>
 </editor>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/main.c"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/init_board.c"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/init_board.h"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/FreeRTOS/Source/include/task.h"/>
 </editors>
 <item historyLabel="welcome" index="0"/>
-<item active="true" historyLabel="main.c" index="1">
+<item historyLabel="main.c" index="1">
 <position info="not_deleted" x="0" y="0"/>
+</item>
+<item historyLabel="main.c" index="1">
+<position info="not_deleted" x="647" y="0"/>
+</item>
+<item historyLabel="main.c" index="1">
+<position info="not_deleted" x="1283" y="3"/>
+</item>
+<item historyLabel="main.c" index="1">
+<position info="not_deleted" x="1281" y="0"/>
+</item>
+<item historyLabel="main.c" index="1">
+<position info="not_deleted" x="1178" y="64"/>
+</item>
+<item historyLabel="main.c" index="1">
+<position info="not_deleted" x="1105" y="0"/>
+</item>
+<item historyLabel="init_board.c" index="2">
+<position info="not_deleted" x="117" y="9"/>
+</item>
+<item historyLabel="init_board.h" index="3">
+<position info="not_deleted" x="0" y="0"/>
+</item>
+<item historyLabel="init_board.h" index="3">
+<position info="not_deleted" x="958" y="0"/>
+</item>
+<item historyLabel="init_board.c" index="2">
+<position info="not_deleted" x="558" y="0"/>
+</item>
+<item historyLabel="main.c" index="1">
+<position info="not_deleted" x="1123" y="0"/>
+</item>
+<item historyLabel="task.h" index="4">
+<position info="not_deleted" x="5694" y="6"/>
+</item>
+<item historyLabel="init_board.h" index="3">
+<position info="not_deleted" x="958" y="0"/>
+</item>
+<item historyLabel="init_board.c" index="2">
+<position info="not_deleted" x="558" y="0"/>
+</item>
+<item active="true" historyLabel="main.c" index="1">
+<position info="not_deleted" x="1123" y="0"/>
 </item>
 </navigationHistory>
 <input factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/" type="8"/>
@@ -249,13 +309,41 @@
 <actionBarAdvisor/>
 </window>
 <mruList>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="task.h" tooltip="ArmMCU/FreeRTOS/Source/include/task.h">
+<persistable path="/ArmMCU/FreeRTOS/Source/include/task.h"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="init_board.h" tooltip="ArmMCU/init_board.h">
+<persistable path="/ArmMCU/init_board.h"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="init_board.c" tooltip="ArmMCU/init_board.c">
+<persistable path="/ArmMCU/init_board.c"/>
+</file>
+<file factoryID="org.eclipse.ui.ide.FileStoreEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="misc.c" tooltip="C:\Users\klaxalk\Desktop\ArmLedTest\STM32F4xx_StdPeriph_Driver\src\misc.c">
+<persistable uri="file:/C:/Users/klaxalk/Desktop/ArmLedTest/STM32F4xx_StdPeriph_Driver/src/misc.c"/>
+</file>
+<file factoryID="org.eclipse.cdt.ui.ExternalEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="misc.h" tooltip="C:\Users\klaxalk\Desktop\ArmLedTest\STM32F4xx_StdPeriph_Driver\inc\misc.h">
+<persistable path="C:\Users\klaxalk\Desktop\ArmLedTest\STM32F4xx_StdPeriph_Driver\inc\misc.h" project="ArmTest"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="startup_stm32f4xx.c" tooltip="ArmTest/cmsis_boot/startup/startup_stm32f4xx.c">
+<persistable path="/ArmTest/cmsis_boot/startup/startup_stm32f4xx.c"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="system_stm32f4xx.c" tooltip="ArmTest/cmsis_boot/system_stm32f4xx.c">
+<persistable path="/ArmTest/cmsis_boot/system_stm32f4xx.c"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="system_stm32f4xx.h" tooltip="ArmTest/cmsis_boot/system_stm32f4xx.h">
+<persistable path="/ArmTest/cmsis_boot/system_stm32f4xx.h"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="stm32f4xx_conf.h" tooltip="ArmTest/cmsis_boot/stm32f4xx_conf.h">
+<persistable path="/ArmTest/cmsis_boot/stm32f4xx_conf.h"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="stm32f4xx.h" tooltip="ArmTest/cmsis_boot/stm32f4xx.h">
+<persistable path="/ArmTest/cmsis_boot/stm32f4xx.h"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="main.c" tooltip="ArmTest/main.c">
+<persistable path="/ArmTest/main.c"/>
+</file>
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="main.c" tooltip="ArmMCU/main.c">
 <persistable path="/ArmMCU/main.c"/>
-</file>
-<file factoryID="org.coocox.builder.ui.persistent.PersistentElementFactory" id="org.coocox.welcome.ui.WelcomePage" name="" tooltip="">
-<persistable>
-<org.coocox.welcome.ui.WelcomePage/>
-</persistable>
 </file>
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="FreeRTOSConfig.h" tooltip="ArmMCU/FreeRTOS/FreeRTOSConfig.h">
 <persistable path="/ArmMCU/FreeRTOS/FreeRTOSConfig.h"/>
@@ -263,38 +351,8 @@
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="uart_driver.c" tooltip="ArmMCU/uart_driver.c">
 <persistable path="/ArmMCU/uart_driver.c"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="init_board.c" tooltip="ArmMCU/init_board.c">
-<persistable path="/ArmMCU/init_board.c"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="init_board.h" tooltip="ArmMCU/init_board.h">
-<persistable path="/ArmMCU/init_board.h"/>
-</file>
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="heap_2.c" tooltip="ArmMCU/FreeRTOS/Port/heap_2.c">
 <persistable path="/ArmMCU/FreeRTOS/Port/heap_2.c"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="tasks.c" tooltip="ArmMCU/FreeRTOS/Source/tasks.c">
-<persistable path="/ArmMCU/FreeRTOS/Source/tasks.c"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="port.c" tooltip="ArmMCU/FreeRTOS/Port/port.c">
-<persistable path="/ArmMCU/FreeRTOS/Port/port.c"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="system_stm32f4xx.c" tooltip="ArmMCU/cmsis_boot/system_stm32f4xx.c">
-<persistable path="/ArmMCU/cmsis_boot/system_stm32f4xx.c"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="portmacro.h" tooltip="ArmMCU/FRT_Library/FreeRTOS/Source/portable/GCC/Cortex-M4F/portmacro.h">
-<persistable path="/ArmMCU/FRT_Library/FreeRTOS/Source/portable/GCC/Cortex-M4F/portmacro.h"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="port.c" tooltip="ArmMCU/FRT_Library/FreeRTOS/Source/portable/GCC/Cortex-M4F/port.c">
-<persistable path="/ArmMCU/FRT_Library/FreeRTOS/Source/portable/GCC/Cortex-M4F/port.c"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="task.h" tooltip="ArmMCU/FRT_Library/FreeRTOS/Source/include/task.h">
-<persistable path="/ArmMCU/FRT_Library/FreeRTOS/Source/include/task.h"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="common.c" tooltip="ArmMCU/FRT_Library/FreeRTOS/Source/portable/GCC/ARM_CM3/common.c">
-<persistable path="/ArmMCU/FRT_Library/FreeRTOS/Source/portable/GCC/ARM_CM3/common.c"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="port.c" tooltip="ArmMCU/FRT_Library/FreeRTOS/Source/portable/GCC/ARM_CM3/port.c">
-<persistable path="/ArmMCU/FRT_Library/FreeRTOS/Source/portable/GCC/ARM_CM3/port.c"/>
 </file>
 </mruList>
 </workbench>

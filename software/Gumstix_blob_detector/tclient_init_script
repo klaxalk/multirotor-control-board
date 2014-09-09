@@ -1,0 +1,44 @@
+#!/bin/sh
+
+case $1 in
+   start)
+      pid=`ps aux | grep "/bin/sh /opt/tracker_client/tclient.sh" | grep -v grep | 
+awk '{print $2}'`
+      if [ -n "$pid" ]
+      then
+	 echo "tracker client is already running"
+      else
+	 /opt/tracker_client/tclient.sh 2>&1 1>/var/log/tclient.log &
+	 echo "tclient started"
+      fi
+      ;;
+   stop)
+      pid=`ps aux | grep "/bin/sh /opt/tracker_client/tclient.sh" | grep -v grep | 
+awk '{print $2}'`
+      if [ -n "$pid" ]; then 
+	 kill -9 $pid; 
+	 killall -9 tclient.sh;
+	 kill -9 `pidof /opt/tracker_client/tclient`
+	 echo "tclient.sh killed"
+      else
+	 echo "tracker client is not running"
+      fi
+      ;;
+   restart)
+      pid=`ps aux | grep "/bin/sh /opt/tracker_client/tclient.sh" | grep -v grep | 
+awk '{print $2}'`
+      if [ -n "$pid" ]; then 
+	 kill -9 $pid; 
+	 echo "tclient.sh killed"
+	 killall -9 tclient.sh;
+	 kill -9 `pidof /opt/tracker_client/tclient`
+      else
+	 echo "tracker client is not runnig"
+      fi
+      /opt/tracker_client/tclient.sh 2>&1 1>/var/log/tclient.log &
+      echo "tracker client started"
+      ;;
+   status)
+      ;;
+   *)
+esac

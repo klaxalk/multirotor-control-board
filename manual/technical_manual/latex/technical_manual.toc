@@ -1,0 +1,22 @@
+\select@language {czech}
+\contentsline {section}{\numberline {1}Hardware}{1}{section.2}
+\contentsline {subsection}{\numberline {1.1}Letoun}{1}{subsection.3}
+\contentsline {subsection}{\numberline {1.2}\IeC {\v R}\IeC {\'\i }dic\IeC {\'\i } deska}{2}{subsection.5}
+\contentsline {subsection}{\numberline {1.3}P\IeC {\v r}ipojiteln\IeC {\'e} extern\IeC {\'\i } moduly}{2}{subsection.7}
+\contentsline {subsubsection}{\numberline {1.3.1}FlightCTRL}{3}{subsubsection.8}
+\contentsline {subsubsection}{\numberline {1.3.2}Po\IeC {\v c}\IeC {\'\i }ta\IeC {\v c} Gumstix}{3}{subsubsection.9}
+\contentsline {subsection}{\numberline {1.4}P\IeC {\v r}\IeC {\'\i }prava p\IeC {\v r}ed letem}{3}{subsection.10}
+\contentsline {subsection}{\numberline {1.5}Aktivace k letu}{3}{subsection.13}
+\contentsline {subsection}{\numberline {1.6}Deaktivace - vypnut\IeC {\'\i }}{4}{subsection.15}
+\contentsline {section}{\numberline {2}Software}{5}{section.17}
+\contentsline {subsection}{\numberline {2.1}Struktura software}{5}{subsection.18}
+\contentsline {subsubsection}{\numberline {2.1.1}main.c}{5}{subsubsection.19}
+\contentsline {subsubsection}{\numberline {2.1.2}controllers.c}{5}{subsubsection.21}
+\contentsline {subsubsection}{\numberline {2.1.3}system.c}{5}{subsubsection.22}
+\contentsline {subsubsection}{\numberline {2.1.4}communication.c}{7}{subsubsection.24}
+\contentsline {subsubsection}{\numberline {2.1.5}config.h}{7}{subsubsection.26}
+\contentsline {subsection}{\numberline {2.2}Kompilace pro ATmega164p}{8}{subsection.28}
+\contentsline {subsection}{\numberline {2.3}Upload progamu do ATmega164p}{8}{subsection.29}
+\contentsline {subsection}{\numberline {2.4}Logov\IeC {\'a}n\IeC {\'\i } letov\IeC {\'y}ch dat do Gumstixe}{9}{subsection.30}
+\contentsline {subsubsection}{\numberline {2.4.1}Strana \IeC {\v r}\IeC {\'\i }dic\IeC {\'\i } desky}{9}{subsubsection.31}
+\contentsline {subsubsection}{\numberline {2.4.2}Strana Gumstixe}{9}{subsubsection.32}
