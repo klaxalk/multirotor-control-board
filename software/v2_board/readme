@@ -1,7 +1,0 @@
-I forked yuriykulikov's FreeRTOS port and added the FreeRTOS 7.0.2 kernel. It was tested on ATXmega128a4u. The source is in form of AtmelStudio project (AtmelStudio 6.2). It utilizes few ASF drivers: "Delay routines", "Generic board support", "IOPORT". Some drivers are supported manually in "MyDrivers" directory.
-
-The demo runs 2 tasks, each blinking one LED with different rate.
-
-------------------------
-FreeRTOS port files (port.c, portmacro.h) forked from https://github.com/yuriykulikov/FreeRTOS-on-XMEGA
-
