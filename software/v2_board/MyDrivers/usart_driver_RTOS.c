@@ -65,7 +65,9 @@
 UsartBuffer * usartBufferC;
 UsartBuffer * usartBufferC1;
 UsartBuffer * usartBufferD;
+UsartBuffer * usartBufferD1;
 UsartBuffer * usartBufferE;
+UsartBuffer * usartBufferE1;
 UsartBuffer * usartBufferF;
 
 signed char USART_RXComplete(UsartBuffer *);
@@ -79,7 +81,9 @@ signed char USART_DataRegEmpty(UsartBuffer *);
 ISR(USARTC0_RXC_vect){ if( USART_RXComplete(usartBufferC) ) taskYIELD(); }
 ISR(USARTC1_RXC_vect){ if( USART_RXComplete(usartBufferC1) ) taskYIELD(); }
 ISR(USARTD0_RXC_vect){ if( USART_RXComplete(usartBufferD) ) taskYIELD(); }
+ISR(USARTD1_RXC_vect){ if( USART_RXComplete(usartBufferD1) ) taskYIELD(); }
 ISR(USARTE0_RXC_vect){ if( USART_RXComplete(usartBufferE) ) taskYIELD(); }
+ISR(USARTE1_RXC_vect){ if( USART_RXComplete(usartBufferE1) ) taskYIELD(); }
 ISR(USARTF0_RXC_vect){ if( USART_RXComplete(usartBufferF) ) taskYIELD(); }
 /*! \brief Data register empty  interrupt service routine.
  *
@@ -90,7 +94,9 @@ ISR(USARTF0_RXC_vect){ if( USART_RXComplete(usartBufferF) ) taskYIELD(); }
 ISR(USARTC0_DRE_vect){USART_DataRegEmpty(usartBufferC);}
 ISR(USARTC1_DRE_vect){USART_DataRegEmpty(usartBufferC1);}
 ISR(USARTD0_DRE_vect){USART_DataRegEmpty(usartBufferD);}
+ISR(USARTD1_DRE_vect){USART_DataRegEmpty(usartBufferD1);}
 ISR(USARTE0_DRE_vect){USART_DataRegEmpty(usartBufferE);}
+ISR(USARTE1_DRE_vect){USART_DataRegEmpty(usartBufferE1);}
 ISR(USARTF0_DRE_vect){USART_DataRegEmpty(usartBufferF);}
 
 /*! \brief Initializes buffer and selects what USART module to use.
@@ -135,11 +141,27 @@ UsartBuffer * usartBufferInitialize(USART_t * usart, Baudrate_enum baudrate ,cha
 			//Since usart is on the port D, we will need to use PORTD
 			port = &PORTD;
 			break;
+		case (int)&USARTD1:
+			//Allocate memory for usart structure and store the pointer
+			usartBuffer = ( UsartBuffer * ) pvPortMalloc( sizeof( UsartBuffer ) );
+			//copy pointer pUsartBuffer to global pUsartBufferD, which is use to handle interrupts
+			usartBufferD1 = usartBuffer;
+			//Since usart is on the port D, we will need to use PORTD
+			port = &PORTD;
+			break;
 		case (int)&USARTE0:
 			//Allocate memory for usart structure and store the pointer
 			usartBuffer = ( UsartBuffer * ) pvPortMalloc( sizeof( UsartBuffer ) );
 			//copy pointer pUsartBuffer to global pUsartBufferE, which is use to handle interrupts
 			usartBufferE = usartBuffer;
+			//Since usart is on the port E, we will need to use PORTE
+			port = &PORTE;
+			break;
+		case (int)&USARTE1:
+			//Allocate memory for usart structure and store the pointer
+			usartBuffer = ( UsartBuffer * ) pvPortMalloc( sizeof( UsartBuffer ) );
+			//copy pointer pUsartBuffer to global pUsartBufferE, which is use to handle interrupts
+			usartBufferE1 = usartBuffer;
 			//Since usart is on the port E, we will need to use PORTE
 			port = &PORTE;
 			break;
@@ -161,7 +183,7 @@ UsartBuffer * usartBufferInitialize(USART_t * usart, Baudrate_enum baudrate ,cha
 	/* (RX0) as input. */
 	port->DIRCLR = PIN2_bm;
 	
-	if (((int)usart) == ((int)&USARTC1)) {
+	if (((int)usart) == ((int)&USARTC1) || ((int)usart) == ((int)&USARTD1) || ((int)usart) == ((int)&USARTE1)) {
 		
 		/* (TX0) as output. */
 		port->DIRSET = PIN7_bm;
