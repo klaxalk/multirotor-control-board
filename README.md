@@ -8,4 +8,4 @@ The control board is responsible for communication with modules and running basi
 Klonování repozitáře
 --------------------
 
-Pro naklonování repozitáře si stáhněte git client. Na Windows doporučuji msysgit+TortoiseGIT, na linuxu git+git-cola. Abyste mohli přispívat do repozitáře, je třeba si vygenerovat ssh klíč (ve windows např. PuttyGen (nainstaluje se s TortoiseGIT)) a poslat mi váš veřejný klíč.
+Pro naklonování repozitáře si stáhněte git client. Na Windows doporučuji original klient od GitHub, na linuxu git+git-cola. Abyste mohli přispívat do repozitáře, je třeba si vygenerovat ssh klíč (ve windows např. PuttyGen (nainstaluje se s TortoiseGIT)) a poslat mi váš veřejný klíč.
