@@ -309,6 +309,687 @@
     <Compile Include="mainTask.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="mavlink\v0.9\ardupilotmega\ardupilotmega.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\ardupilotmega\mavlink.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\ardupilotmega\mavlink_msg_ahrs.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\ardupilotmega\mavlink_msg_ap_adc.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\ardupilotmega\mavlink_msg_digicam_configure.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\ardupilotmega\mavlink_msg_digicam_control.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\ardupilotmega\mavlink_msg_fence_fetch_point.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\ardupilotmega\mavlink_msg_fence_point.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\ardupilotmega\mavlink_msg_fence_status.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\ardupilotmega\mavlink_msg_hwstatus.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\ardupilotmega\mavlink_msg_limits_status.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\ardupilotmega\mavlink_msg_meminfo.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\ardupilotmega\mavlink_msg_mount_configure.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\ardupilotmega\mavlink_msg_mount_control.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\ardupilotmega\mavlink_msg_mount_status.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\ardupilotmega\mavlink_msg_radio.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\ardupilotmega\mavlink_msg_sensor_offsets.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\ardupilotmega\mavlink_msg_set_mag_offsets.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\ardupilotmega\mavlink_msg_simstate.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\ardupilotmega\testsuite.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\ardupilotmega\version.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\checksum.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\common\common.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\common\mavlink.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\common\mavlink_msg_action.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\common\mavlink_msg_action_ack.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\common\mavlink_msg_attitude.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\common\mavlink_msg_auth_key.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\common\mavlink_msg_boot.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\common\mavlink_msg_change_operator_control.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\common\mavlink_msg_change_operator_control_ack.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\common\mavlink_msg_command.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\common\mavlink_msg_command_ack.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\common\mavlink_msg_control_status.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\common\mavlink_msg_debug.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\common\mavlink_msg_debug_vect.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\common\mavlink_msg_global_position.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\common\mavlink_msg_global_position_int.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\common\mavlink_msg_gps_local_origin_set.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\common\mavlink_msg_gps_raw.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\common\mavlink_msg_gps_raw_int.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\common\mavlink_msg_gps_set_global_origin.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\common\mavlink_msg_gps_status.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\common\mavlink_msg_heartbeat.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\common\mavlink_msg_hil_controls.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\common\mavlink_msg_hil_state.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\common\mavlink_msg_local_position.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\common\mavlink_msg_local_position_setpoint.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\common\mavlink_msg_local_position_setpoint_set.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\common\mavlink_msg_manual_control.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\common\mavlink_msg_named_value_float.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\common\mavlink_msg_named_value_int.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\common\mavlink_msg_nav_controller_output.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\common\mavlink_msg_object_detection_event.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\common\mavlink_msg_optical_flow.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\common\mavlink_msg_param_request_list.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\common\mavlink_msg_param_request_read.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\common\mavlink_msg_param_set.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\common\mavlink_msg_param_value.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\common\mavlink_msg_ping.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\common\mavlink_msg_position_target.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\common\mavlink_msg_raw_imu.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\common\mavlink_msg_raw_pressure.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\common\mavlink_msg_rc_channels_override.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\common\mavlink_msg_rc_channels_raw.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\common\mavlink_msg_rc_channels_scaled.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\common\mavlink_msg_request_data_stream.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\common\mavlink_msg_roll_pitch_yaw_speed_thrust_setpoint.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\common\mavlink_msg_roll_pitch_yaw_thrust_setpoint.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\common\mavlink_msg_safety_allowed_area.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\common\mavlink_msg_safety_set_allowed_area.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\common\mavlink_msg_scaled_imu.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\common\mavlink_msg_scaled_pressure.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\common\mavlink_msg_servo_output_raw.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\common\mavlink_msg_set_altitude.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\common\mavlink_msg_set_mode.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\common\mavlink_msg_set_nav_mode.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\common\mavlink_msg_set_roll_pitch_yaw_speed_thrust.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\common\mavlink_msg_set_roll_pitch_yaw_thrust.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\common\mavlink_msg_state_correction.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\common\mavlink_msg_statustext.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\common\mavlink_msg_system_time.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\common\mavlink_msg_system_time_utc.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\common\mavlink_msg_sys_status.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\common\mavlink_msg_vfr_hud.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\common\mavlink_msg_waypoint.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\common\mavlink_msg_waypoint_ack.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\common\mavlink_msg_waypoint_clear_all.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\common\mavlink_msg_waypoint_count.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\common\mavlink_msg_waypoint_current.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\common\mavlink_msg_waypoint_reached.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\common\mavlink_msg_waypoint_request.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\common\mavlink_msg_waypoint_request_list.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\common\mavlink_msg_waypoint_set_current.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\common\testsuite.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\common\version.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\mavlink_helpers.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\mavlink_types.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v0.9\protocol.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\ardupilotmega\ardupilotmega.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\ardupilotmega\mavlink.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\ardupilotmega\mavlink_msg_ahrs.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\ardupilotmega\mavlink_msg_ap_adc.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\ardupilotmega\mavlink_msg_data100.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\ardupilotmega\mavlink_msg_data16.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\ardupilotmega\mavlink_msg_data32.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\ardupilotmega\mavlink_msg_data64.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\ardupilotmega\mavlink_msg_data96.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\ardupilotmega\mavlink_msg_digicam_configure.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\ardupilotmega\mavlink_msg_digicam_control.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\ardupilotmega\mavlink_msg_fence_fetch_point.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\ardupilotmega\mavlink_msg_fence_point.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\ardupilotmega\mavlink_msg_fence_status.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\ardupilotmega\mavlink_msg_hwstatus.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\ardupilotmega\mavlink_msg_limits_status.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\ardupilotmega\mavlink_msg_meminfo.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\ardupilotmega\mavlink_msg_mount_configure.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\ardupilotmega\mavlink_msg_mount_control.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\ardupilotmega\mavlink_msg_mount_status.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\ardupilotmega\mavlink_msg_radio.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\ardupilotmega\mavlink_msg_rangefinder.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\ardupilotmega\mavlink_msg_sensor_offsets.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\ardupilotmega\mavlink_msg_set_mag_offsets.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\ardupilotmega\mavlink_msg_simstate.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\ardupilotmega\mavlink_msg_wind.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\ardupilotmega\testsuite.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\ardupilotmega\version.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\checksum.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\common.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_attitude.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_attitude_quaternion.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_auth_key.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_battery_status.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_change_operator_control.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_change_operator_control_ack.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_command_ack.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_command_long.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_data_stream.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_debug.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_debug_vect.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_file_transfer_dir_list.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_file_transfer_res.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_file_transfer_start.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_global_position_int.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_global_position_setpoint_int.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_global_vision_position_estimate.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_gps_global_origin.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_gps_raw_int.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_gps_status.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_heartbeat.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_highres_imu.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_hil_controls.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_hil_gps.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_hil_optical_flow.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_hil_rc_inputs_raw.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_hil_sensor.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_hil_state.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_hil_state_quaternion.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_local_position_ned.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_local_position_ned_system_global_offset.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_local_position_setpoint.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_manual_control.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_manual_setpoint.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_memory_vect.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_mission_ack.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_mission_clear_all.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_mission_count.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_mission_current.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_mission_item.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_mission_item_reached.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_mission_request.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_mission_request_list.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_mission_request_partial_list.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_mission_set_current.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_mission_write_partial_list.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_named_value_float.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_named_value_int.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_nav_controller_output.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_omnidirectional_flow.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_optical_flow.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_param_request_list.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_param_request_read.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_param_set.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_param_value.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_ping.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_radio_status.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_raw_imu.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_raw_pressure.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_rc_channels_override.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_rc_channels_raw.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_rc_channels_scaled.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_request_data_stream.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_roll_pitch_yaw_rates_thrust_setpoint.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_roll_pitch_yaw_speed_thrust_setpoint.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_roll_pitch_yaw_thrust_setpoint.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_safety_allowed_area.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_safety_set_allowed_area.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_scaled_imu.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_scaled_pressure.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_servo_output_raw.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_setpoint_6dof.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_setpoint_8dof.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_set_global_position_setpoint_int.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_set_gps_global_origin.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_set_local_position_setpoint.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_set_mode.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_set_quad_motors_setpoint.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_set_quad_swarm_led_roll_pitch_yaw_thrust.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_set_quad_swarm_roll_pitch_yaw_thrust.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_set_roll_pitch_yaw_speed_thrust.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_set_roll_pitch_yaw_thrust.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_sim_state.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_state_correction.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_statustext.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_system_time.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_sys_status.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_vfr_hud.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_vicon_position_estimate.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_vision_position_estimate.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\mavlink_msg_vision_speed_estimate.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\testsuite.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\common\version.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\mavlink_conversions.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\mavlink_helpers.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\mavlink_types.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink\v1.0\protocol.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="MyDrivers\pmic_driver.c">
       <SubType>compile</SubType>
     </Compile>
@@ -357,6 +1038,9 @@
     <Compile Include="user_board.h">
       <SubType>compile</SubType>
     </Compile>
+    <None Include="mavlink\v1.0\mavlink_protobuf_manager.hpp">
+      <SubType>compile</SubType>
+    </None>
     <None Include="src\ASF\xmega\utils\assembler\gas.h">
       <SubType>compile</SubType>
     </None>
@@ -471,6 +1155,13 @@
     <Folder Include="FreeRTOS\Source" />
     <Folder Include="FreeRTOS\Port" />
     <Folder Include="FreeRTOS\Source\include" />
+    <Folder Include="mavlink\" />
+    <Folder Include="mavlink\v0.9\" />
+    <Folder Include="mavlink\v0.9\ardupilotmega\" />
+    <Folder Include="mavlink\v0.9\common\" />
+    <Folder Include="mavlink\v1.0\" />
+    <Folder Include="mavlink\v1.0\ardupilotmega\" />
+    <Folder Include="mavlink\v1.0\common\" />
     <Folder Include="MyDrivers" />
     <Folder Include="src\" />
     <Folder Include="src\ASF\" />

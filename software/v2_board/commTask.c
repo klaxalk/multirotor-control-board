@@ -52,14 +52,14 @@ void commTask(void *p) {
 				usartBufferPutString(usart_buffer_xbee, "\r\n", 10);
 			}
 			
-			if (inChar == 'c') {
+			if (inChar == 'v') {
 				
 				char buffer[20];
-				sprintf(buffer, "%f\r\n", (float) opticalFlowData.ground_distance);
+				sprintf(buffer, "%2.2f %2.2f %2.2f\r\n", elevatorSpeed, aileronSpeed, groundDistance);
 				usartBufferPutString(usart_buffer_xbee, buffer, 10);
 			}
 
-			if (inChar == 'p') {
+			if (inChar == 'b') {
 
 				ukazatel = (char*) &elevatorSpeed;
 				usartBufferPutByte(usart_buffer_xbee, *(ukazatel), 10);
