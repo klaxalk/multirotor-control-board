@@ -5,7 +5,6 @@
  *  Author: Tomas Baca
  */ 
 
-
 #ifndef SYSTEM_H_
 #define SYSTEM_H_
 
@@ -45,32 +44,45 @@
 #define ppm_out_off()		ioport_set_pin_level(OUT1, false)
 
 /* -------------------------------------------------------------------- */
-/*	Constans for PPM input timing										*/
+/*	Constants for PPM input timing										*/
 /* -------------------------------------------------------------------- */
 #define PPM_IN_MIN_LENGTH	2000
 #define PPM_IN_MAX_LENGTH	4000
 #define PPM_IN_TRESHOLD		5000
 
 /* -------------------------------------------------------------------- */
-/*	Constans for PPM output timing										*/
+/*	Constants for PPM output timing										*/
 /* -------------------------------------------------------------------- */
-#define PULSE_OUT_MIN						4000
-#define PULSE_OUT_MIDDLE				6000
-#define PULSE_OUT_MAX						8000
+#define PULSE_OUT_MIN			4000
+#define PULSE_OUT_MIDDLE		6000
+#define PULSE_OUT_MAX			8000
 #define NUMBER_OF_CHANNELS_OUT	6
-#define PPM_FRAME_LENGTH				80000
-#define PPM_PULSE								1600
+#define PPM_FRAME_LENGTH		80000
+#define PPM_PULSE				1600
 
 /* -------------------------------------------------------------------- */
-/*	Constans for USART aliases											*/
+/*	Constants for USART aliases											*/
 /* -------------------------------------------------------------------- */
 #define USART_1			USARTD1
 #define USART_2			USARTE0
 #define USART_3			USARTE1
 #define USART_4			USARTF0
 #define USART_STM		USARTC1
-#define USART_XBEE	USARTC0
+#define USART_XBEE		USARTC0
 #define USART_LOG		USARTD0
+
+/* -------------------------------------------------------------------- */
+/*	Constants to asociate the RC channels								*/
+/* -------------------------------------------------------------------- */
+#define THROTTLE		0
+#define RUDDER			1
+#define AILERON			2
+#define ELEVATOR		3
+#define AUX1			4
+#define AUX2			5
+#define AUX3			6
+#define AUX4			7
+#define AUX5			8
 
 /* Basic initialization of the MCU, peripherals and i/o */
 void boardInit();

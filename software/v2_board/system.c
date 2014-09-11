@@ -27,6 +27,17 @@ volatile uint16_t outputChannels[6] = {PULSE_OUT_MIN, PULSE_OUT_MIN, PULSE_OUT_M
 volatile uint8_t currentChannelOut = 0;
 
 /* -------------------------------------------------------------------- */
+/*	Variables related to controllers									*/
+/* -------------------------------------------------------------------- */
+volatile unsigned char controllerEnabled;
+
+// controllers output variables
+volatile int16_t controllerElevatorOutput;
+volatile int16_t controllerAileronOutput;
+volatile int16_t controllerThrottleOutput;
+volatile int16_t controllerRudderOutput;
+
+/* -------------------------------------------------------------------- */
 /*	Buffers for USARTs													*/
 /* -------------------------------------------------------------------- */
 UsartBuffer * usart_buffer_stm;
@@ -43,7 +54,7 @@ UsartBuffer * usart_buffer_4;
 #define USART_STM_BAUDRATE		BAUD9600
 #define USART_XBEE_BAUDRATE		BAUD19200
 #define USART_LOG_BAUDRATE		BAUD9600
-#define USART_1_BAUDRATE		BAUD19200
+#define USART_1_BAUDRATE		BAUD115200
 #define USART_2_BAUDRATE		BAUD19200
 #define USART_3_BAUDRATE		BAUD19200
 #define USART_4_BAUDRATE		BAUD19200
@@ -146,11 +157,33 @@ void boardInit() {
 /* -------------------------------------------------------------------- */
 void mergeSignalsToOutput() {
 
-	int i;
-	for (i = 0; i < NUMBER_OF_CHANNELS_OUT; i++) {
+	int16_t outputThrottle = PULSE_OUT_MIN;
+	int16_t outputElevator = PULSE_OUT_MIDDLE;
+	int16_t outputAileron = PULSE_OUT_MIDDLE;
+	int16_t outputRudder = PULSE_OUT_MIDDLE;
 
-		outputChannels[i] = RCchannel[i]*2;
+	outputThrottle = RCchannel[THROTTLE];
+	outputRudder = RCchannel[RUDDER];
+	outputElevator = RCchannel[ELEVATOR];
+	outputAileron = RCchannel[AILERON];
+
+	if (controllerEnabled == 1) {
+
+		led_red_on();
+
+		outputThrottle += controllerThrottleOutput;
+		outputElevator += controllerElevatorOutput;
+		outputAileron += controllerAileronOutput;
+		//~ outputRudder += controllerRudderOutput;
+		} else {
+
+		led_red_off();
 	}
+
+	outputChannels[0] = outputThrottle;
+	outputChannels[1] = outputRudder;
+	outputChannels[2] = outputElevator;
+	outputChannels[3] = outputAileron;
 }
 
 /* -------------------------------------------------------------------- */

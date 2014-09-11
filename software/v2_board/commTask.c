@@ -11,13 +11,30 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include "usart_driver_RTOS.h"
+#include "communication.h"
+#include <stdio.h>
 
 extern volatile uint16_t RCchannel[9];
 extern UsartBuffer * usart_buffer_xbee;
+extern UsartBuffer * usart_buffer_1;
+
+extern volatile float groundDistance;
+extern volatile float elevatorSpeed;
+extern volatile float aileronSpeed;
+extern volatile uint8_t px4Confidence;
+
+// variables used by the mavlink library
+extern mavlink_message_t mavlinkMessage;
+extern mavlink_status_t mavlinkStatus;
+extern int8_t mavlinkFlag;
+extern mavlink_optical_flow_t opticalFlowData;
+extern int8_t opticalFlowDataFlag;
 
 void commTask(void *p) {
 	
 	unsigned char inChar;
+
+	char* ukazatel;
 	
 	while (1) {
 
@@ -34,8 +51,69 @@ void commTask(void *p) {
 				}
 				usartBufferPutString(usart_buffer_xbee, "\r\n", 10);
 			}
+
+			if (inChar == 'p') {
+
+				ukazatel = (char*) &elevatorSpeed;
+				usartBufferPutByte(usart_buffer_xbee, *(ukazatel), 10);
+				usartBufferPutByte(usart_buffer_xbee, *(ukazatel+1), 10);
+				usartBufferPutByte(usart_buffer_xbee, *(ukazatel+2), 10);
+				usartBufferPutByte(usart_buffer_xbee, *(ukazatel+3), 10);
+
+				ukazatel = (char*) &aileronSpeed;
+				usartBufferPutByte(usart_buffer_xbee, *(ukazatel), 10);
+				usartBufferPutByte(usart_buffer_xbee, *(ukazatel+1), 10);
+				usartBufferPutByte(usart_buffer_xbee, *(ukazatel+2), 10);
+				usartBufferPutByte(usart_buffer_xbee, *(ukazatel+3), 10);
+
+				ukazatel = (char*) &opticalFlowData.ground_distance;
+				usartBufferPutByte(usart_buffer_xbee, *(ukazatel), 10);
+				usartBufferPutByte(usart_buffer_xbee, *(ukazatel+1), 10);
+				usartBufferPutByte(usart_buffer_xbee, *(ukazatel+2), 10);
+				usartBufferPutByte(usart_buffer_xbee, *(ukazatel+3), 10);
+
+				usartBufferPutString(usart_buffer_xbee, "\r\n", 10);
+			}
 		}
-		
-		taskYIELD();
+
+		if (usartBufferGetByte(usart_buffer_1, &inChar, 0)) {
+
+			px4flowParseChar((uint8_t) inChar);
+		}
+
+		if (opticalFlowDataFlag == 1) {
+
+			led_blue_toggle();
+
+			// decode the message (there will be new values in opticalFlowData...
+			mavlink_msg_optical_flow_decode(&mavlinkMessage, &opticalFlowData);
+
+			//px4flow returns velocities in m/s and gnd. distance in m
+			// +elevator = front
+			// +aileron  = left
+			// +throttle = up
+
+			#if PX4_CAMERA_ORIENTATION == FORWARD
+
+				elevatorSpeed = + opticalFlowData.flow_comp_m_x;
+				aileronSpeed  = - opticalFlowData.flow_comp_m_y;
+
+			#elif PX4_CAMERA_ORIENTATION == BACKWARD
+
+				elevatorSpeed = - opticalFlowData.flow_comp_m_x;
+				aileronSpeed  = + opticalFlowData.flow_comp_m_y;
+
+			#endif
+
+			if (opticalFlowData.ground_distance < ALTITUDE_MAXIMUM &&
+			opticalFlowData.ground_distance > 0.3) {
+
+				groundDistance = opticalFlowData.ground_distance;
+			}
+
+			px4Confidence = opticalFlowData.quality;
+
+			opticalFlowDataFlag = 0;
+		}
 	}
 }

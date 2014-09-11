@@ -194,7 +194,7 @@ int main(void)
 	/* -------------------------------------------------------------------- */
 	/*	Start the communication task routine																*/
 	/* -------------------------------------------------------------------- */
-	xTaskCreate(commTask, (signed char*) "commTask", 1024, NULL, 2, NULL);
+	xTaskCreate(commTask, (signed char*) "commTask", 1600, NULL, 2, NULL);
 	
 	/* -------------------------------------------------------------------- */
 	/*	Start the main task routine																					*/

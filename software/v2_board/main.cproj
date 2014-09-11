@@ -147,65 +147,72 @@
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <ToolchainSettings>
       <AvrGcc>
-        <avrgcc.common.optimization.RelaxBranches>True</avrgcc.common.optimization.RelaxBranches>
-        <avrgcc.common.outputfiles.hex>True</avrgcc.common.outputfiles.hex>
-        <avrgcc.common.outputfiles.lss>True</avrgcc.common.outputfiles.lss>
-        <avrgcc.common.outputfiles.eep>True</avrgcc.common.outputfiles.eep>
-        <avrgcc.common.outputfiles.srec>True</avrgcc.common.outputfiles.srec>
-        <avrgcc.common.outputfiles.usersignatures>False</avrgcc.common.outputfiles.usersignatures>
-        <avrgcc.compiler.general.ChangeDefaultCharTypeUnsigned>True</avrgcc.compiler.general.ChangeDefaultCharTypeUnsigned>
-        <avrgcc.compiler.general.ChangeDefaultBitFieldUnsigned>True</avrgcc.compiler.general.ChangeDefaultBitFieldUnsigned>
-        <avrgcc.compiler.symbols.DefSymbols>
-          <ListValues>
-            <Value>DEBUG</Value>
-            <Value>IOPORT_XMEGA_COMPAT</Value>
-          </ListValues>
-        </avrgcc.compiler.symbols.DefSymbols>
-        <avrgcc.compiler.directories.IncludePaths>
-          <ListValues>
-            <Value>..</Value>
-            <Value>../AtmelDrivers</Value>
-            <Value>../FreeRTOS/Port</Value>
-            <Value>../FreeRTOS/Source/include</Value>
-            <Value>../FreeRTOS/Source</Value>
-            <Value>../FreeRTOS</Value>
-            <Value>../src/ASF/xmega/drivers/cpu</Value>
-            <Value>../src/ASF/xmega/drivers/nvm</Value>
-            <Value>../src/Config</Value>
-            <Value>../src/ASF/common/services/clock</Value>
-            <Value>../src/ASF/common/utils</Value>
-            <Value>../src/ASF/xmega/utils/preprocessor</Value>
-            <Value>../src/ASF/xmega/utils</Value>
-            <Value>../src/ASF/common/services/ioport</Value>
-            <Value>../MyDrivers</Value>
-            <Value>../src/ASF/common/boards</Value>
-          </ListValues>
-        </avrgcc.compiler.directories.IncludePaths>
-        <avrgcc.compiler.optimization.level>Optimize (-O1)</avrgcc.compiler.optimization.level>
-        <avrgcc.compiler.optimization.PackStructureMembers>True</avrgcc.compiler.optimization.PackStructureMembers>
-        <avrgcc.compiler.optimization.AllocateBytesNeededForEnum>True</avrgcc.compiler.optimization.AllocateBytesNeededForEnum>
-        <avrgcc.compiler.optimization.DebugLevel>Default (-g2)</avrgcc.compiler.optimization.DebugLevel>
-        <avrgcc.compiler.warnings.AllWarnings>True</avrgcc.compiler.warnings.AllWarnings>
-        <avrgcc.linker.libraries.Libraries>
-          <ListValues>
-            <Value>libm</Value>
-          </ListValues>
-        </avrgcc.linker.libraries.Libraries>
-        <avrgcc.assembler.general.IncludePaths>
-          <ListValues>
-            <Value>../src/ASF/xmega/drivers/cpu</Value>
-            <Value>../src/ASF/xmega/drivers/nvm</Value>
-            <Value>../src/Config</Value>
-            <Value>../src/ASF/common/services/clock</Value>
-            <Value>../src/ASF/common/utils</Value>
-            <Value>../src/ASF/xmega/utils/preprocessor</Value>
-            <Value>../src/ASF/xmega/utils</Value>
-            <Value>../src/ASF/common/services/ioport</Value>
-            <Value>../src/ASF/common/boards</Value>
-          </ListValues>
-        </avrgcc.assembler.general.IncludePaths>
-        <avrgcc.assembler.debugging.DebugLevel>Default (-Wa,-g)</avrgcc.assembler.debugging.DebugLevel>
-      </AvrGcc>
+  <avrgcc.common.optimization.RelaxBranches>True</avrgcc.common.optimization.RelaxBranches>
+  <avrgcc.common.outputfiles.hex>True</avrgcc.common.outputfiles.hex>
+  <avrgcc.common.outputfiles.lss>True</avrgcc.common.outputfiles.lss>
+  <avrgcc.common.outputfiles.eep>True</avrgcc.common.outputfiles.eep>
+  <avrgcc.common.outputfiles.srec>True</avrgcc.common.outputfiles.srec>
+  <avrgcc.common.outputfiles.usersignatures>False</avrgcc.common.outputfiles.usersignatures>
+  <avrgcc.compiler.general.ChangeDefaultCharTypeUnsigned>True</avrgcc.compiler.general.ChangeDefaultCharTypeUnsigned>
+  <avrgcc.compiler.general.ChangeDefaultBitFieldUnsigned>True</avrgcc.compiler.general.ChangeDefaultBitFieldUnsigned>
+  <avrgcc.compiler.symbols.DefSymbols>
+    <ListValues>
+      <Value>DEBUG</Value>
+      <Value>IOPORT_XMEGA_COMPAT</Value>
+    </ListValues>
+  </avrgcc.compiler.symbols.DefSymbols>
+  <avrgcc.compiler.directories.IncludePaths>
+    <ListValues>
+      <Value>..</Value>
+      <Value>../AtmelDrivers</Value>
+      <Value>../FreeRTOS/Port</Value>
+      <Value>../FreeRTOS/Source/include</Value>
+      <Value>../FreeRTOS/Source</Value>
+      <Value>../FreeRTOS</Value>
+      <Value>../src/ASF/xmega/drivers/cpu</Value>
+      <Value>../src/ASF/xmega/drivers/nvm</Value>
+      <Value>../src/Config</Value>
+      <Value>../src/ASF/common/services/clock</Value>
+      <Value>../src/ASF/common/utils</Value>
+      <Value>../src/ASF/xmega/utils/preprocessor</Value>
+      <Value>../src/ASF/xmega/utils</Value>
+      <Value>../src/ASF/common/services/ioport</Value>
+      <Value>../MyDrivers</Value>
+      <Value>../src/ASF/common/boards</Value>
+      <Value>../mavlink</Value>
+      <Value>../mavlink/v1.0/common</Value>
+      <Value>../mavlink/v1.0/ardupilotmega</Value>
+      <Value>../mavlink/v0.9/common</Value>
+      <Value>../mavlink/v0.9/ardupilotmega</Value>
+    </ListValues>
+  </avrgcc.compiler.directories.IncludePaths>
+  <avrgcc.compiler.optimization.level>Optimize (-O1)</avrgcc.compiler.optimization.level>
+  <avrgcc.compiler.optimization.PackStructureMembers>True</avrgcc.compiler.optimization.PackStructureMembers>
+  <avrgcc.compiler.optimization.AllocateBytesNeededForEnum>True</avrgcc.compiler.optimization.AllocateBytesNeededForEnum>
+  <avrgcc.compiler.optimization.DebugLevel>Default (-g2)</avrgcc.compiler.optimization.DebugLevel>
+  <avrgcc.compiler.warnings.AllWarnings>True</avrgcc.compiler.warnings.AllWarnings>
+  <avrgcc.linker.general.UseVprintfLibrary>True</avrgcc.linker.general.UseVprintfLibrary>
+  <avrgcc.linker.libraries.Libraries>
+    <ListValues>
+      <Value>libm</Value>
+      <Value>printf_flt</Value>
+    </ListValues>
+  </avrgcc.linker.libraries.Libraries>
+  <avrgcc.assembler.general.IncludePaths>
+    <ListValues>
+      <Value>../src/ASF/xmega/drivers/cpu</Value>
+      <Value>../src/ASF/xmega/drivers/nvm</Value>
+      <Value>../src/Config</Value>
+      <Value>../src/ASF/common/services/clock</Value>
+      <Value>../src/ASF/common/utils</Value>
+      <Value>../src/ASF/xmega/utils/preprocessor</Value>
+      <Value>../src/ASF/xmega/utils</Value>
+      <Value>../src/ASF/common/services/ioport</Value>
+      <Value>../src/ASF/common/boards</Value>
+    </ListValues>
+  </avrgcc.assembler.general.IncludePaths>
+  <avrgcc.assembler.debugging.DebugLevel>Default (-Wa,-g)</avrgcc.assembler.debugging.DebugLevel>
+</AvrGcc>
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
@@ -213,6 +220,24 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="commTask.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="communication.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="communication.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="config.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="controllers.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="controllers.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="defines.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="FreeRTOS\FreeRTOSConfig.h">
