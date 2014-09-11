@@ -1,6 +1,6 @@
 /*
-    FreeRTOS V7.0.1 - Copyright (C) 2011 Real Time Engineers Ltd.
-
+    FreeRTOS V7.0.2 - Copyright (C) 2011 Real Time Engineers Ltd.
+	
 
     ***************************************************************************
      *                                                                       *
@@ -79,7 +79,7 @@ static union xRTOS_HEAP
 		volatile portDOUBLE dDummy;
 	#else
 		volatile unsigned long ulDummy;
-	#endif
+	#endif	
 	unsigned char ucHeap[ configTOTAL_HEAP_SIZE ];
 } xHeap;
 
@@ -88,7 +88,7 @@ static size_t xNextFreeByte = ( size_t ) 0;
 
 void *pvPortMalloc( size_t xWantedSize )
 {
-void *pvReturn = NULL;
+void *pvReturn = NULL; 
 
 	/* Ensure that blocks are always aligned to the required number of bytes. */
 	#if portBYTE_ALIGNMENT != 1
@@ -108,11 +108,11 @@ void *pvReturn = NULL;
 			/* Return the next free byte then increment the index past this
 			block. */
 			pvReturn = &( xHeap.ucHeap[ xNextFreeByte ] );
-			xNextFreeByte += xWantedSize;
-		}
+			xNextFreeByte += xWantedSize;			
+		}	
 	}
 	xTaskResumeAll();
-
+	
 	#if( configUSE_MALLOC_FAILED_HOOK == 1 )
 	{
 		if( pvReturn == NULL )
@@ -121,7 +121,7 @@ void *pvReturn = NULL;
 			vApplicationMallocFailedHook();
 		}
 	}
-	#endif
+	#endif	
 
 	return pvReturn;
 }
@@ -129,8 +129,8 @@ void *pvReturn = NULL;
 
 void vPortFree( void *pv )
 {
-	/* Memory cannot be freed using this scheme.  See heap_2.c and heap_3.c
-	for alternative implementations, and the memory management pages of
+	/* Memory cannot be freed using this scheme.  See heap_2.c and heap_3.c 
+	for alternative implementations, and the memory management pages of 
 	http://www.FreeRTOS.org for more information. */
 	( void ) pv;
 }

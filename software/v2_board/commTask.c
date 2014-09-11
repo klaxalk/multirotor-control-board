@@ -51,6 +51,13 @@ void commTask(void *p) {
 				}
 				usartBufferPutString(usart_buffer_xbee, "\r\n", 10);
 			}
+			
+			if (inChar == 'c') {
+				
+				char buffer[20];
+				sprintf(buffer, "%f\r\n", (float) opticalFlowData.ground_distance);
+				usartBufferPutString(usart_buffer_xbee, buffer, 10);
+			}
 
 			if (inChar == 'p') {
 
@@ -66,7 +73,7 @@ void commTask(void *p) {
 				usartBufferPutByte(usart_buffer_xbee, *(ukazatel+2), 10);
 				usartBufferPutByte(usart_buffer_xbee, *(ukazatel+3), 10);
 
-				ukazatel = (char*) &opticalFlowData.ground_distance;
+				ukazatel = (char*) &groundDistance;
 				usartBufferPutByte(usart_buffer_xbee, *(ukazatel), 10);
 				usartBufferPutByte(usart_buffer_xbee, *(ukazatel+1), 10);
 				usartBufferPutByte(usart_buffer_xbee, *(ukazatel+2), 10);
