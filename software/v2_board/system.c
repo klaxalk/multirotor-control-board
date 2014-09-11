@@ -223,7 +223,6 @@ ISR(TCD0_OVF_vect) {
 		// if the next space is the sync space, calculates it's length
 		uint32_t finalOutLen = PPM_FRAME_LENGTH - outputSum;
 		TC_SetPeriod(&TCD0, (uint16_t) finalOutLen);
-		ioport_toggle_pin_level(BLUE);
 	}
 }
 

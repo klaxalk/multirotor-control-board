@@ -17,6 +17,12 @@
 // basic system functions
 #include "system.h"
 
+// the main task routine
+#include "mainTask.h"
+
+// the communication task
+#include "commTask.h"
+
 /*! Defining an example slave address. */
 #define SLAVE_ADDRESS    0x55
 
@@ -168,32 +174,35 @@ void stm(void *p) {
 	}
 }
 
-void mainTask(void *p) {
-	
-	while (1) {
-
-		mergeSignalsToOutput();
-	}
-}
-
-
 int main(void)
 {
 		
 	boardInit();
 	
-	usartBufferPutString(usart_buffer_4, "\r\nInit complete\n\r", 10);
+	// usartBufferPutString(usart_buffer_4, "\r\nInit complete\n\r", 10);
 	
 	// xTaskCreate(twi_loopback, (signed char*) "twi", 1024, NULL, 2, NULL);
 	// xTaskCreate(stm, (signed char*) "stm", 1024, NULL, 2, NULL);
 	// xTaskCreate(performanceTest, (signed char*) "perf", 1024, NULL, 2, NULL);
-	
-	xTaskCreate(mainTask, (signed char*) "mainTask", 1024, NULL, 2, NULL);
-	xTaskCreate(timerTest, (signed char*) "uartTest", 1024, NULL, 2, NULL);
-	xTaskCreate(blikej, (signed char*) "blikej", 1024, NULL, 2, NULL);
+	// xTaskCreate(timerTest, (signed char*) "uartTest", 1024, NULL, 2, NULL);
 	
 	/* -------------------------------------------------------------------- */
-	/*	Start the FreeRTOS scheduler										*/
+	/*	The most important task in the world																*/
+	/* -------------------------------------------------------------------- */
+	xTaskCreate(blikej, (signed char*) "blikej", 256, NULL, 2, NULL);
+	
+	/* -------------------------------------------------------------------- */
+	/*	Start the communication task routine																*/
+	/* -------------------------------------------------------------------- */
+	xTaskCreate(commTask, (signed char*) "commTask", 1024, NULL, 2, NULL);
+	
+	/* -------------------------------------------------------------------- */
+	/*	Start the main task routine																					*/
+	/* -------------------------------------------------------------------- */
+	xTaskCreate(mainTask, (signed char*) "mainTask", 1024, NULL, 2, NULL);
+	
+	/* -------------------------------------------------------------------- */
+	/*	Start the FreeRTOS scheduler																				*/
 	/* -------------------------------------------------------------------- */
 	vTaskStartScheduler();
 	

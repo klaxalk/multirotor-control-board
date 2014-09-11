@@ -11,6 +11,4 @@
 
 #define F_CPU 32000000UL
 
-
-
 #endif /* USER_BOARD_H_ */

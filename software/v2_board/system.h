@@ -54,23 +54,23 @@
 /* -------------------------------------------------------------------- */
 /*	Constans for PPM output timing										*/
 /* -------------------------------------------------------------------- */
-#define PULSE_OUT_MIN			4000
-#define PULSE_OUT_MIDDLE		6000
-#define PULSE_OUT_MAX			8000
+#define PULSE_OUT_MIN						4000
+#define PULSE_OUT_MIDDLE				6000
+#define PULSE_OUT_MAX						8000
 #define NUMBER_OF_CHANNELS_OUT	6
-#define PPM_FRAME_LENGTH		80000
-#define PPM_PULSE				1600
+#define PPM_FRAME_LENGTH				80000
+#define PPM_PULSE								1600
 
 /* -------------------------------------------------------------------- */
 /*	Constans for USART aliases											*/
 /* -------------------------------------------------------------------- */
-#define USART_1		USARTD1
-#define USART_2		USARTE0
-#define USART_3		USARTE1
-#define USART_4		USARTF0
-#define USART_STM	USARTC1
+#define USART_1			USARTD1
+#define USART_2			USARTE0
+#define USART_3			USARTE1
+#define USART_4			USARTF0
+#define USART_STM		USARTC1
 #define USART_XBEE	USARTC0
-#define USART_LOG	USARTD0
+#define USART_LOG		USARTD0
 
 /* Basic initialization of the MCU, peripherals and i/o */
 void boardInit();
