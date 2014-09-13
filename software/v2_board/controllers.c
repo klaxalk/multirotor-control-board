@@ -152,9 +152,9 @@ void positionController() {
 	//set controller constants
 	if(positionControllerEnabled && landingState == LS_FLIGHT) {
 		KI = POSITION_KI;
-		KP = POSITION_KP * (0.5 + constant1);
-		KV = POSITION_KV * (0.5 + constant2);
-		KA = POSITION_KA * (0.5 + constant5);
+		KP = POSITION_KP; // * (0.5 + constant1);
+		KV = POSITION_KV; // * (0.5 + constant2);
+		KA = POSITION_KA; // * (0.5 + constant5);
 		//KP = POSITION_KP;
 		//KV = POSITION_KV;
 		//KA = POSITION_KA;

@@ -23,6 +23,9 @@ extern volatile float elevatorSpeed;
 extern volatile float aileronSpeed;
 extern volatile uint8_t px4Confidence;
 
+extern volatile float estimatedElevatorPos;
+extern volatile float estimatedAileronPos;
+
 // variables used by the mavlink library
 extern mavlink_message_t mavlinkMessage;
 extern mavlink_status_t mavlinkStatus;
@@ -61,13 +64,13 @@ void commTask(void *p) {
 
 			if (inChar == 'b') {
 
-				ukazatel = (char*) &elevatorSpeed;
+				ukazatel = (char*) &estimatedElevatorPos;
 				usartBufferPutByte(usart_buffer_xbee, *(ukazatel), 10);
 				usartBufferPutByte(usart_buffer_xbee, *(ukazatel+1), 10);
 				usartBufferPutByte(usart_buffer_xbee, *(ukazatel+2), 10);
 				usartBufferPutByte(usart_buffer_xbee, *(ukazatel+3), 10);
 
-				ukazatel = (char*) &aileronSpeed;
+				ukazatel = (char*) &estimatedAileronPos;
 				usartBufferPutByte(usart_buffer_xbee, *(ukazatel), 10);
 				usartBufferPutByte(usart_buffer_xbee, *(ukazatel+1), 10);
 				usartBufferPutByte(usart_buffer_xbee, *(ukazatel+2), 10);
@@ -78,6 +81,23 @@ void commTask(void *p) {
 				usartBufferPutByte(usart_buffer_xbee, *(ukazatel+1), 10);
 				usartBufferPutByte(usart_buffer_xbee, *(ukazatel+2), 10);
 				usartBufferPutByte(usart_buffer_xbee, *(ukazatel+3), 10);
+
+				ukazatel = (char*) &elevatorSetpoint;
+				usartBufferPutByte(usart_buffer_xbee, *(ukazatel), 10);
+				usartBufferPutByte(usart_buffer_xbee, *(ukazatel+1), 10);
+				usartBufferPutByte(usart_buffer_xbee, *(ukazatel+2), 10);
+				usartBufferPutByte(usart_buffer_xbee, *(ukazatel+3), 10);
+
+				ukazatel = (char*) &aileronSetpoint;
+				usartBufferPutByte(usart_buffer_xbee, *(ukazatel), 10);
+				usartBufferPutByte(usart_buffer_xbee, *(ukazatel+1), 10);
+				usartBufferPutByte(usart_buffer_xbee, *(ukazatel+2), 10);
+				usartBufferPutByte(usart_buffer_xbee, *(ukazatel+3), 10);
+				
+				usartBufferPutByte(usart_buffer_xbee, controllerEnabled, 10);
+				usartBufferPutByte(usart_buffer_xbee, positionControllerEnabled, 10);
+				usartBufferPutByte(usart_buffer_xbee, landingRequest, 10);
+				usartBufferPutByte(usart_buffer_xbee, trajectoryEnabled, 10);
 
 				usartBufferPutString(usart_buffer_xbee, "\r\n", 10);
 			}

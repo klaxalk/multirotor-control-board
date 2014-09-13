@@ -8,6 +8,8 @@
 #ifndef SYSTEM_H_
 #define SYSTEM_H_
 
+#include <stdint.h>
+
 /* -------------------------------------------------------------------- */
 /*	LED masks															*/
 /* -------------------------------------------------------------------- */
@@ -46,9 +48,10 @@
 /* -------------------------------------------------------------------- */
 /*	Constants for PPM input timing										*/
 /* -------------------------------------------------------------------- */
-#define PPM_IN_MIN_LENGTH	2000
-#define PPM_IN_MAX_LENGTH	4000
-#define PPM_IN_TRESHOLD		5000
+#define PPM_IN_MIN_LENGTH		2000
+#define PPM_IN_MIDDLE_LENGTH	3000
+#define PPM_IN_MAX_LENGTH		4000
+#define PPM_IN_TRESHOLD			5000
 
 /* -------------------------------------------------------------------- */
 /*	Constants for PPM output timing										*/
@@ -84,10 +87,32 @@
 #define AUX4			7
 #define AUX5			8
 
+// declaration of global variables
+extern volatile uint8_t portMask;
+extern volatile uint8_t portMask2;
+
+extern volatile float throttleIntegration;
+extern volatile unsigned char positionControllerEnabled;
+
+#if PX4FLOW_DATA_RECEIVE == ENABLED
+
+extern volatile float elevatorSpeedIntegration;
+extern volatile float aileronSpeedIntegration;
+
+#endif
+
 /* Basic initialization of the MCU, peripherals and i/o */
 void boardInit();
 
 /* Merge signals from RC Receiver with the controller outputs */
 void mergeSignalsToOutput();
+
+void disableController();
+
+void enableController();
+
+void disablePositionController();
+
+void enablePositionController();
 
 #endif /* SYSTEM_H_ */

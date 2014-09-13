@@ -23,6 +23,9 @@
 // the communication task
 #include "commTask.h"
 
+// the controllersTask
+#include "controllersTask.h"
+
 /*! Defining an example slave address. */
 #define SLAVE_ADDRESS    0x55
 
@@ -53,16 +56,6 @@ extern UsartBuffer * usart_buffer_4;
 /* Global variables */
 TWI_Master_t twiMaster;    /*!< TWI master module. */
 TWI_Slave_t twiSlave;      /*!< TWI slave module. */
-
-void blikej(void *p) {
-	
-	while (1) {
-
-		led_yellow_toggle();
-		
-		vTaskDelay(100);
-	}
-}
 
 // this function processes received data on the I2C Slave line
 // It is call by the I2C driver
@@ -185,14 +178,9 @@ int main(void)
 	// xTaskCreate(stm, (signed char*) "stm", 1024, NULL, 2, NULL);
 	// xTaskCreate(performanceTest, (signed char*) "perf", 1024, NULL, 2, NULL);
 	// xTaskCreate(timerTest, (signed char*) "uartTest", 1024, NULL, 2, NULL);
-	
+
 	/* -------------------------------------------------------------------- */
-	/*	The most important task in the world																*/
-	/* -------------------------------------------------------------------- */
-	xTaskCreate(blikej, (signed char*) "blikej", 256, NULL, 2, NULL);
-	
-	/* -------------------------------------------------------------------- */
-	/*	Start the communication task routine																*/
+	/*	Start the communication task routine								*/
 	/* -------------------------------------------------------------------- */
 	xTaskCreate(commTask, (signed char*) "commTask", 1024, NULL, 2, NULL);
 	
@@ -200,6 +188,11 @@ int main(void)
 	/*	Start the main task routine																					*/
 	/* -------------------------------------------------------------------- */
 	xTaskCreate(mainTask, (signed char*) "mainTask", 1024, NULL, 2, NULL);
+	
+	/* -------------------------------------------------------------------- */
+	/*	Start the main task routine																					*/
+	/* -------------------------------------------------------------------- */
+	xTaskCreate(controllersTask, (signed char*) "contTasks", 1024, NULL, 2, NULL);
 	
 	/* -------------------------------------------------------------------- */
 	/*	Start the FreeRTOS scheduler																				*/

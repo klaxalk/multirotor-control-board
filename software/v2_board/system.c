@@ -12,6 +12,7 @@
 #include "ioport.h"
 #include "sysclk.h"
 #include "usart_driver_RTOS.h"
+#include "communication.h"
 
 /* -------------------------------------------------------------------- */
 /*	Variables for PPM input capture										*/
@@ -58,6 +59,21 @@ UsartBuffer * usart_buffer_4;
 #define USART_2_BAUDRATE		BAUD19200
 #define USART_3_BAUDRATE		BAUD19200
 #define USART_4_BAUDRATE		BAUD19200
+
+extern volatile float elevatorIntegration;
+extern volatile float aileronIntegration;
+extern volatile float throttleIntegration;
+extern volatile float elevatorSetpoint;
+extern volatile float aileronSetpoint;
+extern volatile float throttleSetpoint;
+
+//vars for estimators
+extern volatile float estimatedElevatorPos;
+extern volatile float estimatedAileronPos;
+extern volatile float estimatedThrottlePos;
+extern volatile float estimatedElevatorVel;
+extern volatile float estimatedAileronVel;
+extern volatile float estimatedThrottleVel;
 
 /* -------------------------------------------------------------------- */
 /*	Basic initialization of the MCU, peripherals and i/o				*/
@@ -180,10 +196,10 @@ void mergeSignalsToOutput() {
 		led_red_off();
 	}
 
-	outputChannels[0] = outputThrottle;
-	outputChannels[1] = outputRudder;
-	outputChannels[2] = outputElevator;
-	outputChannels[3] = outputAileron;
+	outputChannels[0] = outputThrottle*2;
+	outputChannels[1] = outputRudder*2;
+	outputChannels[2] = outputElevator*2;
+	outputChannels[3] = outputAileron*2;
 }
 
 /* -------------------------------------------------------------------- */
@@ -257,6 +273,48 @@ ISR(TCD0_OVF_vect) {
 		uint32_t finalOutLen = PPM_FRAME_LENGTH - outputSum;
 		TC_SetPeriod(&TCD0, (uint16_t) finalOutLen);
 	}
+}
+
+// disable controllers
+void disableController() {
+
+	controllerEnabled = 0;
+}
+
+// enable controllers
+void enableController() {
+
+	if (controllerEnabled == 0) {
+
+		#if PX4FLOW_DATA_RECEIVE == ENABLED
+
+		elevatorIntegration = 0;
+		aileronIntegration = 0;
+		throttleIntegration = 0;
+
+		if(validGumstix != 1) {
+
+			estimatedElevatorPos = elevatorSetpoint;
+			estimatedAileronPos  = aileronSetpoint;
+
+		}
+
+		#endif
+	}
+	controllerEnabled = 1;
+}
+
+void disablePositionController() {
+
+	positionControllerEnabled = 0;
+}
+
+void enablePositionController() {
+
+	if (positionControllerEnabled == 0) {
+		// set integrated variables to default
+	}
+	positionControllerEnabled = 1;
 }
 
 /* -------------------------------------------------------------------- */

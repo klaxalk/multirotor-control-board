@@ -237,6 +237,12 @@
     <Compile Include="controllers.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="controllersTask.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="controllersTask.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="defines.h">
       <SubType>compile</SubType>
     </Compile>
