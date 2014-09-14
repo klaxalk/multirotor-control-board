@@ -98,6 +98,18 @@ void commTask(void *p) {
 				usartBufferPutByte(usart_buffer_xbee, positionControllerEnabled, 10);
 				usartBufferPutByte(usart_buffer_xbee, landingRequest, 10);
 				usartBufferPutByte(usart_buffer_xbee, trajectoryEnabled, 10);
+				
+				ukazatel = (char*) &elevatorSpeed;
+				usartBufferPutByte(usart_buffer_xbee, *(ukazatel), 10);
+				usartBufferPutByte(usart_buffer_xbee, *(ukazatel+1), 10);
+				usartBufferPutByte(usart_buffer_xbee, *(ukazatel+2), 10);
+				usartBufferPutByte(usart_buffer_xbee, *(ukazatel+3), 10);
+
+				ukazatel = (char*) &aileronSpeed;
+				usartBufferPutByte(usart_buffer_xbee, *(ukazatel), 10);
+				usartBufferPutByte(usart_buffer_xbee, *(ukazatel+1), 10);
+				usartBufferPutByte(usart_buffer_xbee, *(ukazatel+2), 10);
+				usartBufferPutByte(usart_buffer_xbee, *(ukazatel+3), 10);
 
 				usartBufferPutString(usart_buffer_xbee, "\r\n", 10);
 			}
