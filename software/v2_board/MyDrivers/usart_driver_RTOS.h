@@ -31,7 +31,8 @@ typedef enum {
 	BAUD19200 = 2,
 	BAUD38400 = 3,
 	BAUD57600 = 4,
-	BAUD115200 = 5
+	BAUD115200 = 5,
+	BAUDPX4FLOW = 6
 } Baudrate_enum;
 
 /*! \brief Struct used when interrupt driven driver is used.

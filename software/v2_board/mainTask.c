@@ -140,16 +140,16 @@ void writeTrajectory1(){
 	//~  Aileron: Pùvodní*2
 	TRAJ_POINT(0,  3,  -900,  0, 1000);
 	TRAJ_POINT(1,  6,  -300,  0, 1000);
-	TRAJ_POINT(2,  9,  +300,  -344, 1000);
-	TRAJ_POINT(3,  12,  +900,  -860, 1000);
-	TRAJ_POINT(4,  15,  +1500,  -984, 1000);
-	TRAJ_POINT(5,  18,  +2100,  -917, 1000);
-	TRAJ_POINT(6,  21,  +2700,  -735, 1000);
-	TRAJ_POINT(7,  24,  +3300,  -439, 1000);
-	TRAJ_POINT(8,  27,  +3900,  -60, 1000);
+	TRAJ_POINT(2,  9,  +300,  0, 1000);
+	TRAJ_POINT(3,  12,  +900,  0, 1000);
+	TRAJ_POINT(4,  15,  +1500,  0, 1000);
+	TRAJ_POINT(5,  18,  +2100,  0, 1000);
+	TRAJ_POINT(6,  21,  +2700,  0, 1000);
+	TRAJ_POINT(7,  24,  +3300,  0, 1000);
+	TRAJ_POINT(8,  27,  +3900,  0, 1000);
 	TRAJ_POINT(9,  30,  -1500,  0, 1000);
 	
-	//~ Experimetn TV
+	//~ Experimet TV
 	//~ TRAJ_POINT(0,  5,  -500,  -50, 1000);
 	//~ TRAJ_POINT(1, 10,  +500, -360, 1120);
 	//~ TRAJ_POINT(2, 15, +1500, -740, 1250);

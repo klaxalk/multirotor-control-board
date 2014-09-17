@@ -57,7 +57,7 @@ void parseFlightCtrlMessage() {
 #if PX4FLOW_DATA_RECEIVE == ENABLED
 
 //px4flow values
-volatile float groundDistance = 3.1415;
+volatile float groundDistance = 0;
 volatile float elevatorSpeed = 0;
 volatile float aileronSpeed = 0;
 volatile uint8_t px4Confidence = 0;
@@ -71,7 +71,7 @@ int8_t opticalFlowDataFlag = 0;
 
 int8_t px4flowParseChar(uint8_t incomingChar) {
 
-	if (my_mavlink_parse_char(MAVLINK_COMM_0, incomingChar, &mavlinkMessage, &mavlinkStatus)) {
+	if (mavlink_parse_char(MAVLINK_COMM_0, incomingChar, &mavlinkMessage, &mavlinkStatus)) {
 
 		switch (mavlinkMessage.msgid) {
 		case MAVLINK_MSG_ID_OPTICAL_FLOW: {
@@ -88,124 +88,6 @@ int8_t px4flowParseChar(uint8_t incomingChar) {
 		}
 	}
 	return 0;
-}
-
-// decode the Mavlink incomming message from the px4flow sensor
-uint8_t my_mavlink_parse_char(uint8_t chan, uint8_t c, mavlink_message_t* r_message, mavlink_status_t* r_mavlink_status) {
-
-	mavlink_message_t* rxmsg = mavlink_get_channel_buffer(chan); ///< The currently decoded message
-	mavlink_status_t* status = mavlink_get_channel_status(chan); ///< The current decode status
-	int bufferIndex = 0;
-
-	status->msg_received = 0;
-
-	switch (status->parse_state) {
-	case MAVLINK_PARSE_STATE_UNINIT:
-	case MAVLINK_PARSE_STATE_IDLE:
-		if (c == MAVLINK_STX) {
-			status->parse_state = MAVLINK_PARSE_STATE_GOT_STX;
-			rxmsg->len = 0;
-			rxmsg->magic = c;
-			mavlink_start_checksum(rxmsg);
-		}
-		break;
-
-	case MAVLINK_PARSE_STATE_GOT_STX:
-		if (status->msg_received
-		        /* Support shorter buffers than the
-		           default maximum packet size */
-#if (MAVLINK_MAX_PAYLOAD_LEN < 255)
-		        || c > MAVLINK_MAX_PAYLOAD_LEN
-#endif
-		   ) {
-			status->buffer_overrun++;
-			status->parse_error++;
-			status->msg_received = 0;
-			status->parse_state = MAVLINK_PARSE_STATE_IDLE;
-		} else {
-			// NOT counting STX, LENGTH, SEQ, SYSID, COMPID, MSGID, CRC1 and CRC2
-			rxmsg->len = c;
-			status->packet_idx = 0;
-			mavlink_update_checksum(rxmsg, c);
-			status->parse_state = MAVLINK_PARSE_STATE_GOT_LENGTH;
-		}
-		break;
-
-	case MAVLINK_PARSE_STATE_GOT_LENGTH:
-		rxmsg->seq = c;
-		mavlink_update_checksum(rxmsg, c);
-		status->parse_state = MAVLINK_PARSE_STATE_GOT_SEQ;
-		break;
-
-	case MAVLINK_PARSE_STATE_GOT_SEQ:
-		rxmsg->sysid = c;
-		mavlink_update_checksum(rxmsg, c);
-		status->parse_state = MAVLINK_PARSE_STATE_GOT_SYSID;
-		break;
-
-	case MAVLINK_PARSE_STATE_GOT_SYSID:
-		rxmsg->compid = c;
-		mavlink_update_checksum(rxmsg, c);
-		status->parse_state = MAVLINK_PARSE_STATE_GOT_COMPID;
-		break;
-
-	case MAVLINK_PARSE_STATE_GOT_COMPID:
-		rxmsg->msgid = c;
-		mavlink_update_checksum(rxmsg, c);
-		if (rxmsg->len == 0) {
-			status->parse_state = MAVLINK_PARSE_STATE_GOT_PAYLOAD;
-		} else {
-			status->parse_state = MAVLINK_PARSE_STATE_GOT_MSGID;
-		}
-		break;
-
-	case MAVLINK_PARSE_STATE_GOT_MSGID:
-		_MAV_PAYLOAD_NON_CONST(rxmsg)[status->packet_idx++] = (char)c;
-		mavlink_update_checksum(rxmsg, c);
-		if (status->packet_idx == rxmsg->len) {
-			status->parse_state = MAVLINK_PARSE_STATE_GOT_PAYLOAD;
-		}
-		break;
-
-	case MAVLINK_PARSE_STATE_GOT_PAYLOAD:
-		status->parse_state = MAVLINK_PARSE_STATE_GOT_CRC1;
-		_MAV_PAYLOAD_NON_CONST(rxmsg)[status->packet_idx] = (char) c;
-		break;
-
-	case MAVLINK_PARSE_STATE_GOT_CRC1:
-
-		// Successfully got message
-		status->msg_received = 1;
-		status->parse_state = MAVLINK_PARSE_STATE_IDLE;
-		_MAV_PAYLOAD_NON_CONST(rxmsg)[status->packet_idx+1] = (char) c;
-		memcpy(r_message, rxmsg, sizeof(mavlink_message_t));
-
-		break;
-	}
-
-	bufferIndex++;
-	// If a message has been sucessfully decoded, check index
-	if (status->msg_received == 1) {
-		//while(status->current_seq != rxmsg->seq)
-		//{
-		//	status->packet_rx_drop_count++;
-		//               status->current_seq++;
-		//}
-		status->current_rx_seq = rxmsg->seq;
-		// Initial condition: If no packet has been received so far, drop count is undefined
-		if (status->packet_rx_success_count == 0) {
-			status->packet_rx_drop_count = 0;
-		}
-		// Count this packet as received
-		status->packet_rx_success_count++;
-	}
-
-	r_mavlink_status->current_rx_seq = status->current_rx_seq+1;
-	r_mavlink_status->packet_rx_success_count = status->packet_rx_success_count;
-	r_mavlink_status->packet_rx_drop_count = status->parse_error;
-	status->parse_error = 0;
-
-	return status->msg_received;
 }
 
 #endif // PX4FLOW_DATA_RECEIVE

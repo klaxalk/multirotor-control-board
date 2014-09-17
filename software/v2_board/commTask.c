@@ -76,7 +76,7 @@ void commTask(void *p) {
 				usartBufferPutByte(usart_buffer_xbee, *(ukazatel+2), 10);
 				usartBufferPutByte(usart_buffer_xbee, *(ukazatel+3), 10);
 
-				ukazatel = (char*) &groundDistance;
+				ukazatel = (char*) &estimatedThrottlePos;
 				usartBufferPutByte(usart_buffer_xbee, *(ukazatel), 10);
 				usartBufferPutByte(usart_buffer_xbee, *(ukazatel+1), 10);
 				usartBufferPutByte(usart_buffer_xbee, *(ukazatel+2), 10);
