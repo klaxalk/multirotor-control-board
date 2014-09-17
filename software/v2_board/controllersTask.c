@@ -5,10 +5,7 @@
  *  Author: Tomas Baca
  */ 
 
-#include "controllersTask.h"
 #include "system.h"
-#include "FreeRTOS.h"
-#include "task.h"
 #include "controllers.h"
 #include "ioport.h"
 
@@ -37,8 +34,6 @@ void controllersTask(void *p) {
 		#endif // PX4FLOW_DATA_RECEIVE == ENABLED
 		
 		led_orange_on();
-		
-		vTaskDelay(14);
 	}
 	
 }

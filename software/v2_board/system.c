@@ -11,8 +11,11 @@
 #include "port_driver.h"
 #include "ioport.h"
 #include "sysclk.h"
-#include "usart_driver_RTOS.h"
 #include "communication.h"
+
+// for usart
+#include "usart_driver.h"
+#include "avr_compiler.h"
 
 /* -------------------------------------------------------------------- */
 /*	Variables for PPM input capture										*/
@@ -39,26 +42,10 @@ volatile int16_t controllerThrottleOutput;
 volatile int16_t controllerRudderOutput;
 
 /* -------------------------------------------------------------------- */
-/*	Buffers for USARTs													*/
+/*	USART variables														*/
 /* -------------------------------------------------------------------- */
-UsartBuffer * usart_buffer_stm;
-UsartBuffer * usart_buffer_xbee;
-UsartBuffer * usart_buffer_log;
-UsartBuffer * usart_buffer_1;
-UsartBuffer * usart_buffer_2;
-UsartBuffer * usart_buffer_3;
-UsartBuffer * usart_buffer_4;
-
-/* -------------------------------------------------------------------- */
-/*	USART baud rates													*/
-/* -------------------------------------------------------------------- */
-#define USART_STM_BAUDRATE		BAUD9600
-#define USART_XBEE_BAUDRATE		BAUD19200
-#define USART_LOG_BAUDRATE		BAUD9600
-#define USART_1_BAUDRATE		BAUD115200
-#define USART_2_BAUDRATE		BAUD19200
-#define USART_3_BAUDRATE		BAUD19200
-#define USART_4_BAUDRATE		BAUD19200
+USART_data_t usart_xbee;
+USART_data_t usart_1;
 
 extern volatile float elevatorIntegration;
 extern volatile float aileronIntegration;
@@ -74,6 +61,9 @@ extern volatile float estimatedThrottlePos;
 extern volatile float estimatedElevatorVel;
 extern volatile float estimatedAileronVel;
 extern volatile float estimatedThrottleVel;
+
+// flag to run the controllers
+extern volatile int8_t controllersFlag;
 
 /* -------------------------------------------------------------------- */
 /*	Basic initialization of the MCU, peripherals and i/o				*/
@@ -140,6 +130,18 @@ void boardInit() {
 	TC_SetCompareA(&TCD0, PPM_PULSE);
 	
 	/* -------------------------------------------------------------------- */
+	/*	Timer for 70Hz controller loop										*/
+	/* -------------------------------------------------------------------- */
+	
+	TC0_ConfigClockSource(&TCC0, TC_CLKSEL_DIV1024_gc);
+	
+	// set the overflow interrupt
+	TC0_SetOverflowIntLevel(&TCC0, TC_OVFINTLVL_LO_gc);
+	
+	// Set period ( TOP value ).
+	TC_SetPeriod(&TCC0, (uint16_t) 446);
+	
+	/* -------------------------------------------------------------------- */
 	/*	setup PD4 as a PPM input with interrupt								*/
 	/* -------------------------------------------------------------------- */
 	
@@ -151,21 +153,112 @@ void boardInit() {
 	PORT_ConfigureInterrupt0(&PORTD, PORT_INT0LVL_LO_gc, 0x10);
 	
 	/* -------------------------------------------------------------------- */
-	/*	Initialize USARTs													*/
-	/* -------------------------------------------------------------------- */
-	usart_buffer_1 = usartBufferInitialize(&USART_1, USART_1_BAUDRATE, 128);
-	usart_buffer_2 = usartBufferInitialize(&USART_2, USART_2_BAUDRATE, 128);
-	usart_buffer_3 = usartBufferInitialize(&USART_3, USART_3_BAUDRATE, 128);
-	usart_buffer_4 = usartBufferInitialize(&USART_4, USART_4_BAUDRATE, 128);
-	usart_buffer_stm = usartBufferInitialize(&USART_STM, USART_STM_BAUDRATE, 128);
-	usart_buffer_xbee = usartBufferInitialize(&USART_XBEE, USART_XBEE_BAUDRATE, 128);
-	usart_buffer_log = usartBufferInitialize(&USART_LOG, USART_LOG_BAUDRATE, 128);
-	
-	/* -------------------------------------------------------------------- */
 	/*	enable low-level interrupts											*/
 	/* -------------------------------------------------------------------- */
 	
 	PMIC_EnableLowLevel();
+}
+
+void USART_XBEE_init() {
+
+	/* Disable global interrupts */
+	cli();
+
+	/* PC2 (RXD0) as input. */
+	PORTC.DIRCLR   = PIN2_bm;
+  	/* PC3 (TXD0) as output. */
+  	PORTC.DIRSET   = PIN3_bm;
+	  
+	/* Use USARTC0 and initialize buffers. */
+	USART_InterruptDriver_Initialize(&usart_xbee, &USARTC0, USART_DREINTLVL_LO_gc);
+
+	/* USARTC0, 8 Data bits, No Parity, 1 Stop bit. */
+	USART_Format_Set(usart_xbee.usart, USART_CHSIZE_8BIT_gc,
+	USART_PMODE_DISABLED_gc, false);
+
+	/* Enable RXC interrupt. */
+	USART_RxdInterruptLevel_Set(usart_xbee.usart, USART_RXCINTLVL_LO_gc);
+
+	/* Select baudrate */
+	USART_Baudrate_Set(&USARTC0, 3301 , -5);
+
+	/* Enable both RX and TX. */
+	USART_Rx_Enable(usart_xbee.usart);
+	USART_Tx_Enable(usart_xbee.usart);
+	
+	/* Enable PMIC interrupt level low. */
+	PMIC.CTRL |= PMIC_LOLVLEX_bm;
+	
+	/* Enable global interrupts. */
+	sei();
+}
+
+/* -------------------------------------------------------------------- */
+/*	USART_XBEE RX interrupt handler										*/
+/* -------------------------------------------------------------------- */
+ISR(USARTC0_RXC_vect)
+{
+	USART_RXComplete(&usart_xbee);
+}
+
+
+/* -------------------------------------------------------------------- */
+/*	USART_XBEE TX interrupt handler										*/
+/* -------------------------------------------------------------------- */
+ISR(USARTC0_DRE_vect)
+{
+	USART_DataRegEmpty(&usart_xbee);
+}
+
+void USART_1_init() {
+
+	/* Disable global interrupts */
+	cli();
+
+	/* PC2 (RXD0) as input. */
+	PORTD.DIRCLR   = PIN6_bm;
+	/* PC3 (TXD0) as output. */
+	PORTD.DIRSET   = PIN7_bm;
+	
+	/* Use USARTC0 and initialize buffers. */
+	USART_InterruptDriver_Initialize(&usart_1, &USARTD1, USART_DREINTLVL_LO_gc);
+
+	/* USARTC0, 8 Data bits, No Parity, 1 Stop bit. */
+	USART_Format_Set(usart_1.usart, USART_CHSIZE_8BIT_gc,
+	USART_PMODE_DISABLED_gc, false);
+
+	/* Enable RXC interrupt. */
+	USART_RxdInterruptLevel_Set(usart_1.usart, USART_RXCINTLVL_LO_gc);
+
+	/* Select baudrate */
+	USART_Baudrate_Set(&USARTD1, 2234 , -7);
+
+	/* Enable both RX and TX. */
+	USART_Rx_Enable(usart_1.usart);
+	USART_Tx_Enable(usart_1.usart);
+	
+	/* Enable PMIC interrupt level low. */
+	PMIC.CTRL |= PMIC_LOLVLEX_bm;
+	
+	/* Enable global interrupts. */
+	sei();
+}
+
+/* -------------------------------------------------------------------- */
+/*	USART_1 RX interrupt handler										*/
+/* -------------------------------------------------------------------- */
+ISR(USARTD1_RXC_vect)
+{
+	USART_RXComplete(&usart_1);
+}
+
+
+/* -------------------------------------------------------------------- */
+/*	USART_1 TX interrupt handler										*/
+/* -------------------------------------------------------------------- */
+ISR(USARTD1_DRE_vect)
+{
+	USART_DataRegEmpty(&usart_1);
 }
 
 /* -------------------------------------------------------------------- */
@@ -324,4 +417,12 @@ ISR(TCD0_CCA_vect) {
 	
 	// shut down the output PPM pulse
 	ppm_out_off();
+}
+
+/* -------------------------------------------------------------------- */
+/*	Interrupt for 70Hz control loop										*/
+/* -------------------------------------------------------------------- */
+ISR(TCC0_OVF_vect) {
+
+	controllersFlag = 1;
 }

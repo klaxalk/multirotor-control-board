@@ -86,18 +86,29 @@ static inline uint16_t mavlink_msg_get_send_buffer_length(const mavlink_message_
 #if MAVLINK_NEED_BYTE_SWAP
 static inline void byte_swap_2(char *dst, const char *src)
 {
+	/*
 	dst[0] = src[1];
 	dst[1] = src[0];
+	*/
+	dst[0] = src[0];
+	dst[1] = src[1];
 }
 static inline void byte_swap_4(char *dst, const char *src)
 {
+	/*
 	dst[0] = src[3];
 	dst[1] = src[2];
 	dst[2] = src[1];
 	dst[3] = src[0];
+	*/
+	dst[0] = src[0];
+	dst[1] = src[1];
+	dst[2] = src[2];
+	dst[3] = src[3];
 }
 static inline void byte_swap_8(char *dst, const char *src)
 {
+	/*
 	dst[0] = src[7];
 	dst[1] = src[6];
 	dst[2] = src[5];
@@ -106,6 +117,15 @@ static inline void byte_swap_8(char *dst, const char *src)
 	dst[5] = src[2];
 	dst[6] = src[1];
 	dst[7] = src[0];
+	*/
+	dst[0] = src[0];
+	dst[1] = src[1];
+	dst[2] = src[2];
+	dst[3] = src[3];
+	dst[4] = src[4];
+	dst[5] = src[5];
+	dst[6] = src[6];
+	dst[7] = src[7];
 }
 #elif !MAVLINK_ALIGNED_FIELDS
 static inline void byte_copy_2(char *dst, const char *src)

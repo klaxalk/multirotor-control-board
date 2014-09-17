@@ -7,6 +7,14 @@
 
 #include "controllers.h"
 
+#include "usart_driver.h"
+
+#include "ioport.h"
+
+#include "system.h"
+
+extern USART_data_t usart_xbee;
+
 #if PX4FLOW_DATA_RECEIVE == ENABLED
 
 //~ ------------------------------------------------------------------------ ~//
@@ -248,7 +256,7 @@ void altitudeEstimator() {
     if(groundDistance != estimatedThrottlePos_prev) {//input data changed
 
         // extreme filter
-        if(abs(groundDistance - estimatedThrottlePos_prev) <= 0.3) {//limitation cca 3m/s
+        if(fabs(groundDistance - estimatedThrottlePos_prev) <= 0.3) {//limitation cca 3m/s
 
            // compute new values 
            estimatedThrottleVel = (groundDistance - estimatedThrottlePos_prev) / (7*DT);

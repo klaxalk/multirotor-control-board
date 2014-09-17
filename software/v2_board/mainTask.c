@@ -13,9 +13,6 @@
 
 extern volatile uint16_t RCchannel[9];
 
-// flag to run the controllers
-volatile int8_t controllersFlag = 0;
-
 // constants from RC transmitter
 volatile float constant1 = 0;
 volatile float constant2 = 0;

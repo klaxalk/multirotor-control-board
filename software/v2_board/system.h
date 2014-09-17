@@ -104,6 +104,10 @@ extern volatile float aileronSpeedIntegration;
 /* Basic initialization of the MCU, peripherals and i/o */
 void boardInit();
 
+/* Initialize the XBEE USART */
+void USART_XBEE_init();
+void USART_1_init();
+
 /* Merge signals from RC Receiver with the controller outputs */
 void mergeSignalsToOutput();
 

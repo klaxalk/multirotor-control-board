@@ -8,15 +8,10 @@
 #include "commTask.h"
 #include "system.h"
 #include "ioport.h"
-#include "FreeRTOS.h"
-#include "task.h"
-#include "usart_driver_RTOS.h"
 #include "communication.h"
 #include <stdio.h>
 
 extern volatile uint16_t RCchannel[9];
-extern UsartBuffer * usart_buffer_xbee;
-extern UsartBuffer * usart_buffer_1;
 
 extern volatile float groundDistance;
 extern volatile float elevatorSpeed;
@@ -42,6 +37,7 @@ void commTask(void *p) {
 	while (1) {
 
 		// xbee received
+		/*
 		if (usartBufferGetByte(usart_buffer_xbee, &inChar, 0)) {
 					
 			if (inChar == 'x') {
@@ -154,5 +150,6 @@ void commTask(void *p) {
 
 			opticalFlowDataFlag = 0;
 		}
+		*/
 	}
 }
