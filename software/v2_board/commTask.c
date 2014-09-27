@@ -6,6 +6,7 @@
  */
 
 #include "packets.h"
+#include "commands.h"
 
 #include "commTask.h"
 #include "system.h"
@@ -35,6 +36,60 @@ extern int8_t mavlinkFlag;
 extern mavlink_optical_flow_t opticalFlowData;
 extern int8_t opticalFlowDataFlag;
 
+
+//recognize packet
+void recPacket(){
+    char *address16[2];
+    char *address64[8];
+    char recieveOptions;
+    char *data[20];
+
+    switch (*(inPacket+3)) {
+    //Modem Status
+    case 0x8A:
+
+        break;
+    //Transmit Status
+    case 0x8B:
+
+        break;
+    //Receive Packet
+    case 0x90:
+            parReceivePacket(address64,address16,&recieveOptions,data);
+            switch (*(data+1)){
+                //command
+                case 'c':
+                        switch(*(data+2)){
+                            //GroundDistance telemetry request
+                            case 0x01:
+                                    groundDistanceTelemetry(address64,address16,0x00);
+                                break;
+                        }
+                    break;
+                //telemetry
+                case 't':
+                    break;
+                //report
+                case 'r':
+                    break;
+                //warning
+                case 'w':
+                    break;
+                //error
+                case 'e':
+                    break;
+                default:
+                    /*TODO neimplementovany parametr*/
+                    break;
+            }
+        break;
+    default:
+           /*TODO zablikat ledkou ze je neni implementovano nebo poslat PC upozorneni ze se neco nezpracovalo */
+        break;
+    }
+
+}
+
 void commTask(void *p) {
 
 	unsigned char inChar;
@@ -44,6 +99,19 @@ void commTask(void *p) {
 	int i;
 
 	while (1) {
+
+        //xbee send packet
+        if (sendPacket){
+            /*TODO
+            nemam paru jak to funguje a jak poslat jen cast stringu
+            usartBufferPutString(usart_buffer_xbee, outPacket, 10);
+            */
+            for (i=0;i<*(outPacket+2)+4){
+                usartBufferPutByte(usart_buffer_xbee, *(outPacket+i), 10);
+            }
+            sendPacket=0;
+        }
+
 
 		// xbee received
 		if (usartBufferGetByte(usart_buffer_xbee, &inChar, 0)) {
@@ -56,6 +124,7 @@ void commTask(void *p) {
                 for (i=0;i<*(inPacket+2)+1;i++){
                     while(!usartBufferGetByte(usart_buffer_xbee, inPacket+3+i, 0));
                 }
+                recPacket();
             }
 
 			if (inChar == 'x') {
