@@ -17,6 +17,7 @@
 extern volatile uint16_t RCchannel[9];
 extern UsartBuffer * usart_buffer_xbee;
 extern UsartBuffer * usart_buffer_1;
+extern UsartBuffer * usart_buffer_4;
 
 extern volatile float groundDistance;
 extern volatile float elevatorSpeed;
@@ -98,6 +99,8 @@ void commTask(void *p) {
 				usartBufferPutByte(usart_buffer_xbee, positionControllerEnabled, 10);
 				usartBufferPutByte(usart_buffer_xbee, landingRequest, 10);
 				usartBufferPutByte(usart_buffer_xbee, trajectoryEnabled, 10);
+
+				usartBufferPutByte(usart_buffer_xbee, validGumstix, 10);
 				
 				ukazatel = (char*) &elevatorSpeed;
 				usartBufferPutByte(usart_buffer_xbee, *(ukazatel), 10);
@@ -113,6 +116,57 @@ void commTask(void *p) {
 
 				usartBufferPutString(usart_buffer_xbee, "\r\n", 10);
 			}
+		}
+		
+		if (usartBufferGetByte(usart_buffer_4, &inChar, 0)) {
+
+			gumstixParseChar(inChar);
+		}
+		
+		if (gumstixDataFlag == 1) {
+			
+			if (validGumstix == 1) {
+
+				//Gumstix returns position of the blob relative to camera
+				//in milimeters, we want position of the drone relative
+				//to the blob in meters.
+				// +elevator = front
+				// +aileron  = left
+				// +throttle = up
+
+				//saturation
+				if(xPosGumstixNew > 2*POSITION_MAXIMUM) xPosGumstixNew = 2*POSITION_MAXIMUM;
+				if(xPosGumstixNew < 0) xPosGumstixNew = 0; //distance from the blob (positive)
+
+				if(yPosGumstixNew > +POSITION_MAXIMUM) yPosGumstixNew = +POSITION_MAXIMUM;
+				if(yPosGumstixNew < -POSITION_MAXIMUM) yPosGumstixNew = -POSITION_MAXIMUM;
+
+				if(zPosGumstixNew > +POSITION_MAXIMUM) zPosGumstixNew = +POSITION_MAXIMUM;
+				if(zPosGumstixNew < -POSITION_MAXIMUM) zPosGumstixNew = -POSITION_MAXIMUM;
+
+				#if GUMSTIX_CAMERA_POINTING == FORWARD //camera led on up side
+
+				//~ Camera pointing forward and being PORTRAIT oriented
+				//~ elevatorGumstix = - (float)xPosGumstixNew / 1000;
+				//~ aileronGumstix  = - (float)zPosGumstixNew / 1000;
+				//~ throttleGumstix = + (float)yPosGumstixNew / 1000;
+
+				//~ Camera pointing forward and being LANDSCAPE oriented
+				elevatorGumstix = - (float) xPosGumstixNew / 1000;
+				aileronGumstix  = - (float) yPosGumstixNew / 1000;
+				throttleGumstix = - (float) zPosGumstixNew / 1000;
+
+				#elif GUMSTIX_CAMERA_POINTING == DOWNWARD //camera led on front side
+
+				elevatorGumstix = + (float) yPosGumstixNew / 1000;
+				aileronGumstix  = - (float) zPosGumstixNew / 1000;
+				throttleGumstix = + (float) xPosGumstixNew / 1000;
+
+				#endif
+
+			}
+
+			gumstixDataFlag = 0;
 		}
 
 		if (usartBufferGetByte(usart_buffer_1, &inChar, 0)) {

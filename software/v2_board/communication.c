@@ -260,10 +260,8 @@ void gumstixParseChar(unsigned char incomingChar) {
 			validGumstix = gumstixParseTempInt;
 
 			if (validGumstix == 1) {
-				// led_control_on();
 				gumstixDataFlag = 1;
 			} else {
-				// led_control_off();
 			}
 			break;
 		}

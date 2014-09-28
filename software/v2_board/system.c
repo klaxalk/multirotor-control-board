@@ -58,7 +58,7 @@ UsartBuffer * usart_buffer_4;
 #define USART_1_BAUDRATE		BAUDPX4FLOW
 #define USART_2_BAUDRATE		BAUD19200
 #define USART_3_BAUDRATE		BAUD19200
-#define USART_4_BAUDRATE		BAUD19200
+#define USART_4_BAUDRATE		BAUD57600
 
 extern volatile float elevatorIntegration;
 extern volatile float aileronIntegration;

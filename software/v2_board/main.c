@@ -117,56 +117,6 @@ void twi_loopback(void *p) {
 	}
 }
 
-void uartTest(void *p) {
-	
-	unsigned char inChar;
-	
-	while (1) {
-		
-		if (usartBufferGetByte(usart_buffer_4, &inChar, 0)) {
-			
-			usartBufferPutByte(usart_buffer_4, inChar, 10);
-		}
-	}
-}
-
-void timerTest(void *p) {
-	
-	int i;
-	
-	while (1) {
-
-		for (i = 0; i < 4; i++) {
-			
-			usartBufferPutInt(usart_buffer_xbee, RCchannel[i], 10, 10);
-			
-			if (i != 4)
-				usartBufferPutByte(usart_buffer_xbee, ',', 10);
-		}
-		
-		usartBufferPutString(usart_buffer_xbee, "\r\n", 10);
-		
-		vTaskDelay(100);
-	}
-}
-
-void stm(void *p) {
-	
-	unsigned char inChar;
-	
-	while (1) {
-		
-		if (usartBufferGetByte(usart_buffer_stm, &inChar, 0)) {
-			
-			usartBufferPutByte(usart_buffer_4, inChar, 10);
-		}
-		if (usartBufferGetByte(usart_buffer_4, &inChar, 0)) {
-			
-			usartBufferPutByte(usart_buffer_stm, inChar, 10);
-		}
-	}
-}
-
 int main(void)
 {
 		
