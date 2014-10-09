@@ -42,7 +42,7 @@ void commTask(void *p) {
 	
 	while (1) {
 
-		// xbee received
+		// received something from XBEE
 		if (usartBufferGetByte(usart_buffer_xbee, &inChar, 0)) {
 					
 			if (inChar == 'x') {
@@ -118,11 +118,13 @@ void commTask(void *p) {
 			}
 		}
 		
+		// Received something from USART4 (Gumstix computer)
 		if (usartBufferGetByte(usart_buffer_4, &inChar, 0)) {
 
 			gumstixParseChar(inChar);
 		}
 		
+		// When gumstix data has been decoded
 		if (gumstixDataFlag == 1) {
 			
 			if (validGumstix == 1) {
@@ -169,11 +171,13 @@ void commTask(void *p) {
 			gumstixDataFlag = 0;
 		}
 
+		// When received something from the USART1 (PX4Flow module)
 		if (usartBufferGetByte(usart_buffer_1, &inChar, 0)) {
 
 			px4flowParseChar((uint8_t) inChar);
 		}
 
+		// When PX4Flow data has been decoded
 		if (opticalFlowDataFlag == 1) {
 
 			led_blue_toggle();
