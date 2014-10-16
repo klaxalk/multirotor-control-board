@@ -18,6 +18,7 @@ extern volatile uint16_t RCchannel[9];
 extern UsartBuffer * usart_buffer_xbee;
 extern UsartBuffer * usart_buffer_1;
 extern UsartBuffer * usart_buffer_4;
+extern UsartBuffer * usart_buffer_log;
 
 extern volatile float groundDistance;
 extern volatile float elevatorSpeed;
@@ -37,92 +38,27 @@ extern int8_t opticalFlowDataFlag;
 void commTask(void *p) {
 	
 	unsigned char inChar;
-
-	char* ukazatel;
+	//char* ukazatel;
 	
 	while (1) {
 
-		// received something from XBEE
-		if (usartBufferGetByte(usart_buffer_xbee, &inChar, 0)) {
-					
-			if (inChar == 'x') {
-				
-				int i;
-				for (i = 0; i < 4; i++) {
-										
-					usartBufferPutInt(usart_buffer_xbee, RCchannel[i], 10, 10);
-					usartBufferPutString(usart_buffer_xbee, ", ", 10);
-				}
-				usartBufferPutString(usart_buffer_xbee, "\r\n", 10);
-			}
-			
-			if (inChar == 'v') {
-				
-				char buffer[20];
-				sprintf(buffer, "%2.2f %2.2f %2.2f\r\n", elevatorSpeed, aileronSpeed, groundDistance);
-				usartBufferPutString(usart_buffer_xbee, buffer, 10);
-			}
-
-			if (inChar == 'b') {
-
-				ukazatel = (char*) &estimatedElevatorPos;
-				usartBufferPutByte(usart_buffer_xbee, *(ukazatel), 10);
-				usartBufferPutByte(usart_buffer_xbee, *(ukazatel+1), 10);
-				usartBufferPutByte(usart_buffer_xbee, *(ukazatel+2), 10);
-				usartBufferPutByte(usart_buffer_xbee, *(ukazatel+3), 10);
-
-				ukazatel = (char*) &estimatedAileronPos;
-				usartBufferPutByte(usart_buffer_xbee, *(ukazatel), 10);
-				usartBufferPutByte(usart_buffer_xbee, *(ukazatel+1), 10);
-				usartBufferPutByte(usart_buffer_xbee, *(ukazatel+2), 10);
-				usartBufferPutByte(usart_buffer_xbee, *(ukazatel+3), 10);
-
-				ukazatel = (char*) &estimatedThrottlePos;
-				usartBufferPutByte(usart_buffer_xbee, *(ukazatel), 10);
-				usartBufferPutByte(usart_buffer_xbee, *(ukazatel+1), 10);
-				usartBufferPutByte(usart_buffer_xbee, *(ukazatel+2), 10);
-				usartBufferPutByte(usart_buffer_xbee, *(ukazatel+3), 10);
-
-				ukazatel = (char*) &elevatorSetpoint;
-				usartBufferPutByte(usart_buffer_xbee, *(ukazatel), 10);
-				usartBufferPutByte(usart_buffer_xbee, *(ukazatel+1), 10);
-				usartBufferPutByte(usart_buffer_xbee, *(ukazatel+2), 10);
-				usartBufferPutByte(usart_buffer_xbee, *(ukazatel+3), 10);
-
-				ukazatel = (char*) &aileronSetpoint;
-				usartBufferPutByte(usart_buffer_xbee, *(ukazatel), 10);
-				usartBufferPutByte(usart_buffer_xbee, *(ukazatel+1), 10);
-				usartBufferPutByte(usart_buffer_xbee, *(ukazatel+2), 10);
-				usartBufferPutByte(usart_buffer_xbee, *(ukazatel+3), 10);
-				
-				usartBufferPutByte(usart_buffer_xbee, controllerEnabled, 10);
-				usartBufferPutByte(usart_buffer_xbee, positionControllerEnabled, 10);
-				usartBufferPutByte(usart_buffer_xbee, landingRequest, 10);
-				usartBufferPutByte(usart_buffer_xbee, trajectoryEnabled, 10);
-
-				usartBufferPutByte(usart_buffer_xbee, validGumstix, 10);
-				
-				ukazatel = (char*) &elevatorSpeed;
-				usartBufferPutByte(usart_buffer_xbee, *(ukazatel), 10);
-				usartBufferPutByte(usart_buffer_xbee, *(ukazatel+1), 10);
-				usartBufferPutByte(usart_buffer_xbee, *(ukazatel+2), 10);
-				usartBufferPutByte(usart_buffer_xbee, *(ukazatel+3), 10);
-
-				ukazatel = (char*) &aileronSpeed;
-				usartBufferPutByte(usart_buffer_xbee, *(ukazatel), 10);
-				usartBufferPutByte(usart_buffer_xbee, *(ukazatel+1), 10);
-				usartBufferPutByte(usart_buffer_xbee, *(ukazatel+2), 10);
-				usartBufferPutByte(usart_buffer_xbee, *(ukazatel+3), 10);
-
-				usartBufferPutString(usart_buffer_xbee, "\r\n", 10);
-			}
+		
+		if (usartBufferGetByte(usart_buffer_4, &inChar, 0)) {
+			usartBufferPutByte(usart_buffer_log,inChar,20);
+		//	usartBufferPutString(usart_buffer_log,"ls\r",10);
+		}
+		if (usartBufferGetByte(usart_buffer_log, &inChar, 0)){
+			usartBufferPutByte(usart_buffer_4,inChar,10);
+			led_green_toggle();
 		}
 		
+	
+		
 		// Received something from USART4 (Gumstix computer)
-		if (usartBufferGetByte(usart_buffer_4, &inChar, 0)) {
+	/*	if (usartBufferGetByte(usart_buffer_4, &inChar, 0)) {
 
 			gumstixParseChar(inChar);
-		}
+		}*/
 		
 		// When gumstix data has been decoded
 		if (gumstixDataFlag == 1) {
