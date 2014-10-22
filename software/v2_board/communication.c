@@ -13,37 +13,29 @@
 
 // parse the whole message from the FlightCtrl (angles)
 void parseFlightCtrlMessage() {
-
 	Decode64();
 
 	char* dummy;
 	int16_t tempAngle;
 
 	dummy = (char*)(&tempAngle);
-
 	dummy[0] = pRxData[0];
 	dummy[1] = pRxData[1];
 
 	if (RxdBuffer[2] == 'X') {
-
 		pitchBoardAngle = tempAngle;
-
 	} else if (RxdBuffer[2] == 'Y') {
-
 		rollBoardAngle = tempAngle;
 	}
 
 #if FRAME_ORIENTATION == X_COPTER
-
 	// rotate the angles to the xCopter reference frame
 	pitchAngle = (pitchBoardAngle-rollBoardAngle)/2;
 	rollAngle = (pitchBoardAngle+rollBoardAngle)/2;
 
 #elif FRAME_ORIENTATION == PLUS_COPTER
-
 	pitchAngle = pitchBoardAngle;
 	rollAngle = rollBoardAngle;
-
 #endif
 
 }
@@ -70,16 +62,11 @@ mavlink_optical_flow_t opticalFlowData;
 int8_t opticalFlowDataFlag = 0;
 
 int8_t px4flowParseChar(uint8_t incomingChar) {
-
 	if (mavlink_parse_char(MAVLINK_COMM_0, incomingChar, &mavlinkMessage, &mavlinkStatus)) {
-
 		switch (mavlinkMessage.msgid) {
 		case MAVLINK_MSG_ID_OPTICAL_FLOW: {
-
 			opticalFlowDataFlag = 1;
-
 			return 1;
-
 		}
 		break;
 		default:
@@ -260,8 +247,10 @@ void gumstixParseChar(unsigned char incomingChar) {
 			validGumstix = gumstixParseTempInt;
 
 			if (validGumstix == 1) {
+				// led_control_on();
 				gumstixDataFlag = 1;
 			} else {
+				// led_control_off();
 			}
 			break;
 		}

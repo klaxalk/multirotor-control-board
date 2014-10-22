@@ -88,6 +88,17 @@
       <ToolNumber>000200213075</ToolNumber>
       <ToolName>AVRISP mkII</ToolName>
     </com_atmel_avrdbg_tool_ispmk2>
+    <com_atmel_avrdbg_tool_simulator>
+      <ToolOptions xmlns="">
+        <InterfaceProperties>
+        </InterfaceProperties>
+        <InterfaceName>PDI</InterfaceName>
+      </ToolOptions>
+      <ToolType xmlns="">com.atmel.avrdbg.tool.simulator</ToolType>
+      <ToolNumber xmlns="">
+      </ToolNumber>
+      <ToolName xmlns="">Simulator</ToolName>
+    </com_atmel_avrdbg_tool_simulator>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <ToolchainSettings>
@@ -216,6 +227,12 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="commands.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="commands.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="commTask.c">
       <SubType>compile</SubType>
     </Compile>
@@ -313,6 +330,9 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="mainTask.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mavlink.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="mavlink\v1.0\ardupilotmega\ardupilotmega.h">
@@ -736,6 +756,12 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="MyDrivers\usart_driver_RTOS.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="packets.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="packets.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="system.c">

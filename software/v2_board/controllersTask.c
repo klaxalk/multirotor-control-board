@@ -35,9 +35,6 @@ void controllersTask(void *p) {
 		altitudeController();
 
 		#endif // PX4FLOW_DATA_RECEIVE == ENABLED
-		
-		led_orange_on();
-		
 		vTaskDelay(14);
 	}
 	

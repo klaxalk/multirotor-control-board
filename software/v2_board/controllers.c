@@ -7,6 +7,11 @@
 
 #include "controllers.h"
 
+
+// controller on/off
+volatile unsigned char controllerEnabled = 0;
+volatile unsigned char positionControllerEnabled = 0;
+
 #if PX4FLOW_DATA_RECEIVE == ENABLED
 
 static uint8_t estimator_cycle = 0;
@@ -16,11 +21,6 @@ static float   estimatedThrottlePos_prev = 0;
 //~ Setpoints - assign setpoint values                                       ~//
 //~ ------------------------------------------------------------------------ ~//
 void setpoints() {
-
-	float sp_new;
-
-#if TRAJECTORY_FOLLOWING == ENABLED
-
 	float dTime;
 	float dValue;
 	static float aileronIncrement;
@@ -31,16 +31,16 @@ void setpoints() {
 	//trajectory following
 	if(trajectoryEnabled && positionControllerEnabled){
 
-		if(trajIndex < TRAJECTORY_LENGTH){
+		if(trajIndex <= trajMaxIndex){
 
-			if(trajIndex < 0 || trajTimer >= trajectory[trajIndex].time) {
+			if(trajIndex == 0 || trajTimer >= trajectory[trajIndex].time) {
 				trajIndex++;
 				dTime  = (trajectory[trajIndex].time - trajTimer);
-				dValue = ((float)trajectory[trajIndex].elevatorPos/1000 - elevatorSetpoint);
+				dValue = (trajectory[trajIndex].elevatorPos - elevatorSetpoint);
 				elevatorIncrement = dValue / dTime * DT;
-				dValue = ((float)trajectory[trajIndex].aileronPos/1000 - aileronSetpoint);
+				dValue = (trajectory[trajIndex].aileronPos - aileronSetpoint);
 				aileronIncrement = dValue / dTime * DT;
-				dValue = ((float)trajectory[trajIndex].throttlePos/1000 - throttleSetpoint);
+				dValue = (trajectory[trajIndex].throttlePos - throttleSetpoint);
 				throttleIncrement = dValue / dTime * DT;
 			}
 
@@ -48,41 +48,29 @@ void setpoints() {
 			elevatorSetpoint += elevatorIncrement;
 			aileronSetpoint  += aileronIncrement;
 			throttleSetpoint  += throttleIncrement;
+			
+			elevatorDesiredSetpoint=elevatorSetpoint;
+			aileronDesiredSetpoint=aileronSetpoint;
+			throttleDesiredSetpoint=throttleSetpoint;
+		}
 
-
-		} //else End of Trajectory - do nothing
-
-	//manual setpoints from RC transmitter
 	}else{
 
-#endif //TRAJECTORY_FOLLOWING == ENABLED
+/*
+		if(elevatorDesiredSetpoint>ELEVATOR_SP_HIGH){elevatorDesiredSetpoint=ELEVATOR_SP_HIGH;}
+		if(elevatorDesiredSetpoint<ELEVATOR_SP_LOW){elevatorDesiredSetpoint=ELEVATOR_SP_LOW;}
+			
+		if(aileronDesiredSetpoint>AILERON_SP_HIGH){aileronDesiredSetpoint=AILERON_SP_HIGH;}
+		if(aileronDesiredSetpoint<AILERON_SP_LOW){aileronDesiredSetpoint=AILERON_SP_LOW;}
+*/		
+		if(throttleDesiredSetpoint>THROTTLE_SP_HIGH){throttleDesiredSetpoint=THROTTLE_SP_HIGH;}
+		if(throttleDesiredSetpoint<THROTTLE_SP_LOW){throttleDesiredSetpoint=THROTTLE_SP_LOW;}					
 
-		//sp_new = ELEVATOR_SP_HIGH * constant2 + ELEVATOR_SP_LOW * (1-constant2);
-		sp_new = (ELEVATOR_SP_LOW + ELEVATOR_SP_HIGH)/2;
-		elevatorSetpoint += (sp_new-elevatorSetpoint) * (DT/SETPOINT_FILTER_CONST);
-
-		//sp_new = AILERON_SP_HIGH * constant2 + AILERON_SP_LOW * (1-constant2);
-		sp_new = (AILERON_SP_LOW  + AILERON_SP_HIGH )/2;
-		aileronSetpoint += (sp_new-aileronSetpoint) * (DT/SETPOINT_FILTER_CONST);
-
-		//sp_new = THROTTLE_SP_HIGH * constant1 + THROTTLE_SP_LOW * (1-constant1);
-		
-		// zakomentovano, Tomáš Báèa, 24.6.2014
-		// sp_new = (THROTTLE_SP_LOW + THROTTLE_SP_HIGH)/2;
-		
-		sp_new = 1;
-		
-		throttleSetpoint += (sp_new-throttleSetpoint) * (DT/SETPOINT_FILTER_CONST);
-
-#if TRAJECTORY_FOLLOWING == ENABLED
-
-		//reset trajectory vars
-		trajIndex = -1;
-		trajTimer = 0;
+	
+		elevatorSetpoint += (elevatorDesiredSetpoint-elevatorSetpoint) * (DT/SETPOINT_FILTER_CONST);
+		aileronSetpoint += (aileronDesiredSetpoint-aileronSetpoint) * (DT/SETPOINT_FILTER_CONST);		
+		throttleSetpoint += (throttleDesiredSetpoint-throttleSetpoint) * (DT/SETPOINT_FILTER_CONST);
 	}
-
-#endif //TRAJECTORY_FOLLOWING == ENABLED
-
 }
 
 //~ ------------------------------------------------------------------------ ~//
@@ -155,12 +143,9 @@ void positionController() {
 	//set controller constants
 	if(positionControllerEnabled && landingState == LS_FLIGHT) {
 		KI = POSITION_KI;
-		KP = POSITION_KP; // * (0.5 + constant1);
-		KV = POSITION_KV; // * (0.5 + constant2);
-		KA = POSITION_KA; // * (0.5 + constant5);
-		//KP = POSITION_KP;
-		//KV = POSITION_KV;
-		//KA = POSITION_KA;
+		KP = POSITION_KP; 
+		KV = POSITION_KV; 
+		KA = POSITION_KA;
 		KX = KP / KV;
 
 
@@ -169,7 +154,6 @@ void positionController() {
 		KV = VELOCITY_KV;
 		KA = VELOCITY_KA;
 		KX = 0;
- 
 	}
 
 	//elevator controller
@@ -238,7 +222,7 @@ void positionController() {
 }
 
 //~ ------------------------------------------------------------------------ ~//
-//~ Altitude Estimator - interpolates the data fron PX4Flow sonar sensor     ~//
+//~ Altitude Estimator - interpolates the data from PX4Flow sonar sensor     ~//
 //~ ------------------------------------------------------------------------ ~//
 void altitudeEstimator() {
 

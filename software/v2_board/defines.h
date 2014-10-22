@@ -3,7 +3,7 @@
  *
  * Created: 11.9.2014 13:27:36
  *  Author: Tomas Baca
- */ 
+ */
 
 #ifndef _DEFINES_H
 #define _DEFINES_H
@@ -24,5 +24,8 @@
 #define FORWARD 1
 #define DOWNWARD 2
 #define BACKWARD 3
+
+// platform define
+#define KOPTER
 
 #endif // _DEFINES_H

@@ -111,6 +111,10 @@ extern volatile float elevatorSetpoint;
 extern volatile float aileronSetpoint;
 extern volatile float throttleSetpoint;
 
+extern volatile float elevatorDesiredSetpoint;
+extern volatile float aileronDesiredSetpoint;
+extern volatile float throttleDesiredSetpoint;
+
 //auto-landing variables and state defines
 extern volatile unsigned char landingRequest;
 extern volatile unsigned char landingState;
@@ -124,12 +128,13 @@ extern volatile uint8_t landingCounter;
 //auto-trajectory variables and types
 extern volatile unsigned char trajectoryEnabled;
 extern volatile float trajTimer;
-extern volatile int trajIndex;
+extern volatile unsigned char trajIndex;
+extern volatile unsigned char trajMaxIndex;
 typedef struct {
 	float time;
-	int16_t elevatorPos; //position in mm
-	int16_t aileronPos;  //position in mm
-	int16_t throttlePos; //position in mm
+	float elevatorPos; //position in m
+	float aileronPos;  //position in m
+	float throttlePos; //position in m
 } trajectoryPoint_t;
 extern volatile trajectoryPoint_t trajectory[];
 #define TRAJECTORY_LENGTH	10
@@ -144,7 +149,6 @@ void setpoints();
 
 //position estimator and controllers
 void positionEstimator();
-void velocityController();
 void positionController();
 
 //altitude estimator and controllers

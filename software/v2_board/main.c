@@ -14,6 +14,9 @@
 #include "twi_slave_driver.h"
 #include "usart_driver_RTOS.h"
 
+//xbee protocol
+#include "packets.h"
+
 // basic system functions
 #include "system.h"
 
@@ -101,53 +104,34 @@ void twi_loopback(void *p) {
 	
 	taskENABLE_INTERRUPTS();
 
-	while (1) {
-		
-		// wait for some characters in USART input buffer
-		while (!usartBufferGetByte(usart_buffer_4, &inChar, 0)) {}
-		
+	while (1) {		
 		// send the character to I2C Slave
 		TWI_MasterWriteRead(&twiMaster, SLAVE_ADDRESS, &inChar, 1, 1);
 		
 		// Wait until transaction is complete
 		while (twiMaster.status != TWIM_STATUS_READY) {}
-		
-		// send the received character back to the USART
-		usartBufferPutByte(usart_buffer_4, twiMaster.readData[0], 10);
-	}
+		}
 }
+
 
 int main(void)
 {
-		
+	//Control board initialize
 	boardInit();
 	
-	// usartBufferPutString(usart_buffer_4, "\r\nInit complete\n\r", 10);
+	//XBee protocol constants
+	constInit();
 	
-	// xTaskCreate(twi_loopback, (signed char*) "twi", 1024, NULL, 2, NULL);
-	// xTaskCreate(stm, (signed char*) "stm", 1024, NULL, 2, NULL);
-	// xTaskCreate(performanceTest, (signed char*) "perf", 1024, NULL, 2, NULL);
-	// xTaskCreate(timerTest, (signed char*) "uartTest", 1024, NULL, 2, NULL);
-
-	/* -------------------------------------------------------------------- */
-	/*	Start the communication task routine								*/
-	/* -------------------------------------------------------------------- */
+	//Start the communication task routine
 	xTaskCreate(commTask, (signed char*) "commTask", 1024, NULL, 2, NULL);
 	
-	/* -------------------------------------------------------------------- */
-	/*	Start the main task routine																					*/
-	/* -------------------------------------------------------------------- */
+	//Start the main task routine
 	xTaskCreate(mainTask, (signed char*) "mainTask", 1024, NULL, 2, NULL);
-	
-	/* -------------------------------------------------------------------- */
-	/*	Start the main task routine																					*/
-	/* -------------------------------------------------------------------- */
+
+	//Start the main task routine
 	xTaskCreate(controllersTask, (signed char*) "contTasks", 1024, NULL, 2, NULL);
 	
-	/* -------------------------------------------------------------------- */
-	/*	Start the FreeRTOS scheduler																				*/
-	/* -------------------------------------------------------------------- */
-
+	//Start the FreeRTOS scheduler
 	vTaskStartScheduler();
 	
 	return 0;

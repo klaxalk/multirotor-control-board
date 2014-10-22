@@ -77,10 +77,10 @@
 /* -------------------------------------------------------------------- */
 /*	Constants to asociate the RC channels								*/
 /* -------------------------------------------------------------------- */
-#define THROTTLE		0
-#define RUDDER			1
-#define AILERON			2
-#define ELEVATOR		3
+#define RC_THROTTLE		0
+#define RC_RUDDER		1
+#define RC_AILERON		2
+#define RC_ELEVATOR		3
 #define AUX1			4
 #define AUX2			5
 #define AUX3			6
@@ -92,6 +92,7 @@ extern volatile uint8_t portMask;
 extern volatile uint8_t portMask2;
 
 extern volatile float throttleIntegration;
+extern volatile unsigned char controllerEnabled;
 extern volatile unsigned char positionControllerEnabled;
 
 #if PX4FLOW_DATA_RECEIVE == ENABLED

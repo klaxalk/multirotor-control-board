@@ -19,24 +19,26 @@
 /* -------------------------------------------------------------------- */
 uint16_t PPM_in_start = 0;
 uint8_t PPM_in_current_channel = 0;
-volatile uint16_t RCchannel[9] = {PPM_IN_MIN_LENGTH, PPM_IN_MIN_LENGTH, PPM_IN_MIN_LENGTH, PPM_IN_MIN_LENGTH, PPM_IN_MIN_LENGTH, PPM_IN_MIN_LENGTH, PPM_IN_MIN_LENGTH, PPM_IN_MIN_LENGTH, PPM_IN_MIN_LENGTH};
+volatile uint16_t RCchannel[9] = {PPM_IN_MIN_LENGTH, PPM_IN_MIDDLE_LENGTH, PPM_IN_MIDDLE_LENGTH, PPM_IN_MIDDLE_LENGTH, PPM_IN_MIN_LENGTH, PPM_IN_MIN_LENGTH, PPM_IN_MIN_LENGTH, PPM_IN_MIN_LENGTH, PPM_IN_MIN_LENGTH};
 
 /* -------------------------------------------------------------------- */
 /*	Variables for PPM output generation									*/
 /* -------------------------------------------------------------------- */
-volatile uint16_t outputChannels[6] = {PULSE_OUT_MIN, PULSE_OUT_MIN, PULSE_OUT_MIN, PULSE_OUT_MIN, PULSE_OUT_MIN, PULSE_OUT_MIN};
+volatile uint16_t outputChannels[6] = {PULSE_OUT_MIN, PULSE_OUT_MIDDLE, PULSE_OUT_MIDDLE, PULSE_OUT_MIDDLE, PULSE_OUT_MIN, PULSE_OUT_MIN};
 volatile uint8_t currentChannelOut = 0;
-
-/* -------------------------------------------------------------------- */
-/*	Variables related to controllers									*/
-/* -------------------------------------------------------------------- */
-volatile unsigned char controllerEnabled;
 
 // controllers output variables
 volatile int16_t controllerElevatorOutput;
 volatile int16_t controllerAileronOutput;
 volatile int16_t controllerThrottleOutput;
 volatile int16_t controllerRudderOutput;
+
+//XBee gestures output
+volatile int16_t gestureElevatorOutput=PULSE_OUT_MIDDLE;
+volatile int16_t gestureAileronOutput=PULSE_OUT_MIDDLE;
+volatile int16_t gestureRudderOutput=PULSE_OUT_MIDDLE;
+volatile int16_t gestureThrottleOutput=PULSE_OUT_MIN;
+volatile unsigned char gestured=1;
 
 /* -------------------------------------------------------------------- */
 /*	Buffers for USARTs													*/
@@ -53,12 +55,12 @@ UsartBuffer * usart_buffer_4;
 /*	USART baud rates													*/
 /* -------------------------------------------------------------------- */
 #define USART_STM_BAUDRATE		BAUD9600
-#define USART_XBEE_BAUDRATE		BAUD19200
+#define USART_XBEE_BAUDRATE		BAUD9600
 #define USART_LOG_BAUDRATE		BAUD9600
 #define USART_1_BAUDRATE		BAUDPX4FLOW
 #define USART_2_BAUDRATE		BAUD19200
 #define USART_3_BAUDRATE		BAUD19200
-#define USART_4_BAUDRATE		BAUD57600
+#define USART_4_BAUDRATE		BAUD9600
 
 extern volatile float elevatorIntegration;
 extern volatile float aileronIntegration;
@@ -66,6 +68,9 @@ extern volatile float throttleIntegration;
 extern volatile float elevatorSetpoint;
 extern volatile float aileronSetpoint;
 extern volatile float throttleSetpoint;
+extern volatile float elevatorDesiredSetpoint;
+extern volatile float aileronDesiredSetpoint;
+extern volatile float throttleDesiredSetpoint;
 
 //vars for estimators
 extern volatile float estimatedElevatorPos;
@@ -178,24 +183,32 @@ void mergeSignalsToOutput() {
 	int16_t outputAileron = PULSE_OUT_MIDDLE;
 	int16_t outputRudder = PULSE_OUT_MIDDLE;
 
-	outputThrottle = RCchannel[THROTTLE];
-	outputRudder = RCchannel[RUDDER];
-	outputElevator = RCchannel[ELEVATOR];
-	outputAileron = RCchannel[AILERON];
+	outputThrottle = RCchannel[RC_THROTTLE];
+	outputRudder = RCchannel[RC_RUDDER];
+	outputElevator = RCchannel[RC_ELEVATOR];
+	outputAileron = RCchannel[RC_AILERON];
 
 	if (controllerEnabled == 1) {
-
-		led_red_on();
-
 		outputThrottle += controllerThrottleOutput;
 		outputElevator += controllerElevatorOutput;
 		outputAileron += controllerAileronOutput;
 		//~ outputRudder += controllerRudderOutput;
-		} else {
-
-		led_red_off();
 	}
-
+	
+	if(gestured==0){
+		outputThrottle = gestureThrottleOutput;
+		outputRudder   = gestureRudderOutput;
+		outputElevator = gestureElevatorOutput;
+		outputAileron  = gestureAileronOutput;
+		
+		gestureElevatorOutput=PULSE_OUT_MIDDLE;
+		gestureAileronOutput=PULSE_OUT_MIDDLE;
+		gestureRudderOutput=PULSE_OUT_MIDDLE;
+		gestureThrottleOutput=PULSE_OUT_MIN;
+		gestured=1;
+	}
+	
+	
 	outputChannels[0] = outputThrottle*2;
 	outputChannels[1] = outputRudder*2;
 	outputChannels[2] = outputElevator*2;
@@ -277,40 +290,39 @@ ISR(TCD0_OVF_vect) {
 
 // disable controllers
 void disableController() {
-
 	controllerEnabled = 0;
 }
 
 // enable controllers
 void enableController() {
-
 	if (controllerEnabled == 0) {
-
 		#if PX4FLOW_DATA_RECEIVE == ENABLED
-
 		elevatorIntegration = 0;
 		aileronIntegration = 0;
 		throttleIntegration = 0;
 
 		if(validGumstix != 1) {
-
+			elevatorSetpoint = (ELEVATOR_SP_LOW + ELEVATOR_SP_HIGH)/2;
+			aileronSetpoint  = (AILERON_SP_LOW  + AILERON_SP_HIGH )/2;
+			throttleSetpoint = 1;
+			
 			estimatedElevatorPos = elevatorSetpoint;
 			estimatedAileronPos  = aileronSetpoint;
-
+			
+			elevatorDesiredSetpoint=elevatorSetpoint;
+			aileronDesiredSetpoint=aileronSetpoint;
+			throttleDesiredSetpoint=throttleSetpoint;
 		}
-
 		#endif
 	}
 	controllerEnabled = 1;
 }
 
 void disablePositionController() {
-
 	positionControllerEnabled = 0;
 }
 
 void enablePositionController() {
-
 	if (positionControllerEnabled == 0) {
 		// set integrated variables to default
 	}
