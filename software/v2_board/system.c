@@ -19,12 +19,12 @@
 /* -------------------------------------------------------------------- */
 uint16_t PPM_in_start = 0;
 uint8_t PPM_in_current_channel = 0;
-volatile uint16_t RCchannel[9] = {PPM_IN_MIN_LENGTH, PPM_IN_MIN_LENGTH, PPM_IN_MIN_LENGTH, PPM_IN_MIN_LENGTH, PPM_IN_MIN_LENGTH, PPM_IN_MIN_LENGTH, PPM_IN_MIN_LENGTH, PPM_IN_MIN_LENGTH, PPM_IN_MIN_LENGTH};
+volatile uint16_t RCchannel[9] = {PPM_IN_MIN_LENGTH, PPM_IN_MIDDLE_LENGTH, PPM_IN_MIDDLE_LENGTH, PPM_IN_MIDDLE_LENGTH, PPM_IN_MIN_LENGTH, PPM_IN_MIN_LENGTH, PPM_IN_MIN_LENGTH, PPM_IN_MIN_LENGTH, PPM_IN_MIN_LENGTH};
 
 /* -------------------------------------------------------------------- */
 /*	Variables for PPM output generation									*/
 /* -------------------------------------------------------------------- */
-volatile uint16_t outputChannels[6] = {PULSE_OUT_MIN, PULSE_OUT_MIN, PULSE_OUT_MIN, PULSE_OUT_MIN, PULSE_OUT_MIN, PULSE_OUT_MIN};
+volatile uint16_t outputChannels[6] = {PULSE_OUT_MIN, PULSE_OUT_MIDDLE, PULSE_OUT_MIDDLE, PULSE_OUT_MIDDLE, PULSE_OUT_MIN, PULSE_OUT_MIN};
 volatile uint8_t currentChannelOut = 0;
 
 /* -------------------------------------------------------------------- */
