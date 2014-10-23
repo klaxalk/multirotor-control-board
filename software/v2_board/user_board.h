@@ -2,7 +2,7 @@
  * user_board.h
  *
  * Created: 24.8.2014 21:05:19
- *  Author: klaxalk
+ *  Author: Tomas Baca
  */ 
 
 

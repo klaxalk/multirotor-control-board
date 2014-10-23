@@ -8,13 +8,9 @@
 #include "mainTask.h"
 #include "system.h"
 #include "controllers.h"
+#include "communication.h"
 #include <stdio.h> // sprintf
 #include <stdlib.h> // abs
-
-extern volatile uint16_t RCchannel[9];
-
-// flag to run the controllers
-volatile int8_t controllersFlag = 0;
 
 // constants from RC transmitter
 volatile float constant1 = 0;
@@ -32,69 +28,6 @@ int8_t previous_AUX3 = 0;
 volatile unsigned char controllerEnabled = 0;
 volatile unsigned char positionControllerEnabled = 0;
 
-#if PX4FLOW_DATA_RECEIVE == ENABLED
-
-//~ --------------------------------------------------------------------
-//~ Variables used with the px4flow sensor
-//~ --------------------------------------------------------------------
-
-//px4flow values
-extern volatile float groundDistance;
-extern volatile float elevatorSpeed;
-extern volatile float aileronSpeed;
-extern volatile uint8_t px4Confidence;
-
-//vars for estimators
-volatile float estimatedElevatorPos = 0;
-volatile float estimatedAileronPos  = 0;
-volatile float estimatedThrottlePos = 0;
-volatile float estimatedElevatorVel = 0;
-volatile float estimatedAileronVel  = 0;
-volatile float estimatedThrottleVel = 0;
-
-//vars for controllers
-volatile float elevatorIntegration = 0;
-volatile float aileronIntegration  = 0;
-volatile float throttleIntegration = 0;
-//~ volatile float elevatorSetpoint = (ELEVATOR_SP_LOW + ELEVATOR_SP_HIGH)/2;
-volatile float elevatorSetpoint = -1.5;
-volatile float aileronSetpoint  = (AILERON_SP_LOW  + AILERON_SP_HIGH )/2;
-//~ volatile float throttleSetpoint = (THROTTLE_SP_LOW + THROTTLE_SP_HIGH)/2;
-volatile float throttleSetpoint = 0.75;
-
-//auto-landing variables
-volatile unsigned char landingRequest = 0;
-volatile unsigned char landingState = LS_ON_GROUND;
-volatile uint8_t landingCounter = 0;
-
-//auto-trajectory variables
-volatile unsigned char trajectoryEnabled = 0;
-volatile float trajTimer = 0;
-volatile int trajIndex = -1;
-volatile trajectoryPoint_t trajectory[TRAJECTORY_LENGTH];
-
-#endif // PX4FLOW_DATA_RECEIVE == ENABLED
-
-#if GUMSTIX_DATA_RECEIVE == ENABLED
-
-/* -------------------------------------------------------------------- */
-/*	Variables for gumstix												*/
-/* -------------------------------------------------------------------- */
-volatile unsigned char gumstixParseCharState = 0;
-volatile unsigned char gumstixParseCharByte = 0;
-volatile int16_t gumstixParseTempInt;
-volatile int16_t xPosGumstixNew = 0;
-volatile int16_t yPosGumstixNew = 0;
-volatile int16_t zPosGumstixNew = 0;
-volatile float elevatorGumstix = 0;
-volatile float aileronGumstix = 0;
-volatile float throttleGumstix = 0;
-volatile int8_t validGumstix = 0;
-volatile int8_t gumstixDataFlag = 0;
-volatile unsigned char gumstixParseCharCrc = 0;
-
-#endif
-
 #if TRAJECTORY_FOLLOWING == ENABLED
 
 void writeTrajectory1(){
@@ -102,39 +35,6 @@ void writeTrajectory1(){
 	//TRAJ_POINT(0,  0, -1500,     0);
 
 	// (i, time (s), x (+ forward), y (+ leftward), z (altitude))
-
-	//~ Square
-	//~ TRAJ_POINT(0,  8,  -1500,  -300, 750);
-	//~ TRAJ_POINT(1,  16,  -2100,  -300, 750);
-	//~ TRAJ_POINT(2,  24,  -2100,  +300, 750);
-	//~ TRAJ_POINT(3,  32,  -1500,  +300, 750);
-	//~ TRAJ_POINT(4,  40,  -1500,  0, 750);
-	
-	//~ Zuzeni Follower Experiment Telocvicna
-	//~  Puvodni*3 - 0.5
-	//~ TRAJ_POINT(0,  3,  -1900,  0, 1000);
-	//~ TRAJ_POINT(1,  6,  -1902,  0, 1000);
-	//~ TRAJ_POINT(2,  9,  -1660,  0, 1000);
-	//~ TRAJ_POINT(3,  12,  -1136,  0, 1000);
-	//~ TRAJ_POINT(4,  15,  -1380,  0, 1000);
-	//~ TRAJ_POINT(5,  18,  -1993,  0, 1000);
-	//~ TRAJ_POINT(6,  21,  -2063,  0, 1000);
-	//~ TRAJ_POINT(7,  24,  -1897,  0, 1000);
-	//~ TRAJ_POINT(8,  27,  -1826,  0, 1000);
-	//~ TRAJ_POINT(9,  30,  -1846,  0, 1000);
-
-	//~ Zuzeni LEADER Experiment Telocvicna
-	//~  Aileron: Puvodni*3 - 0.5
-	//~ TRAJ_POINT(0,  3,  -900,  0, 1000);
-	//~ TRAJ_POINT(1,  6,  -300,  0, 1000);
-	//~ TRAJ_POINT(2,  9,  +300,  0, 1000);
-	//~ TRAJ_POINT(3,  12,  +900,  0, 1000);
-	//~ TRAJ_POINT(4,  15,  +1500,  0, 1000);
-	//~ TRAJ_POINT(5,  18,  +2100,  0, 1000);
-	//~ TRAJ_POINT(6,  21,  +2700,  0, 1000);
-	//~ TRAJ_POINT(7,  24,  +3300,  0, 1000);
-	//~ TRAJ_POINT(8,  27,  +3900,  0, 1000);
-	//~ TRAJ_POINT(9,  30,  -1500,  0, 1000);
 
 	//~ Preplanovani LEADER Experiment Telocvicna
 	//~  Aileron: Pùvodní*2
@@ -148,22 +48,6 @@ void writeTrajectory1(){
 	TRAJ_POINT(7,  24,  +3300,  0, 1000);
 	TRAJ_POINT(8,  27,  +3900,  0, 1000);
 	TRAJ_POINT(9,  30,  -1500,  0, 1000);
-	
-	//~ Experimet TV
-	//~ TRAJ_POINT(0,  5,  -500,  -50, 1000);
-	//~ TRAJ_POINT(1, 10,  +500, -360, 1120);
-	//~ TRAJ_POINT(2, 15, +1500, -740, 1250);
-	//~ TRAJ_POINT(3, 20, +2500, -880,  980);
-	//~ TRAJ_POINT(4, 25, +3500, -820,  690);
-	//~
-	//~ TRAJ_POINT(5, 30, +4500, -550,  630);
-	//~ TRAJ_POINT(6, 35, +5500, -150,  690);
-	//~ TRAJ_POINT(7, 40, +6500, +280,  790);
-	//~ TRAJ_POINT(8, 45, +7500, +220,  930);
-	//~ TRAJ_POINT(9, 50, +8500,    0, 1000);
-
-	//TRAJ_POINT(9,999, 0, -1500,     0);
-
 }
 
 #endif //TRAJECTORY_FOLLOWING == ENABLED

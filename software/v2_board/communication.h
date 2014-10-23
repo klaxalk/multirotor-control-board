@@ -8,7 +8,7 @@
 #ifndef _COMMUNICATION_H
 #define _COMMUNICATION_H
 
-#include "mavlink/v1.0/common/mavlink.h"
+#include "mavlink/common/mavlink.h"
 #include <avr/io.h>
 #include "config.h"
 #include "controllers.h"
@@ -44,6 +44,13 @@ extern signed volatile char TxdBuffer[MAX_SENDE_BUFF];
 extern signed volatile char RxdBuffer[MAX_EMPFANGS_BUFF];
 extern signed char *pRxData;
 extern unsigned char RxDataLen;
+
+// data from px4flow
+extern volatile float groundDistance;
+extern volatile float elevatorSpeed;
+extern volatile float aileronSpeed;
+extern volatile uint8_t px4Confidence;
+extern mavlink_optical_flow_t opticalFlowData;
 
 // angles with respect to the board
 extern volatile int16_t pitchBoardAngle;

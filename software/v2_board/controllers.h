@@ -8,9 +8,7 @@
 #ifndef _CONTROLLERS_H
 #define _CONTROLLERS_H
 
-#include "mavlink/v1.0/common/mavlink.h"
-#include "defines.h"
-#include "config.h"
+#include "system.h"
 #include <stdlib.h>
 
 // controllers period (do not change!)

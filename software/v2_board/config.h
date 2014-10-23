@@ -117,24 +117,6 @@
 */
 
 //~ --------------------------------------------------------------------
-//~ Receiving data from Atom computer (surfnav) configuration
-//~ --------------------------------------------------------------------
-
-// on/off the receiving of data from the atom computer
-#define ATOM_DATA_RECEIVE DISABLED
-/*
-	ENABLED
-	DISABLED
-*/
-
-// define the UART port for communication with the atom
-#define ATOM_RECEIVE_PORT UART0
-/*
-	UART0
-	UART1
-*/
-
-//~ --------------------------------------------------------------------
 //~ Config baud rates for UARTs
 //~ --------------------------------------------------------------------
 
@@ -169,18 +151,6 @@
 #endif
 
 #if PX4FLOW_RECEIVE_PORT == UART1
-#define BAUD1 115200
-#endif
-
-#endif
-
-#if ATOM_DATA_RECEIVE == ENABLED
-
-#if ATOM_RECEIVE_PORT == UART0
-#define BAUD0 115200
-#endif
-
-#if ATOM_RECEIVE_PORT == UART1
 #define BAUD1 115200
 #endif
 

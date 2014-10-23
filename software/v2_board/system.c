@@ -19,12 +19,12 @@
 /* -------------------------------------------------------------------- */
 uint16_t PPM_in_start = 0;
 uint8_t PPM_in_current_channel = 0;
-volatile uint16_t RCchannel[9] = {PPM_IN_MIN_LENGTH, PPM_IN_MIN_LENGTH, PPM_IN_MIN_LENGTH, PPM_IN_MIN_LENGTH, PPM_IN_MIN_LENGTH, PPM_IN_MIN_LENGTH, PPM_IN_MIN_LENGTH, PPM_IN_MIN_LENGTH, PPM_IN_MIN_LENGTH};
+volatile uint16_t RCchannel[9] = {PPM_IN_MIN_LENGTH, PPM_IN_MIDDLE_LENGTH, PPM_IN_MIDDLE_LENGTH, PPM_IN_MIDDLE_LENGTH, PPM_IN_MIN_LENGTH, PPM_IN_MIN_LENGTH, PPM_IN_MIN_LENGTH, PPM_IN_MIN_LENGTH, PPM_IN_MIN_LENGTH};
 
 /* -------------------------------------------------------------------- */
 /*	Variables for PPM output generation									*/
 /* -------------------------------------------------------------------- */
-volatile uint16_t outputChannels[6] = {PULSE_OUT_MIN, PULSE_OUT_MIN, PULSE_OUT_MIN, PULSE_OUT_MIN, PULSE_OUT_MIN, PULSE_OUT_MIN};
+volatile uint16_t outputChannels[6] = {PULSE_OUT_MIN, PULSE_OUT_MIDDLE, PULSE_OUT_MIDDLE, PULSE_OUT_MIDDLE, PULSE_OUT_MIN, PULSE_OUT_MIN};
 volatile uint8_t currentChannelOut = 0;
 
 /* -------------------------------------------------------------------- */
@@ -58,22 +58,7 @@ UsartBuffer * usart_buffer_4;
 #define USART_1_BAUDRATE		BAUDPX4FLOW
 #define USART_2_BAUDRATE		BAUD19200
 #define USART_3_BAUDRATE		BAUD19200
-#define USART_4_BAUDRATE		BAUD19200
-
-extern volatile float elevatorIntegration;
-extern volatile float aileronIntegration;
-extern volatile float throttleIntegration;
-extern volatile float elevatorSetpoint;
-extern volatile float aileronSetpoint;
-extern volatile float throttleSetpoint;
-
-//vars for estimators
-extern volatile float estimatedElevatorPos;
-extern volatile float estimatedAileronPos;
-extern volatile float estimatedThrottlePos;
-extern volatile float estimatedElevatorVel;
-extern volatile float estimatedAileronVel;
-extern volatile float estimatedThrottleVel;
+#define USART_4_BAUDRATE		BAUD57600
 
 /* -------------------------------------------------------------------- */
 /*	Basic initialization of the MCU, peripherals and i/o				*/
@@ -196,6 +181,7 @@ void mergeSignalsToOutput() {
 		led_red_off();
 	}
 
+	// Everithing is *2 because the PPM incoming to this board is twice slower then the PPM goeing out
 	outputChannels[0] = outputThrottle*2;
 	outputChannels[1] = outputRudder*2;
 	outputChannels[2] = outputElevator*2;

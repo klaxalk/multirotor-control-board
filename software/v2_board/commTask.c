@@ -17,79 +17,6 @@
 #include "communication.h"
 #include <stdio.h>
 
-extern volatile uint16_t RCchannel[9];
-extern UsartBuffer * usart_buffer_xbee;
-extern UsartBuffer * usart_buffer_1;
-
-extern volatile float groundDistance;
-extern volatile float elevatorSpeed;
-extern volatile float aileronSpeed;
-extern volatile uint8_t px4Confidence;
-
-extern volatile float estimatedElevatorPos;
-extern volatile float estimatedAileronPos;
-
-// variables used by the mavlink library
-extern mavlink_message_t mavlinkMessage;
-extern mavlink_status_t mavlinkStatus;
-extern int8_t mavlinkFlag;
-extern mavlink_optical_flow_t opticalFlowData;
-extern int8_t opticalFlowDataFlag;
-
-
-//recognize packet
-void recPacket(){
-    char *address16[2];
-    char *address64[8];
-    char recieveOptions;
-    char *data[20];
-
-    switch (*(inPacket+3)) {
-    //Modem Status
-    case 0x8A:
-
-        break;
-    //Transmit Status
-    case 0x8B:
-
-        break;
-    //Receive Packet
-    case 0x90:
-            parReceivePacket(address64,address16,&recieveOptions,data);
-            switch (*(data+1)){
-                //command
-                case 'c':
-                        switch(*(data+2)){
-                            //GroundDistance telemetry request
-                            case 0x01:
-                                    groundDistanceTelemetry(address64,address16,0x00);
-                                break;
-                        }
-                    break;
-                //telemetry
-                case 't':
-                    break;
-                //report
-                case 'r':
-                    break;
-                //warning
-                case 'w':
-                    break;
-                //error
-                case 'e':
-                    break;
-                default:
-                    /*TODO neimplementovany parametr*/
-                    break;
-            }
-        break;
-    default:
-           /*TODO zablikat ledkou ze je neni implementovano nebo poslat PC upozorneni ze se neco nezpracovalo */
-        break;
-    }
-
-}
-
 void commTask(void *p) {
 
 	unsigned char inChar;
@@ -182,6 +109,8 @@ void commTask(void *p) {
 				usartBufferPutByte(usart_buffer_xbee, landingRequest, 10);
 				usartBufferPutByte(usart_buffer_xbee, trajectoryEnabled, 10);
 
+				usartBufferPutByte(usart_buffer_xbee, validGumstix, 10);
+				
 				ukazatel = (char*) &elevatorSpeed;
 				usartBufferPutByte(usart_buffer_xbee, *(ukazatel), 10);
 				usartBufferPutByte(usart_buffer_xbee, *(ukazatel+1), 10);
@@ -196,6 +125,57 @@ void commTask(void *p) {
 
 				usartBufferPutString(usart_buffer_xbee, "\r\n", 10);
 			}
+		}
+		
+		if (usartBufferGetByte(usart_buffer_4, &inChar, 0)) {
+
+			gumstixParseChar(inChar);
+		}
+		
+		if (gumstixDataFlag == 1) {
+			
+			if (validGumstix == 1) {
+
+				//Gumstix returns position of the blob relative to camera
+				//in milimeters, we want position of the drone relative
+				//to the blob in meters.
+				// +elevator = front
+				// +aileron  = left
+				// +throttle = up
+
+				//saturation
+				if(xPosGumstixNew > 2*POSITION_MAXIMUM) xPosGumstixNew = 2*POSITION_MAXIMUM;
+				if(xPosGumstixNew < 0) xPosGumstixNew = 0; //distance from the blob (positive)
+
+				if(yPosGumstixNew > +POSITION_MAXIMUM) yPosGumstixNew = +POSITION_MAXIMUM;
+				if(yPosGumstixNew < -POSITION_MAXIMUM) yPosGumstixNew = -POSITION_MAXIMUM;
+
+				if(zPosGumstixNew > +POSITION_MAXIMUM) zPosGumstixNew = +POSITION_MAXIMUM;
+				if(zPosGumstixNew < -POSITION_MAXIMUM) zPosGumstixNew = -POSITION_MAXIMUM;
+
+				#if GUMSTIX_CAMERA_POINTING == FORWARD //camera led on up side
+
+				//~ Camera pointing forward and being PORTRAIT oriented
+				//~ elevatorGumstix = - (float)xPosGumstixNew / 1000;
+				//~ aileronGumstix  = - (float)zPosGumstixNew / 1000;
+				//~ throttleGumstix = + (float)yPosGumstixNew / 1000;
+
+				//~ Camera pointing forward and being LANDSCAPE oriented
+				elevatorGumstix = - (float) xPosGumstixNew / 1000;
+				aileronGumstix  = - (float) yPosGumstixNew / 1000;
+				throttleGumstix = - (float) zPosGumstixNew / 1000;
+
+				#elif GUMSTIX_CAMERA_POINTING == DOWNWARD //camera led on front side
+
+				elevatorGumstix = + (float) yPosGumstixNew / 1000;
+				aileronGumstix  = - (float) zPosGumstixNew / 1000;
+				throttleGumstix = + (float) xPosGumstixNew / 1000;
+
+				#endif
+
+			}
+
+			gumstixDataFlag = 0;
 		}
 
 		if (usartBufferGetByte(usart_buffer_1, &inChar, 0)) {

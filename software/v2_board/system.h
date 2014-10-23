@@ -9,6 +9,8 @@
 #define SYSTEM_H_
 
 #include <stdint.h>
+#include "usart_driver_RTOS.h"
+#include "ioport.h"
 
 /* -------------------------------------------------------------------- */
 /*	LED masks															*/
@@ -87,19 +89,21 @@
 #define AUX4			7
 #define AUX5			8
 
-// declaration of global variables
-extern volatile uint8_t portMask;
-extern volatile uint8_t portMask2;
+/* -------------------------------------------------------------------- */
+/*	Contains signals from RC receiver									*/
+/* -------------------------------------------------------------------- */
+extern volatile uint16_t RCchannel[9];
 
-extern volatile float throttleIntegration;
-extern volatile unsigned char positionControllerEnabled;
-
-#if PX4FLOW_DATA_RECEIVE == ENABLED
-
-extern volatile float elevatorSpeedIntegration;
-extern volatile float aileronSpeedIntegration;
-
-#endif
+/* -------------------------------------------------------------------- */
+/*	Buffers for USARTs													*/
+/* -------------------------------------------------------------------- */
+extern UsartBuffer * usart_buffer_stm;
+extern UsartBuffer * usart_buffer_xbee;
+extern UsartBuffer * usart_buffer_log;
+extern UsartBuffer * usart_buffer_1;
+extern UsartBuffer * usart_buffer_2;
+extern UsartBuffer * usart_buffer_3;
+extern UsartBuffer * usart_buffer_4;
 
 /* Basic initialization of the MCU, peripherals and i/o */
 void boardInit();
