@@ -3,10 +3,7 @@
  *
  * Created: 11.9.2014 11:17:03
  *  Author: Tomas Baca
- */
-
-#include "packets.h"
-#include "commands.h"
+ */ 
 
 #include "commTask.h"
 #include "system.h"
@@ -18,55 +15,29 @@
 #include <stdio.h>
 
 void commTask(void *p) {
-
+	
 	unsigned char inChar;
 
 	char* ukazatel;
-
-	int i;
-
+	
 	while (1) {
-
-        //xbee send packet
-        if (sendPacket){
-            /*TODO
-            nemam paru jak to funguje a jak poslat jen cast stringu
-            usartBufferPutString(usart_buffer_xbee, outPacket, 10);
-            */
-            for (i=0;i<*(outPacket+2)+4){
-                usartBufferPutByte(usart_buffer_xbee, *(outPacket+i), 10);
-            }
-            sendPacket=0;
-        }
-
 
 		// xbee received
 		if (usartBufferGetByte(usart_buffer_xbee, &inChar, 0)) {
-
-            //packet received
-            if (inChar == 0x7E){
-                *inPacket=inChar;
-                while(!usartBufferGetByte(usart_buffer_xbee, inPacket+1, 0));
-                while(!usartBufferGetByte(usart_buffer_xbee, inPacket+2, 0));
-                for (i=0;i<*(inPacket+2)+1;i++){
-                    while(!usartBufferGetByte(usart_buffer_xbee, inPacket+3+i, 0));
-                }
-                recPacket();
-            }
-
+					
 			if (inChar == 'x') {
-
+				
 				int i;
 				for (i = 0; i < 4; i++) {
-
+										
 					usartBufferPutInt(usart_buffer_xbee, RCchannel[i], 10, 10);
 					usartBufferPutString(usart_buffer_xbee, ", ", 10);
 				}
 				usartBufferPutString(usart_buffer_xbee, "\r\n", 10);
 			}
-
+			
 			if (inChar == 'v') {
-
+				
 				char buffer[20];
 				sprintf(buffer, "%2.2f %2.2f %2.2f\r\n", elevatorSpeed, aileronSpeed, groundDistance);
 				usartBufferPutString(usart_buffer_xbee, buffer, 10);
@@ -103,7 +74,7 @@ void commTask(void *p) {
 				usartBufferPutByte(usart_buffer_xbee, *(ukazatel+1), 10);
 				usartBufferPutByte(usart_buffer_xbee, *(ukazatel+2), 10);
 				usartBufferPutByte(usart_buffer_xbee, *(ukazatel+3), 10);
-
+				
 				usartBufferPutByte(usart_buffer_xbee, controllerEnabled, 10);
 				usartBufferPutByte(usart_buffer_xbee, positionControllerEnabled, 10);
 				usartBufferPutByte(usart_buffer_xbee, landingRequest, 10);
