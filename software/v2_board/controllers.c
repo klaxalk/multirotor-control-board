@@ -185,6 +185,7 @@ void positionController() {
 		if(vd > +POSITION_SPEED_MAX) vd = +POSITION_SPEED_MAX;
 		if(vd < -POSITION_SPEED_MAX) vd = -POSITION_SPEED_MAX;
 	} else { //velocity controller
+		// TODO [HCH] add requested velocity setpoint
 		vd = 0;
 		error = - estimatedElevatorVel;
 	}
@@ -217,6 +218,7 @@ void positionController() {
 		if(vd > +POSITION_SPEED_MAX) vd = +POSITION_SPEED_MAX;
 		if(vd < -POSITION_SPEED_MAX) vd = -POSITION_SPEED_MAX;
 	} else { //velocity controller
+		// TODO [HCH] add requested velocity setpoint
 		vd = 0;
 		error = - estimatedAileronVel;
 	}

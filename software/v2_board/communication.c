@@ -64,7 +64,7 @@ void parseFlightCtrlMessage() {
 volatile float estimatedElevatorPos = 0;
 volatile float estimatedAileronPos  = 0;
 volatile float estimatedThrottlePos = 0;
-volatile float estimatedElevatorVel = 0;
+volatile float estimatedElevatorVel = 0; // TODO [HCH] move to controllers.c as it is not used anywhere else
 volatile float estimatedAileronVel  = 0;
 volatile float estimatedThrottleVel = 0;
 
