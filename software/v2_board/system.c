@@ -60,21 +60,6 @@ UsartBuffer * usart_buffer_4;
 #define USART_3_BAUDRATE		BAUD19200
 #define USART_4_BAUDRATE		BAUD57600
 
-extern volatile float elevatorIntegration;
-extern volatile float aileronIntegration;
-extern volatile float throttleIntegration;
-extern volatile float elevatorSetpoint;
-extern volatile float aileronSetpoint;
-extern volatile float throttleSetpoint;
-
-//vars for estimators
-extern volatile float estimatedElevatorPos;
-extern volatile float estimatedAileronPos;
-extern volatile float estimatedThrottlePos;
-extern volatile float estimatedElevatorVel;
-extern volatile float estimatedAileronVel;
-extern volatile float estimatedThrottleVel;
-
 /* -------------------------------------------------------------------- */
 /*	Basic initialization of the MCU, peripherals and i/o				*/
 /* -------------------------------------------------------------------- */
@@ -196,6 +181,7 @@ void mergeSignalsToOutput() {
 		led_red_off();
 	}
 
+	// Everithing is *2 because the PPM incoming to this board is twice slower then the PPM goeing out
 	outputChannels[0] = outputThrottle*2;
 	outputChannels[1] = outputRudder*2;
 	outputChannels[2] = outputElevator*2;

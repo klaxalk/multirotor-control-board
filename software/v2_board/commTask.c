@@ -14,26 +14,6 @@
 #include "communication.h"
 #include <stdio.h>
 
-extern volatile uint16_t RCchannel[9];
-extern UsartBuffer * usart_buffer_xbee;
-extern UsartBuffer * usart_buffer_1;
-extern UsartBuffer * usart_buffer_4;
-
-extern volatile float groundDistance;
-extern volatile float elevatorSpeed;
-extern volatile float aileronSpeed;
-extern volatile uint8_t px4Confidence;
-
-extern volatile float estimatedElevatorPos;
-extern volatile float estimatedAileronPos;
-
-// variables used by the mavlink library
-extern mavlink_message_t mavlinkMessage;
-extern mavlink_status_t mavlinkStatus;
-extern int8_t mavlinkFlag;
-extern mavlink_optical_flow_t opticalFlowData;
-extern int8_t opticalFlowDataFlag;
-
 void commTask(void *p) {
 	
 	unsigned char inChar;

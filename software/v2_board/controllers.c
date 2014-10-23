@@ -9,6 +9,12 @@
 
 #if PX4FLOW_DATA_RECEIVE == ENABLED
 
+//auto-trajectory variables
+volatile unsigned char trajectoryEnabled = 0;
+volatile float trajTimer = 0;
+volatile int trajIndex = -1;
+volatile trajectoryPoint_t trajectory[TRAJECTORY_LENGTH];
+
 static uint8_t estimator_cycle = 0;
 static float   estimatedThrottlePos_prev = 0;
 

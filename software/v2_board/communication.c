@@ -56,6 +56,33 @@ void parseFlightCtrlMessage() {
 
 #if PX4FLOW_DATA_RECEIVE == ENABLED
 
+//~ --------------------------------------------------------------------
+//~ Variables used with the px4flow sensor
+//~ --------------------------------------------------------------------
+
+//vars for estimators
+volatile float estimatedElevatorPos = 0;
+volatile float estimatedAileronPos  = 0;
+volatile float estimatedThrottlePos = 0;
+volatile float estimatedElevatorVel = 0;
+volatile float estimatedAileronVel  = 0;
+volatile float estimatedThrottleVel = 0;
+
+//vars for controllers
+volatile float elevatorIntegration = 0;
+volatile float aileronIntegration  = 0;
+volatile float throttleIntegration = 0;
+//~ volatile float elevatorSetpoint = (ELEVATOR_SP_LOW + ELEVATOR_SP_HIGH)/2;
+volatile float elevatorSetpoint = -1.5;
+volatile float aileronSetpoint  = (AILERON_SP_LOW  + AILERON_SP_HIGH )/2;
+//~ volatile float throttleSetpoint = (THROTTLE_SP_LOW + THROTTLE_SP_HIGH)/2;
+volatile float throttleSetpoint = 0.75;
+
+//auto-landing variables
+volatile unsigned char landingRequest = 0;
+volatile unsigned char landingState = LS_ON_GROUND;
+volatile uint8_t landingCounter = 0;
+
 //px4flow values
 volatile float groundDistance = 0;
 volatile float elevatorSpeed = 0;
@@ -96,7 +123,7 @@ int8_t px4flowParseChar(uint8_t incomingChar) {
 //~ Processes message from flightCtrl
 //~ --------------------------------------------------------------------
 
-#if (FLIGHTCTRL_DATA_RECEIVE == ENABLED) || (ATOM_DATA_RECEIVE == ENABLED)
+#if (FLIGHTCTRL_DATA_RECEIVE == ENABLED)
 
 void flightCtrlParseChar(char incomingChar) {
 
@@ -201,9 +228,25 @@ void Decode64(void) {
 	RxDataLen = ptrOut - 3;  // kolik bylo dekodováno bytù?
 }
 
-#endif
+#endif // FLIGHTCTRL_DATA_RECEIVE == ENABLED
 
 #if GUMSTIX_DATA_RECEIVE == ENABLED
+
+/* -------------------------------------------------------------------- */
+/*	Variables for gumstix												*/
+/* -------------------------------------------------------------------- */
+volatile unsigned char gumstixParseCharState = 0;
+volatile unsigned char gumstixParseCharByte = 0;
+volatile int16_t gumstixParseTempInt;
+volatile int16_t xPosGumstixNew = 0;
+volatile int16_t yPosGumstixNew = 0;
+volatile int16_t zPosGumstixNew = 0;
+volatile float elevatorGumstix = 0;
+volatile float aileronGumstix = 0;
+volatile float throttleGumstix = 0;
+volatile int8_t validGumstix = 0;
+volatile int8_t gumstixDataFlag = 0;
+volatile unsigned char gumstixParseCharCrc = 0;
 
 void gumstixParseChar(unsigned char incomingChar) {
 
@@ -243,7 +286,7 @@ void gumstixParseChar(unsigned char incomingChar) {
 		gumstixParseCharByte++;
 	}
 
-	if ((gumstixParseCharByte == 3) && (gumstixParseCharCrc == incomingChar)) { // we have the whole int ret
+	if ((gumstixParseCharByte == 3) && (gumstixParseCharCrc == incomingChar)) { // we have the whole int red
 
 		switch (gumstixParseCharState) {
 

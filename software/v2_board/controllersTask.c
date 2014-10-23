@@ -6,11 +6,8 @@
  */ 
 
 #include "controllersTask.h"
-#include "system.h"
-#include "FreeRTOS.h"
-#include "task.h"
 #include "controllers.h"
-#include "ioport.h"
+#include "system.h"
 
 void controllersTask(void *p) {
 	
@@ -18,26 +15,27 @@ void controllersTask(void *p) {
 		
 		#if PX4FLOW_DATA_RECEIVE == ENABLED
 
-		//If controllerEnabled == 0 the controller output signals
-		//are "unplugged" (in mergeSignalsToOutput) but the
-		//controllers keep running.
-		//When the controllers are turned on, it's integral actions
-		//are reset (in enableController).
+			//If controllerEnabled == 0 the controller output signals
+			//are "unplugged" (in mergeSignalsToOutput) but the
+			//controllers keep running.
+			//When the controllers are turned on, it's integral actions
+			//are reset (in enableController).
 
-		positionEstimator();
-		altitudeEstimator();
+			positionEstimator();
+			altitudeEstimator();
 
-		setpoints();
+			setpoints();
 
-		landingStateAutomat();
+			landingStateAutomat();
 
-		positionController();
-		altitudeController();
+			positionController();
+			altitudeController();
 
 		#endif // PX4FLOW_DATA_RECEIVE == ENABLED
 		
 		led_orange_on();
 		
+		// makes the 70Hz loop
 		vTaskDelay(14);
 	}
 	
