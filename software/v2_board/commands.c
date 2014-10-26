@@ -2,6 +2,9 @@
 #include "packets.h"
 #include "commands.h"
 
+//enable disable controllers
+#include "system.h"
+
 
 //telemetry
 extern volatile float groundDistance;
@@ -208,7 +211,6 @@ void kopterTrajectoryAddPoint(unsigned char *address64,unsigned char *address16,
 	*/
 }
 void kopterTrajectoryPointStatusRequest(unsigned char *address64,unsigned char *address16,unsigned char index,unsigned char frameID){
-	unsigned char *d;
 	*(dataOUT)='c';
 	*(dataOUT+1)=COMMANDS.TRAJECTORY_POINTS;
 	*(dataOUT+2)=GET_STATUS;
@@ -331,8 +333,6 @@ void kopterControllersRequest(unsigned char *address64,unsigned char *address16,
 		makeTRPacket(address64,address16,0x00,frameID,dataOUT,3);	
 }
 void kopterControllers(unsigned char *address64,unsigned char *address16,unsigned char option){	
-	/*
-		TODO
 		if(		 option==CONTROLLERS.OFF){
 			disablePositionController();
 			disableController();			
@@ -342,8 +342,7 @@ void kopterControllers(unsigned char *address64,unsigned char *address16,unsigne
 		}else if(option==CONTROLLERS.VELOCITY){
 			disablePositionController();
 			enableController();
-		}
-		*/
+		}		
 }
 void kopterControllersStatusRequest(unsigned char *address64,unsigned char *address16,unsigned char frameID){
 	*(dataOUT)='c';

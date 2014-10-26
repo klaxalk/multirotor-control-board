@@ -22,8 +22,8 @@ volatile double timeStamp = 0;
 volatile uint16_t main_cycle = 0;
 
 // for on-off by AUX channels
-unsigned char previous_AUX3 = 0;
-unsigned char previous_AUX4 = 2;
+unsigned char previous_AUX3 = 5;
+unsigned char previous_AUX4 = 5;
 
 // controller on/off
 volatile unsigned char controllerEnabled = 0;
@@ -62,38 +62,40 @@ void mainTask(void *p) {
 		main_cycle++;		
 		// controller on/off
 		if (abs(RCchannel[AUX3] - PPM_IN_MIDDLE_LENGTH) < 200) {
-			if (previous_AUX3 == 0) {
+			if (previous_AUX3 != 1) {
 				enableController();
+				disablePositionController();
+				previous_AUX3 = 1;
 			}
-			disablePositionController();
-			previous_AUX3 = 1;
-			} else if (RCchannel[AUX3] > (PPM_IN_MIDDLE_LENGTH + 200)) {
-			if (previous_AUX3 == 1) {
+		} else if (RCchannel[AUX3] > (PPM_IN_MIDDLE_LENGTH + 200)) {
+			if (previous_AUX3 != 2) {
 				enablePositionController();
+				previous_AUX3 = 2;
+			}			
+		} else {
+			if (previous_AUX3 != 0) {
+				disableController();
+				disablePositionController();
+				previous_AUX3 = 0;
 			}
-			previous_AUX3 = 2;
-			} else {
-			disableController();
-			disablePositionController();
-			previous_AUX3 = 0;
 		}
 		
 #if PX4FLOW_DATA_RECEIVE == ENABLED
 	// landing on/off, trajectory on/off
 	if (RCchannel[AUX4] < (PPM_IN_MIDDLE_LENGTH - 200)) {
-		if(!previous_AUX4==0){
+		if(previous_AUX4!=0){
 			landingRequest = 1;
 			trajectoryEnabled = 0;
 			previous_AUX4 = 0;
 		}
 	} else if(RCchannel[AUX4] > (PPM_IN_MIDDLE_LENGTH + 200)) {
-		if(!previous_AUX4==1){
+		if(previous_AUX4!=1){
 			landingRequest = 0;
 			trajectoryEnabled = 1;
 			previous_AUX4=1;
 		}
 	}else{
-		if(!previous_AUX4==2){
+		if(previous_AUX4!=2){
 			landingRequest = 0;
 			trajectoryEnabled = 0;
 			previous_AUX4=2;
