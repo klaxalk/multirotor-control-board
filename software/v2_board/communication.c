@@ -9,6 +9,15 @@
 #include "system.h"
 #include "ioport.h"
 
+//send XBee packet
+void sendXBeePacket(unsigned char *packet){
+	int i;
+
+	for (i=0;i<*(packet+2)+4;i++){
+		usartBufferPutByte(usart_buffer_xbee, *(packet+i), 10);
+	}
+}
+
 #if FLIGHTCTRL_DATA_RECEIVE == ENABLED
 
 // parse the whole message from the FlightCtrl (angles)

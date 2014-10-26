@@ -7,6 +7,7 @@
 
 #include "FreeRTOS.h"
 #include "task.h"
+#include "packets.h"
 
 // basic system functions
 #include "system.h"
@@ -25,7 +26,10 @@ int main(void)
 		
 	// initialize the hardware
 	boardInit();
-
+	
+	//XBee protocol constants initialize
+	constInit();
+	
 	/* -------------------------------------------------------------------- */
 	/*	Start the communication task routine								*/
 	/* -------------------------------------------------------------------- */

@@ -27,10 +27,6 @@ volatile uint16_t RCchannel[9] = {PPM_IN_MIN_LENGTH, PPM_IN_MIDDLE_LENGTH, PPM_I
 volatile uint16_t outputChannels[6] = {PULSE_OUT_MIN, PULSE_OUT_MIDDLE, PULSE_OUT_MIDDLE, PULSE_OUT_MIDDLE, PULSE_OUT_MIN, PULSE_OUT_MIN};
 volatile uint8_t currentChannelOut = 0;
 
-/* -------------------------------------------------------------------- */
-/*	Variables related to controllers									*/
-/* -------------------------------------------------------------------- */
-volatile unsigned char controllerEnabled;
 
 // controllers output variables
 volatile int16_t controllerElevatorOutput;
@@ -53,7 +49,7 @@ UsartBuffer * usart_buffer_4;
 /*	USART baud rates													*/
 /* -------------------------------------------------------------------- */
 #define USART_STM_BAUDRATE		BAUD9600
-#define USART_XBEE_BAUDRATE		BAUD19200
+#define USART_XBEE_BAUDRATE		BAUD9600
 #define USART_LOG_BAUDRATE		BAUD9600
 #define USART_1_BAUDRATE		BAUDPX4FLOW
 #define USART_2_BAUDRATE		BAUD19200

@@ -12,90 +12,29 @@
 #include "task.h"
 #include "usart_driver_RTOS.h"
 #include "communication.h"
+#include "packets.h"
 #include <stdio.h>
 
 void commTask(void *p) {
 	
 	unsigned char inChar;
-
-	char* ukazatel;
+	unsigned char packet[60];
 	
+	int8_t i;
 	while (1) {
 
-		// xbee received
-		if (usartBufferGetByte(usart_buffer_xbee, &inChar, 0)) {
-					
-			if (inChar == 'x') {
-				
-				int i;
-				for (i = 0; i < 4; i++) {
-										
-					usartBufferPutInt(usart_buffer_xbee, RCchannel[i], 10, 10);
-					usartBufferPutString(usart_buffer_xbee, ", ", 10);
-				}
-				usartBufferPutString(usart_buffer_xbee, "\r\n", 10);
-			}
-			
-			if (inChar == 'v') {
-				
-				char buffer[20];
-				sprintf(buffer, "%2.2f %2.2f %2.2f\r\n", elevatorSpeed, aileronSpeed, groundDistance);
-				usartBufferPutString(usart_buffer_xbee, buffer, 10);
-			}
-
-			if (inChar == 'b') {
-
-				ukazatel = (char*) &estimatedElevatorPos;
-				usartBufferPutByte(usart_buffer_xbee, *(ukazatel), 10);
-				usartBufferPutByte(usart_buffer_xbee, *(ukazatel+1), 10);
-				usartBufferPutByte(usart_buffer_xbee, *(ukazatel+2), 10);
-				usartBufferPutByte(usart_buffer_xbee, *(ukazatel+3), 10);
-
-				ukazatel = (char*) &estimatedAileronPos;
-				usartBufferPutByte(usart_buffer_xbee, *(ukazatel), 10);
-				usartBufferPutByte(usart_buffer_xbee, *(ukazatel+1), 10);
-				usartBufferPutByte(usart_buffer_xbee, *(ukazatel+2), 10);
-				usartBufferPutByte(usart_buffer_xbee, *(ukazatel+3), 10);
-
-				ukazatel = (char*) &estimatedThrottlePos;
-				usartBufferPutByte(usart_buffer_xbee, *(ukazatel), 10);
-				usartBufferPutByte(usart_buffer_xbee, *(ukazatel+1), 10);
-				usartBufferPutByte(usart_buffer_xbee, *(ukazatel+2), 10);
-				usartBufferPutByte(usart_buffer_xbee, *(ukazatel+3), 10);
-
-				ukazatel = (char*) &elevatorSetpoint;
-				usartBufferPutByte(usart_buffer_xbee, *(ukazatel), 10);
-				usartBufferPutByte(usart_buffer_xbee, *(ukazatel+1), 10);
-				usartBufferPutByte(usart_buffer_xbee, *(ukazatel+2), 10);
-				usartBufferPutByte(usart_buffer_xbee, *(ukazatel+3), 10);
-
-				ukazatel = (char*) &aileronSetpoint;
-				usartBufferPutByte(usart_buffer_xbee, *(ukazatel), 10);
-				usartBufferPutByte(usart_buffer_xbee, *(ukazatel+1), 10);
-				usartBufferPutByte(usart_buffer_xbee, *(ukazatel+2), 10);
-				usartBufferPutByte(usart_buffer_xbee, *(ukazatel+3), 10);
-				
-				usartBufferPutByte(usart_buffer_xbee, controllerEnabled, 10);
-				usartBufferPutByte(usart_buffer_xbee, positionControllerEnabled, 10);
-				usartBufferPutByte(usart_buffer_xbee, landingRequest, 10);
-				usartBufferPutByte(usart_buffer_xbee, trajectoryEnabled, 10);
-
-				usartBufferPutByte(usart_buffer_xbee, validGumstix, 10);
-				
-				ukazatel = (char*) &elevatorSpeed;
-				usartBufferPutByte(usart_buffer_xbee, *(ukazatel), 10);
-				usartBufferPutByte(usart_buffer_xbee, *(ukazatel+1), 10);
-				usartBufferPutByte(usart_buffer_xbee, *(ukazatel+2), 10);
-				usartBufferPutByte(usart_buffer_xbee, *(ukazatel+3), 10);
-
-				ukazatel = (char*) &aileronSpeed;
-				usartBufferPutByte(usart_buffer_xbee, *(ukazatel), 10);
-				usartBufferPutByte(usart_buffer_xbee, *(ukazatel+1), 10);
-				usartBufferPutByte(usart_buffer_xbee, *(ukazatel+2), 10);
-				usartBufferPutByte(usart_buffer_xbee, *(ukazatel+3), 10);
-
-				usartBufferPutString(usart_buffer_xbee, "\r\n", 10);
-			}
+		// XBee received
+		if (usartBufferGetByte(usart_buffer_xbee, &inChar, 0)) {					
+			 //packet received
+			 if (inChar == 0x7E){
+				 *packet=inChar;
+				 while(!usartBufferGetByte(usart_buffer_xbee, packet+1, 0));
+				 while(!usartBufferGetByte(usart_buffer_xbee, packet+2, 0));
+				 for (i=0;i<*(packet+2)+1;i++){
+					 while(!usartBufferGetByte(usart_buffer_xbee, packet+3+i, 0));
+				 }
+				 packetHandler(packet);
+			 }
 		}
 		
 		if (usartBufferGetByte(usart_buffer_4, &inChar, 0)) {

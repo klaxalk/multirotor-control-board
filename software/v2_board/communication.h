@@ -26,7 +26,6 @@
 #define MYUBRR0 FOSC/16/BAUD0-1
 #define MYUBRR1 FOSC/16/BAUD1-1
 
-extern volatile unsigned char controllerEnabled;
 extern volatile uint16_t outputChannels[6];
 extern volatile uint8_t pulseFlag[9];
 extern volatile uint16_t pulseStart[9];
@@ -76,6 +75,9 @@ void Uart0_write_string(char* array, int len);
 
 // write num to Uart0 (debug) serial output
 void Uart0_write_num(int16_t num);
+
+//send XBee Packet
+void sendXBeePacket(unsigned char *packet);
 
 #if FLIGHTCTRL_DATA_RECEIVE == ENABLED
 
