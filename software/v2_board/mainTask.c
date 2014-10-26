@@ -21,8 +21,9 @@ volatile float constant5 = 0;
 volatile double timeStamp = 0;
 volatile uint16_t main_cycle = 0;
 
-// for on-off by AUX3 channel
-int8_t previous_AUX3 = 0;
+// for on-off by AUX channels
+unsigned char previous_AUX3 = 0;
+//unsigned char previous_AUX4 = 2;
 
 // controller on/off
 volatile unsigned char controllerEnabled = 0;
@@ -56,12 +57,9 @@ void mainTask(void *p) {
 	
 #if TRAJECTORY_FOLLOWING == ENABLED
 	writeTrajectory1();
-#endif
-	
-	while (1) {
-		
-		main_cycle++;
-		
+#endif	
+	while (1) {		
+		main_cycle++;		
 		// controller on/off
 		if (abs(RCchannel[AUX3] - PPM_IN_MIDDLE_LENGTH) < 200) {
 			if (previous_AUX3 == 0) {
@@ -81,19 +79,26 @@ void mainTask(void *p) {
 		}
 		
 #if PX4FLOW_DATA_RECEIVE == ENABLED
-
 	// landing on/off, trajectory on/off
 	if (RCchannel[AUX4] < (PPM_IN_MIDDLE_LENGTH - 200)) {
-		landingRequest = 1;
-		trajectoryEnabled = 0;
-		} else if(RCchannel[AUX4] > (PPM_IN_MIDDLE_LENGTH + 200)) {
-		landingRequest = 0;
-		trajectoryEnabled = 1;
-		}else{
-		landingRequest = 0;
-		trajectoryEnabled = 0;
+		if(!previous_AUX4==0){
+			landingRequest = 1;
+			trajectoryEnabled = 0;
+			previous_AUX4 = 0;
+		}
+	} else if(RCchannel[AUX4] > (PPM_IN_MIDDLE_LENGTH + 200)) {
+		if(!previous_AUX4==1){
+			landingRequest = 0;
+			trajectoryEnabled = 1;
+			previous_AUX4=1;
+		}
+	}else{
+		if(!previous_AUX4==2){
+			landingRequest = 0;
+			trajectoryEnabled = 0;
+			previous_AUX4=2;
+		}
 	}
-
 #endif // PX4FLOW_DATA_RECEIVE == ENABLED
 
 		// load the constant values from the RC
