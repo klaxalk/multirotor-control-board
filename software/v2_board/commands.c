@@ -12,6 +12,14 @@ extern volatile float estimatedAileronVel;
 extern volatile float estimatedElevatorPos;
 extern volatile float estimatedAileronPos;
 
+//setpoints
+extern volatile float elevatorSetpoint;
+extern volatile float aileronSetpoint;
+extern volatile float throttleSetpoint;
+extern volatile float elevatorDesiredSetpoint;
+extern volatile float aileronDesiredSetpoint;
+extern volatile float throttleDesiredSetpoint;
+
 //trajectory
 extern volatile unsigned char trajectoryEnabled;
 
@@ -253,8 +261,6 @@ void kopterSetpointsSetRequest(unsigned char *address64,unsigned char *address16
 }
 void kopterSetpointsSet(unsigned char *address64,unsigned char *address16,unsigned char type,unsigned char positionType,float value){
 	//positions setpoints
-	/*
-		TODO
 		if(type==SETPOINTS.THROTTLE_SP){
 			if(		 positionType==POSITIONS.ABSOLUT){
 				throttleDesiredSetpoint=value;
@@ -275,8 +281,7 @@ void kopterSetpointsSet(unsigned char *address64,unsigned char *address16,unsign
 				}else if(positionType==POSITIONS.RELATIV){
 					aileronDesiredSetpoint+=value;
 			}			
-		}	
-		*/	
+		}				
 }
 void kopterSetpointStatusRequest(unsigned char *address64,unsigned char *address16,unsigned char type,unsigned char frameID){
 	*(dataOUT)='c';
@@ -286,31 +291,27 @@ void kopterSetpointStatusRequest(unsigned char *address64,unsigned char *address
 	makeTRPacket(address64,address16,0x00,frameID,dataOUT,4);
 }
 void kopterSetpointsReport(unsigned char *address64,unsigned char *address16,unsigned char type,unsigned char frameID){	
-	/*
-	TODO
 	float f=0;
 	unsigned char *ch;
 	
 	*(dataOUT)='r';
 	*(dataOUT+1)=COMMANDS.SET_SETPOINTS;
 	*(dataOUT+2)=type;
-	
+	//TODO add desired
 	if(type==SETPOINTS.THROTTLE_SP){
-		f=throttleDesiredSetpoint;
+		f=throttleSetpoint;
 	}else if(type==SETPOINTS.ELEVATOR_SP){
-		f=elevatorDesiredSetpoint;
+		f=elevatorSetpoint;
 	}else if(type==SETPOINTS.AILERON_SP){
-		f=aileronDesiredSetpoint;
+		f=aileronSetpoint;
 	}
-	
-	
+		
 	ch=(unsigned char *) &f;
 	*(dataOUT+3)=*ch;
 	*(dataOUT+4)=*(ch+1);
 	*(dataOUT+5)=*(ch+2);
 	*(dataOUT+6)=*(ch+3);
-	makeTRPacket(address64,address16,0x00,frameID,dataOUT,7);
-	*/
+	makeTRPacket(address64,address16,0x00,frameID,dataOUT,7);	
 }
 void kopterSetpointsReportReceived(unsigned char *address64,unsigned char *address16,unsigned char type,float value){
 	if(		 type==SETPOINTS.THROTTLE_SP){

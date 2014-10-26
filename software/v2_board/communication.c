@@ -81,11 +81,13 @@ volatile float estimatedThrottleVel = 0;
 volatile float elevatorIntegration = 0;
 volatile float aileronIntegration  = 0;
 volatile float throttleIntegration = 0;
-//~ volatile float elevatorSetpoint = (ELEVATOR_SP_LOW + ELEVATOR_SP_HIGH)/2;
-volatile float elevatorSetpoint = -1.5;
+volatile float elevatorSetpoint =  (ELEVATOR_SP_LOW + ELEVATOR_SP_HIGH)/2;
 volatile float aileronSetpoint  = (AILERON_SP_LOW  + AILERON_SP_HIGH )/2;
-//~ volatile float throttleSetpoint = (THROTTLE_SP_LOW + THROTTLE_SP_HIGH)/2;
-volatile float throttleSetpoint = 0.75;
+volatile float throttleSetpoint = 1;
+
+volatile float elevatorDesiredSetpoint =  (ELEVATOR_SP_LOW + ELEVATOR_SP_HIGH)/2;
+volatile float aileronDesiredSetpoint  = (AILERON_SP_LOW  + AILERON_SP_HIGH )/2;
+volatile float throttleDesiredSetpoint = 1;
 
 //auto-landing variables
 volatile unsigned char landingRequest = 0;

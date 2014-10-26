@@ -23,8 +23,6 @@ static float   estimatedThrottlePos_prev = 0;
 //~ ------------------------------------------------------------------------ ~//
 void setpoints() {
 
-	float sp_new;
-
 #if TRAJECTORY_FOLLOWING == ENABLED
 
 	float dTime;
@@ -62,23 +60,9 @@ void setpoints() {
 	}else{
 
 #endif //TRAJECTORY_FOLLOWING == ENABLED
-
-		//sp_new = ELEVATOR_SP_HIGH * constant2 + ELEVATOR_SP_LOW * (1-constant2);
-		sp_new = (ELEVATOR_SP_LOW + ELEVATOR_SP_HIGH)/2;
-		elevatorSetpoint += (sp_new-elevatorSetpoint) * (DT/SETPOINT_FILTER_CONST);
-
-		//sp_new = AILERON_SP_HIGH * constant2 + AILERON_SP_LOW * (1-constant2);
-		sp_new = (AILERON_SP_LOW  + AILERON_SP_HIGH )/2;
-		aileronSetpoint += (sp_new-aileronSetpoint) * (DT/SETPOINT_FILTER_CONST);
-
-		//sp_new = THROTTLE_SP_HIGH * constant1 + THROTTLE_SP_LOW * (1-constant1);
-		
-		// zakomentovano, Tom·ö B·Ëa, 24.6.2014
-		// sp_new = (THROTTLE_SP_LOW + THROTTLE_SP_HIGH)/2;
-		
-		sp_new = 1;
-		
-		throttleSetpoint += (sp_new-throttleSetpoint) * (DT/SETPOINT_FILTER_CONST);
+		elevatorSetpoint += (elevatorDesiredSetpoint-elevatorSetpoint) * (DT/SETPOINT_FILTER_CONST);
+		aileronSetpoint += (aileronDesiredSetpoint-aileronSetpoint) * (DT/SETPOINT_FILTER_CONST);
+		throttleSetpoint += (throttleDesiredSetpoint-throttleSetpoint) * (DT/SETPOINT_FILTER_CONST);
 
 #if TRAJECTORY_FOLLOWING == ENABLED
 

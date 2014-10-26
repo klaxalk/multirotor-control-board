@@ -23,7 +23,7 @@ volatile uint16_t main_cycle = 0;
 
 // for on-off by AUX channels
 unsigned char previous_AUX3 = 0;
-//unsigned char previous_AUX4 = 2;
+unsigned char previous_AUX4 = 2;
 
 // controller on/off
 volatile unsigned char controllerEnabled = 0;
