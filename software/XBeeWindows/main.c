@@ -224,7 +224,10 @@ void main()
                             packetHandler(readPacket());
                             packetHandler(readPacket());
                         break;
-                    case 4: kopterTrajectoryPointStatusRequest(ADDRESS.K1,ADDRESS.UNKNOWN16,0,0x02);
+                    case 4: kopterTrajectoryPointStatusRequest(ADDRESS.K1,ADDRESS.UNKNOWN16,0x02);
+                            packetHandler(readPacket());
+                            packetHandler(readPacket());
+                            packetHandler(readPacket());
                             packetHandler(readPacket());
                             packetHandler(readPacket());
                             packetHandler(readPacket());

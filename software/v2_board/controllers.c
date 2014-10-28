@@ -13,6 +13,7 @@
 volatile unsigned char trajectoryEnabled = 0;
 volatile float trajTimer = 0;
 volatile int trajIndex = -1;
+volatile int trajMaxIndex = -1;
 volatile trajectoryPoint_t trajectory[TRAJECTORY_LENGTH];
 
 static uint8_t estimator_cycle = 0;
@@ -35,16 +36,16 @@ void setpoints() {
 	//trajectory following
 	if(trajectoryEnabled && positionControllerEnabled){
 
-		if(trajIndex < TRAJECTORY_LENGTH){
+		if(trajIndex < trajMaxIndex){
 
 			if(trajIndex < 0 || trajTimer >= trajectory[trajIndex].time) {
 				trajIndex++;
 				dTime  = (trajectory[trajIndex].time - trajTimer);
-				dValue = ((float)trajectory[trajIndex].elevatorPos/1000 - elevatorSetpoint);
+				dValue = (trajectory[trajIndex].elevatorPos - elevatorSetpoint);
 				elevatorIncrement = dValue / dTime * DT;
-				dValue = ((float)trajectory[trajIndex].aileronPos/1000 - aileronSetpoint);
+				dValue = (trajectory[trajIndex].aileronPos - aileronSetpoint);
 				aileronIncrement = dValue / dTime * DT;
-				dValue = ((float)trajectory[trajIndex].throttlePos/1000 - throttleSetpoint);
+				dValue = (trajectory[trajIndex].throttlePos - throttleSetpoint);
 				throttleIncrement = dValue / dTime * DT;
 			}
 

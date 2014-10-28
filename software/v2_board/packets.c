@@ -157,31 +157,20 @@ void packetHandler(unsigned char *inPacket){
 							}
 						} else
 						//TRAJECTORY ADD POINT REQUEST
-						/*
-						TODO
 						if(*(dataIN+2)==COMMANDS.TRAJECTORY_POINTS){
-							if(		 *(dataIN+3)==GET_STATUS){								
-								if(*(dataIN+4)==0){
-									for(i=1;i<=trajMaxIndex;i++){
+							if(*(dataIN+3)==GET_STATUS){																
+								for(i=0;i<=trajMaxIndex;i++){
 										kopterTrajectoryPointReport(address64,address16,i,0x01);
-									}
-								}else{
-									kopterTrajectoryPointReport(address64,address16,i,0x01);
-								}
+								}								
 							}else{								
 								ch1[0]=*(dataIN+5); ch1[1]=*(dataIN+6); ch1[2]=*(dataIN+7); ch1[3]=*(dataIN+8); f1=(float *)ch1;
 								ch2[0]=*(dataIN+9); ch2[1]=*(dataIN+10); ch2[2]=*(dataIN+11); ch2[3]=*(dataIN+12); f2=(float *)ch2;
 								ch3[0]=*(dataIN+13); ch3[1]=*(dataIN+14); ch3[2]=*(dataIN+15); ch3[3]=*(dataIN+16); f3=(float *)ch3;
 								ch4[0]=*(dataIN+17); ch4[1]=*(dataIN+18); ch4[2]=*(dataIN+19); ch4[3]=*(dataIN+20); f4=(float *)ch4;
 								kopterTrajectoryAddPoint(address64,address16,*(dataIN+4),*f1,*f2,*f3,*f4);	
-								if (*(dataIN+4)==0){
-									kopterTrajectoryPointReport(address64,address16,trajMaxIndex,0x01);
-								}else{
-									kopterTrajectoryPointReport(address64,address16,*(dataIN+4),0x01);
-								}															
+								kopterTrajectoryPointReport(address64,address16,*(dataIN+4),0x01);																							
 							}
-						} else
-						*/												
+						} else																		
 						//SETPOINTS REQUEST
 						if(*(dataIN+2)==COMMANDS.SET_SETPOINTS){
 							if(*(dataIN+4)==GET_STATUS){

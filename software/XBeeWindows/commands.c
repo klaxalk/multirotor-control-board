@@ -119,12 +119,11 @@ void kopterTrajectoryAddPointRequest(unsigned char *address64,unsigned char *add
 	makeTRPacket(address64,address16,0x00,frameID,data,20);
 }
 
-void kopterTrajectoryPointStatusRequest(unsigned char *address64,unsigned char *address16,unsigned char index,unsigned char frameID){
+void kopterTrajectoryPointStatusRequest(unsigned char *address64,unsigned char *address16,unsigned char frameID){
 	unsigned char *d;
 	*(data)='c';
 	*(data+1)=COMMANDS.TRAJECTORY_POINTS;
 	*(data+2)=GET_STATUS;
-	*(data+3)=index;
 	makeTRPacket(address64,address16,0x00,frameID,data,4);
 }
 

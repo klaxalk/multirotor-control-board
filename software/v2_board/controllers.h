@@ -126,11 +126,12 @@ extern volatile uint8_t landingCounter;
 extern volatile unsigned char trajectoryEnabled;
 extern volatile float trajTimer;
 extern volatile int trajIndex;
+extern volatile int trajMaxIndex;
 typedef struct {
 	float time;
-	int16_t elevatorPos; //position in mm
-	int16_t aileronPos;  //position in mm
-	int16_t throttlePos; //position in mm
+	float elevatorPos; //position in m
+	float aileronPos;  //position in m
+	float throttlePos; //position in m
 } trajectoryPoint_t;
 extern volatile trajectoryPoint_t trajectory[];
 #define TRAJECTORY_LENGTH	10

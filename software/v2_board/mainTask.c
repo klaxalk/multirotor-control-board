@@ -32,10 +32,13 @@ volatile unsigned char positionControllerEnabled = 0;
 #if TRAJECTORY_FOLLOWING == ENABLED
 
 void writeTrajectory1(){
-
-	//TRAJ_POINT(0,  0, -1500,     0);
+	int8_t i=0;
 
 	// (i, time (s), x (+ forward), y (+ leftward), z (altitude))
+	
+	for(i=0;i<TRAJECTORY_LENGTH;i++){
+		TRAJ_POINT(i,i+1,elevatorSetpoint,aileronSetpoint,throttleSetpoint);
+	}
 
 	//~ Preplanovani LEADER Experiment Telocvicna
 	//~  Aileron: Pùvodní*2
@@ -49,6 +52,7 @@ void writeTrajectory1(){
 	TRAJ_POINT(7,  24,  +3300,  0, 1000);
 	TRAJ_POINT(8,  27,  +3900,  0, 1000);
 	TRAJ_POINT(9,  30,  -1500,  0, 1000);
+	trajMaxIndex=9;
 }
 
 #endif //TRAJECTORY_FOLLOWING == ENABLED

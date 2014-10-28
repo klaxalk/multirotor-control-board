@@ -85,6 +85,7 @@ void packetHandler(unsigned char *inPacket){
     unsigned char address64[8];
     unsigned char recieveOptions[5];
     unsigned char data[25];
+    int i;
 
 	float *f1;
 	float *f2;
@@ -186,7 +187,9 @@ void packetHandler(unsigned char *inPacket){
            packetTypeError(inPacket);
         break;
     }
-
+    for(i=0;i<*(inPacket+2)+3;i++){
+        *(inPacket+i)=' ';
+    }
 }
 
 
