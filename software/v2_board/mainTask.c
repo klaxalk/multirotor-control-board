@@ -1,14 +1,6 @@
-/*
- * mainTask.c
- *
- * Created: 11.9.2014 11:05:32
- *  Author: Tomas Baca
- */ 
-
 #include "mainTask.h"
-#include "system.h"
 #include "controllers.h"
-#include "communication.h"
+#include "system.h"
 #include <stdio.h> // sprintf
 #include <stdlib.h> // abs
 
@@ -17,42 +9,13 @@ volatile float constant1 = 0;
 volatile float constant2 = 0;
 volatile float constant5 = 0;
 
-// timestamp for debug and logging
-volatile double timeStamp = 0;
-volatile uint16_t main_cycle = 0;
-
-// for on-off by AUX channels
+//AUX channels switchers reacts just for changeS
 unsigned char previous_AUX3 = 5;
 unsigned char previous_AUX4 = 5;
 
-// controller on/off
-volatile unsigned char controllerEnabled = 0;
-volatile unsigned char positionControllerEnabled = 0;
-
-#if TRAJECTORY_FOLLOWING == ENABLED
-
-void writeTrajectory1(){
-	int8_t i=0;
-
-	// (i, time (s), x (+ forward), y (+ leftward), z (altitude))
-	
-	for(i=0;i<TRAJECTORY_LENGTH;i++){
-		TRAJ_POINT(i,i+1,elevatorSetpoint,aileronSetpoint,throttleSetpoint);
-	}
-	trajMaxIndex=-1;
-}
-
-#endif //TRAJECTORY_FOLLOWING == ENABLED
-
-void mainTask(void *p) {
-	
-#if TRAJECTORY_FOLLOWING == ENABLED
-	writeTrajectory1();
-#endif
-	
-	while (1) {		
-		main_cycle++;		
-		// controller on/off
+void mainTask(void *p) {		
+	while (1) {					
+		// controllers on/off
 		if (abs(RCchannel[AUX3] - PPM_IN_MIDDLE_LENGTH) < 200) {
 			if (previous_AUX3 != 1) {
 				enableController();

@@ -40,6 +40,10 @@ volatile unsigned char landingRequest = 0;
 volatile unsigned char landingState = LS_ON_GROUND;
 volatile uint8_t landingCounter = 0;
 
+// controller on/off
+volatile unsigned char controllerEnabled = 0;
+volatile unsigned char positionControllerEnabled = 0;
+
 //auto-trajectory variables
 volatile unsigned char trajectoryEnabled = 0;
 volatile float trajTimer = 0;
@@ -50,6 +54,21 @@ volatile trajectoryPoint_t trajectory[TRAJECTORY_LENGTH];
 static uint8_t estimator_cycle = 0;
 static float   estimatedThrottlePos_prev = 0;
 
+
+#if TRAJECTORY_FOLLOWING == ENABLED
+
+void writeTrajectory1(){
+	int8_t i=0;
+
+	// (i, time (s), x (+ forward), y (+ leftward), z (altitude))
+	
+	for(i=0;i<TRAJECTORY_LENGTH;i++){
+		TRAJ_POINT(i,i+1,elevatorSetpoint,aileronSetpoint,throttleSetpoint);
+	}
+	trajMaxIndex=-1;
+}
+
+#endif //TRAJECTORY_FOLLOWING == ENABLED
 
 // disable controllers
 void disableController() {

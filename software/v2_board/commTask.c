@@ -1,14 +1,15 @@
 #include <stdio.h>
 #include "commTask.h"
+//#include "ioport.h"
+//#include "FreeRTOS.h"
+//#include "task.h"
 
-#include "ioport.h"
-#include "FreeRTOS.h"
-#include "task.h"
 #include "usart_driver_RTOS.h"
-
 #include "communication.h"
-#include "packets.h"
 #include "controllers.h"
+#include "system.h"
+#include "packets.h"
+
 
 
 void commTask(void *p) {	
