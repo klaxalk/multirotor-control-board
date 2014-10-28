@@ -66,12 +66,6 @@
 //~ Receiving data from FlightCTRL configuration
 //~ --------------------------------------------------------------------
 
-// on/off the receiving of the Angles from the FlightCTRL
-#define FLIGHTCTRL_DATA_RECEIVE DISABLED
-/*
-	ENABLED
-	DISABLED
-*/
 
 // define the UART port for communication with the FlightCTRL
 #define FLIGHTCTRL_RECEIVE_PORT UART1

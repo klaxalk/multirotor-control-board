@@ -13,6 +13,7 @@
 #include "sysclk.h"
 #include "usart_driver_RTOS.h"
 #include "communication.h"
+#include "controllers.h"
 
 /* -------------------------------------------------------------------- */
 /*	Variables for PPM input capture										*/
@@ -27,12 +28,6 @@ volatile uint16_t RCchannel[9] = {PPM_IN_MIN_LENGTH, PPM_IN_MIDDLE_LENGTH, PPM_I
 volatile uint16_t outputChannels[6] = {PULSE_OUT_MIN, PULSE_OUT_MIDDLE, PULSE_OUT_MIDDLE, PULSE_OUT_MIDDLE, PULSE_OUT_MIN, PULSE_OUT_MIN};
 volatile uint8_t currentChannelOut = 0;
 
-
-// controllers output variables
-volatile int16_t controllerElevatorOutput;
-volatile int16_t controllerAileronOutput;
-volatile int16_t controllerThrottleOutput;
-volatile int16_t controllerRudderOutput;
 
 /* -------------------------------------------------------------------- */
 /*	Buffers for USARTs													*/
@@ -55,6 +50,13 @@ UsartBuffer * usart_buffer_4;
 #define USART_2_BAUDRATE		BAUD19200
 #define USART_3_BAUDRATE		BAUD19200
 #define USART_4_BAUDRATE		BAUD57600
+
+
+// controllers output variables
+extern volatile int16_t controllerElevatorOutput;
+extern volatile int16_t controllerAileronOutput;
+extern volatile int16_t controllerThrottleOutput;
+extern volatile int16_t controllerRudderOutput;
 
 /* -------------------------------------------------------------------- */
 /*	Basic initialization of the MCU, peripherals and i/o				*/
@@ -255,48 +257,6 @@ ISR(TCD0_OVF_vect) {
 		uint32_t finalOutLen = PPM_FRAME_LENGTH - outputSum;
 		TC_SetPeriod(&TCD0, (uint16_t) finalOutLen);
 	}
-}
-
-// disable controllers
-void disableController() {
-
-	controllerEnabled = 0;
-}
-
-// enable controllers
-void enableController() {
-
-	if (controllerEnabled == 0) {
-
-		#if PX4FLOW_DATA_RECEIVE == ENABLED
-
-		elevatorIntegration = 0;
-		aileronIntegration = 0;
-		throttleIntegration = 0;
-
-		if(validGumstix != 1) {
-
-			estimatedElevatorPos = elevatorSetpoint;
-			estimatedAileronPos  = aileronSetpoint;
-
-		}
-
-		#endif
-	}
-	controllerEnabled = 1;
-}
-
-void disablePositionController() {
-
-	positionControllerEnabled = 0;
-}
-
-void enablePositionController() {
-
-	if (positionControllerEnabled == 0) {
-		// set integrated variables to default
-	}
-	positionControllerEnabled = 1;
 }
 
 /* -------------------------------------------------------------------- */

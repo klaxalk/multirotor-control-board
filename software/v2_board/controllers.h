@@ -45,7 +45,7 @@
 #define ALTITUDE_SPEED_MAX 0.8 //in m/s, must be positive!
 #define LANDING_SPEED     -0.4 //in m/s, must be negative!
 
-#define THROTTLE_SP_HIGH  1.5
+#define THROTTLE_SP_HIGH  2.0
 #define THROTTLE_SP_LOW   0.5
 
 #define ALTITUDE_KP 180
@@ -140,6 +140,13 @@ extern volatile trajectoryPoint_t trajectory[];
 	trajectory[i].elevatorPos = e; \
 	trajectory[i].aileronPos = a; \
 	trajectory[i].throttlePos = th
+
+//enables - disables controllers
+void disableController();
+void enableController();
+void disablePositionController();
+void enablePositionController();
+
 
 //setpoint and trajectory handling
 void setpoints();

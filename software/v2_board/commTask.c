@@ -6,6 +6,7 @@
  */ 
 
 #include "commTask.h"
+#include "controllers.h"
 #include "system.h"
 #include "ioport.h"
 #include "FreeRTOS.h"
@@ -38,14 +39,11 @@ void commTask(void *p) {
 		}
 		
 		if (usartBufferGetByte(usart_buffer_4, &inChar, 0)) {
-
 			gumstixParseChar(inChar);
 		}
 		
 		if (gumstixDataFlag == 1) {
-			
 			if (validGumstix == 1) {
-
 				//Gumstix returns position of the blob relative to camera
 				//in milimeters, we want position of the drone relative
 				//to the blob in meters.
@@ -82,49 +80,36 @@ void commTask(void *p) {
 				throttleGumstix = + (float) xPosGumstixNew / 1000;
 
 				#endif
-
 			}
-
 			gumstixDataFlag = 0;
 		}
 
 		if (usartBufferGetByte(usart_buffer_1, &inChar, 0)) {
-
 			px4flowParseChar((uint8_t) inChar);
 		}
 
 		if (opticalFlowDataFlag == 1) {
-
 			led_blue_toggle();
-
 			// decode the message (there will be new values in opticalFlowData...
 			mavlink_msg_optical_flow_decode(&mavlinkMessage, &opticalFlowData);
-
+			
 			//px4flow returns velocities in m/s and gnd. distance in m
 			// +elevator = front
 			// +aileron  = left
 			// +throttle = up
-
 			#if PX4_CAMERA_ORIENTATION == FORWARD
-
 				elevatorSpeed = + opticalFlowData.flow_comp_m_x;
 				aileronSpeed  = - opticalFlowData.flow_comp_m_y;
-
 			#elif PX4_CAMERA_ORIENTATION == BACKWARD
-
 				elevatorSpeed = - opticalFlowData.flow_comp_m_x;
 				aileronSpeed  = + opticalFlowData.flow_comp_m_y;
-
 			#endif
 
 			if (opticalFlowData.ground_distance < ALTITUDE_MAXIMUM &&
 			opticalFlowData.ground_distance > 0.3) {
-
 				groundDistance = opticalFlowData.ground_distance;
 			}
-
 			px4Confidence = opticalFlowData.quality;
-
 			opticalFlowDataFlag = 0;
 		}
 	}

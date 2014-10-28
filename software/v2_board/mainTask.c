@@ -39,20 +39,7 @@ void writeTrajectory1(){
 	for(i=0;i<TRAJECTORY_LENGTH;i++){
 		TRAJ_POINT(i,i+1,elevatorSetpoint,aileronSetpoint,throttleSetpoint);
 	}
-
-	//~ Preplanovani LEADER Experiment Telocvicna
-	//~  Aileron: Pùvodní*2
-	TRAJ_POINT(0,  3,  -900,  0, 1000);
-	TRAJ_POINT(1,  6,  -300,  0, 1000);
-	TRAJ_POINT(2,  9,  +300,  0, 1000);
-	TRAJ_POINT(3,  12,  +900,  0, 1000);
-	TRAJ_POINT(4,  15,  +1500,  0, 1000);
-	TRAJ_POINT(5,  18,  +2100,  0, 1000);
-	TRAJ_POINT(6,  21,  +2700,  0, 1000);
-	TRAJ_POINT(7,  24,  +3300,  0, 1000);
-	TRAJ_POINT(8,  27,  +3900,  0, 1000);
-	TRAJ_POINT(9,  30,  -1500,  0, 1000);
-	trajMaxIndex=9;
+	trajMaxIndex=-1;
 }
 
 #endif //TRAJECTORY_FOLLOWING == ENABLED
@@ -61,7 +48,8 @@ void mainTask(void *p) {
 	
 #if TRAJECTORY_FOLLOWING == ENABLED
 	writeTrajectory1();
-#endif	
+#endif
+	
 	while (1) {		
 		main_cycle++;		
 		// controller on/off
@@ -120,57 +108,6 @@ void mainTask(void *p) {
 		constant5 = ((float)(RCchannel[AUX5] - PPM_IN_MIN_LENGTH))/(PPM_IN_MAX_LENGTH - PPM_IN_MIN_LENGTH);
 		if(constant5 > 1) constant5 = 1;
 		if(constant5 < 0) constant5 = 0;
-		
-#if GUMSTIX_DATA_RECEIVE == ENABLED
-
-	//receive gumstix data
-	if (gumstixDataFlag == 1) {
-
-		if (validGumstix == 1) {
-
-			//Gumstix returns position of the blob relative to camera
-			//in milimeters, we want position of the drone relative
-			//to the blob in meters.
-			// +elevator = front
-			// +aileron  = left
-			// +throttle = up
-
-			//saturation
-			if(xPosGumstixNew > 2*POSITION_MAXIMUM) xPosGumstixNew = 2*POSITION_MAXIMUM;
-			if(xPosGumstixNew < 0) xPosGumstixNew = 0; //distance from the blob (positive)
-
-			if(yPosGumstixNew > +POSITION_MAXIMUM) yPosGumstixNew = +POSITION_MAXIMUM;
-			if(yPosGumstixNew < -POSITION_MAXIMUM) yPosGumstixNew = -POSITION_MAXIMUM;
-
-			if(zPosGumstixNew > +POSITION_MAXIMUM) zPosGumstixNew = +POSITION_MAXIMUM;
-			if(zPosGumstixNew < -POSITION_MAXIMUM) zPosGumstixNew = -POSITION_MAXIMUM;
-
-			#if GUMSTIX_CAMERA_POINTING == FORWARD //camera led on up side
-
-			//~ Camera pointing forward and being PORTRAIT oriented
-			//~ elevatorGumstix = - (float)xPosGumstixNew / 1000;
-			//~ aileronGumstix  = - (float)zPosGumstixNew / 1000;
-			//~ throttleGumstix = + (float)yPosGumstixNew / 1000;
-
-			//~ Camera pointing forward and being LANDSCAPE oriented
-			elevatorGumstix = - (float) xPosGumstixNew / 1000;
-			aileronGumstix  = - (float) yPosGumstixNew / 1000;
-			throttleGumstix = - (float) zPosGumstixNew / 1000;
-
-			#elif GUMSTIX_CAMERA_POINTING == DOWNWARD //camera led on front side
-
-			elevatorGumstix = + (float) yPosGumstixNew / 1000;
-			aileronGumstix  = - (float) zPosGumstixNew / 1000;
-			throttleGumstix = + (float) xPosGumstixNew / 1000;
-
-			#endif
-
-		}
-
-		gumstixDataFlag = 0;
-	}
-
-#endif
 		
 		mergeSignalsToOutput();
 	}

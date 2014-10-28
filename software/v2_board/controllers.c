@@ -9,6 +9,37 @@
 
 #if PX4FLOW_DATA_RECEIVE == ENABLED
 
+// controllers output variables
+volatile int16_t controllerElevatorOutput;
+volatile int16_t controllerAileronOutput;
+volatile int16_t controllerThrottleOutput;
+volatile int16_t controllerRudderOutput;
+
+//vars for estimators
+volatile float estimatedElevatorPos = 0;
+volatile float estimatedAileronPos  = 0;
+volatile float estimatedThrottlePos = 0;
+volatile float estimatedElevatorVel = 0;
+volatile float estimatedAileronVel  = 0;
+volatile float estimatedThrottleVel = 0;
+
+//vars for controllers
+volatile float elevatorIntegration = 0;
+volatile float aileronIntegration  = 0;
+volatile float throttleIntegration = 0;
+volatile float elevatorSetpoint =  (ELEVATOR_SP_LOW + ELEVATOR_SP_HIGH)/2;
+volatile float aileronSetpoint  = (AILERON_SP_LOW  + AILERON_SP_HIGH )/2;
+volatile float throttleSetpoint = 1;
+
+volatile float elevatorDesiredSetpoint =  (ELEVATOR_SP_LOW + ELEVATOR_SP_HIGH)/2;
+volatile float aileronDesiredSetpoint  = (AILERON_SP_LOW  + AILERON_SP_HIGH )/2;
+volatile float throttleDesiredSetpoint = 1;
+
+//auto-landing variables
+volatile unsigned char landingRequest = 0;
+volatile unsigned char landingState = LS_ON_GROUND;
+volatile uint8_t landingCounter = 0;
+
 //auto-trajectory variables
 volatile unsigned char trajectoryEnabled = 0;
 volatile float trajTimer = 0;
@@ -18,6 +49,49 @@ volatile trajectoryPoint_t trajectory[TRAJECTORY_LENGTH];
 
 static uint8_t estimator_cycle = 0;
 static float   estimatedThrottlePos_prev = 0;
+
+
+// disable controllers
+void disableController() {
+
+	controllerEnabled = 0;
+}
+
+// enable controllers
+void enableController() {
+
+	if (controllerEnabled == 0) {
+
+		#if PX4FLOW_DATA_RECEIVE == ENABLED
+
+		elevatorIntegration = 0;
+		aileronIntegration = 0;
+		throttleIntegration = 0;
+
+		if(validGumstix != 1) {
+
+			estimatedElevatorPos = elevatorSetpoint;
+			estimatedAileronPos  = aileronSetpoint;
+
+		}
+
+		#endif
+	}
+	controllerEnabled = 1;
+}
+
+void disablePositionController() {
+
+	positionControllerEnabled = 0;
+}
+
+void enablePositionController() {
+
+	if (positionControllerEnabled == 0) {
+		// set integrated variables to default
+	}
+	positionControllerEnabled = 1;
+}
 
 //~ ------------------------------------------------------------------------ ~//
 //~ Setpoints - assign setpoint values                                       ~//
@@ -61,6 +135,9 @@ void setpoints() {
 	}else{
 
 #endif //TRAJECTORY_FOLLOWING == ENABLED
+	
+		if(throttleDesiredSetpoint<THROTTLE_SP_LOW){throttleDesiredSetpoint=THROTTLE_SP_LOW;}
+		if(throttleDesiredSetpoint>THROTTLE_SP_HIGH){throttleDesiredSetpoint=THROTTLE_SP_HIGH;}
 		elevatorSetpoint += (elevatorDesiredSetpoint-elevatorSetpoint) * (DT/SETPOINT_FILTER_CONST);
 		aileronSetpoint += (aileronDesiredSetpoint-aileronSetpoint) * (DT/SETPOINT_FILTER_CONST);
 		throttleSetpoint += (throttleDesiredSetpoint-throttleSetpoint) * (DT/SETPOINT_FILTER_CONST);

@@ -110,13 +110,4 @@ void boardInit();
 
 /* Merge signals from RC Receiver with the controller outputs */
 void mergeSignalsToOutput();
-
-void disableController();
-
-void enableController();
-
-void disablePositionController();
-
-void enablePositionController();
-
 #endif /* SYSTEM_H_ */
