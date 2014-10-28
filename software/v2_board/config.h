@@ -10,12 +10,13 @@
 
 #include "defines.h"
 
+
+
 // Choose if the logging is on
 #define LOGGING_ON ENABLED
 /*
 	ENABLED
 	DISABLED
-
 */
 
 // Choose if trajectory following is on
@@ -23,7 +24,6 @@
 /*
 	ENABLED
 	DISABLED
-
 */
 
 //~ --------------------------------------------------------------------
@@ -62,16 +62,11 @@
 
 */
 
-//~ --------------------------------------------------------------------
-//~ Receiving data from FlightCTRL configuration
-//~ --------------------------------------------------------------------
-
-
-// define the UART port for communication with the FlightCTRL
-#define FLIGHTCTRL_RECEIVE_PORT UART1
+// on/off the receiving of data from the XBee
+#define XBEE_DATA_RECEIVE ENABLED
 /*
-	UART0
-	UART1
+	ENABLED
+	DISABLED
 */
 
 //~ --------------------------------------------------------------------
@@ -114,17 +109,6 @@
 //~ Config baud rates for UARTs
 //~ --------------------------------------------------------------------
 
-#if FLIGHTCTRL_DATA_RECEIVE == ENABLED
-
-#if FLIGHTCTRL_RECEIVE_PORT == UART0
-#define BAUD0 57600
-#endif
-
-#if FLIGHTCTRL_RECEIVE_PORT == UART1
-#define BAUD1 57600
-#endif
-
-#endif
 
 #if GUMSTIX_DATA_RECEIVE == ENABLED
 
