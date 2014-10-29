@@ -21,11 +21,6 @@
 
 // constants for position and velocity controllers
 #define POSITION_MAXIMUM   2000 //in mm, must be positive! crops Gumstix values
-#define ELEVATOR_SP_HIGH  -1.0
-#define ELEVATOR_SP_LOW   -2.0
-
-#define AILERON_SP_HIGH   +0.5
-#define AILERON_SP_LOW    -0.5
 
 // changed 0.33 -> 0.4, Tom·ö B·Ëa, 24.6.2014
 #define POSITION_SPEED_MAX 0.4 // in m/s, must be positive!
@@ -55,6 +50,11 @@
 #define LANDING_KV 180
 #define LANDING_KI 120
 
+// controllers saturations
+#define CONTROLLER_ELEVATOR_SATURATION 100
+#define CONTROLLER_AILERON_SATURATION  100
+#define CONTROLLER_THROTTLE_SATURATION 300
+
 // common global variables
 // controllers output variables
 extern volatile int16_t controllerElevatorOutput;
@@ -62,36 +62,8 @@ extern volatile int16_t controllerAileronOutput;
 extern volatile int16_t controllerThrottleOutput;
 
 // controller on/off
-extern volatile unsigned char controllerEnabled;
+extern volatile unsigned char velocityControllerEnabled;
 extern volatile unsigned char positionControllerEnabled;
-extern volatile unsigned char landingMode;
-
-// constants from RC transmitter
-extern volatile float constant1;
-extern volatile float constant2;
-extern volatile float constant5;
-
-// controllers saturations
-#define CONTROLLER_ELEVATOR_SATURATION 100
-#define CONTROLLER_AILERON_SATURATION  100
-#define CONTROLLER_THROTTLE_SATURATION 300
-
-#if PX4FLOW_DATA_RECEIVE == ENABLED
-
-//px4flow values
-extern volatile float groundDistance;
-extern volatile float elevatorSpeed;
-extern volatile float aileronSpeed;
-
-#if GUMSTIX_DATA_RECEIVE == ENABLED
-
-//gumstix values
-extern volatile float elevatorGumstix;
-extern volatile float aileronGumstix;
-extern volatile float throttleGumstix;
-extern volatile int8_t validGumstix;
-
-#endif
 
 //vars for estimators
 extern volatile float estimatedElevatorPos;
@@ -102,9 +74,6 @@ extern volatile float estimatedAileronVel;
 extern volatile float estimatedThrottleVel;
 
 //vars for controllers
-extern volatile float elevatorIntegration;
-extern volatile float aileronIntegration;
-extern volatile float throttleIntegration;
 extern volatile float elevatorSetpoint;
 extern volatile float aileronSetpoint;
 extern volatile float throttleSetpoint;
@@ -115,7 +84,6 @@ extern volatile float throttleDesiredSetpoint;
 //auto-landing variables and state defines
 extern volatile unsigned char landingRequest;
 extern volatile unsigned char landingState;
-extern volatile uint8_t landingCounter;
 #define LS_STABILIZATION      2
 #define LS_LANDING            1
 #define LS_ON_GROUND          0
@@ -124,9 +92,7 @@ extern volatile uint8_t landingCounter;
 
 //auto-trajectory variables and types
 extern volatile unsigned char trajectoryEnabled;
-extern volatile float trajTimer;
-extern volatile int trajIndex;
-extern volatile int trajMaxIndex;
+extern volatile int8_t trajMaxIndex;
 typedef struct {
 	float time;
 	float elevatorPos; //position in m
@@ -141,12 +107,14 @@ extern volatile trajectoryPoint_t trajectory[];
 	trajectory[i].aileronPos = a; \
 	trajectory[i].throttlePos = th
 
+//set default trajectory
+void initTrajectory();
+
 //enables - disables controllers
-void disableController();
-void enableController();
+void disableVelocityController();
+void enableVelocityController();
 void disablePositionController();
 void enablePositionController();
-
 
 //setpoint and trajectory handling
 void setpoints();
@@ -160,7 +128,5 @@ void positionController();
 void altitudeEstimator();
 void altitudeController();
 void landingStateAutomat();
-
-#endif // PX4FLOW_DATA_RECEIVE == ENABLED
 
 #endif // _CONTROLLERS_H

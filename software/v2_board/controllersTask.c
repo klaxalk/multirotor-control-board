@@ -8,11 +8,13 @@
 #include "controllersTask.h"
 #include "controllers.h"
 #include "system.h"
+#include "config.h"
+
 
 void controllersTask(void *p) {
 	
 	#if TRAJECTORY_FOLLOWING == ENABLED
-	writeTrajectory1();
+	initTrajectory();
 	#endif
 	
 	while (1) {

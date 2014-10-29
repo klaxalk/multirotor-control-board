@@ -52,12 +52,6 @@ UsartBuffer * usart_buffer_4;
 #define USART_4_BAUDRATE		BAUD57600
 
 
-// controllers output variables
-extern volatile int16_t controllerElevatorOutput;
-extern volatile int16_t controllerAileronOutput;
-extern volatile int16_t controllerThrottleOutput;
-extern volatile int16_t controllerRudderOutput;
-
 /* -------------------------------------------------------------------- */
 /*	Basic initialization of the MCU, peripherals and i/o				*/
 /* -------------------------------------------------------------------- */
@@ -166,7 +160,7 @@ void mergeSignalsToOutput() {
 	outputElevator = RCchannel[ELEVATOR];
 	outputAileron = RCchannel[AILERON];
 
-	if (controllerEnabled == 1) {
+	if (velocityControllerEnabled == 1) {
 
 		led_red_on();
 

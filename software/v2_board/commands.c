@@ -1,41 +1,11 @@
 #include <stdio.h>
 #include "packets.h"
 #include "commands.h"
-
-//enable disable controllers
+#include "communication.h"
+#include "controllers.h"
 #include "system.h"
 
-//trajectory macros
-#include "controllers.h"
 
-
-//telemetry
-extern volatile float groundDistance;
-extern volatile float elevatorSpeed;
-extern volatile float aileronSpeed;
-extern volatile float estimatedElevatorVel;
-extern volatile float estimatedAileronVel;
-extern volatile float estimatedElevatorPos;
-extern volatile float estimatedAileronPos;
-
-//setpoints
-extern volatile float elevatorSetpoint;
-extern volatile float aileronSetpoint;
-extern volatile float throttleSetpoint;
-extern volatile float elevatorDesiredSetpoint;
-extern volatile float aileronDesiredSetpoint;
-extern volatile float throttleDesiredSetpoint;
-
-//trajectory
-extern volatile unsigned char trajectoryEnabled;
-
-//controllers
-extern volatile unsigned char positionControllerEnabled;
-extern volatile unsigned char controllerEnabled;
-
-
-
-extern volatile unsigned char landingRequest;
 
 //UDP XBee packetOUT
 unsigned char dataOUT[25];
@@ -322,13 +292,13 @@ void kopterControllersRequest(unsigned char *address64,unsigned char *address16,
 void kopterControllers(unsigned char *address64,unsigned char *address16,unsigned char option){	
 		if(		 option==CONTROLLERS.OFF){
 			disablePositionController();
-			disableController();			
+			disableVelocityController();			
 		}else if(option==CONTROLLERS.POSITION){
-			enableController();
+			enableVelocityController();
 			enablePositionController();
 		}else if(option==CONTROLLERS.VELOCITY){
 			disablePositionController();
-			enableController();
+			enableVelocityController();
 		}		
 }
 void kopterControllersStatusRequest(unsigned char *address64,unsigned char *address16,unsigned char frameID){
@@ -343,7 +313,7 @@ void kopterControllersReport(unsigned char *address64,unsigned char *address16,u
 	
 	if(positionControllerEnabled){
 		*(dataOUT+2)=CONTROLLERS.POSITION;
-	}else if(controllerEnabled){
+	}else if(velocityControllerEnabled){
 		*(dataOUT+2)=CONTROLLERS.VELOCITY;
 	}else{
 		*(dataOUT+2)=CONTROLLERS.OFF;

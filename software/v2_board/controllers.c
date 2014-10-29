@@ -6,6 +6,7 @@
  */ 
 
 #include "controllers.h"
+#include "communication.h"
 
 #if PX4FLOW_DATA_RECEIVE == ENABLED
 
@@ -19,6 +20,7 @@ volatile int16_t controllerRudderOutput;
 volatile float estimatedElevatorPos = 0;
 volatile float estimatedAileronPos  = 0;
 volatile float estimatedThrottlePos = 0;
+
 volatile float estimatedElevatorVel = 0;
 volatile float estimatedAileronVel  = 0;
 volatile float estimatedThrottleVel = 0;
@@ -27,12 +29,12 @@ volatile float estimatedThrottleVel = 0;
 volatile float elevatorIntegration = 0;
 volatile float aileronIntegration  = 0;
 volatile float throttleIntegration = 0;
-volatile float elevatorSetpoint =  (ELEVATOR_SP_LOW + ELEVATOR_SP_HIGH)/2;
-volatile float aileronSetpoint  = (AILERON_SP_LOW  + AILERON_SP_HIGH )/2;
-volatile float throttleSetpoint = 1;
 
-volatile float elevatorDesiredSetpoint =  (ELEVATOR_SP_LOW + ELEVATOR_SP_HIGH)/2;
-volatile float aileronDesiredSetpoint  = (AILERON_SP_LOW  + AILERON_SP_HIGH )/2;
+volatile float elevatorSetpoint =  -1.5;
+volatile float aileronSetpoint  = 0;
+volatile float throttleSetpoint = 1;
+volatile float elevatorDesiredSetpoint = -1.5;
+volatile float aileronDesiredSetpoint  = 0;
 volatile float throttleDesiredSetpoint = 1;
 
 //auto-landing variables
@@ -41,14 +43,14 @@ volatile unsigned char landingState = LS_ON_GROUND;
 volatile uint8_t landingCounter = 0;
 
 // controller on/off
-volatile unsigned char controllerEnabled = 0;
+volatile unsigned char velocityControllerEnabled = 0;
 volatile unsigned char positionControllerEnabled = 0;
 
 //auto-trajectory variables
 volatile unsigned char trajectoryEnabled = 0;
 volatile float trajTimer = 0;
-volatile int trajIndex = -1;
-volatile int trajMaxIndex = -1;
+volatile int8_t trajIndex = -1;
+volatile int8_t trajMaxIndex = -1;
 volatile trajectoryPoint_t trajectory[TRAJECTORY_LENGTH];
 
 static uint8_t estimator_cycle = 0;
@@ -56,30 +58,26 @@ static float   estimatedThrottlePos_prev = 0;
 
 
 #if TRAJECTORY_FOLLOWING == ENABLED
-
-void writeTrajectory1(){
+void initTrajectory(){
 	int8_t i=0;
-
 	// (i, time (s), x (+ forward), y (+ leftward), z (altitude))
-	
 	for(i=0;i<TRAJECTORY_LENGTH;i++){
 		TRAJ_POINT(i,i+1,elevatorSetpoint,aileronSetpoint,throttleSetpoint);
 	}
 	trajMaxIndex=-1;
 }
-
 #endif //TRAJECTORY_FOLLOWING == ENABLED
 
 // disable controllers
-void disableController() {
+void disableVelocityController() {
 
-	controllerEnabled = 0;
+	velocityControllerEnabled = 0;
 }
 
 // enable controllers
-void enableController() {
+void enableVelocityController() {
 
-	if (controllerEnabled == 0) {
+	if (velocityControllerEnabled == 0) {
 
 		#if PX4FLOW_DATA_RECEIVE == ENABLED
 
@@ -96,7 +94,7 @@ void enableController() {
 
 		#endif
 	}
-	controllerEnabled = 1;
+	velocityControllerEnabled = 1;
 }
 
 void disablePositionController() {

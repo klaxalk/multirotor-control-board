@@ -6,7 +6,7 @@
 #include "usart_driver_RTOS.h"
 
 extern UsartBuffer * usart_buffer_4;
-extern volatile int trajMaxIndex;
+extern volatile int8_t trajMaxIndex;
 
 
 
