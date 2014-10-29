@@ -28,12 +28,12 @@ volatile float elevatorIntegration = 0;
 volatile float aileronIntegration  = 0;
 volatile float throttleIntegration = 0;
 
-volatile float elevatorSetpoint =  -1.5;
-volatile float aileronSetpoint  = 0;
-volatile float throttleSetpoint = 1;
-volatile float elevatorDesiredSetpoint = -1.5;
-volatile float aileronDesiredSetpoint  = 0;
-volatile float throttleDesiredSetpoint = 1;
+volatile float elevatorSetpoint =  DEFAULT_ELEVATOR_SETPOINT;
+volatile float aileronSetpoint  = DEFAULT_AILERON_SETPOINT;
+volatile float throttleSetpoint = DEFAULT_THROTTLE_SETPOINT;
+volatile float elevatorDesiredSetpoint = DEFAULT_ELEVATOR_SETPOINT;
+volatile float aileronDesiredSetpoint  = DEFAULT_AILERON_SETPOINT;
+volatile float throttleDesiredSetpoint = DEFAULT_THROTTLE_SETPOINT;
 
 //auto-landing variables
 volatile unsigned char landingRequest = 0;
@@ -64,41 +64,54 @@ void initTrajectory(){
 	trajMaxIndex=-1;
 }
 
-// disable controllers
-void disableVelocityController() {
 
-	velocityControllerEnabled = 0;
-}
 
-// enable controllers
 void enableVelocityController() {
-
 	if (velocityControllerEnabled == 0) {
 		elevatorIntegration = 0;
 		aileronIntegration = 0;
 		throttleIntegration = 0;
-
-		if(validGumstix != 1) {
-
-			estimatedElevatorPos = elevatorSetpoint;
-			estimatedAileronPos  = aileronSetpoint;
-
-		}
+		
+		elevatorDesiredSetpoint = DEFAULT_ELEVATOR_SETPOINT;
+		aileronDesiredSetpoint = DEFAULT_AILERON_SETPOINT;
+		throttleDesiredSetpoint = DEFAULT_THROTTLE_SETPOINT;
+		elevatorSetpoint = DEFAULT_ELEVATOR_SETPOINT;
+		aileronSetpoint = DEFAULT_AILERON_SETPOINT;
+		throttleSetpoint = DEFAULT_THROTTLE_SETPOINT;
+		
+		estimatedElevatorPos = elevatorSetpoint;
+		estimatedAileronPos  = aileronSetpoint;		
 	}
 	velocityControllerEnabled = 1;
 }
 
-void disablePositionController() {
 
-	positionControllerEnabled = 0;
+void disableVelocityController() {
+	velocityControllerEnabled = 0;
 }
 
-void enablePositionController() {
 
+void enablePositionController() {
 	if (positionControllerEnabled == 0) {
-		// set integrated variables to default
+		elevatorIntegration = 0;
+		aileronIntegration = 0;
+		throttleIntegration = 0;
+		
+		elevatorDesiredSetpoint = DEFAULT_ELEVATOR_SETPOINT;
+		aileronDesiredSetpoint = DEFAULT_AILERON_SETPOINT;
+		throttleDesiredSetpoint = DEFAULT_THROTTLE_SETPOINT;
+		elevatorSetpoint = DEFAULT_ELEVATOR_SETPOINT;
+		aileronSetpoint = DEFAULT_AILERON_SETPOINT;
+		throttleSetpoint = DEFAULT_THROTTLE_SETPOINT;
+		
+		estimatedElevatorPos = elevatorSetpoint;
+		estimatedAileronPos  = aileronSetpoint;
 	}
 	positionControllerEnabled = 1;
+}
+
+void disablePositionController() {
+	positionControllerEnabled = 0;
 }
 
 //~ ------------------------------------------------------------------------ ~//
@@ -193,9 +206,10 @@ void positionEstimator() {
 
 }
 
-//~ ------------------------------------------------------------------------ ~//
-//~ Position Controller - stabilizes Elevator and Aileron                    ~//
-//~ ------------------------------------------------------------------------ ~//
+void velocityController(){
+
+	
+}
 void positionController() {
 
 	static float elevatorSpeed_prev = 0;
@@ -224,7 +238,6 @@ void positionController() {
 		KV = VELOCITY_KV;
 		KA = VELOCITY_KA;
 		KX = 0;
- 
 	}
 
 	//elevator controller

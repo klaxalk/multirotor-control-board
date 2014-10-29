@@ -296,7 +296,7 @@ void kopterControllers(unsigned char *address64,unsigned char *address16,unsigne
 			disablePositionController();
 			disableVelocityController();			
 		}else if(option==CONTROLLERS.POSITION){
-			enableVelocityController();
+			disableVelocityController();
 			enablePositionController();
 		}else if(option==CONTROLLERS.VELOCITY){
 			disablePositionController();

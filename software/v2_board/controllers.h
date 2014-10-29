@@ -19,10 +19,13 @@
 #define PX4FLOW_FILTER_CONST    0.05
 #define SETPOINT_FILTER_CONST   0.10
 
+//constants for setpoints
+#define DEFAULT_AILERON_SETPOINT 0
+#define DEFAULT_ELEVATOR_SETPOINT -1.5
+#define DEFAULT_THROTTLE_SETPOINT 1
+
 // constants for position and velocity controllers
 #define POSITION_MAXIMUM   2000 //in mm, must be positive! crops Gumstix values
-
-// changed 0.33 -> 0.4, Tom·ö B·Ëa, 24.6.2014
 #define POSITION_SPEED_MAX 0.4 // in m/s, must be positive!
 
 #define VELOCITY_KV 250

@@ -18,18 +18,19 @@ void mainTask(void *p) {
 		// controllers on/off
 		if (abs(RCchannel[AUX3] - PPM_IN_MIDDLE_LENGTH) < 200) {
 			if (previous_AUX3 != 1) {
-				enableVelocityController();
+				disableVelocityController();
 				disablePositionController();
 				previous_AUX3 = 1;
 			}
 		} else if (RCchannel[AUX3] > (PPM_IN_MIDDLE_LENGTH + 200)) {
 			if (previous_AUX3 != 2) {
 				enablePositionController();
+				disableVelocityController();
 				previous_AUX3 = 2;
 			}			
 		} else {
 			if (previous_AUX3 != 0) {
-				disableVelocityController();
+				enableVelocityController();
 				disablePositionController();
 				previous_AUX3 = 0;
 			}
