@@ -15,9 +15,6 @@ void controllersTask(void *p) {
 	
 	initTrajectory();
 	while (1) {
-		
-		#if PX4FLOW_DATA_RECEIVE == ENABLED
-
 			//If controllerEnabled == 0 the controller output signals
 			//are "unplugged" (in mergeSignalsToOutput) but the
 			//controllers keep running.
@@ -33,8 +30,6 @@ void controllersTask(void *p) {
 
 			positionController();
 			altitudeController();
-
-		#endif // PX4FLOW_DATA_RECEIVE == ENABLED
 						
 		// makes the 70Hz loop
 		vTaskDelay(14);

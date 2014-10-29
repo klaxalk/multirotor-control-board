@@ -19,10 +19,7 @@ void commTask(void *p) {
 	unsigned char packet[60];	
 	int8_t i;
 	
-	while (1) {
-	bluetoothProcessing();
-		
-	#if XBEE_DATA_RECEIVE == ENABLED	
+	while (1) {		
 		// XBee
 		if (usartBufferGetByte(usart_buffer_xbee, &inChar, 0)) {					
 			 //packet received
@@ -36,9 +33,8 @@ void commTask(void *p) {
 				 packetHandler(packet);
 			 }
 		}
-	#endif // XBEE_DATA_RECEIVE == ENABLED
 		
-	#if GUMSTIX_DATA_RECEIVE == ENABLED
+
 		//Gumstix
 		if (usartBufferGetByte(usart_buffer_4, &inChar, 0)) {
 			gumstixParseChar(inChar);
@@ -79,9 +75,7 @@ void commTask(void *p) {
 			}
 			gumstixDataFlag = 0;
 		}
-	#endif // GUMSTIX_DATA_RECEIVE == ENABLED
 
-	#if PX4FLOW_DATA_RECEIVE == ENABLED
 		//PX4Flow
 		if (usartBufferGetByte(usart_buffer_1, &inChar, 0)) {
 			px4flowParseChar((uint8_t) inChar);
@@ -111,6 +105,5 @@ void commTask(void *p) {
 			px4Confidence = opticalFlowData.quality;
 			opticalFlowDataFlag = 0;
 		}
-	#endif // PX4FLOW_DATA_RECEIVE	
 	}	
 }

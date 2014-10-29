@@ -8,8 +8,6 @@
 #include "controllers.h"
 #include "communication.h"
 
-#if PX4FLOW_DATA_RECEIVE == ENABLED
-
 // controllers output variables
 volatile int16_t controllerElevatorOutput;
 volatile int16_t controllerAileronOutput;
@@ -76,9 +74,6 @@ void disableVelocityController() {
 void enableVelocityController() {
 
 	if (velocityControllerEnabled == 0) {
-
-		#if PX4FLOW_DATA_RECEIVE == ENABLED
-
 		elevatorIntegration = 0;
 		aileronIntegration = 0;
 		throttleIntegration = 0;
@@ -89,8 +84,6 @@ void enableVelocityController() {
 			estimatedAileronPos  = aileronSetpoint;
 
 		}
-
-		#endif
 	}
 	velocityControllerEnabled = 1;
 }
@@ -165,7 +158,6 @@ void setpoints() {
 //~ ------------------------------------------------------------------------ ~//
 void positionEstimator() {
 
-#if GUMSTIX_DATA_RECEIVE == ENABLED
 
 	//gustix valid delay - filters faulty values
 	static uint8_t gumstix_counter = 0;
@@ -177,35 +169,27 @@ void positionEstimator() {
 		gumstix_counter = 0;
 	}
 
-#endif
 
 	//elevator velocity
 	estimatedElevatorVel += (elevatorSpeed-estimatedElevatorVel) * (DT/PX4FLOW_FILTER_CONST);
 
 	//elevator position
-#if GUMSTIX_DATA_RECEIVE == ENABLED
 	if(gumstix_counter == gumstix_delay) {
 		estimatedElevatorPos += (elevatorGumstix-estimatedElevatorPos) * (DT/GUMSTIX_FILTER_CONST);
 	}else{
-#endif
 		estimatedElevatorPos += estimatedElevatorVel * DT;
-#if GUMSTIX_DATA_RECEIVE == ENABLED
 	}
-#endif
 
 	//aileron velocity
 	estimatedAileronVel += (aileronSpeed-estimatedAileronVel) * (DT/PX4FLOW_FILTER_CONST);
 
 	//aileron position
-#if GUMSTIX_DATA_RECEIVE == ENABLED
 	if(gumstix_counter == gumstix_delay) {
 		estimatedAileronPos += (aileronGumstix-estimatedAileronPos) * (DT/GUMSTIX_FILTER_CONST);
 	}else{
-#endif
             estimatedAileronPos += estimatedAileronVel * DT;
-#if GUMSTIX_DATA_RECEIVE == ENABLED
 	}
-#endif
+
 
 }
 
@@ -469,4 +453,3 @@ void landingStateAutomat(){
 
 }
 
-#endif // PX4FLOW_DATA_RECEIVE == ENABLED

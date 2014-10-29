@@ -12,10 +12,6 @@
 #define ENABLED 1
 #define DISABLED 0
 
-// fram configuration
-#define PLUS_COPTER 1
-#define X_COPTER 2
-
 // gumstix camera pointing
 #define FORWARD 1
 #define DOWNWARD 2

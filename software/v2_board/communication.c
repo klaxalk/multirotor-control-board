@@ -5,10 +5,33 @@
 #include "communication.h"
 #include "system.h"
 
-extern volatile uint16_t outputChannels[6];
-extern volatile uint16_t RCchannel[9];
-extern volatile float groundDistance;
-extern volatile float throttleSetpoint;
+
+
+//px4flow values
+volatile float groundDistance = 0;
+volatile float elevatorSpeed = 0;
+volatile float aileronSpeed = 0;
+volatile uint8_t px4Confidence = 0;
+
+// variables used by the mavlink library
+mavlink_message_t mavlinkMessage;
+mavlink_status_t mavlinkStatus;
+mavlink_optical_flow_t opticalFlowData;
+int8_t opticalFlowDataFlag = 0;
+
+//Gumstix values
+volatile unsigned char gumstixParseCharState = 0;
+volatile unsigned char gumstixParseCharByte = 0;
+volatile int16_t gumstixParseTempInt = 0;
+volatile int16_t xPosGumstixNew = 0;
+volatile int16_t yPosGumstixNew = 0;
+volatile int16_t zPosGumstixNew = 0;
+volatile float elevatorGumstix = 0;
+volatile float aileronGumstix = 0;
+volatile float throttleGumstix = 0;
+volatile int8_t validGumstix = 0;
+volatile int8_t gumstixDataFlag = 0;
+volatile unsigned char gumstixParseCharCrc = 0;
 
 //send XBee packet
 void sendXBeePacket(unsigned char *packet){
@@ -18,20 +41,6 @@ void sendXBeePacket(unsigned char *packet){
 		usartBufferPutByte(usart_buffer_xbee, *(packet+i), 10);
 	}
 }
-
-#if PX4FLOW_DATA_RECEIVE == ENABLED
-//px4flow values
-volatile float groundDistance = 0;
-volatile float elevatorSpeed = 0;
-volatile float aileronSpeed = 0;
-volatile uint8_t px4Confidence = 0;
-
-
-// variables used by the mavlink library
-mavlink_message_t mavlinkMessage;
-mavlink_status_t mavlinkStatus;
-mavlink_optical_flow_t opticalFlowData;
-int8_t opticalFlowDataFlag = 0;
 
 int8_t px4flowParseChar(uint8_t incomingChar) {
 	if (mavlink_parse_char(MAVLINK_COMM_0, incomingChar, &mavlinkMessage, &mavlinkStatus)) {
@@ -47,22 +56,6 @@ int8_t px4flowParseChar(uint8_t incomingChar) {
 	}
 	return 0;
 }
-#endif // PX4FLOW_DATA_RECEIVE
-
-#if GUMSTIX_DATA_RECEIVE == ENABLED
-//Gumstix values
-volatile unsigned char gumstixParseCharState = 0;
-volatile unsigned char gumstixParseCharByte = 0;
-volatile int16_t gumstixParseTempInt = 0;
-volatile int16_t xPosGumstixNew = 0;
-volatile int16_t yPosGumstixNew = 0;
-volatile int16_t zPosGumstixNew = 0;
-volatile float elevatorGumstix = 0;
-volatile float aileronGumstix = 0;
-volatile float throttleGumstix = 0;
-volatile int8_t validGumstix = 0;
-volatile int8_t gumstixDataFlag = 0;
-volatile unsigned char gumstixParseCharCrc = 0;
 
 void gumstixParseChar(unsigned char incomingChar) {
 	if (gumstixParseCharByte == 2) {
@@ -119,25 +112,3 @@ void gumstixParseChar(unsigned char incomingChar) {
 	}
 }
 
-#endif // GUMSTIX_DATA_RECEIVE == ENABLED
-
-void bluetoothProcessing(){
-	char str[20];
-	usartBufferPutString(usart_buffer_3,"O;",10);
-	sprintf(str, "%d", RCchannel[THROTTLE]);
-	usartBufferPutString(usart_buffer_3,str,10);
-	
-	usartBufferPutByte(usart_buffer_3,';',10);
-	sprintf(str, "%d",outputChannels[0]/2);
-	usartBufferPutString(usart_buffer_3,str,10);
-	
-	usartBufferPutByte(usart_buffer_3,';',10);
-	sprintf(str, "%d",RCchannel[THROTTLE]+(int16_t)round((groundDistance*400)-(throttleSetpoint*400)));
-	usartBufferPutString(usart_buffer_3,str,10);
-	
-	usartBufferPutByte(usart_buffer_3,';',10);
-	sprintf(str, "%d",RCchannel[THROTTLE]+(int16_t)round((estimatedThrottlePos*400)-(throttleSetpoint*400)));
-	usartBufferPutString(usart_buffer_3,str,10);
-	
-	usartBufferPutByte(usart_buffer_3,'\n',10);	
-}

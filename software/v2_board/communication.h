@@ -7,7 +7,6 @@
 #define MAX_SENDE_BUFF 20
 #define MAX_EMPFANGS_BUFF 20
 
-#if PX4FLOW_DATA_RECEIVE == ENABLED
 	// data from px4flow
 	extern volatile float groundDistance;
 	extern volatile float elevatorSpeed;
@@ -18,9 +17,8 @@
 	extern mavlink_status_t mavlinkStatus;
 	extern mavlink_optical_flow_t opticalFlowData;
 	extern int8_t opticalFlowDataFlag;
-#endif // PX4FLOW_DATA_RECEIVE
 
-#if GUMSTIX_DATA_RECEIVE == ENABLED
+
 	// data from Gumstix
 	extern volatile float elevatorGumstix;
 	extern volatile float aileronGumstix;
@@ -30,12 +28,10 @@
 	extern volatile int16_t zPosGumstixNew;	
 	extern volatile int8_t validGumstix;
 	extern volatile int8_t gumstixDataFlag;	
-#endif // GUMSTIX_DATA_RECEIVE == ENABLED
 
 //send XBee Packet
 void sendXBeePacket(unsigned char *packet);
-
-void bluetoothProcessing();
-
+int8_t px4flowParseChar(uint8_t incomingChar);
+void gumstixParseChar(unsigned char incomingChar);
 
 #endif // COMMUNICATION_H
