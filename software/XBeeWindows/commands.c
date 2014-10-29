@@ -33,6 +33,8 @@ void telemetryReceive(unsigned char *address64,unsigned char *address16,unsigned
         printf("Elevator Pos Est: %f\n",value);
 	}else if(type==TELEMETRIES.AILERON_POS_ESTIMATED){
         printf("Aileron Pos Est: %f\n",value);
+	}else if(type==TELEMETRIES.THROTTLE_CONTROLLER_OUTPUT){
+        printf("Throttle Cont Out: %f\n",value);
 	}
 }
 

@@ -28,7 +28,7 @@ void main()
             printf("BYE\n");
             break;
         case 1:
-            printf("\nTELEMTRY: 1 - GROUND DISTANCE   2 - ELEVATOR SPEED   3 - AILERON SPEED   4 - ELEVATOR POS   5 - AILERON POS\n");
+            printf("\nTELEMTRY: 1 - GROUND DISTANCE   2 - ELEVATOR SPEED   3 - AILERON SPEED   4 - ELEVATOR POS   5 - AILERON POS   6 - THROTTLE CONT OUT\n");
             printf("DECISION:");
             scanf("%d",&decison);
                     switch(decison){
@@ -62,6 +62,13 @@ void main()
                             break;
                         case 5:
                             telemetryRequest(ADDRESS.K1,ADDRESS.UNKNOWN16,TELEMETRIES.AILERON_POS_ESTIMATED,TELREQOPT.SENDING_ONCE,0x01);
+                            packetHandler(readPacket());
+                            packetHandler(readPacket());
+                            packetHandler(readPacket());
+                            packetHandler(readPacket());
+                            break;
+                        case 6:
+                            telemetryRequest(ADDRESS.K1,ADDRESS.UNKNOWN16,TELEMETRIES.THROTTLE_CONTROLLER_OUTPUT,TELREQOPT.SENDING_ONCE,0x01);
                             packetHandler(readPacket());
                             packetHandler(readPacket());
                             packetHandler(readPacket());
@@ -210,9 +217,9 @@ void main()
                             packetHandler(readPacket());
                         break;
                     case 3:
-                        kopterTrajectoryAddPointRequest(ADDRESS.K1,ADDRESS.UNKNOWN16,0,5,2,0,1,0x16);
-                        kopterTrajectoryAddPointRequest(ADDRESS.K1,ADDRESS.UNKNOWN16,0,10,-2,0,2,0x16);
-                        kopterTrajectoryAddPointRequest(ADDRESS.K1,ADDRESS.UNKNOWN16,0,13,-2,0,0.5,0x16);
+                        kopterTrajectoryAddPointRequest(ADDRESS.K1,ADDRESS.UNKNOWN16,1,2,0.5,0,1,0x16);
+                        kopterTrajectoryAddPointRequest(ADDRESS.K1,ADDRESS.UNKNOWN16,2,5,-1,0,2,0x16);
+                        kopterTrajectoryAddPointRequest(ADDRESS.K1,ADDRESS.UNKNOWN16,3,7,-1,0,0.5,0x16);
                             packetHandler(readPacket());
                             packetHandler(readPacket());
                             packetHandler(readPacket());

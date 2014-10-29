@@ -18,7 +18,8 @@ typedef struct
 	unsigned char ELEVATOR_SPEED_ESTIMATED;
 	unsigned char AILERON_SPEED_ESTIMATED;
 	unsigned char ELEVATOR_POS_ESTIMATED;
-	unsigned char AILERON_POS_ESTIMATED;		
+	unsigned char AILERON_POS_ESTIMATED;	
+	unsigned char THROTTLE_CONTROLLER_OUTPUT;	
 } TELEMETRIEST;
 
 //Telemetry request options

@@ -37,6 +37,8 @@ void telemetrySend(unsigned char *address64,unsigned char *address16,unsigned ch
 		f=estimatedElevatorPos;
 	}else if(type==TELEMETRIES.AILERON_POS_ESTIMATED){
 		f=estimatedAileronPos;
+	}else if(type==TELEMETRIES.THROTTLE_CONTROLLER_OUTPUT){
+		f=controllerThrottleOutput;
 	}
 	
 	ch=(unsigned char *) &f;

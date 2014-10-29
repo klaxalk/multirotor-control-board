@@ -90,13 +90,8 @@ void commTask(void *p) {
 			// +elevator = front
 			// +aileron  = left
 			// +throttle = up
-			#if PX4_CAMERA_ORIENTATION == FORWARD
-				elevatorSpeed = + opticalFlowData.flow_comp_m_x;
-				aileronSpeed  = - opticalFlowData.flow_comp_m_y;
-			#elif PX4_CAMERA_ORIENTATION == BACKWARD
 				elevatorSpeed = - opticalFlowData.flow_comp_m_x;
 				aileronSpeed  = + opticalFlowData.flow_comp_m_y;
-			#endif
 
 			if (opticalFlowData.ground_distance < ALTITUDE_MAXIMUM &&
 			opticalFlowData.ground_distance > 0.3) {

@@ -17,11 +17,5 @@
 	DOWNWARD
 */
 
-// Choose where the XP4Flow's X axis is pointing
-#define PX4_CAMERA_ORIENTATION BACKWARD
-/*
-	FORWARD
-	BACKWARD
-*/
 
 #endif // _CONFIG_H
