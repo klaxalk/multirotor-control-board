@@ -12,12 +12,16 @@
 
 
 
+
+
 void commTask(void *p) {	
 	unsigned char inChar;
 	unsigned char packet[60];	
 	int8_t i;
 	
 	while (1) {
+	bluetoothProcessing();
+		
 	#if XBEE_DATA_RECEIVE == ENABLED	
 		// XBee
 		if (usartBufferGetByte(usart_buffer_xbee, &inChar, 0)) {					

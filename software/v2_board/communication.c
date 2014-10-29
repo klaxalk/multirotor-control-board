@@ -5,6 +5,11 @@
 #include "communication.h"
 #include "system.h"
 
+extern volatile uint16_t outputChannels[6];
+extern volatile uint16_t RCchannel[9];
+extern volatile float groundDistance;
+extern volatile float throttleSetpoint;
+
 //send XBee packet
 void sendXBeePacket(unsigned char *packet){
 	int i;
@@ -115,3 +120,24 @@ void gumstixParseChar(unsigned char incomingChar) {
 }
 
 #endif // GUMSTIX_DATA_RECEIVE == ENABLED
+
+void bluetoothProcessing(){
+	char str[20];
+	usartBufferPutString(usart_buffer_3,"O;",10);
+	sprintf(str, "%d", RCchannel[THROTTLE]);
+	usartBufferPutString(usart_buffer_3,str,10);
+	
+	usartBufferPutByte(usart_buffer_3,';',10);
+	sprintf(str, "%d",outputChannels[0]/2);
+	usartBufferPutString(usart_buffer_3,str,10);
+	
+	usartBufferPutByte(usart_buffer_3,';',10);
+	sprintf(str, "%d",RCchannel[THROTTLE]+(int16_t)round((groundDistance*400)-(throttleSetpoint*400)));
+	usartBufferPutString(usart_buffer_3,str,10);
+	
+	usartBufferPutByte(usart_buffer_3,';',10);
+	sprintf(str, "%d",RCchannel[THROTTLE]+(int16_t)round((estimatedThrottlePos*400)-(throttleSetpoint*400)));
+	usartBufferPutString(usart_buffer_3,str,10);
+	
+	usartBufferPutByte(usart_buffer_3,'\n',10);	
+}

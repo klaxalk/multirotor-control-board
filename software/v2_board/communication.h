@@ -35,9 +35,7 @@
 //send XBee Packet
 void sendXBeePacket(unsigned char *packet);
 
-// merge RC channels with controller output
-// the most important function, do not modify unless you know what you are doing!
-void mergeSignalsToOutput();
+void bluetoothProcessing();
 
 
 #endif // COMMUNICATION_H
