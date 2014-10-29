@@ -187,9 +187,6 @@ void packetHandler(unsigned char *inPacket){
            packetTypeError(inPacket);
         break;
     }
-    for(i=0;i<*(inPacket+2)+3;i++){
-        *(inPacket+i)=' ';
-    }
 }
 
 

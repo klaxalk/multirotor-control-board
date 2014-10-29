@@ -24,10 +24,10 @@ void commTask(void *p) {
 			 //packet received
 			 if (inChar == 0x7E){
 				 *packet=inChar;
-				 usartBufferGetByte(usart_buffer_xbee, packet+1, 0);
-				 usartBufferGetByte(usart_buffer_xbee, packet+2, 0);
+				 while(!usartBufferGetByte(usart_buffer_xbee, packet+1, 0));
+				 while(!usartBufferGetByte(usart_buffer_xbee, packet+2, 0));
 				 for (i=0;i<*(packet+2)+1;i++){
-					usartBufferGetByte(usart_buffer_xbee, packet+3+i, 0);
+					while(!usartBufferGetByte(usart_buffer_xbee, packet+3+i, 0));
 				 }
 				 packetHandler(packet);
 			 }
