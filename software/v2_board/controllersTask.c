@@ -13,10 +13,7 @@
 
 void controllersTask(void *p) {
 	
-	#if TRAJECTORY_FOLLOWING == ENABLED
 	initTrajectory();
-	#endif
-	
 	while (1) {
 		
 		#if PX4FLOW_DATA_RECEIVE == ENABLED

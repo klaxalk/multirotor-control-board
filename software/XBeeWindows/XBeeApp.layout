@@ -1,6 +1,28 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_layout_file>
 	<ActiveTarget name="Debug" />
+	<File name="commands.h" open="1" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1417" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="defines.h" open="1" top="0" tabpos="8" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="89" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="commands.c" open="1" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="-1" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="4272" topLine="13" />
+		</Cursor>
+		<Folding>
+			<Collapse line="10" />
+			<Collapse line="20" />
+			<Collapse line="39" />
+			<Collapse line="42" />
+			<Collapse line="51" />
+		</Folding>
+	</File>
 	<File name="serialLink.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="247" topLine="0" />
@@ -11,9 +33,9 @@
 			<Cursor1 position="52" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="packets.c" open="1" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="-1" zoom_2="0">
+	<File name="packets.c" open="1" top="1" tabpos="5" split="0" active="1" splitpos="0" zoom_1="-1" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="4847" topLine="143" />
+			<Cursor1 position="5539" topLine="157" />
 		</Cursor>
 	</File>
 	<File name="serialLink.c" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -23,7 +45,7 @@
 	</File>
 	<File name="main.c" open="1" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="-1" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="11908" topLine="8" />
+			<Cursor1 position="1055" topLine="26" />
 		</Cursor>
 	</File>
 	<File name="XBeeComm.c" open="1" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -38,43 +60,7 @@
 	</File>
 	<File name="packets.h" open="1" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="-1" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="505" topLine="8" />
+			<Cursor1 position="1728" topLine="60" />
 		</Cursor>
-	</File>
-	<File name="commands.h" open="1" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1417" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="defines.h" open="1" top="0" tabpos="8" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="89" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="commands.c" open="1" top="1" tabpos="3" split="0" active="1" splitpos="0" zoom_1="-1" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="4272" topLine="13" />
-		</Cursor>
-		<Folding>
-			<Collapse line="10" />
-			<Collapse line="20" />
-			<Collapse line="39" />
-			<Collapse line="42" />
-			<Collapse line="51" />
-			<Collapse line="58" />
-			<Collapse line="65" />
-			<Collapse line="74" />
-			<Collapse line="81" />
-			<Collapse line="88" />
-			<Collapse line="98" />
-			<Collapse line="121" />
-			<Collapse line="129" />
-			<Collapse line="134" />
-			<Collapse line="151" />
-			<Collapse line="159" />
-			<Collapse line="170" />
-			<Collapse line="177" />
-			<Collapse line="184" />
-		</Folding>
 	</File>
 </CodeBlocks_layout_file>

@@ -57,7 +57,6 @@ static uint8_t estimator_cycle = 0;
 static float   estimatedThrottlePos_prev = 0;
 
 
-#if TRAJECTORY_FOLLOWING == ENABLED
 void initTrajectory(){
 	int8_t i=0;
 	// (i, time (s), x (+ forward), y (+ leftward), z (altitude))
@@ -66,7 +65,6 @@ void initTrajectory(){
 	}
 	trajMaxIndex=-1;
 }
-#endif //TRAJECTORY_FOLLOWING == ENABLED
 
 // disable controllers
 void disableVelocityController() {
@@ -115,8 +113,6 @@ void enablePositionController() {
 //~ ------------------------------------------------------------------------ ~//
 void setpoints() {
 
-#if TRAJECTORY_FOLLOWING == ENABLED
-
 	float dTime;
 	float dValue;
 	static float aileronIncrement;
@@ -150,8 +146,6 @@ void setpoints() {
 
 	//manual setpoints from RC transmitter
 	}else{
-
-#endif //TRAJECTORY_FOLLOWING == ENABLED
 	
 		if(throttleDesiredSetpoint<THROTTLE_SP_LOW){throttleDesiredSetpoint=THROTTLE_SP_LOW;}
 		if(throttleDesiredSetpoint>THROTTLE_SP_HIGH){throttleDesiredSetpoint=THROTTLE_SP_HIGH;}
@@ -159,15 +153,10 @@ void setpoints() {
 		aileronSetpoint += (aileronDesiredSetpoint-aileronSetpoint) * (DT/SETPOINT_FILTER_CONST);
 		throttleSetpoint += (throttleDesiredSetpoint-throttleSetpoint) * (DT/SETPOINT_FILTER_CONST);
 
-#if TRAJECTORY_FOLLOWING == ENABLED
-
 		//reset trajectory vars
 		trajIndex = -1;
 		trajTimer = 0;
 	}
-
-#endif //TRAJECTORY_FOLLOWING == ENABLED
-
 }
 
 //~ ------------------------------------------------------------------------ ~//
