@@ -174,10 +174,14 @@ void kopterSetpointStatusRequest(unsigned char *address64,unsigned char *address
 void kopterSetpointsReportReceived(unsigned char *address64,unsigned char *address16,unsigned char type,float value){
 	if(		 type==SETPOINTS.THROTTLE){
         printf("Throttle setpoint: %f\n",value);
-	}else if(type==SETPOINTS.AILERON){
-        printf("Aileron setpoint: %f\n",value);
-	}else if(type==SETPOINTS.ELEVATOR){
-        printf("Elevator setpoint: %f\n",value);
+	}else if(type==SETPOINTS.AILERON_POSITION){
+        printf("Aileron Pos setpoint: %f\n",value);
+	}else if(type==SETPOINTS.ELEVATOR_POSITION){
+        printf("Elevator Pos setpoint: %f\n",value);
+	}else if(type==SETPOINTS.AILERON_VELOCITY){
+        printf("Aileron Vel setpoint: %f\n",value);
+	}else if(type==SETPOINTS.ELEVATOR_VELOCITY){
+        printf("Elevator Vel setpoint: %f\n",value);
 	}
 }
 

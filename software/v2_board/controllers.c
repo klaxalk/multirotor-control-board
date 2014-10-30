@@ -168,9 +168,17 @@ void setpoints() {
 		if(throttleDesiredSetpoint<THROTTLE_SP_LOW){throttleDesiredSetpoint=THROTTLE_SP_LOW;}
 		if(throttleDesiredSetpoint>THROTTLE_SP_HIGH){throttleDesiredSetpoint=THROTTLE_SP_HIGH;}
 			
+		if(elevatorDesiredVelocitySetpoint<SPEED_MAX){elevatorDesiredVelocitySetpoint=SPEED_MAX;}
+		if(elevatorDesiredVelocitySetpoint>SPEED_MAX){elevatorDesiredVelocitySetpoint=SPEED_MAX;}
+			
+		if(aileronDesiredVelocitySetpoint<SPEED_MAX){aileronDesiredVelocitySetpoint=SPEED_MAX;}
+		if(aileronDesiredVelocitySetpoint>SPEED_MAX){aileronDesiredVelocitySetpoint=SPEED_MAX;}
+				
+			
 		elevatorPositionSetpoint += (elevatorDesiredPositionSetpoint-elevatorPositionSetpoint) * (DT/SETPOINT_FILTER_CONST);
 		aileronPositionSetpoint += (aileronDesiredPositionSetpoint-aileronPositionSetpoint) * (DT/SETPOINT_FILTER_CONST);
 		throttleSetpoint += (throttleDesiredSetpoint-throttleSetpoint) * (DT/SETPOINT_FILTER_CONST);
+		
 		elevatorVelocitySetpoint += (elevatorDesiredVelocitySetpoint-elevatorVelocitySetpoint) * (DT/SETPOINT_FILTER_CONST);
 		aileronVelocitySetpoint += (aileronDesiredVelocitySetpoint-aileronVelocitySetpoint) * (DT/SETPOINT_FILTER_CONST);		
 
@@ -288,8 +296,8 @@ void positionController() {
 	if(positionControllerEnabled && landingState == LS_FLIGHT) {
 		error = elevatorPositionSetpoint - estimatedElevatorPos;
 		vd = KX * error;
-		if(vd > +POSITION_SPEED_MAX) vd = +POSITION_SPEED_MAX;
-		if(vd < -POSITION_SPEED_MAX) vd = -POSITION_SPEED_MAX;
+		if(vd > +SPEED_MAX) vd = +SPEED_MAX;
+		if(vd < -SPEED_MAX) vd = -SPEED_MAX;
 	} else { //velocity controller
 		vd = 0;
 		error = - estimatedElevatorVel;
@@ -308,8 +316,8 @@ void positionController() {
 	if(positionControllerEnabled && landingState == LS_FLIGHT) {
 		error = aileronPositionSetpoint - estimatedAileronPos;
 		vd = KX * error;
-		if(vd > +POSITION_SPEED_MAX) vd = +POSITION_SPEED_MAX;
-		if(vd < -POSITION_SPEED_MAX) vd = -POSITION_SPEED_MAX;
+		if(vd > +SPEED_MAX) vd = +SPEED_MAX;
+		if(vd < -SPEED_MAX) vd = -SPEED_MAX;
 	} else { //velocity controller
 		vd = 0;
 		error = - estimatedAileronVel;

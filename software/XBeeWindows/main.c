@@ -111,10 +111,11 @@ void main()
                     }
             break;
         case 3:
-            printf("\nSETPOINTS (POS RELATIVE): 1 - SET    THROTTLE    2 - SET    ELEVATOR   3 - SET    AILERON\n                          4 - STATUS THROTTLE    5 - STATUS ELEVATOR   6 - STATUS AILERON\n");
+            printf("\nSETPOINTS (POS RELATIVE): 1 - SET THROTTLE    2 - SET ELEVATOR POS   3 - SET AILERON POS\n4 - SET ELEVATOR VEL   5 - SET AILERON VEL \n");
+            printf("6 - STATUS THROTTLE 7 - STATUS ELEVATOR POS   8 - STATUS AILERON POS\n9 - STATUS ELEVATOR VEL   10 - STATUS AILERON VEL\n");
             printf("DECISION:");
             scanf("%d",&decison);
-            if (decison<4 && decison>0){
+            if (decison<6 && decison>0){
                 printf("Set value in meters:");
                 scanf("%f",&f);
             }
@@ -127,35 +128,64 @@ void main()
                             packetHandler(readPacket());
                             break;
                         case 2:
-                            kopterSetpointsSetRequest(ADDRESS.K1,ADDRESS.UNKNOWN16,SETPOINTS.ELEVATOR,POSITIONS.RELATIV,f,0x02);
+                            kopterSetpointsSetRequest(ADDRESS.K1,ADDRESS.UNKNOWN16,SETPOINTS.ELEVATOR_POSITION,POSITIONS.RELATIV,f,0x02);
                             packetHandler(readPacket());
                             packetHandler(readPacket());
                             packetHandler(readPacket());
                             packetHandler(readPacket());
                             break;
                         case 3:
-                            kopterSetpointsSetRequest(ADDRESS.K1,ADDRESS.UNKNOWN16,SETPOINTS.AILERON,POSITIONS.RELATIV,f,0x02);
+                            kopterSetpointsSetRequest(ADDRESS.K1,ADDRESS.UNKNOWN16,SETPOINTS.AILERON_POSITION,POSITIONS.RELATIV,f,0x02);
                             packetHandler(readPacket());
                             packetHandler(readPacket());
                             packetHandler(readPacket());
                             packetHandler(readPacket());
                             break;
                         case 4:
-                            kopterSetpointStatusRequest(ADDRESS.K1,ADDRESS.UNKNOWN16,SETPOINTS.THROTTLE,0x02);
+                            kopterSetpointsSetRequest(ADDRESS.K1,ADDRESS.UNKNOWN16,SETPOINTS.ELEVATOR_VELOCITY,POSITIONS.ABSOLUT,f,0x02);
                             packetHandler(readPacket());
                             packetHandler(readPacket());
                             packetHandler(readPacket());
                             packetHandler(readPacket());
                             break;
                         case 5:
-                            kopterSetpointStatusRequest(ADDRESS.K1,ADDRESS.UNKNOWN16,SETPOINTS.ELEVATOR,0x02);
+                            kopterSetpointsSetRequest(ADDRESS.K1,ADDRESS.UNKNOWN16,SETPOINTS.AILERON_VELOCITY,POSITIONS.ABSOLUT,f,0x02);
                             packetHandler(readPacket());
                             packetHandler(readPacket());
                             packetHandler(readPacket());
                             packetHandler(readPacket());
                             break;
+
                         case 6:
-                            kopterSetpointStatusRequest(ADDRESS.K1,ADDRESS.UNKNOWN16,SETPOINTS.AILERON,0x02);
+                            kopterSetpointStatusRequest(ADDRESS.K1,ADDRESS.UNKNOWN16,SETPOINTS.THROTTLE,0x02);
+                            packetHandler(readPacket());
+                            packetHandler(readPacket());
+                            packetHandler(readPacket());
+                            packetHandler(readPacket());
+                            break;
+                        case 7:
+                            kopterSetpointStatusRequest(ADDRESS.K1,ADDRESS.UNKNOWN16,SETPOINTS.ELEVATOR_POSITION,0x02);
+                            packetHandler(readPacket());
+                            packetHandler(readPacket());
+                            packetHandler(readPacket());
+                            packetHandler(readPacket());
+                            break;
+                        case 8:
+                            kopterSetpointStatusRequest(ADDRESS.K1,ADDRESS.UNKNOWN16,SETPOINTS.AILERON_POSITION,0x02);
+                            packetHandler(readPacket());
+                            packetHandler(readPacket());
+                            packetHandler(readPacket());
+                            packetHandler(readPacket());
+                            break;
+                        case 9:
+                            kopterSetpointStatusRequest(ADDRESS.K1,ADDRESS.UNKNOWN16,SETPOINTS.ELEVATOR_VELOCITY,0x02);
+                            packetHandler(readPacket());
+                            packetHandler(readPacket());
+                            packetHandler(readPacket());
+                            packetHandler(readPacket());
+                            break;
+                        case 10:
+                            kopterSetpointStatusRequest(ADDRESS.K1,ADDRESS.UNKNOWN16,SETPOINTS.AILERON_VELOCITY,0x02);
                             packetHandler(readPacket());
                             packetHandler(readPacket());
                             packetHandler(readPacket());
@@ -167,7 +197,7 @@ void main()
                     }
             break;
         case 4:
-            printf("1 - OFF   2 - VELOCITY   3 - POSITION\n");
+            printf("1 - OFF   2 - VELOCITY   3 - POSITION   4 - STATUS\n");
             printf("DECISION:");
             scanf("%d",&decison);
             switch(decison){
@@ -187,6 +217,13 @@ void main()
                         break;
                     case 3:
                         kopterControllersRequest(ADDRESS.K1,ADDRESS.UNKNOWN16,CONTROLLERS.POSITION,0x13);
+                            packetHandler(readPacket());
+                            packetHandler(readPacket());
+                            packetHandler(readPacket());
+                            packetHandler(readPacket());
+                        break;
+                    case 4:
+                        kopterControllersStatusRequest(ADDRESS.K1,ADDRESS.UNKNOWN16,0x13);
                             packetHandler(readPacket());
                             packetHandler(readPacket());
                             packetHandler(readPacket());

@@ -28,7 +28,7 @@
 
 // constants for position and velocity controllers
 #define POSITION_MAXIMUM   2000 //in mm, must be positive! crops Gumstix values
-#define POSITION_SPEED_MAX 0.4 // in m/s, must be positive!
+#define SPEED_MAX 0.4 // in m/s, must be positive!
 
 #define VELOCITY_KV 250
 #define VELOCITY_KI 10

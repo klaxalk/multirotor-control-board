@@ -54,8 +54,10 @@ typedef struct
 typedef struct
 {
 	unsigned char THROTTLE;
-	unsigned char ELEVATOR;
-	unsigned char AILERON;
+	unsigned char ELEVATOR_POSITION;
+	unsigned char AILERON_POSITION;
+	unsigned char ELEVATOR_VELOCITY;
+	unsigned char AILERON_VELOCITY;
 } SETPOINTST;
 
 typedef struct
