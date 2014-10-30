@@ -231,16 +231,16 @@ void kopterSetpointsSet(unsigned char *address64,unsigned char *address16,unsign
 			
 		}else if(type==SETPOINTS.ELEVATOR_SP){
 			if(			 positionType==POSITIONS.ABSOLUT){
-					elevatorDesiredSetpoint=value;
+					elevatorDesiredPositionSetpoint=value;
 				}else if(positionType==POSITIONS.RELATIV){
-					elevatorDesiredSetpoint+=value;
+					elevatorDesiredPositionSetpoint+=value;
 			}		
 				
 		}else if(type==SETPOINTS.AILERON_SP){
 			if(			 positionType==POSITIONS.ABSOLUT){
-					aileronDesiredSetpoint=value;
+					aileronDesiredPositionSetpoint=value;
 				}else if(positionType==POSITIONS.RELATIV){
-					aileronDesiredSetpoint+=value;
+					aileronDesiredPositionSetpoint+=value;
 			}			
 		}				
 }
@@ -262,9 +262,9 @@ void kopterSetpointsReport(unsigned char *address64,unsigned char *address16,uns
 	if(type==SETPOINTS.THROTTLE_SP){
 		f=throttleSetpoint;
 	}else if(type==SETPOINTS.ELEVATOR_SP){
-		f=elevatorSetpoint;
+		f=elevatorPositionSetpoint;
 	}else if(type==SETPOINTS.AILERON_SP){
-		f=aileronSetpoint;
+		f=aileronPositionSetpoint;
 	}
 		
 	ch=(unsigned char *) &f;

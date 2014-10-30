@@ -20,9 +20,11 @@
 #define SETPOINT_FILTER_CONST   0.10
 
 //constants for setpoints
-#define DEFAULT_AILERON_SETPOINT 0
-#define DEFAULT_ELEVATOR_SETPOINT -1.5
+#define DEFAULT_AILERON_POSITION_SETPOINT 0
+#define DEFAULT_ELEVATOR_POSITION_SETPOINT -1.5
 #define DEFAULT_THROTTLE_SETPOINT 1
+#define DEFAULT_AILERON_VELOCITY_SETPOINT 0
+#define DEFAULT_ELEVATOR_VELOCITY_SETPOINT 0
 
 // constants for position and velocity controllers
 #define POSITION_MAXIMUM   2000 //in mm, must be positive! crops Gumstix values
@@ -60,8 +62,10 @@
 
 // common global variables
 // controllers output variables
-extern volatile int16_t controllerElevatorOutput;
-extern volatile int16_t controllerAileronOutput;
+extern volatile int16_t velocityControllerElevatorOutput;
+extern volatile int16_t velocityControllerAileronOutput;
+extern volatile int16_t positionControllerElevatorOutput;
+extern volatile int16_t positionControllerAileronOutput;
 extern volatile int16_t controllerThrottleOutput;
 
 // controller on/off
@@ -75,14 +79,21 @@ extern volatile float estimatedThrottlePos;
 extern volatile float estimatedElevatorVel;
 extern volatile float estimatedAileronVel;
 extern volatile float estimatedThrottleVel;
+extern volatile float estimatedElevatorAcc;
+extern volatile float estimatedAileronAcc;
 
-//vars for controllers
-extern volatile float elevatorSetpoint;
-extern volatile float aileronSetpoint;
+//vars for controllers - Setpoints
+extern volatile float elevatorPositionSetpoint;
+extern volatile float aileronPositionSetpoint;
 extern volatile float throttleSetpoint;
-extern volatile float elevatorDesiredSetpoint;
-extern volatile float aileronDesiredSetpoint;
+extern volatile float elevatorVelocitySetpoint;
+extern volatile float aileronVelocitySetpoint;
+
+extern volatile float elevatorDesiredPositionSetpoint;
+extern volatile float aileronDesiredPositionSetpoint;
 extern volatile float throttleDesiredSetpoint;
+extern volatile float elevatorDesiredVelocitySetpoint;
+extern volatile float aileronDesiredVelocitySetpoint;
 
 //auto-landing variables and state defines
 extern volatile unsigned char landingRequest;

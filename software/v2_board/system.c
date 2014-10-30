@@ -161,14 +161,16 @@ void mergeSignalsToOutput() {
 	outputAileron = RCchannel[AILERON];
 
 	if (velocityControllerEnabled == 1 || positionControllerEnabled == 1) {
-		led_red_on();
 		outputThrottle += controllerThrottleOutput;
-		outputElevator += controllerElevatorOutput;
-		outputAileron += controllerAileronOutput;
-		//~ outputRudder += controllerRudderOutput;
-		} else {
-		led_red_off();
-	}
+	} 	
+	if (velocityControllerEnabled == 1 ) {
+		outputElevator += velocityControllerElevatorOutput;
+		outputAileron += velocityControllerAileronOutput;
+	}	
+	if (positionControllerEnabled == 1) {
+		outputElevator += positionControllerElevatorOutput;
+		outputAileron += positionControllerAileronOutput;
+	}		
 
 	// Everything is *2 because the PPM incoming to this board is twice slower then the PPM goeing out
 	outputChannels[0] = outputThrottle*2;
