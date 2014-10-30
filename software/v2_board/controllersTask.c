@@ -27,7 +27,8 @@ void controllersTask(void *p) {
 			setpoints();
 
 			landingStateAutomat();
-
+			
+			velocityController();
 			positionController();
 			altitudeController();
 						

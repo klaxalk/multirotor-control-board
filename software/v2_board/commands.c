@@ -22,8 +22,10 @@ void packetTypeError(unsigned char *inPacket){
 void telemetrySend(unsigned char *address64,unsigned char *address16,unsigned char type,unsigned char frameID){
 	float f=0;
 	unsigned char *ch;
-	
-	if(type==TELEMETRIES.GROUND_DISTANCE){
+
+	if(type==TELEMETRIES.GROUND_DISTANCE_ESTIMATED){
+		f=estimatedThrottlePos;	
+	}else if(type==TELEMETRIES.GROUND_DISTANCE){
 		f=groundDistance;		
 	}else if(type==TELEMETRIES.ELEVATOR_SPEED){
 		f=elevatorSpeed;		
@@ -39,6 +41,16 @@ void telemetrySend(unsigned char *address64,unsigned char *address16,unsigned ch
 		f=estimatedAileronPos;
 	}else if(type==TELEMETRIES.THROTTLE_CONTROLLER_OUTPUT){
 		f=controllerThrottleOutput;
+	}else if(type==TELEMETRIES.THROTTLE_SPEED){
+		f=estimatedThrottleVel;
+	}else if(type==TELEMETRIES.AILERON_POS_CONTROLLER_OUTPUT){
+		f=positionControllerAileronOutput;
+	}else if(type==TELEMETRIES.ELEVATOR_POS_CONTROLLER_OUTPUT){
+		f=positionControllerElevatorOutput;
+	}else if(type==TELEMETRIES.AILERON_VEL_CONTROLLER_OUTPUT){
+		f=velocityControllerAileronOutput;
+	}else if(type==TELEMETRIES.ELEVATOR_VEL_CONTROLLER_OUTPUT){
+		f=velocityControllerElevatorOutput;
 	}
 	
 	ch=(unsigned char *) &f;
@@ -57,10 +69,12 @@ void telemetryRequest(unsigned char *address64,unsigned char *address16,unsigned
 	makeTRPacket(address64,address16,0x00,frameID,dataOUT,3);
 }
 void telemetryReceive(unsigned char *address64,unsigned char *address16,unsigned char type,float value){
-	if(type==TELEMETRIES.GROUND_DISTANCE){
-		
+	if(type==TELEMETRIES.GROUND_DISTANCE_ESTIMATED){
+	
+	}else if(type==TELEMETRIES.GROUND_DISTANCE){
+	
 	}else if(type==TELEMETRIES.ELEVATOR_SPEED){
-		
+	
 	}else if(type==TELEMETRIES.AILERON_SPEED){
 	
 	}else if(type==TELEMETRIES.ELEVATOR_SPEED_ESTIMATED){
@@ -70,6 +84,18 @@ void telemetryReceive(unsigned char *address64,unsigned char *address16,unsigned
 	}else if(type==TELEMETRIES.ELEVATOR_POS_ESTIMATED){
 	
 	}else if(type==TELEMETRIES.AILERON_POS_ESTIMATED){
+	
+	}else if(type==TELEMETRIES.THROTTLE_CONTROLLER_OUTPUT){
+	
+	}else if(type==TELEMETRIES.THROTTLE_SPEED){
+	
+	}else if(type==TELEMETRIES.AILERON_POS_CONTROLLER_OUTPUT){
+	
+	}else if(type==TELEMETRIES.ELEVATOR_POS_CONTROLLER_OUTPUT){
+	
+	}else if(type==TELEMETRIES.AILERON_VEL_CONTROLLER_OUTPUT){
+	
+	}else if(type==TELEMETRIES.ELEVATOR_VEL_CONTROLLER_OUTPUT){
 	
 	}
 }

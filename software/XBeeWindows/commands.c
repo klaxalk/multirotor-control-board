@@ -19,7 +19,9 @@ void telemetryRequest(unsigned char *address64,unsigned char *address16,unsigned
 }
 
 void telemetryReceive(unsigned char *address64,unsigned char *address16,unsigned char type,float value){
-	if(type==TELEMETRIES.GROUND_DISTANCE){
+	if(type==TELEMETRIES.GROUND_DISTANCE_ESTIMATED){
+        printf("Ground Distance Est: %f\n",value);
+	}else if(type==TELEMETRIES.GROUND_DISTANCE){
         printf("Ground Distance: %f\n",value);
 	}else if(type==TELEMETRIES.ELEVATOR_SPEED){
         printf("Elevator Speed: %f\n",value);
@@ -34,7 +36,17 @@ void telemetryReceive(unsigned char *address64,unsigned char *address16,unsigned
 	}else if(type==TELEMETRIES.AILERON_POS_ESTIMATED){
         printf("Aileron Pos Est: %f\n",value);
 	}else if(type==TELEMETRIES.THROTTLE_CONTROLLER_OUTPUT){
-        printf("Throttle Cont Out: %f\n",value);
+        printf("Throttle Controller Out: %f\n",value);
+	}else if(type==TELEMETRIES.THROTTLE_SPEED){
+        printf("Throttle Speed Est: %f\n",value);
+	}else if(type==TELEMETRIES.AILERON_POS_CONTROLLER_OUTPUT){
+        printf("Pos Aileron Controller Out: %f\n",value);
+	}else if(type==TELEMETRIES.ELEVATOR_POS_CONTROLLER_OUTPUT){
+        printf("Pos Elevator Controller Out: %f\n",value);
+	}else if(type==TELEMETRIES.AILERON_VEL_CONTROLLER_OUTPUT){
+        printf("Vel Aileron Controller Out: %f\n",value);
+	}else if(type==TELEMETRIES.ELEVATOR_VEL_CONTROLLER_OUTPUT){
+        printf("Vel Elevator Controller Out: %f\n",value);
 	}
 }
 

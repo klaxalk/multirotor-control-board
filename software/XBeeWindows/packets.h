@@ -13,6 +13,7 @@ typedef struct
 
 typedef struct
 {
+	unsigned char GROUND_DISTANCE_ESTIMATED;
 	unsigned char GROUND_DISTANCE;
 	unsigned char ELEVATOR_SPEED;
 	unsigned char AILERON_SPEED;
@@ -21,6 +22,11 @@ typedef struct
 	unsigned char ELEVATOR_POS_ESTIMATED;
 	unsigned char AILERON_POS_ESTIMATED;
 	unsigned char THROTTLE_CONTROLLER_OUTPUT;
+    unsigned char THROTTLE_SPEED;
+	unsigned char AILERON_VEL_CONTROLLER_OUTPUT;
+	unsigned char ELEVATOR_VEL_CONTROLLER_OUTPUT;
+	unsigned char AILERON_POS_CONTROLLER_OUTPUT;
+	unsigned char ELEVATOR_POS_CONTROLLER_OUTPUT;
 } TELEMETRIEST;
 
 //Telemetry request options
