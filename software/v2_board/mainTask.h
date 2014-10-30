@@ -9,8 +9,12 @@
 #ifndef MAINTASK_H_
 #define MAINTASK_H_
 
+// constants = AUX channels from the RC transmitter
+extern volatile float constant1;
+extern volatile float constant2;
+extern volatile float constant5;
+
 // the main task routine
 void mainTask(void *p);
-
 
 #endif /* MAINTASK_H_ */

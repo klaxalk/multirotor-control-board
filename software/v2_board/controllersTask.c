@@ -8,6 +8,7 @@
 #include "controllersTask.h"
 #include "controllers.h"
 #include "system.h"
+#include "config.h"
 
 void controllersTask(void *p) {
 	
@@ -32,8 +33,6 @@ void controllersTask(void *p) {
 			altitudeController();
 
 		#endif // PX4FLOW_DATA_RECEIVE == ENABLED
-		
-		led_orange_on();
 		
 		// makes the 70Hz loop
 		vTaskDelay(14);

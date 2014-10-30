@@ -55,21 +55,10 @@
 #define LANDING_KV 180
 #define LANDING_KI 120
 
-// common global variables
-// controllers output variables
-extern volatile int16_t controllerElevatorOutput;
-extern volatile int16_t controllerAileronOutput;
-extern volatile int16_t controllerThrottleOutput;
-
 // controller on/off
 extern volatile unsigned char controllerEnabled;
 extern volatile unsigned char positionControllerEnabled;
 extern volatile unsigned char landingMode;
-
-// constants from RC transmitter
-extern volatile float constant1;
-extern volatile float constant2;
-extern volatile float constant5;
 
 // controllers saturations
 #define CONTROLLER_ELEVATOR_SATURATION 100
@@ -77,21 +66,6 @@ extern volatile float constant5;
 #define CONTROLLER_THROTTLE_SATURATION 300
 
 #if PX4FLOW_DATA_RECEIVE == ENABLED
-
-//px4flow values
-extern volatile float groundDistance;
-extern volatile float elevatorSpeed;
-extern volatile float aileronSpeed;
-
-#if GUMSTIX_DATA_RECEIVE == ENABLED
-
-//gumstix values
-extern volatile float elevatorGumstix;
-extern volatile float aileronGumstix;
-extern volatile float throttleGumstix;
-extern volatile int8_t validGumstix;
-
-#endif
 
 //vars for estimators
 extern volatile float estimatedElevatorPos;

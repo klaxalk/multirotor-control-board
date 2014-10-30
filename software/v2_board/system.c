@@ -175,7 +175,8 @@ void mergeSignalsToOutput() {
 		outputThrottle += controllerThrottleOutput;
 		outputElevator += controllerElevatorOutput;
 		outputAileron += controllerAileronOutput;
-		//~ outputRudder += controllerRudderOutput;
+		// we do not have a rudder controller, yet
+		//~ outputRudder += controllerRudderOutput; 
 		} else {
 
 		led_red_off();
@@ -189,7 +190,7 @@ void mergeSignalsToOutput() {
 }
 
 /* -------------------------------------------------------------------- */
-/*	Interrupt for receiving PPM with RC Receiver signals				*/
+/*	Interrupt for receiving PPM with RC Receiver signals, DO NOT MODIFY!*/
 /* -------------------------------------------------------------------- */
 ISR(PORTD_INT0_vect) {
 	
@@ -231,7 +232,7 @@ ISR(PORTD_INT0_vect) {
 }
 
 /* -------------------------------------------------------------------- */
-/*	Interrupt for timing the PPM output pulse							*/
+/*	Interrupt for timing the PPM output pulse, DO NOT MODIFY!			*/
 /* -------------------------------------------------------------------- */
 ISR(TCD0_OVF_vect) {
 
@@ -278,12 +279,16 @@ void enableController() {
 		aileronIntegration = 0;
 		throttleIntegration = 0;
 
+		#if GUMSTIX_DATA_RECEIVE == ENABLED
 		if(validGumstix != 1) {
 
 			estimatedElevatorPos = elevatorSetpoint;
 			estimatedAileronPos  = aileronSetpoint;
-
 		}
+		#else
+			estimatedElevatorPos = elevatorSetpoint;
+			estimatedAileronPos  = aileronSetpoint;
+		#endif // GUMSTIX_DATA_RECEIVE == ENABLED
 
 		#endif
 	}
@@ -304,7 +309,7 @@ void enablePositionController() {
 }
 
 /* -------------------------------------------------------------------- */
-/*	Interrupt for timing the PPM output pulse							*/
+/*	Interrupt for timing the PPM output pulse, DO NOT MODIFY!			*/
 /* -------------------------------------------------------------------- */
 ISR(TCD0_CCA_vect) {
 	

@@ -105,6 +105,14 @@ extern UsartBuffer * usart_buffer_2;
 extern UsartBuffer * usart_buffer_3;
 extern UsartBuffer * usart_buffer_4;
 
+/* -------------------------------------------------------------------- */
+/*	Controllers output to mix with RC and send to FlightCTRL			*/
+/* -------------------------------------------------------------------- */
+extern volatile int16_t controllerElevatorOutput;
+extern volatile int16_t controllerAileronOutput;
+extern volatile int16_t controllerThrottleOutput;
+extern volatile int16_t controllerRudderOutput;
+
 /* Basic initialization of the MCU, peripherals and i/o */
 void boardInit();
 
