@@ -269,7 +269,12 @@ void positionEstimator() {
 	if(gumstix_counter == gumstix_delay) {
 		estimatedAileronPos += (aileronGumstix-estimatedAileronPos) * (DT/GUMSTIX_FILTER_CONST);
 	}else{
-            estimatedAileronPos += estimatedAileronVel * DT;
+        estimatedAileronPos += estimatedAileronVel * DT;
+	}
+	
+	//safety land
+	if (gumstix_counter == gumstix_delay && validGumstix == 1 && estimatedElevatorPos > -0.5){
+		enableLanding();
 	}
 }
 
@@ -476,4 +481,3 @@ void landingStateAutomat(){
 	} //endswitch
 
 }
-
