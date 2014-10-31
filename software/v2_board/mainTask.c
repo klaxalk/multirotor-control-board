@@ -39,19 +39,19 @@ void mainTask(void *p) {
 	// landing on/off, trajectory on/off
 	if (RCchannel[AUX4] < (PPM_IN_MIDDLE_LENGTH - 200)) {
 		if(previous_AUX4!=0){
-			landingRequest = 1;
+			enableLanding();
 			trajectoryEnabled = 0;
 			previous_AUX4 = 0;
 		}
 	} else if(RCchannel[AUX4] > (PPM_IN_MIDDLE_LENGTH + 200)) {
 		if(previous_AUX4!=1){
-			landingRequest = 0;
+			disableLanding();
 			trajectoryEnabled = 1;
 			previous_AUX4=1;
 		}
 	}else{
 		if(previous_AUX4!=2){
-			landingRequest = 0;
+			disableLanding();
 			trajectoryEnabled = 0;
 			previous_AUX4=2;
 		}

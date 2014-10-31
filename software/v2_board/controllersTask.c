@@ -24,8 +24,12 @@ void controllersTask(void *p) {
 			positionEstimator();
 			altitudeEstimator();
 
-			setpoints();
-
+			if(landingState==LS_FLIGHT){
+				setpointsFilter(throttleDesiredSetpoint,aileronDesiredPositionSetpoint,elevatorDesiredPositionSetpoint,aileronDesiredVelocitySetpoint,elevatorDesiredVelocitySetpoint);
+			}else{
+				setpointsFilter(landingThrottleSetpoint,estimatedAileronPos,estimatedElevatorPos,0,0);
+			}
+			
 			landingStateAutomat();
 			
 			velocityController();

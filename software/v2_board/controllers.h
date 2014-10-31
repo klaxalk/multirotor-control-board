@@ -99,6 +99,8 @@ extern volatile float aileronDesiredVelocitySetpoint;
 extern volatile unsigned char gumstixEnabled;
 
 //auto-landing variables and state defines
+extern volatile float landingThrottleSetpoint;
+extern volatile int16_t landingThrottleOutput;
 extern volatile unsigned char landingRequest;
 extern volatile unsigned char landingState;
 #define LS_STABILIZATION      2
@@ -134,9 +136,11 @@ void disablePositionController();
 void enablePositionController();
 void enableGumstix();
 void disableGumstix();
+void enableLanding();
+void disableLanding();
 
 //setpoint and trajectory handling
-void setpoints();
+void setpointsFilter(float throttleDSP,float aileronPosDSP,float elevatorPosDSP,float aileronVelDSP,float elevatorVelDSP);
 
 //position estimator and controllers
 void positionEstimator();

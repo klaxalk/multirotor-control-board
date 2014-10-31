@@ -108,7 +108,11 @@ void kopterLandRequest(unsigned char *address64,unsigned char *address16,unsigne
 	makeTRPacket(address64,address16,0x00,frameID,dataOUT,3);
 }
 void kopterLand(unsigned char *address64,unsigned char *address16,unsigned char on){
-	landingRequest=on;
+	if(on){
+		enableLanding();
+	}else{
+		disableLanding();
+	}
 }
 void kopterLandStatusRequest(unsigned char *address64,unsigned char *address16,unsigned char frameID){
 	*dataOUT='c';
@@ -300,15 +304,15 @@ void kopterSetpointsReport(unsigned char *address64,unsigned char *address16,uns
 	*(dataOUT+2)=type;
 	//TODO add desired
 	if(type==SETPOINTS.THROTTLE_SP){
-		f=throttleDesiredSetpoint;
+		f=throttleSetpoint;
 	}else if(type==SETPOINTS.ELEVATOR_POSITION){
-		f=elevatorDesiredPositionSetpoint;
+		f=elevatorPositionSetpoint;
 	}else if(type==SETPOINTS.AILERON_POSITION){
-		f=aileronDesiredPositionSetpoint;
+		f=aileronPositionSetpoint;
 	}else if(type==SETPOINTS.ELEVATOR_VELOCITY){
-		f=elevatorDesiredVelocitySetpoint;
+		f=elevatorVelocitySetpoint;
 	}else if(type==SETPOINTS.AILERON_VELOCITY){
-		f=aileronDesiredVelocitySetpoint;
+		f=aileronVelocitySetpoint;
 	}
 		
 	ch=(unsigned char *) &f;

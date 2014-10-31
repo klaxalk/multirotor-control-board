@@ -50,10 +50,13 @@ volatile float throttleDesiredSetpoint = DEFAULT_THROTTLE_SETPOINT;
 volatile float elevatorDesiredVelocitySetpoint = DEFAULT_ELEVATOR_VELOCITY_SETPOINT;
 volatile float aileronDesiredVelocitySetpoint  = DEFAULT_AILERON_VELOCITY_SETPOINT;
 
+
 //auto-landing variables
 volatile unsigned char landingRequest = 0;
 volatile unsigned char landingState = LS_ON_GROUND;
 volatile uint8_t landingCounter = 0;
+volatile float landingThrottleSetpoint = 0;
+volatile int16_t landingThrottleOutput;
 
 // controller on/off
 volatile unsigned char velocityControllerEnabled = 0;
@@ -80,6 +83,14 @@ void initTrajectory(){
 		TRAJ_POINT(i,i+1,elevatorPositionSetpoint,aileronPositionSetpoint,throttleSetpoint);
 	}
 	trajMaxIndex=-1;
+}
+
+void enableLanding(){	
+	landingRequest=1;
+}
+
+void disableLanding(){	
+	landingRequest=0;
 }
 
 void enableGumstix(){
@@ -151,10 +162,7 @@ void disablePositionController() {
 	positionControllerEnabled = 0;
 }
 
-//~ ------------------------------------------------------------------------ ~//
-//~ Setpoints - assign setpoint values                                       ~//
-//~ ------------------------------------------------------------------------ ~//
-void setpoints() {
+void setpointsFilter(float throttleDSP,float aileronPosDSP,float elevatorPosDSP,float aileronVelDSP,float elevatorVelDSP) {
 
 	float dTime;
 	float dValue;
@@ -190,8 +198,8 @@ void setpoints() {
 	//manual setpoints from RC transmitter
 	}else{
 	
-		if(throttleDesiredSetpoint<THROTTLE_SP_LOW){throttleDesiredSetpoint=THROTTLE_SP_LOW;}
-		if(throttleDesiredSetpoint>THROTTLE_SP_HIGH){throttleDesiredSetpoint=THROTTLE_SP_HIGH;}
+		if(throttleDSP<THROTTLE_SP_LOW){throttleDSP=THROTTLE_SP_LOW;}
+		if(throttleDSP>THROTTLE_SP_HIGH){throttleDSP=THROTTLE_SP_HIGH;}
 			
 		if(elevatorDesiredVelocitySetpoint<-SPEED_MAX){elevatorDesiredVelocitySetpoint=-SPEED_MAX;}
 		if(elevatorDesiredVelocitySetpoint>SPEED_MAX){elevatorDesiredVelocitySetpoint=SPEED_MAX;}
@@ -200,12 +208,12 @@ void setpoints() {
 		if(aileronDesiredVelocitySetpoint>SPEED_MAX){aileronDesiredVelocitySetpoint=SPEED_MAX;}
 				
 			
-		elevatorPositionSetpoint += (elevatorDesiredPositionSetpoint-elevatorPositionSetpoint) * (DT/SETPOINT_FILTER_CONST);
-		aileronPositionSetpoint += (aileronDesiredPositionSetpoint-aileronPositionSetpoint) * (DT/SETPOINT_FILTER_CONST);
-		throttleSetpoint += (throttleDesiredSetpoint-throttleSetpoint) * (DT/SETPOINT_FILTER_CONST);
+		elevatorPositionSetpoint += (elevatorPosDSP-elevatorPositionSetpoint) * (DT/SETPOINT_FILTER_CONST);
+		aileronPositionSetpoint += (aileronPosDSP-aileronPositionSetpoint) * (DT/SETPOINT_FILTER_CONST);
+		throttleSetpoint += (throttleDSP-throttleSetpoint) * (DT/SETPOINT_FILTER_CONST);
 		
-		elevatorVelocitySetpoint += (elevatorDesiredVelocitySetpoint-elevatorVelocitySetpoint) * (DT/SETPOINT_FILTER_CONST);
-		aileronVelocitySetpoint += (aileronDesiredVelocitySetpoint-aileronVelocitySetpoint) * (DT/SETPOINT_FILTER_CONST);		
+		elevatorVelocitySetpoint += (elevatorVelDSP-elevatorVelocitySetpoint) * (DT/SETPOINT_FILTER_CONST);
+		aileronVelocitySetpoint += (aileronVelDSP-aileronVelocitySetpoint) * (DT/SETPOINT_FILTER_CONST);		
 
 		//reset trajectory vars
 		trajIndex = -1;
@@ -213,10 +221,6 @@ void setpoints() {
 	}
 }
 
-//~ ------------------------------------------------------------------------ ~//
-//~ Position Estimator - estimates Elevator and Aileron position and         ~//
-//~                      velocity from PX4flow and Gumstix data              ~//
-//~ ------------------------------------------------------------------------ ~//
 void positionEstimator() {
 	//help variable for acceleration
 	float acc_new;
@@ -302,31 +306,18 @@ void positionController() {
 	float KX, KI, KP, KV, KA;
 
 	//set controller constants
-	if(positionControllerEnabled && landingState == LS_FLIGHT) {
-		KI = POSITION_KI;
-		KP = POSITION_KP;
-		KV = POSITION_KV;
-		KA = POSITION_KA;
-		KX = KP / KV;
+	KI = POSITION_KI;
+	KP = POSITION_KP;
+	KV = POSITION_KV;
+	KA = POSITION_KA;
+	KX = KP / KV;
 
-
-	} else { //velocity controller
-		KI = VELOCITY_KI;
-		KV = VELOCITY_KV;
-		KA = VELOCITY_KA;
-		KX = 0;
-	}
 
 	//elevator controller
-	if(positionControllerEnabled && landingState == LS_FLIGHT) {
-		error = elevatorPositionSetpoint - estimatedElevatorPos;
-		vd = KX * error;
-		if(vd > +SPEED_MAX) vd = +SPEED_MAX;
-		if(vd < -SPEED_MAX) vd = -SPEED_MAX;
-	} else { //velocity controller
-		vd = 0;
-		error = - estimatedElevatorVel;
-	}
+	error = elevatorPositionSetpoint - estimatedElevatorPos;
+	vd = KX * error;
+	if(vd > +SPEED_MAX) vd = +SPEED_MAX;
+	if(vd < -SPEED_MAX) vd = -SPEED_MAX;
 
 	elevatorPositionIntegration += KI * error * DT;
 	if (elevatorPositionIntegration > CONTROLLER_ELEVATOR_SATURATION/4) {elevatorPositionIntegration = CONTROLLER_ELEVATOR_SATURATION/4;} else 
@@ -338,15 +329,10 @@ void positionController() {
 
 
 	//aileron controller
-	if(positionControllerEnabled && landingState == LS_FLIGHT) {
-		error = aileronPositionSetpoint - estimatedAileronPos;
-		vd = KX * error;
-		if(vd > +SPEED_MAX) vd = +SPEED_MAX;
-		if(vd < -SPEED_MAX) vd = -SPEED_MAX;
-	} else { //velocity controller
-		vd = 0;
-		error = - estimatedAileronVel;
-	}
+	error = aileronPositionSetpoint - estimatedAileronPos;
+	vd = KX * error;
+	if(vd > +SPEED_MAX) vd = +SPEED_MAX;
+	if(vd < -SPEED_MAX) vd = -SPEED_MAX;
 
 	aileronPositionIntegration += KI * error * DT;
 	if (aileronPositionIntegration > CONTROLLER_AILERON_SATURATION/4) {aileronPositionIntegration = CONTROLLER_AILERON_SATURATION/4;} else 
@@ -358,9 +344,6 @@ void positionController() {
 
 }
 
-//~ ------------------------------------------------------------------------ ~//
-//~ Altitude Estimator - interpolates the data from PX4Flow sonar sensor     ~//
-//~ ------------------------------------------------------------------------ ~//
 void altitudeEstimator() {
    //new cycle 
    estimator_cycle++;
@@ -386,37 +369,20 @@ void altitudeEstimator() {
     }
 }
 
-//~ ------------------------------------------------------------------------ ~//
-//~ Altitude Controller - stabilizes throttle                                ~//
-//~ ------------------------------------------------------------------------ ~//
 void altitudeController() {
-
 	float error;
 	float vd; //desired velocity
-
 	float KX, KI, KV;
 
-	if(landingState == LS_ON_GROUND){
-		controllerThrottleOutput = -CONTROLLER_THROTTLE_SATURATION;
-		return;
+	KX = ((float)ALTITUDE_KP / ALTITUDE_KV);
+	KI = ALTITUDE_KI;
+	KV = ALTITUDE_KV;
 
-	}else if(landingState == LS_LANDING) {
-		KI = LANDING_KI;
-		KV = LANDING_KV;
-
-		error = LANDING_SPEED - estimatedThrottleVel;
-		vd = LANDING_SPEED;
-
-	} else { //altitude controller
-		KX = ((float)ALTITUDE_KP / ALTITUDE_KV);
-		KI = ALTITUDE_KI;
-		KV = ALTITUDE_KV;
-
-		error =(throttleSetpoint - estimatedThrottlePos);
-		vd = KX * error;
-		if(vd > +ALTITUDE_SPEED_MAX) vd = +ALTITUDE_SPEED_MAX;
-		if(vd < -ALTITUDE_SPEED_MAX) vd = -ALTITUDE_SPEED_MAX;
-	}
+	error =(throttleSetpoint - estimatedThrottlePos);
+	vd = KX * error;
+	if(vd > +ALTITUDE_SPEED_MAX) vd = +ALTITUDE_SPEED_MAX;
+	if(vd < -ALTITUDE_SPEED_MAX) vd = -ALTITUDE_SPEED_MAX;
+	
 
 	// calculate integrational
 	throttleIntegration += KI * error * DT;
@@ -439,24 +405,25 @@ void altitudeController() {
 
 }
 
-//~ ------------------------------------------------------------------------ ~//
-//~ LandingStateAutomat - handles stabilized landing and takeoff             ~//
-//~ ------------------------------------------------------------------------ ~//
 void landingStateAutomat(){
 	switch(landingState){
 		case LS_ON_GROUND:
+			landingThrottleOutput = -CONTROLLER_THROTTLE_SATURATION;
 			if(!landingRequest){
 				landingCounter = 0;
 				landingState = LS_TAKEOFF;
+				landingThrottleSetpoint = throttleDesiredSetpoint;
 			} break;
 		case LS_TAKEOFF:
 			if(landingRequest){
 				landingCounter = 0;
-				landingState = LS_LANDING;
+				landingState = LS_STABILIZATION;
+				landingThrottleSetpoint = ALTITUDE_MINIMUM;
 			}else{
+				landingThrottleOutput=controllerThrottleOutput;
+				
 				//stabilize altitude for 0.5s
-				if(fabs(throttleSetpoint - estimatedThrottlePos) < 0.1
-				&& fabs(estimatedThrottleVel ) < 0.2){
+				if(fabs(throttleSetpoint - estimatedThrottlePos) < 0.1 && fabs(estimatedThrottleVel) < 0.2){
 					landingCounter++;
 				}else{
 					landingCounter = 0;
@@ -469,29 +436,33 @@ void landingStateAutomat(){
 			if(landingRequest){
 				landingCounter = 0;
 				landingState = LS_STABILIZATION;
+				landingThrottleSetpoint = ALTITUDE_MINIMUM;
 			} break;
 		case LS_STABILIZATION:
 			if(!landingRequest){
-				landingState = LS_FLIGHT;
-			}else{
-				//stabilize position for 1s
-				if(++landingCounter >= 70){
+				landingState = LS_TAKEOFF;
+				landingThrottleSetpoint = throttleDesiredSetpoint;
+			}else{				
+				//stabilize altitude for 0.5s
+				if(fabs(throttleSetpoint - estimatedThrottlePos) < 0.1 && fabs(estimatedThrottleVel ) < 0.2){
+					landingCounter++;
+					landingThrottleOutput+=(controllerThrottleOutput-landingThrottleOutput)*(DT/PX4FLOW_FILTER_CONST);
+				}else{
 					landingCounter = 0;
-					landingState = LS_LANDING;
+					landingThrottleOutput=controllerThrottleOutput;
+				}
+				if(landingCounter >= 35){
+					landingState = LS_LANDING;					
 				}
 			} break;
 		default: //LS_LANDING
 			if(!landingRequest){
 				landingCounter = 0;
 				landingState = LS_TAKEOFF;
+				landingThrottleSetpoint = throttleDesiredSetpoint;
 			}else{
-				//filter wrong sonar readings
-				if(estimatedThrottlePos < ALTITUDE_MINIMUM){
-					landingCounter++;
-				}else{
-					landingCounter = 0;
-				}
-				if(landingCounter >= 7){
+				landingThrottleOutput-=10;
+				if(landingThrottleOutput == -CONTROLLER_THROTTLE_SATURATION){
 					landingState = LS_ON_GROUND;
 				}
 			}
