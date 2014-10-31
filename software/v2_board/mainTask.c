@@ -12,7 +12,7 @@
 #include <stdio.h> // sprintf
 #include <stdlib.h> // abs
 
-// constants from RC transmitter
+// constants = AUX channels from the RC transmitter
 volatile float constant1 = 0;
 volatile float constant2 = 0;
 volatile float constant5 = 0;
@@ -23,10 +23,6 @@ volatile uint16_t main_cycle = 0;
 
 // for on-off by AUX3 channel
 int8_t previous_AUX3 = 0;
-
-// controller on/off
-volatile unsigned char controllerEnabled = 0;
-volatile unsigned char positionControllerEnabled = 0;
 
 #if TRAJECTORY_FOLLOWING == ENABLED
 
@@ -109,57 +105,6 @@ void mainTask(void *p) {
 		constant5 = ((float)(RCchannel[AUX5] - PPM_IN_MIN_LENGTH))/(PPM_IN_MAX_LENGTH - PPM_IN_MIN_LENGTH);
 		if(constant5 > 1) constant5 = 1;
 		if(constant5 < 0) constant5 = 0;
-		
-#if GUMSTIX_DATA_RECEIVE == ENABLED
-
-	//receive gumstix data
-	if (gumstixDataFlag == 1) {
-
-		if (validGumstix == 1) {
-
-			//Gumstix returns position of the blob relative to camera
-			//in milimeters, we want position of the drone relative
-			//to the blob in meters.
-			// +elevator = front
-			// +aileron  = left
-			// +throttle = up
-
-			//saturation
-			if(xPosGumstixNew > 2*POSITION_MAXIMUM) xPosGumstixNew = 2*POSITION_MAXIMUM;
-			if(xPosGumstixNew < 0) xPosGumstixNew = 0; //distance from the blob (positive)
-
-			if(yPosGumstixNew > +POSITION_MAXIMUM) yPosGumstixNew = +POSITION_MAXIMUM;
-			if(yPosGumstixNew < -POSITION_MAXIMUM) yPosGumstixNew = -POSITION_MAXIMUM;
-
-			if(zPosGumstixNew > +POSITION_MAXIMUM) zPosGumstixNew = +POSITION_MAXIMUM;
-			if(zPosGumstixNew < -POSITION_MAXIMUM) zPosGumstixNew = -POSITION_MAXIMUM;
-
-			#if GUMSTIX_CAMERA_POINTING == FORWARD //camera led on up side
-
-			//~ Camera pointing forward and being PORTRAIT oriented
-			//~ elevatorGumstix = - (float)xPosGumstixNew / 1000;
-			//~ aileronGumstix  = - (float)zPosGumstixNew / 1000;
-			//~ throttleGumstix = + (float)yPosGumstixNew / 1000;
-
-			//~ Camera pointing forward and being LANDSCAPE oriented
-			elevatorGumstix = - (float) xPosGumstixNew / 1000;
-			aileronGumstix  = - (float) yPosGumstixNew / 1000;
-			throttleGumstix = - (float) zPosGumstixNew / 1000;
-
-			#elif GUMSTIX_CAMERA_POINTING == DOWNWARD //camera led on front side
-
-			elevatorGumstix = + (float) yPosGumstixNew / 1000;
-			aileronGumstix  = - (float) zPosGumstixNew / 1000;
-			throttleGumstix = + (float) xPosGumstixNew / 1000;
-
-			#endif
-
-		}
-
-		gumstixDataFlag = 0;
-	}
-
-#endif
 		
 		mergeSignalsToOutput();
 	}

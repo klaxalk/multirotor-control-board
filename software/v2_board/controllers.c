@@ -6,6 +6,11 @@
  */ 
 
 #include "controllers.h"
+#include "communication.h"
+
+// controller on/off
+volatile unsigned char controllerEnabled = 0;
+volatile unsigned char positionControllerEnabled = 0;
 
 #if PX4FLOW_DATA_RECEIVE == ENABLED
 
@@ -17,6 +22,29 @@ volatile trajectoryPoint_t trajectory[TRAJECTORY_LENGTH];
 
 static uint8_t estimator_cycle = 0;
 static float   estimatedThrottlePos_prev = 0;
+
+//vars for estimators
+volatile float estimatedElevatorPos = 0;
+volatile float estimatedAileronPos  = 0;
+volatile float estimatedThrottlePos = 0;
+volatile float estimatedElevatorVel = 0;
+volatile float estimatedAileronVel  = 0;
+volatile float estimatedThrottleVel = 0;
+
+
+volatile float elevatorIntegration = 0;
+volatile float aileronIntegration  = 0;
+volatile float throttleIntegration = 0;
+//~ volatile float elevatorSetpoint = (ELEVATOR_SP_LOW + ELEVATOR_SP_HIGH)/2;
+volatile float elevatorSetpoint = -1.5;
+volatile float aileronSetpoint  = (AILERON_SP_LOW  + AILERON_SP_HIGH )/2;
+//~ volatile float throttleSetpoint = (THROTTLE_SP_LOW + THROTTLE_SP_HIGH)/2;
+volatile float throttleSetpoint = 0.75;
+
+//auto-landing variables
+volatile unsigned char landingRequest = 0;
+volatile unsigned char landingState = LS_ON_GROUND;
+volatile uint8_t landingCounter = 0;
 
 //~ ------------------------------------------------------------------------ ~//
 //~ Setpoints - assign setpoint values                                       ~//
@@ -185,6 +213,7 @@ void positionController() {
 		if(vd > +POSITION_SPEED_MAX) vd = +POSITION_SPEED_MAX;
 		if(vd < -POSITION_SPEED_MAX) vd = -POSITION_SPEED_MAX;
 	} else { //velocity controller
+		// TODO [HCH] add requested velocity setpoint
 		vd = 0;
 		error = - estimatedElevatorVel;
 	}
@@ -217,6 +246,7 @@ void positionController() {
 		if(vd > +POSITION_SPEED_MAX) vd = +POSITION_SPEED_MAX;
 		if(vd < -POSITION_SPEED_MAX) vd = -POSITION_SPEED_MAX;
 	} else { //velocity controller
+		// TODO [HCH] add requested velocity setpoint
 		vd = 0;
 		error = - estimatedAileronVel;
 	}

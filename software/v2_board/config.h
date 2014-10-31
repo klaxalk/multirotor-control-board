@@ -10,14 +10,6 @@
 
 #include "defines.h"
 
-// Choose if the logging is on
-#define LOGGING_ON ENABLED
-/*
-	ENABLED
-	DISABLED
-
-*/
-
 // Choose if trajectory following is on
 #define TRAJECTORY_FOLLOWING ENABLED
 /*
@@ -63,24 +55,6 @@
 */
 
 //~ --------------------------------------------------------------------
-//~ Receiving data from FlightCTRL configuration
-//~ --------------------------------------------------------------------
-
-// on/off the receiving of the Angles from the FlightCTRL
-#define FLIGHTCTRL_DATA_RECEIVE DISABLED
-/*
-	ENABLED
-	DISABLED
-*/
-
-// define the UART port for communication with the FlightCTRL
-#define FLIGHTCTRL_RECEIVE_PORT UART1
-/*
-	UART0
-	UART1
-*/
-
-//~ --------------------------------------------------------------------
 //~ Receiving data from GumStix configuration
 //~ --------------------------------------------------------------------
 
@@ -89,13 +63,6 @@
 /*
 	ENABLED
 	DISABLED
-*/
-
-// define the UART port for communication with the GumStix
-#define GUMSTIX_RECEIVE_PORT UART0
-/*
-	UART0
-	UART1
 */
 
 //~ --------------------------------------------------------------------
@@ -109,63 +76,12 @@
 	DISABLED
 */
 
-// define the UART port for communication with the px4flow
-#define PX4FLOW_RECEIVE_PORT UART1
-/*
-	UART0
-	UART1
-*/
+// disable the trajectory following IF there are no data for control
+#if (PX4FLOW_DATA_RECEIVE == DISABLED && GUMSTIX_DATA_RECEIVE == DISABLED)
 
-//~ --------------------------------------------------------------------
-//~ Config baud rates for UARTs
-//~ --------------------------------------------------------------------
+	#undef	TRAJECTORY_FOLLOWING
+	#define	TRAJECTORY_FOLLOWING	DISABLED
 
-#if FLIGHTCTRL_DATA_RECEIVE == ENABLED
-
-#if FLIGHTCTRL_RECEIVE_PORT == UART0
-#define BAUD0 57600
-#endif
-
-#if FLIGHTCTRL_RECEIVE_PORT == UART1
-#define BAUD1 57600
-#endif
-
-#endif
-
-#if GUMSTIX_DATA_RECEIVE == ENABLED
-
-#if GUMSTIX_RECEIVE_PORT == UART0
-#define BAUD0 57600
-#endif
-
-#if GUMSTIX_RECEIVE_PORT == UART1
-#define BAUD1 57600
-#endif
-
-#endif
-
-#if PX4FLOW_DATA_RECEIVE == ENABLED
-
-#if PX4FLOW_RECEIVE_PORT == UART0
-#define BAUD0 115200
-#endif
-
-#if PX4FLOW_RECEIVE_PORT == UART1
-#define BAUD1 115200
-#endif
-
-#endif
-
-// default BAUDs
-#ifndef BAUD0
-#define BAUD0 57600
-#endif
-
-#ifndef BAUD1
-#define BAUD1 57600
-#endif
-
-#define PITCH_BUFFER_SIZE 8
-#define ROLL_BUFFER_SIZE 8
+#endif 
 
 #endif // _CONFIG_H

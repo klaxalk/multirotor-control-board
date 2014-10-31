@@ -13,36 +13,20 @@
 #include "usart_driver_RTOS.h"
 #include "communication.h"
 #include <stdio.h>
+#include "controllers.h"
 
 void commTask(void *p) {
 	
 	unsigned char inChar;
-
 	char* ukazatel;
 	
 	while (1) {
 
-		// xbee received
+		// xBee received
 		if (usartBufferGetByte(usart_buffer_xbee, &inChar, 0)) {
-					
-			if (inChar == 'x') {
-				
-				int i;
-				for (i = 0; i < 4; i++) {
-										
-					usartBufferPutInt(usart_buffer_xbee, RCchannel[i], 10, 10);
-					usartBufferPutString(usart_buffer_xbee, ", ", 10);
-				}
-				usartBufferPutString(usart_buffer_xbee, "\r\n", 10);
-			}
-			
-			if (inChar == 'v') {
-				
-				char buffer[20];
-				sprintf(buffer, "%2.2f %2.2f %2.2f\r\n", elevatorSpeed, aileronSpeed, groundDistance);
-				usartBufferPutString(usart_buffer_xbee, buffer, 10);
-			}
 
+			#if (GUMSTIX_DATA_RECEIVE == ENABLED) && (PX4FLOW_DATA_RECEIVE == ENABLED)
+			// prototype of answering with log to xBee
 			if (inChar == 'b') {
 
 				ukazatel = (char*) &estimatedElevatorPos;
@@ -96,8 +80,10 @@ void commTask(void *p) {
 
 				usartBufferPutString(usart_buffer_xbee, "\r\n", 10);
 			}
+			#endif // GUMSTIX_DATA_RECEIVE == ENABLED
 		}
 		
+		#if GUMSTIX_DATA_RECEIVE == ENABLED
 		if (usartBufferGetByte(usart_buffer_4, &inChar, 0)) {
 
 			gumstixParseChar(inChar);
@@ -105,7 +91,7 @@ void commTask(void *p) {
 		
 		if (gumstixDataFlag == 1) {
 			
-			if (validGumstix == 1) {
+			if (validGumstix == 1) { // whether the blob detector outputs valid data
 
 				//Gumstix returns position of the blob relative to camera
 				//in milimeters, we want position of the drone relative
@@ -126,37 +112,36 @@ void commTask(void *p) {
 
 				#if GUMSTIX_CAMERA_POINTING == FORWARD //camera led on up side
 
-				//~ Camera pointing forward and being PORTRAIT oriented
-				//~ elevatorGumstix = - (float)xPosGumstixNew / 1000;
-				//~ aileronGumstix  = - (float)zPosGumstixNew / 1000;
-				//~ throttleGumstix = + (float)yPosGumstixNew / 1000;
+					//~ Camera pointing forward and being PORTRAIT oriented
+					//~ elevatorGumstix = - (float)xPosGumstixNew / 1000;
+					//~ aileronGumstix  = - (float)zPosGumstixNew / 1000;
+					//~ throttleGumstix = + (float)yPosGumstixNew / 1000;
 
-				//~ Camera pointing forward and being LANDSCAPE oriented
-				elevatorGumstix = - (float) xPosGumstixNew / 1000;
-				aileronGumstix  = - (float) yPosGumstixNew / 1000;
-				throttleGumstix = - (float) zPosGumstixNew / 1000;
+					//~ Camera pointing forward and being LANDSCAPE oriented
+					elevatorGumstix = - (float) xPosGumstixNew / 1000;
+					aileronGumstix  = - (float) yPosGumstixNew / 1000;
+					throttleGumstix = - (float) zPosGumstixNew / 1000;
 
 				#elif GUMSTIX_CAMERA_POINTING == DOWNWARD //camera led on front side
 
-				elevatorGumstix = + (float) yPosGumstixNew / 1000;
-				aileronGumstix  = - (float) zPosGumstixNew / 1000;
-				throttleGumstix = + (float) xPosGumstixNew / 1000;
+					elevatorGumstix = + (float) yPosGumstixNew / 1000;
+					aileronGumstix  = - (float) zPosGumstixNew / 1000;
+					throttleGumstix = + (float) xPosGumstixNew / 1000;
 
 				#endif
-
 			}
 
 			gumstixDataFlag = 0;
 		}
+		#endif // GUMSTIX_DATA_RECEIVE == ENABLED
 
+		#if PX4FLOW_DATA_RECEIVE == ENABLED
 		if (usartBufferGetByte(usart_buffer_1, &inChar, 0)) {
 
 			px4flowParseChar((uint8_t) inChar);
 		}
 
 		if (opticalFlowDataFlag == 1) {
-
-			led_blue_toggle();
 
 			// decode the message (there will be new values in opticalFlowData...
 			mavlink_msg_optical_flow_decode(&mavlinkMessage, &opticalFlowData);
@@ -188,5 +173,6 @@ void commTask(void *p) {
 
 			opticalFlowDataFlag = 0;
 		}
+		#endif // PX4FLOW_DATA_RECEIVE == ENABLED
 	}
 }
