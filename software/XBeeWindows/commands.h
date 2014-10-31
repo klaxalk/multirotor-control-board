@@ -28,4 +28,8 @@ void kopterSetpointsReportReceived(unsigned char *address64,unsigned char *addre
 void kopterControllersRequest(unsigned char *address64,unsigned char *address16,unsigned char option,unsigned char frameID);
 void kopterControllersStatusRequest(unsigned char *address64,unsigned char *address16,unsigned char frameID);
 void kopterControllersReportReceived(unsigned char *address64,unsigned char *address16,unsigned char status);
+
+void kopterGumstixRequest(unsigned char *address64,unsigned char *address16,unsigned char options,unsigned char frameID);
+void kopterGumstixStatusRequest(unsigned char *address64,unsigned char *address16,unsigned char frameID);
+void kopterGumstixReportRecieved(unsigned char *address64,unsigned char *address16,unsigned char status);
 #endif /*COMMANDS_H*/

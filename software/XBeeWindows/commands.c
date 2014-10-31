@@ -5,19 +5,18 @@
 #include "main.h"
 #include "defines.h"
 
-unsigned char data[20];
+unsigned char dataOUT[25];
 
 //TELEMETRY
 void telemetryRequest(unsigned char *address64,unsigned char *address16,unsigned char type,unsigned char options,unsigned char frameID){
-    *data='c';
-    *(data+1)=type;
-    *(data+2)=options;
-    makeTRPacket(address64,address16,0x00,frameID,data,3);
+    *dataOUT='c';
+    *(dataOUT+1)=type;
+    *(dataOUT+2)=options;
+    makeTRPacket(address64,address16,0x00,frameID,dataOUT,3);
     #ifdef DEBUG
      printf("TELEMETRY REQUEST\n");
     #endif // DEBUG
 }
-
 void telemetryReceive(unsigned char *address64,unsigned char *address16,unsigned char type,float value){
 	if(type==TELEMETRIES.GROUND_DISTANCE_ESTIMATED){
         printf("Ground Distance Est: %f\n",value);
@@ -51,9 +50,8 @@ void telemetryReceive(unsigned char *address64,unsigned char *address16,unsigned
 }
 
 //GENERAL
-void dataTypeError(unsigned char *address64,unsigned char *address16,unsigned char *data){
+void dataTypeError(unsigned char *address64,unsigned char *address16,unsigned char *dataOUT){
 }
-
 void packetTypeError(unsigned char *inPacket){
     int i;
     printf("Unknown Packet: ");
@@ -64,46 +62,42 @@ void packetTypeError(unsigned char *inPacket){
 
 //LANDING
 void kopterLandRequest(unsigned char *address64,unsigned char *address16,unsigned char options,unsigned char frameID){
-    *(data)='c';
-    *(data+1)=COMMANDS.LANDING;
-    *(data+2)=options;
-    makeTRPacket(address64,address16,0x00,frameID,data,3);
+    *(dataOUT)='c';
+    *(dataOUT+1)=COMMANDS.LANDING;
+    *(dataOUT+2)=options;
+    makeTRPacket(address64,address16,0x00,frameID,dataOUT,3);
 }
-
 void kopterLandStatusRequest(unsigned char *address64,unsigned char *address16,unsigned char frameID){
-		*data='c';
-		*(data+1)=COMMANDS.LANDING;
-		*(data+2)=GET_STATUS;
-		makeTRPacket(address64,address16,0x00,frameID,data,3);
+		*dataOUT='c';
+		*(dataOUT+1)=COMMANDS.LANDING;
+		*(dataOUT+2)=GET_STATUS;
+		makeTRPacket(address64,address16,0x00,frameID,dataOUT,3);
 }
-
 void kopterLandReportRecieved(unsigned char *address64,unsigned char *address16,unsigned char status){
-    if(status==LANDING.LAND_ON){
+    if(status==ONOFF.ON){
         printf("LANDING ON\n");
-    }else if(status==LANDING.LAND_OFF){
+    }else if(status==ONOFF.OFF){
         printf("LANDING OFF\n");
     }
 }
 
 //TRAJECTORY
 void kopterTrajectoryRequest(unsigned char *address64,unsigned char *address16,unsigned char options,unsigned char frameID){
-	*(data)='c';
-	*(data+1)=COMMANDS.TRAJECTORY;
-	*(data+2)=options;
-	makeTRPacket(address64,address16,0x00,frameID,data,3);
+	*(dataOUT)='c';
+	*(dataOUT+1)=COMMANDS.TRAJECTORY_FOLLOW;
+	*(dataOUT+2)=options;
+	makeTRPacket(address64,address16,0x00,frameID,dataOUT,3);
 }
-
 void kopterTrajectoryStatusRequest(unsigned char *address64,unsigned char *address16,unsigned char frameID){
-	*data='c';
-	*(data+1)=COMMANDS.TRAJECTORY;
-	*(data+2)=GET_STATUS;
-	makeTRPacket(address64,address16,0x00,frameID,data,3);
+	*dataOUT='c';
+	*(dataOUT+1)=COMMANDS.TRAJECTORY_FOLLOW;
+	*(dataOUT+2)=GET_STATUS;
+	makeTRPacket(address64,address16,0x00,frameID,dataOUT,3);
 }
-
 void kopterTrajectoryReportRecieved(unsigned char *address64,unsigned char *address16,unsigned char status){
-	if(			status==TRAJECTORY.FOLLOW){
+	if(			status==ONOFF.ON){
         printf("TRAJECTORY FOLLOWING\n");
-	}else if(status==TRAJECTORY.NOT_FOLLOW){
+	}else if(status==ONOFF.OFF){
         printf("TRAJECTORY NOT FOLLOWING\n");
 	}
 }
@@ -113,34 +107,31 @@ void kopterTrajectoryReportRecieved(unsigned char *address64,unsigned char *addr
 void kopterTrajectoryAddPointRequest(unsigned char *address64,unsigned char *address16,unsigned char index,float time,float elevatorPos,float aileronPos,float throttlePos,unsigned char frameID){
 	unsigned char *ch;
 
-	*(data)='c';
-	*(data+1)=COMMANDS.TRAJECTORY_POINTS;
-	*(data+2)=COMMANDS.TRAJECTORY_POINTS;
-	*(data+3)=index;
+	*(dataOUT)='c';
+	*(dataOUT+1)=COMMANDS.TRAJECTORY_POINTS;
+	*(dataOUT+2)=COMMANDS.TRAJECTORY_POINTS;
+	*(dataOUT+3)=index;
 
 	ch=(unsigned char *) &time;
-	*(data+4)=*ch; *(data+5)=*(ch+1); *(data+6)=*(ch+2); *(data+7)=*(ch+3);
+	*(dataOUT+4)=*ch; *(dataOUT+5)=*(ch+1); *(dataOUT+6)=*(ch+2); *(dataOUT+7)=*(ch+3);
 
 	ch=(unsigned char *) &elevatorPos;
-	*(data+8)=*ch; *(data+9)=*(ch+1); *(data+10)=*(ch+2); *(data+11)=*(ch+3);
+	*(dataOUT+8)=*ch; *(dataOUT+9)=*(ch+1); *(dataOUT+10)=*(ch+2); *(dataOUT+11)=*(ch+3);
 
 	ch=(unsigned char *) &aileronPos;
-	*(data+12)=*ch; *(data+13)=*(ch+1); *(data+14)=*(ch+2); *(data+15)=*(ch+3);
+	*(dataOUT+12)=*ch; *(dataOUT+13)=*(ch+1); *(dataOUT+14)=*(ch+2); *(dataOUT+15)=*(ch+3);
 
 	ch=(unsigned char *) &throttlePos;
-	*(data+16)=*ch; *(data+17)=*(ch+1); *(data+18)=*(ch+2); *(data+19)=*(ch+3);
+	*(dataOUT+16)=*ch; *(dataOUT+17)=*(ch+1); *(dataOUT+18)=*(ch+2); *(dataOUT+19)=*(ch+3);
 
-	makeTRPacket(address64,address16,0x00,frameID,data,20);
+	makeTRPacket(address64,address16,0x00,frameID,dataOUT,20);
 }
-
 void kopterTrajectoryPointStatusRequest(unsigned char *address64,unsigned char *address16,unsigned char frameID){
-	unsigned char *d;
-	*(data)='c';
-	*(data+1)=COMMANDS.TRAJECTORY_POINTS;
-	*(data+2)=GET_STATUS;
-	makeTRPacket(address64,address16,0x00,frameID,data,4);
+	*(dataOUT)='c';
+	*(dataOUT+1)=COMMANDS.TRAJECTORY_POINTS;
+	*(dataOUT+2)=GET_STATUS;
+	makeTRPacket(address64,address16,0x00,frameID,dataOUT,4);
 }
-
 void kopterTrajectoryPointReportReceived(unsigned char *address64,unsigned char *address16,unsigned char index,float time,float elevatorPos,float aileronPos,float throttlePos){
 	printf("%i.) T:%.2f El:%.2f Ai:%.2f Th:%.2f\n",index,time,elevatorPos,aileronPos,throttlePos);
 }
@@ -150,27 +141,25 @@ void kopterSetpointsSetRequest(unsigned char *address64,unsigned char *address16
 	float f=value;
 	unsigned char *ch;
 
-	*(data)='c';
-	*(data+1)=COMMANDS.SET_SETPOINTS;
-	*(data+2)=type;
-	*(data+3)=positionType;
+	*(dataOUT)='c';
+	*(dataOUT+1)=COMMANDS.SET_SETPOINTS;
+	*(dataOUT+2)=type;
+	*(dataOUT+3)=positionType;
 
 	ch=(unsigned char *) &f;
-	*(data+4)=*ch;
-	*(data+5)=*(ch+1);
-	*(data+6)=*(ch+2);
-	*(data+7)=*(ch+3);
-	makeTRPacket(address64,address16,0x00,frameID,data,8);
+	*(dataOUT+4)=*ch;
+	*(dataOUT+5)=*(ch+1);
+	*(dataOUT+6)=*(ch+2);
+	*(dataOUT+7)=*(ch+3);
+	makeTRPacket(address64,address16,0x00,frameID,dataOUT,8);
 }
-
 void kopterSetpointStatusRequest(unsigned char *address64,unsigned char *address16,unsigned char type,unsigned char frameID){
-    *(data)='c';
-    *(data+1)=COMMANDS.SET_SETPOINTS;
-    *(data+2)=type;
-    *(data+3)=GET_STATUS;
-    makeTRPacket(address64,address16,0x00,frameID,data,4);
+    *(dataOUT)='c';
+    *(dataOUT+1)=COMMANDS.SET_SETPOINTS;
+    *(dataOUT+2)=type;
+    *(dataOUT+3)=GET_STATUS;
+    makeTRPacket(address64,address16,0x00,frameID,dataOUT,4);
 }
-
 void kopterSetpointsReportReceived(unsigned char *address64,unsigned char *address16,unsigned char type,float value){
 	if(		 type==SETPOINTS.THROTTLE){
         printf("Throttle setpoint: %f\n",value);
@@ -187,19 +176,17 @@ void kopterSetpointsReportReceived(unsigned char *address64,unsigned char *addre
 
 //CONTROLLERS
 void kopterControllersRequest(unsigned char *address64,unsigned char *address16,unsigned char option,unsigned char frameID){
-		*(data)='c';
-		*(data+1)=COMMANDS.CONTROLLERS;
-		*(data+2)=option;
-		makeTRPacket(address64,address16,0x00,frameID,data,3);
+		*(dataOUT)='c';
+		*(dataOUT+1)=COMMANDS.CONTROLLERS;
+		*(dataOUT+2)=option;
+		makeTRPacket(address64,address16,0x00,frameID,dataOUT,3);
 }
-
 void kopterControllersStatusRequest(unsigned char *address64,unsigned char *address16,unsigned char frameID){
-	*(data)='c';
-	*(data+1)=COMMANDS.CONTROLLERS;
-	*(data+2)=GET_STATUS;
-	makeTRPacket(address64,address16,0x00,frameID,data,3);
+	*(dataOUT)='c';
+	*(dataOUT+1)=COMMANDS.CONTROLLERS;
+	*(dataOUT+2)=GET_STATUS;
+	makeTRPacket(address64,address16,0x00,frameID,dataOUT,3);
 }
-
 void kopterControllersReportReceived(unsigned char *address64,unsigned char *address16,unsigned char status){
 	if(		 status==CONTROLLERS.OFF){
 		printf("Controllers: OFF\n");
@@ -209,3 +196,25 @@ void kopterControllersReportReceived(unsigned char *address64,unsigned char *add
         printf("Controllers: VELOCITY\n");
 	}
 }
+
+//GUMSTIX
+void kopterGumstixRequest(unsigned char *address64,unsigned char *address16,unsigned char options,unsigned char frameID){
+	*(dataOUT)='c';
+	*(dataOUT+1)=COMMANDS.GUMSTIX;
+	*(dataOUT+2)=options;
+	makeTRPacket(address64,address16,0x00,frameID,dataOUT,3);
+}
+void kopterGumstixStatusRequest(unsigned char *address64,unsigned char *address16,unsigned char frameID){
+	*(dataOUT)='c';
+	*(dataOUT+1)=COMMANDS.GUMSTIX;
+	*(dataOUT+2)=GET_STATUS;
+	makeTRPacket(address64,address16,0x00,frameID,dataOUT,3);
+}
+void kopterGumstixReportRecieved(unsigned char *address64,unsigned char *address16,unsigned char status){
+	if(status==ONOFF.ON){
+        printf("GUMSTIX ENABLED\n");
+	}else if(status==ONOFF.OFF){
+        printf("GUMSTIX DISABLED\n");
+	}
+}
+//

@@ -14,8 +14,7 @@ extern volatile int8_t trajMaxIndex;
 ADDRESST ADDRESS;
 TELEMETRIEST TELEMETRIES;
 TELREQOPTT TELREQOPT;
-LANDINGT LANDING;
-TRAJECTORYT TRAJECTORY;
+ONOFFT ONOFF;
 SETPOINTST SETPOINTS;
 POSITIONST POSITIONS;
 CONTROLLERST CONTROLLERS;
@@ -58,12 +57,9 @@ void constInit(){
     TELREQOPT.SENDING_ON = 0x01;
     TELREQOPT.SENDING_ONCE = 0x02;
     TELREQOPT.SENDING_STATUS = 0x00;
-	
-	LANDING.LAND_ON=0x00;
-	LANDING.LAND_OFF=0x01;
-	
-	TRAJECTORY.FOLLOW=0x01;
-	TRAJECTORY.NOT_FOLLOW=0x02;
+		
+	ONOFF.ON=0x01;
+	ONOFF.OFF=0x02;
 	
 	SETPOINTS.THROTTLE_SP=0x01;
 	SETPOINTS.ELEVATOR_POSITION=0x02;
@@ -81,8 +77,9 @@ void constInit(){
 	COMMANDS.LANDING=0x11;
 	COMMANDS.SET_SETPOINTS=0x12;
 	COMMANDS.CONTROLLERS=0x13;
-	COMMANDS.TRAJECTORY=0x15;
+	COMMANDS.TRAJECTORY_FOLLOW=0x15;
 	COMMANDS.TRAJECTORY_POINTS=0x16;
+	COMMANDS.GUMSTIX=0x17;
 	
 	GET_STATUS=0x95;
 }
@@ -132,44 +129,44 @@ void packetHandler(unsigned char *inPacket){
                             }else if(*(dataIN+3)==TELREQOPT.SENDING_ON){
 
                             }else if(*(dataIN+3)==TELREQOPT.SENDING_ONCE){ 								            
-                                telemetrySend(address64,address16,*(dataIN+2),0x01);
-                            }else if(*(dataIN+3)==TELREQOPT.SENDING_STATUS){
+                                telemetrySend(address64,address16,*(dataIN+2),0x00);
+                            }else if(*(dataIN+3)==GET_STATUS){
 
                             }
                         } else
 						//LANDING REQUEST
 						if(*(dataIN+2)==COMMANDS.LANDING){
-							if(		 *(dataIN+3)==LANDING.LAND_ON){
+							if(		 *(dataIN+3)==ONOFF.ON){
 								kopterLand(address64,address16,1);
-								kopterLandReport(address64,address16,0x01);
+								kopterLandReport(address64,address16,0x00);
 								
-							}else if(*(dataIN+3)==LANDING.LAND_OFF){
+							}else if(*(dataIN+3)==ONOFF.OFF){
 								kopterLand(address64,address16,0);
-								kopterLandReport(address64,address16,0x01);
+								kopterLandReport(address64,address16,0x00);
 								
 							}else if(*(dataIN+3)==GET_STATUS){
-								kopterLandReport(address64,address16,0x01);								
+								kopterLandReport(address64,address16,0x00);								
 							}
 						} else
 						//TRAJECTORY FOLLOW REQUEST
-						if(*(dataIN+2)==COMMANDS.TRAJECTORY){
-							if(		 *(dataIN+3)==TRAJECTORY.FOLLOW){
+						if(*(dataIN+2)==COMMANDS.TRAJECTORY_FOLLOW){
+							if(		 *(dataIN+3)==ONOFF.ON){
 								kopterTrajectory(address64,address16,1);
-								kopterTrajectoryReport(address64,address16,0x01);
+								kopterTrajectoryReport(address64,address16,0x00);
 								
-							}else if(*(dataIN+3)==TRAJECTORY.NOT_FOLLOW){
+							}else if(*(dataIN+3)==ONOFF.OFF){
 								kopterTrajectory(address64,address16,0);
-								kopterTrajectoryReport(address64,address16,0x01);
+								kopterTrajectoryReport(address64,address16,0x00);
 								
 							}else if(*(dataIN+3)==GET_STATUS){
-								kopterTrajectoryReport(address64,address16,0x01);								
+								kopterTrajectoryReport(address64,address16,0x00);								
 							}
 						} else
 						//TRAJECTORY ADD POINT REQUEST
 						if(*(dataIN+2)==COMMANDS.TRAJECTORY_POINTS){
 							if(*(dataIN+3)==GET_STATUS){																
 								for(i=0;i<=trajMaxIndex;i++){
-										kopterTrajectoryPointReport(address64,address16,i,0x01);
+										kopterTrajectoryPointReport(address64,address16,i,0x00);
 								}								
 							}else{								
 								ch1[0]=*(dataIN+5); ch1[1]=*(dataIN+6); ch1[2]=*(dataIN+7); ch1[3]=*(dataIN+8); f1=(float *)ch1;
@@ -177,13 +174,13 @@ void packetHandler(unsigned char *inPacket){
 								ch3[0]=*(dataIN+13); ch3[1]=*(dataIN+14); ch3[2]=*(dataIN+15); ch3[3]=*(dataIN+16); f3=(float *)ch3;
 								ch4[0]=*(dataIN+17); ch4[1]=*(dataIN+18); ch4[2]=*(dataIN+19); ch4[3]=*(dataIN+20); f4=(float *)ch4;
 								kopterTrajectoryAddPoint(address64,address16,*(dataIN+4),*f1,*f2,*f3,*f4);	
-								kopterTrajectoryPointReport(address64,address16,*(dataIN+4),0x01);																							
+								kopterTrajectoryPointReport(address64,address16,*(dataIN+4),0x00);																							
 							}
 						} else																		
 						//SETPOINTS REQUEST
 						if(*(dataIN+2)==COMMANDS.SET_SETPOINTS){
 							if(*(dataIN+4)==GET_STATUS){
-								kopterSetpointsReport(address64,address16,*(dataIN+3),0x12);
+								kopterSetpointsReport(address64,address16,*(dataIN+3),0x00);
 							}else{
 								ch1[0]=*(dataIN+5);
 								ch1[1]=*(dataIN+6);
@@ -191,7 +188,7 @@ void packetHandler(unsigned char *inPacket){
 								ch1[3]=*(dataIN+8);
 								f1=(float *)ch1;
 								kopterSetpointsSet(address64,address64,*(dataIN+3),*(dataIN+4),*f1);
-								kopterSetpointsReport(address64,address16,*(dataIN+3),0x12);
+								kopterSetpointsReport(address64,address16,*(dataIN+3),0x00);
 							}
 						}else
 						//CONTROLLERS ON/OFF
@@ -200,9 +197,18 @@ void packetHandler(unsigned char *inPacket){
 								kopterControllersReport(address64,address16,0x13);
 							}else{
 								kopterControllers(address64,address16,*(dataIN+3));
-								kopterControllersReport(address64,address16,0x13);
+								kopterControllersReport(address64,address16,0x00);
 							}															
-						}
+						}else
+						//GUMSTIX ON/OFF
+						if(*(dataIN+2)==COMMANDS.GUMSTIX){
+							if(*(dataIN+3)==GET_STATUS){
+								kopterGumstixReport(address64,address16,0x13);
+							}else{
+								kopterGumstix(address64,address16,*(dataIN+3));
+								kopterGumstixReport(address64,address16,0x00);
+							}
+						}						
                     break;
                 //telemetry
                 case 't':                                                                       
@@ -220,7 +226,7 @@ void packetHandler(unsigned char *inPacket){
 					         kopterLandReportRecieved(address64,address16,*(dataIN+3));
 				         } else
 						 //TRAJECTORY FOLLOW STATUS
-						 if(*(dataIN+2)==COMMANDS.TRAJECTORY){
+						 if(*(dataIN+2)==COMMANDS.TRAJECTORY_FOLLOW){
 							 kopterTrajectoryReportRecieved(address64,address16,*(dataIN+3));
 						 } else
 						 //TRAJECTORY POINTS
@@ -243,7 +249,11 @@ void packetHandler(unsigned char *inPacket){
 						 //CONTROLLERS STATUS
 						 if(*(dataIN+2)==COMMANDS.CONTROLLERS){
 							kopterControllersReportReceived(address64,address16,*(dataIN+3));
-						 }
+						 }else
+						 //GUMSTIX STATUS
+						 if(*(dataIN+2)==COMMANDS.GUMSTIX){
+							 kopterGumstixReportRecieved(address64,address16,*(dataIN+3));
+						 }						 
                     break;
                 //warning
                 case 'w':

@@ -7,7 +7,7 @@
 
 HANDLE matlabH;
 
-void main()
+int main()
 {
     int decison;
     float f;
@@ -85,14 +85,14 @@ void main()
             scanf("%d",&decison);
                     switch(decison){
                         case 1:
-                            kopterLandRequest(ADDRESS.K1,ADDRESS.UNKNOWN16,LANDING.LAND_ON,0x02);
+                            kopterLandRequest(ADDRESS.K1,ADDRESS.UNKNOWN16,ONOFF.ON,0x02);
                             packetHandler(readPacket());
                             packetHandler(readPacket());
                             packetHandler(readPacket());
                             packetHandler(readPacket());
                             break;
                         case 2:
-                            kopterLandRequest(ADDRESS.K1,ADDRESS.UNKNOWN16,LANDING.LAND_OFF,0x02);
+                            kopterLandRequest(ADDRESS.K1,ADDRESS.UNKNOWN16,ONOFF.OFF,0x02);
                             packetHandler(readPacket());
                             packetHandler(readPacket());
                             packetHandler(readPacket());
@@ -240,14 +240,14 @@ void main()
             scanf("%d",&decison);
             switch(decison){
                     case 1:
-                        kopterTrajectoryRequest(ADDRESS.K1,ADDRESS.UNKNOWN16,TRAJECTORY.FOLLOW,0x10);
+                        kopterTrajectoryRequest(ADDRESS.K1,ADDRESS.UNKNOWN16,ONOFF.ON,0x10);
                             packetHandler(readPacket());
                             packetHandler(readPacket());
                             packetHandler(readPacket());
                             packetHandler(readPacket());
                         break;
                     case 2:
-                        kopterTrajectoryRequest(ADDRESS.K1,ADDRESS.UNKNOWN16,TRAJECTORY.NOT_FOLLOW,0x10);
+                        kopterTrajectoryRequest(ADDRESS.K1,ADDRESS.UNKNOWN16,ONOFF.OFF,0x10);
                             packetHandler(readPacket());
                             packetHandler(readPacket());
                             packetHandler(readPacket());
@@ -299,4 +299,5 @@ void main()
     closeSerialLine(matlabH);
     #endif // MATLAB
     closeXBeeComm();
+    return 0;
 }

@@ -95,6 +95,9 @@ extern volatile float throttleDesiredSetpoint;
 extern volatile float elevatorDesiredVelocitySetpoint;
 extern volatile float aileronDesiredVelocitySetpoint;
 
+//Gumstix on/off
+extern volatile unsigned char gumstixEnabled;
+
 //auto-landing variables and state defines
 extern volatile unsigned char landingRequest;
 extern volatile unsigned char landingState;
@@ -124,11 +127,13 @@ extern volatile trajectoryPoint_t trajectory[];
 //set default trajectory
 void initTrajectory();
 
-//enables - disables controllers
+//enables - disables
 void disableVelocityController();
 void enableVelocityController();
 void disablePositionController();
 void enablePositionController();
+void enableGumstix();
+void disableGumstix();
 
 //setpoint and trajectory handling
 void setpoints();

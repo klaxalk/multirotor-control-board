@@ -35,21 +35,13 @@ typedef struct
     unsigned char SENDING_OFF;
     unsigned char SENDING_ON;
     unsigned char SENDING_ONCE;
-    unsigned char SENDING_STATUS;
 } TELREQOPTT;
 
-
 typedef struct
 {
-	unsigned char LAND_ON;
-	unsigned char LAND_OFF;
-} LANDINGT;
-
-typedef struct
-{
-	unsigned char FOLLOW;
-	unsigned char NOT_FOLLOW;
-} TRAJECTORYT;
+	unsigned char ON;
+	unsigned char OFF;
+} ONOFFT;
 
 typedef struct
 {
@@ -79,8 +71,9 @@ typedef struct
 	unsigned char LANDING;
 	unsigned char SET_SETPOINTS;
 	unsigned char CONTROLLERS;
-	unsigned char TRAJECTORY;
+	unsigned char TRAJECTORY_FOLLOW;
 	unsigned char TRAJECTORY_POINTS;
+	unsigned char GUMSTIX;
 }COMMANDST;
 
 
@@ -89,8 +82,7 @@ extern unsigned char GET_STATUS;
 extern ADDRESST ADDRESS;
 extern TELEMETRIEST TELEMETRIES;
 extern TELREQOPTT TELREQOPT;
-extern LANDINGT LANDING;
-extern TRAJECTORYT TRAJECTORY;
+extern ONOFFT ONOFF;
 extern SETPOINTST SETPOINTS;
 extern POSITIONST POSITIONS;
 extern CONTROLLERST CONTROLLERS;
@@ -101,11 +93,8 @@ void constInit();
 void packetHandler(unsigned char *inPacket);
 //create Transmit Request Packet 0x10
 void makeTRPacket(unsigned char *adr64,unsigned char *adr16,unsigned char options,unsigned char frameID,unsigned char *data, unsigned char dataLength);
-//parse Modem Status 0x8A
-void parMSPacket(unsigned char *inPacket,unsigned char *status);
-//parse Transmit Status 0x8B
+void parReceivePacket(unsigned char *inPacket,unsigned char *address64,unsigned char *address16,unsigned char *receiveOptions,unsigned char *dataIN);
 void parTSPacket(unsigned char *inPacket,unsigned char *frameID,unsigned char *address16,unsigned char *TrRetryCount,unsigned char *deliveryStatus,unsigned char *discoveryStatus);
-//parse Receive Packet 0x90
-void parReceivePacket(unsigned char *inPacket,unsigned char *address64,unsigned char *address16,unsigned char *receiveOptions,unsigned char *data);
+void parMSPacket(unsigned char *inPacket,unsigned char *status);
 
 #endif /*PACKETS_H*/

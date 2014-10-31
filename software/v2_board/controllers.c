@@ -59,6 +59,9 @@ volatile uint8_t landingCounter = 0;
 volatile unsigned char velocityControllerEnabled = 0;
 volatile unsigned char positionControllerEnabled = 0;
 
+//Gumstix on/off
+volatile unsigned char gumstixEnabled = 0;
+
 //auto-trajectory variables
 volatile unsigned char trajectoryEnabled = 0;
 volatile float trajTimer = 0;
@@ -77,6 +80,28 @@ void initTrajectory(){
 		TRAJ_POINT(i,i+1,elevatorPositionSetpoint,aileronPositionSetpoint,throttleSetpoint);
 	}
 	trajMaxIndex=-1;
+}
+
+void enableGumstix(){
+	if (gumstixEnabled ==0 ){		
+		elevatorPositionSetpoint = DEFAULT_ELEVATOR_POSITION_SETPOINT;
+		aileronPositionSetpoint = DEFAULT_AILERON_POSITION_SETPOINT;
+		elevatorDesiredPositionSetpoint = DEFAULT_ELEVATOR_POSITION_SETPOINT;
+		aileronDesiredPositionSetpoint = DEFAULT_AILERON_POSITION_SETPOINT;	
+		
+		estimatedElevatorPos = elevatorPositionSetpoint;
+		estimatedAileronPos  = aileronPositionSetpoint;
+		
+		aileronVelocitySetpoint = DEFAULT_AILERON_VELOCITY_SETPOINT;
+		elevatorVelocitySetpoint = DEFAULT_ELEVATOR_VELOCITY_SETPOINT;
+		aileronDesiredVelocitySetpoint = DEFAULT_AILERON_VELOCITY_SETPOINT;
+		elevatorDesiredVelocitySetpoint = DEFAULT_ELEVATOR_VELOCITY_SETPOINT;			
+	}
+	gumstixEnabled = 1;
+}
+
+void disableGumstix(){	
+	gumstixEnabled = 0;
 }
 
 void enableVelocityController() {
@@ -168,10 +193,10 @@ void setpoints() {
 		if(throttleDesiredSetpoint<THROTTLE_SP_LOW){throttleDesiredSetpoint=THROTTLE_SP_LOW;}
 		if(throttleDesiredSetpoint>THROTTLE_SP_HIGH){throttleDesiredSetpoint=THROTTLE_SP_HIGH;}
 			
-		if(elevatorDesiredVelocitySetpoint<SPEED_MAX){elevatorDesiredVelocitySetpoint=SPEED_MAX;}
+		if(elevatorDesiredVelocitySetpoint<-SPEED_MAX){elevatorDesiredVelocitySetpoint=-SPEED_MAX;}
 		if(elevatorDesiredVelocitySetpoint>SPEED_MAX){elevatorDesiredVelocitySetpoint=SPEED_MAX;}
 			
-		if(aileronDesiredVelocitySetpoint<SPEED_MAX){aileronDesiredVelocitySetpoint=SPEED_MAX;}
+		if(aileronDesiredVelocitySetpoint<-SPEED_MAX){aileronDesiredVelocitySetpoint=-SPEED_MAX;}
 		if(aileronDesiredVelocitySetpoint>SPEED_MAX){aileronDesiredVelocitySetpoint=SPEED_MAX;}
 				
 			

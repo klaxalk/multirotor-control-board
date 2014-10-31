@@ -39,15 +39,10 @@ typedef struct
 
 typedef struct
 {
-	unsigned char LAND_ON;
-	unsigned char LAND_OFF;
-} LANDINGT;
+	unsigned char ON;
+	unsigned char OFF;
+} ONOFFT;
 
-typedef struct
-{
-	unsigned char FOLLOW;
-	unsigned char NOT_FOLLOW;
-} TRAJECTORYT;
 
 typedef struct
 {
@@ -76,8 +71,9 @@ typedef struct
 	unsigned char LANDING;		
 	unsigned char SET_SETPOINTS;
 	unsigned char CONTROLLERS;
-	unsigned char TRAJECTORY;
+	unsigned char TRAJECTORY_FOLLOW;
 	unsigned char TRAJECTORY_POINTS;
+	unsigned char GUMSTIX;
 }COMMANDST;
 
 extern unsigned char GET_STATUS;
@@ -85,8 +81,7 @@ extern unsigned char GET_STATUS;
 extern ADDRESST ADDRESS;
 extern TELEMETRIEST TELEMETRIES;
 extern TELREQOPTT TELREQOPT;
-extern LANDINGT LANDING;
-extern TRAJECTORYT TRAJECTORY;
+extern ONOFFT ONOFF;
 extern SETPOINTST SETPOINTS;
 extern POSITIONST POSITIONS;
 extern CONTROLLERST CONTROLLERS;

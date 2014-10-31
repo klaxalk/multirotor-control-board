@@ -21,8 +21,7 @@ unsigned char GET_STATUS;
 ADDRESST ADDRESS;
 TELEMETRIEST TELEMETRIES;
 TELREQOPTT TELREQOPT;
-LANDINGT LANDING;
-TRAJECTORYT TRAJECTORY;
+ONOFFT ONOFF;
 SETPOINTST SETPOINTS;
 POSITIONST POSITIONS;
 CONTROLLERST CONTROLLERS;
@@ -58,13 +57,9 @@ void constInit(){
     TELREQOPT.SENDING_OFF = 0x00;
     TELREQOPT.SENDING_ON = 0x01;
     TELREQOPT.SENDING_ONCE = 0x02;
-    TELREQOPT.SENDING_STATUS = 0x00;
 
-	LANDING.LAND_ON=0x00;
-	LANDING.LAND_OFF=0x01;
-
-	TRAJECTORY.FOLLOW=0x01;
-	TRAJECTORY.NOT_FOLLOW=0x02;
+	ONOFF.ON=0x01;
+	ONOFF.OFF=0x02;
 
 	SETPOINTS.THROTTLE=0x01;
 	SETPOINTS.ELEVATOR_POSITION=0x02;
@@ -82,8 +77,9 @@ void constInit(){
 	COMMANDS.LANDING=0x11;
 	COMMANDS.SET_SETPOINTS=0x12;
 	COMMANDS.CONTROLLERS=0x13;
-	COMMANDS.TRAJECTORY=0x15;
+	COMMANDS.TRAJECTORY_FOLLOW=0x15;
 	COMMANDS.TRAJECTORY_POINTS=0x16;
+    COMMANDS.GUMSTIX=0x17;
 
 	GET_STATUS=0x95;
 }
@@ -93,7 +89,7 @@ void packetHandler(unsigned char *inPacket){
     unsigned char address16[2];
     unsigned char address64[8];
     unsigned char recieveOptions[5];
-    unsigned char data[25];
+    unsigned char dataIN[25];
     int i;
 
 	float *f1;
@@ -127,9 +123,9 @@ void packetHandler(unsigned char *inPacket){
         break;
     //Receive Packet
     case 0x90:
-            parReceivePacket(inPacket,address64,address16,recieveOptions,data);
+            parReceivePacket(inPacket,address64,address16,recieveOptions,dataIN);
             //*data is data length
-            switch ((int)*(data+1)){
+            switch ((int)*(dataIN+1)){
                 //command
                 case 'c':
 
@@ -139,47 +135,51 @@ void packetHandler(unsigned char *inPacket){
                         #ifdef DEBUG
                           printf("TELEMETRY RECEIVED\n");
                         #endif // DEBUG
-                        ch1[0]=*(data+3);
-                        ch1[1]=*(data+4);
-                        ch1[2]=*(data+5);
-                        ch1[3]=*(data+6);
+                        ch1[0]=*(dataIN+3);
+                        ch1[1]=*(dataIN+4);
+                        ch1[2]=*(dataIN+5);
+                        ch1[3]=*(dataIN+6);
                         f1=(float *)ch1;
                         #ifdef MATLAB
                         sendBytes(matlabH,ch1,4);
                         #endif // MATLAB
-                        telemetryReceive(address64,address16,*(data+2),*f1);
+                        telemetryReceive(address64,address16,*(dataIN+2),*f1);
                     break;
                 //report
                 case 'r':
                      //LANDING STATUS
-                    if(*(data+2)==COMMANDS.LANDING){
-                        kopterLandReportRecieved(address64,address16,*(data+3));
+                    if(*(dataIN+2)==COMMANDS.LANDING){
+                        kopterLandReportRecieved(address64,address16,*(dataIN+3));
                     }else
                     //TRAJECTORY FOLLOW STATUS
-                    if(*(data+2)==COMMANDS.TRAJECTORY){
-					    kopterTrajectoryReportRecieved(address64,address16,*(data+3));
+                    if(*(dataIN+2)==COMMANDS.TRAJECTORY_FOLLOW){
+					    kopterTrajectoryReportRecieved(address64,address16,*(dataIN+3));
 				    } else
 					 //TRAJECTORY POINTS
-				    if(*(data+2)==COMMANDS.TRAJECTORY_POINTS){
-                         ch1[0]=*(data+4); ch1[1]=*(data+5); ch1[2]=*(data+6); ch1[3]=*(data+7); f1=(float *)ch1;
-						 ch2[0]=*(data+8); ch2[1]=*(data+9); ch2[2]=*(data+10); ch2[3]=*(data+11); f2=(float *)ch2;
-						 ch3[0]=*(data+12); ch3[1]=*(data+13); ch3[2]=*(data+14); ch3[3]=*(data+15); f3=(float *)ch3;
-						 ch4[0]=*(data+16); ch4[1]=*(data+17); ch4[2]=*(data+18); ch4[3]=*(data+19); f4=(float *)ch4;
-						 kopterTrajectoryPointReportReceived(address64,address16,*(data+3),*f1,*f2,*f3,*f4);
+				    if(*(dataIN+2)==COMMANDS.TRAJECTORY_POINTS){
+                         ch1[0]=*(dataIN+4); ch1[1]=*(dataIN+5); ch1[2]=*(dataIN+6); ch1[3]=*(dataIN+7); f1=(float *)ch1;
+						 ch2[0]=*(dataIN+8); ch2[1]=*(dataIN+9); ch2[2]=*(dataIN+10); ch2[3]=*(dataIN+11); f2=(float *)ch2;
+						 ch3[0]=*(dataIN+12); ch3[1]=*(dataIN+13); ch3[2]=*(dataIN+14); ch3[3]=*(dataIN+15); f3=(float *)ch3;
+						 ch4[0]=*(dataIN+16); ch4[1]=*(dataIN+17); ch4[2]=*(dataIN+18); ch4[3]=*(dataIN+19); f4=(float *)ch4;
+						 kopterTrajectoryPointReportReceived(address64,address16,*(dataIN+3),*f1,*f2,*f3,*f4);
 				    } else
                     //SETPOINTS STATUS
-                    if(*(data+2)==COMMANDS.SET_SETPOINTS){
-						ch1[0]=*(data+4);
-						ch1[1]=*(data+5);
-						ch1[2]=*(data+6);
-						ch1[3]=*(data+7);
+                    if(*(dataIN+2)==COMMANDS.SET_SETPOINTS){
+						ch1[0]=*(dataIN+4);
+						ch1[1]=*(dataIN+5);
+						ch1[2]=*(dataIN+6);
+						ch1[3]=*(dataIN+7);
 						f1=(float *)ch1;
-						kopterSetpointsReportReceived(address64,address16,*(data+3),*f1);
+						kopterSetpointsReportReceived(address64,address16,*(dataIN+3),*f1);
                     }else
-					//CONTROLLERS STATUS
-                    if(*(data+2)==COMMANDS.CONTROLLERS){
-						kopterControllersReportReceived(address64,address16,*(data+3));
-                    }
+					 //CONTROLLERS STATUS
+					 if(*(dataIN+2)==COMMANDS.CONTROLLERS){
+						kopterControllersReportReceived(address64,address16,*(dataIN+3));
+					 }else
+					 //GUMSTIX STATUS
+					 if(*(dataIN+2)==COMMANDS.GUMSTIX){
+						 kopterGumstixReportRecieved(address64,address16,*(dataIN+3));
+					 }
                     break;
                 //warning
                 case 'w':
@@ -188,7 +188,7 @@ void packetHandler(unsigned char *inPacket){
                 case 'e':
                     break;
                 default:
-                        dataTypeError(address64,address16,data);
+                        dataTypeError(address64,address16,dataIN);
                     break;
             }
         break;
@@ -286,7 +286,7 @@ void parTSPacket(unsigned char *inPacket,unsigned char *frameID,unsigned char *a
 }
 
 //parse Receive Packet 0x90
-void parReceivePacket(unsigned char *inPacket,unsigned char *address64,unsigned char *address16,unsigned char *receiveOptions,unsigned char *data){
+void parReceivePacket(unsigned char *inPacket,unsigned char *address64,unsigned char *address16,unsigned char *receiveOptions,unsigned char *dataIN){
     int i=0;
     for (i=0 ; i<8 ; i++){
         *(address64+i)=*(inPacket+4+i);
@@ -301,9 +301,9 @@ void parReceivePacket(unsigned char *inPacket,unsigned char *address64,unsigned 
     0x40 - Packet was sent from an end device (if known)*/
 
     //the *data is dataLength
-    *data=*(inPacket+2)-12;
-    for (i=0 ; i<*data ; i++){
-        *(data+i+1)=*(inPacket+15+i);
+    *dataIN=*(inPacket+2)-12;
+    for (i=0 ; i<*dataIN ; i++){
+        *(dataIN+i+1)=*(inPacket+15+i);
     }
 
 }
