@@ -225,7 +225,7 @@ void positionEstimator() {
 	static uint8_t gumstix_counter = 0;
 	uint8_t gumstix_delay = 7;
 
-	if(validGumstix == 1) {
+	if(validGumstix == 1 && gumstixEnabled) {
 		if(gumstix_counter < gumstix_delay) gumstix_counter++;
 	} else {
 		gumstix_counter = 0;

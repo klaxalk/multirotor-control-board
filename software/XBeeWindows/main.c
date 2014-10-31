@@ -197,7 +197,7 @@ int main()
                     }
             break;
         case 4:
-            printf("1 - OFF   2 - VELOCITY   3 - POSITION   4 - STATUS\n");
+            printf("1 - OFF   2 - VELOCITY   3 - POSITION   4 - BOTH   5 - STATUS\n");
             printf("DECISION:");
             scanf("%d",&decison);
             switch(decison){
@@ -221,8 +221,14 @@ int main()
                             packetHandler(readPacket());
                             packetHandler(readPacket());
                             packetHandler(readPacket());
-                        break;
                     case 4:
+                        kopterControllersRequest(ADDRESS.K1,ADDRESS.UNKNOWN16,CONTROLLERS.BOTH,0x13);
+                            packetHandler(readPacket());
+                            packetHandler(readPacket());
+                            packetHandler(readPacket());
+                            packetHandler(readPacket());
+                        break;
+                    case 5:
                         kopterControllersStatusRequest(ADDRESS.K1,ADDRESS.UNKNOWN16,0x13);
                             packetHandler(readPacket());
                             packetHandler(readPacket());

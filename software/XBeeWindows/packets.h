@@ -63,6 +63,7 @@ typedef struct
 	unsigned char OFF;
 	unsigned char VELOCITY;
 	unsigned char POSITION;
+	unsigned char BOTH;
 } CONTROLLERST;
 
 

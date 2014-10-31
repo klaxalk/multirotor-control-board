@@ -194,6 +194,8 @@ void kopterControllersReportReceived(unsigned char *address64,unsigned char *add
 		printf("Controllers: POSITION\n");
 	}else if(status==CONTROLLERS.VELOCITY){
         printf("Controllers: VELOCITY\n");
+	}else if(status==CONTROLLERS.BOTH){
+		printf("Controllers: BOTH\n");
 	}
 }
 

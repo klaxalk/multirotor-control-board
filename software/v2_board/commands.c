@@ -348,7 +348,10 @@ void kopterControllers(unsigned char *address64,unsigned char *address16,unsigne
 		}else if(option==CONTROLLERS.VELOCITY){
 			disablePositionController();
 			enableVelocityController();
-		}		
+		}else if(option==CONTROLLERS.BOTH){
+			enableVelocityController();
+			enablePositionController();
+		}
 }
 void kopterControllersStatusRequest(unsigned char *address64,unsigned char *address16,unsigned char frameID){
 	*(dataOUT)='c';
@@ -359,8 +362,9 @@ void kopterControllersStatusRequest(unsigned char *address64,unsigned char *addr
 void kopterControllersReport(unsigned char *address64,unsigned char *address16,unsigned char frameID){
 	*(dataOUT)='r';
 	*(dataOUT+1)=COMMANDS.CONTROLLERS;		
-	
-	if(positionControllerEnabled){
+	if(positionControllerEnabled && velocityControllerEnabled){
+		*(dataOUT+2)=CONTROLLERS.BOTH;
+	}else if(positionControllerEnabled){
 		*(dataOUT+2)=CONTROLLERS.POSITION;
 	}else if(velocityControllerEnabled){
 		*(dataOUT+2)=CONTROLLERS.VELOCITY;
@@ -376,7 +380,9 @@ void kopterControllersReportReceived(unsigned char *address64,unsigned char *add
 		
 	}else if(status==CONTROLLERS.VELOCITY){
 
-	}	
+	}else if(status==CONTROLLERS.BOTH){
+		
+	}
 }
 
 //GUMSTIX
