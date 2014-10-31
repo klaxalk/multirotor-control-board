@@ -66,7 +66,6 @@ typedef struct
 	unsigned char BOTH;
 } CONTROLLERST;
 
-
 typedef struct
 {
 	unsigned char LANDING;
@@ -75,6 +74,7 @@ typedef struct
 	unsigned char TRAJECTORY_FOLLOW;
 	unsigned char TRAJECTORY_POINTS;
 	unsigned char GUMSTIX;
+	unsigned char OPEN_LOG;
 }COMMANDST;
 
 

@@ -43,7 +43,6 @@ typedef struct
 	unsigned char OFF;
 } ONOFFT;
 
-
 typedef struct
 {
 	unsigned char THROTTLE_SP;

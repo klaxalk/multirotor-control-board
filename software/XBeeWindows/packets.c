@@ -2,15 +2,9 @@
 #include "packets.h"
 #include "defines.h"
 #include "commands.h"
-
-#ifdef KOPTER
-#include "commTask.h"
-#endif // KOPTER
-
-#ifdef PC
 #include "XBEEComm.h"
 #include "main.h"
-#endif // PC
+#include "openLog.h"
 
 
 //addresses to other XBees
@@ -187,6 +181,10 @@ void packetHandler(unsigned char *inPacket){
                     break;
                 //error
                 case 'e':
+                    break;
+                //OpenLog
+                case 'o':
+                        openLogReceive(address64,address16,dataIN);
                     break;
                 default:
                         dataTypeError(address64,address16,dataIN);
