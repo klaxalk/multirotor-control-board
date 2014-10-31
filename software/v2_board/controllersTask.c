@@ -15,27 +15,23 @@ void controllersTask(void *p) {
 	
 	initTrajectory();
 	while (1) {
-			//If controllerEnabled == 0 the controller output signals
-			//are "unplugged" (in mergeSignalsToOutput) but the
-			//controllers keep running.
-			//When the controllers are turned on, it's integral actions
-			//are reset (in enableController).
-
-			positionEstimator();
-			altitudeEstimator();
-
-			if(landingState==LS_FLIGHT){
-				setpointsFilter(throttleDesiredSetpoint,aileronDesiredPositionSetpoint,elevatorDesiredPositionSetpoint,aileronDesiredVelocitySetpoint,elevatorDesiredVelocitySetpoint);
-			}else{
-				setpointsFilter(landingThrottleSetpoint,estimatedAileronPos,estimatedElevatorPos,0,0);
-			}
+		positionEstimator();
+		altitudeEstimator();
+		
+		if(landingState!=LS_FLIGHT){
+			setpointsFilter(landingThrottleSetpoint,estimatedAileronPos,estimatedElevatorPos,0,0);
+		}else if(trajectoryEnabled==1 && positionControllerEnabled==1 && gumstixEnabled==0){
+			trajectorySetpoints();
+		}else{
+			setpointsFilter(throttleDesiredSetpoint,aileronDesiredPositionSetpoint,elevatorDesiredPositionSetpoint,aileronDesiredVelocitySetpoint,elevatorDesiredVelocitySetpoint);
+		}
 			
-			landingStateAutomat();
-			
-			velocityController();
-			positionController();
-			altitudeController();
-						
+		landingStateAutomat();
+		
+		velocityController();
+		positionController();
+		altitudeController();
+					
 		// makes the 70Hz loop
 		vTaskDelay(14);
 	}

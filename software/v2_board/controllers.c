@@ -67,7 +67,7 @@ volatile unsigned char gumstixEnabled = 0;
 
 //auto-trajectory variables
 volatile unsigned char trajectoryEnabled = 0;
-volatile float trajTimer = 0;
+volatile float trajTimer=0;
 volatile int8_t trajIndex = -1;
 volatile int8_t trajMaxIndex = -1;
 volatile trajectoryPoint_t trajectory[TRAJECTORY_LENGTH];
@@ -80,9 +80,20 @@ void initTrajectory(){
 	int8_t i=0;
 	// (i, time (s), x (+ forward), y (+ leftward), z (altitude))
 	for(i=0;i<TRAJECTORY_LENGTH;i++){
-		TRAJ_POINT(i,i+1,elevatorPositionSetpoint,aileronPositionSetpoint,throttleSetpoint);
+		TRAJ_POINT(i,1,elevatorPositionSetpoint,aileronPositionSetpoint,throttleSetpoint);
 	}
 	trajMaxIndex=-1;
+}
+
+void enableTrajectoryFollow(){
+	if (trajectoryEnabled==0){
+		trajIndex=-1;
+	}
+	trajectoryEnabled=1;
+}
+
+void disableTrajectoryFollow(){
+	trajectoryEnabled=0;
 }
 
 void enableLanding(){	
@@ -162,63 +173,59 @@ void disablePositionController() {
 	positionControllerEnabled = 0;
 }
 
-void setpointsFilter(float throttleDSP,float aileronPosDSP,float elevatorPosDSP,float aileronVelDSP,float elevatorVelDSP) {
 
-	float dTime;
+
+void trajectorySetpoints(){
 	float dValue;
 	static float aileronIncrement;
 	static float elevatorIncrement;
 	static float throttleIncrement;
-
-
-	//trajectory following
-	if(trajectoryEnabled && positionControllerEnabled){
-
-		if(trajIndex < trajMaxIndex){
-
-			if(trajIndex < 0 || trajTimer >= trajectory[trajIndex].time) {
-				trajIndex++;
-				dTime  = (trajectory[trajIndex].time - trajTimer);
-				dValue = (trajectory[trajIndex].elevatorPos - elevatorPositionSetpoint);
-				elevatorIncrement = dValue / dTime * DT;
-				dValue = (trajectory[trajIndex].aileronPos - aileronPositionSetpoint);
-				aileronIncrement = dValue / dTime * DT;
-				dValue = (trajectory[trajIndex].throttlePos - throttleSetpoint);
-				throttleIncrement = dValue / dTime * DT;
-			}
-
-			trajTimer  += DT;
-			elevatorPositionSetpoint += elevatorIncrement;
-			aileronPositionSetpoint  += aileronIncrement;
-			throttleSetpoint  += throttleIncrement;
-
-
-		} //else End of Trajectory - do nothing
-
-	//manual setpoints from RC transmitter
-	}else{
 	
-		if(throttleDSP<THROTTLE_SP_LOW){throttleDSP=THROTTLE_SP_LOW;}
-		if(throttleDSP>THROTTLE_SP_HIGH){throttleDSP=THROTTLE_SP_HIGH;}
-			
-		if(elevatorDesiredVelocitySetpoint<-SPEED_MAX){elevatorDesiredVelocitySetpoint=-SPEED_MAX;}
-		if(elevatorDesiredVelocitySetpoint>SPEED_MAX){elevatorDesiredVelocitySetpoint=SPEED_MAX;}
-			
-		if(aileronDesiredVelocitySetpoint<-SPEED_MAX){aileronDesiredVelocitySetpoint=-SPEED_MAX;}
-		if(aileronDesiredVelocitySetpoint>SPEED_MAX){aileronDesiredVelocitySetpoint=SPEED_MAX;}
-				
-			
-		elevatorPositionSetpoint += (elevatorPosDSP-elevatorPositionSetpoint) * (DT/SETPOINT_FILTER_CONST);
-		aileronPositionSetpoint += (aileronPosDSP-aileronPositionSetpoint) * (DT/SETPOINT_FILTER_CONST);
-		throttleSetpoint += (throttleDSP-throttleSetpoint) * (DT/SETPOINT_FILTER_CONST);
+	if(trajIndex < trajMaxIndex){
+		if(trajIndex < 0 
+		||(fabs(trajectory[trajIndex].throttlePos - estimatedThrottlePos) < 0.1 
+		&& fabs(trajectory[trajIndex].elevatorPos - estimatedElevatorPos) < 0.1 
+		&& fabs(trajectory[trajIndex].aileronPos  - estimatedAileronPos ) < 0.1)){
+			trajIndex++;
+			trajTimer=0;
+			dValue = (trajectory[trajIndex].elevatorPos - elevatorPositionSetpoint);
+			elevatorIncrement = dValue / trajectory[trajIndex].time;
+			dValue = (trajectory[trajIndex].aileronPos - aileronPositionSetpoint);
+			aileronIncrement = dValue / trajectory[trajIndex].time;
+			dValue = (trajectory[trajIndex].throttlePos - throttleSetpoint);
+			throttleIncrement = dValue / trajectory[trajIndex].time;
+		}			
 		
-		elevatorVelocitySetpoint += (elevatorVelDSP-elevatorVelocitySetpoint) * (DT/SETPOINT_FILTER_CONST);
-		aileronVelocitySetpoint += (aileronVelDSP-aileronVelocitySetpoint) * (DT/SETPOINT_FILTER_CONST);		
+		if(trajTimer<trajectory[trajIndex].time){
+			trajTimer+=DT;
+			throttleSetpoint  += throttleIncrement*DT;
+			elevatorPositionSetpoint += elevatorIncrement*DT;
+			aileronPositionSetpoint  += aileronIncrement*DT;
+		}else{
+			throttleSetpoint = trajectory[trajIndex].throttlePos;
+			elevatorPositionSetpoint = trajectory[trajIndex].elevatorPos;
+			aileronPositionSetpoint = trajectory[trajIndex].aileronPos;
+		}
+	} 
+}
 
-		//reset trajectory vars
-		trajIndex = -1;
-		trajTimer = 0;
-	}
+void setpointsFilter(float throttleDSP,float aileronPosDSP,float elevatorPosDSP,float aileronVelDSP,float elevatorVelDSP) {	
+	if(throttleDSP<THROTTLE_SP_LOW){throttleDSP=THROTTLE_SP_LOW;}
+	if(throttleDSP>THROTTLE_SP_HIGH){throttleDSP=THROTTLE_SP_HIGH;}
+		
+	if(elevatorDesiredVelocitySetpoint<-SPEED_MAX){elevatorDesiredVelocitySetpoint=-SPEED_MAX;}
+	if(elevatorDesiredVelocitySetpoint>SPEED_MAX){elevatorDesiredVelocitySetpoint=SPEED_MAX;}
+		
+	if(aileronDesiredVelocitySetpoint<-SPEED_MAX){aileronDesiredVelocitySetpoint=-SPEED_MAX;}
+	if(aileronDesiredVelocitySetpoint>SPEED_MAX){aileronDesiredVelocitySetpoint=SPEED_MAX;}
+			
+		
+	elevatorPositionSetpoint += (elevatorPosDSP-elevatorPositionSetpoint) * (DT/SETPOINT_FILTER_CONST);
+	aileronPositionSetpoint += (aileronPosDSP-aileronPositionSetpoint) * (DT/SETPOINT_FILTER_CONST);
+	throttleSetpoint += (throttleDSP-throttleSetpoint) * (DT/SETPOINT_FILTER_CONST);
+	
+	elevatorVelocitySetpoint += (elevatorVelDSP-elevatorVelocitySetpoint) * (DT/SETPOINT_FILTER_CONST);
+	aileronVelocitySetpoint += (aileronVelDSP-aileronVelocitySetpoint) * (DT/SETPOINT_FILTER_CONST);			
 }
 
 void positionEstimator() {

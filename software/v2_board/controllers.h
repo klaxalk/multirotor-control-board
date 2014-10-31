@@ -126,8 +126,9 @@ extern volatile trajectoryPoint_t trajectory[];
 	trajectory[i].aileronPos = a; \
 	trajectory[i].throttlePos = th
 
-//set default trajectory
+//trajectory Follow
 void initTrajectory();
+void trajectorySetpoints();
 
 //enables - disables
 void disableVelocityController();
@@ -138,6 +139,8 @@ void enableGumstix();
 void disableGumstix();
 void enableLanding();
 void disableLanding();
+void enableTrajectoryFollow();
+void disableTrajectoryFollow();
 
 //setpoint and trajectory handling
 void setpointsFilter(float throttleDSP,float aileronPosDSP,float elevatorPosDSP,float aileronVelDSP,float elevatorVelDSP);

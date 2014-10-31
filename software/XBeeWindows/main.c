@@ -260,9 +260,10 @@ int main()
                             packetHandler(readPacket());
                         break;
                     case 3:
-                        kopterTrajectoryAddPointRequest(ADDRESS.K1,ADDRESS.UNKNOWN16,1,2,0.5,0,1,0x16);
-                        kopterTrajectoryAddPointRequest(ADDRESS.K1,ADDRESS.UNKNOWN16,2,5,-1,0,2,0x16);
-                        kopterTrajectoryAddPointRequest(ADDRESS.K1,ADDRESS.UNKNOWN16,3,7,-1,0,0.5,0x16);
+                        kopterTrajectoryAddPointRequest(ADDRESS.K1,ADDRESS.UNKNOWN16,0,2,-1.5,0,  1,0x16);
+                        kopterTrajectoryAddPointRequest(ADDRESS.K1,ADDRESS.UNKNOWN16,1,2,   0,0,  1,0x16);
+                        kopterTrajectoryAddPointRequest(ADDRESS.K1,ADDRESS.UNKNOWN16,2,2,  -1,0,  2,0x16);
+                        kopterTrajectoryAddPointRequest(ADDRESS.K1,ADDRESS.UNKNOWN16,3,2,   0,0,0.5,0x16);
                             packetHandler(readPacket());
                             packetHandler(readPacket());
                             packetHandler(readPacket());
