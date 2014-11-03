@@ -27,15 +27,12 @@ typedef struct
 	unsigned char ELEVATOR_VEL_CONTROLLER_OUTPUT;
 	unsigned char AILERON_POS_CONTROLLER_OUTPUT;
 	unsigned char ELEVATOR_POS_CONTROLLER_OUTPUT;
+	unsigned char THROTTLE_SETPOINT;
+	unsigned char ELEVATOR_POS_SETPOINT;
+	unsigned char AILERON_POS_SETPOINT;
+	unsigned char ELEVATOR_VEL_SETPOINT;
+	unsigned char AILERON_VEL_SETPOINT;
 } TELEMETRIEST;
-
-//Telemetry request options
-typedef struct
-{
-    unsigned char SENDING_OFF;
-    unsigned char SENDING_ON;
-    unsigned char SENDING_ONCE;
-} TELREQOPTT;
 
 typedef struct
 {
@@ -68,6 +65,7 @@ typedef struct
 
 typedef struct
 {
+    unsigned char TELEMETRY;
 	unsigned char LANDING;
 	unsigned char SET_SETPOINTS;
 	unsigned char CONTROLLERS;
@@ -82,7 +80,6 @@ extern unsigned char GET_STATUS;
 
 extern ADDRESST ADDRESS;
 extern TELEMETRIEST TELEMETRIES;
-extern TELREQOPTT TELREQOPT;
 extern ONOFFT ONOFF;
 extern SETPOINTST SETPOINTS;
 extern POSITIONST POSITIONS;

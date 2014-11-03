@@ -51,8 +51,17 @@ void telemetrySend(unsigned char *address64,unsigned char *address16,unsigned ch
 		f=velocityControllerAileronOutput;
 	}else if(type==TELEMETRIES.ELEVATOR_VEL_CONTROLLER_OUTPUT){
 		f=velocityControllerElevatorOutput;
-	}
-	
+	}else if(type==TELEMETRIES.THROTTLE_SETPOINT){
+		f=throttleSetpoint;
+	}else if(type==TELEMETRIES.ELEVATOR_POS_SETPOINT){
+		f=elevatorPositionSetpoint;
+	}else if(type==TELEMETRIES.AILERON_POS_SETPOINT){
+		f=aileronPositionSetpoint;
+	}else if(type==TELEMETRIES.ELEVATOR_VEL_SETPOINT){
+		f=elevatorVelocitySetpoint;
+	}else if(type==TELEMETRIES.AILERON_VEL_SETPOINT){
+		f=aileronVelocitySetpoint;
+	}	
 	ch=(unsigned char *) &f;
 	*dataOUT='t';
 	*(dataOUT+1)=type;
@@ -62,10 +71,10 @@ void telemetrySend(unsigned char *address64,unsigned char *address16,unsigned ch
 	*(dataOUT+5)=*(ch+3);
 	makeTRPacket(address64,address16,0x00,frameID,dataOUT,6);
 }
-void telemetryRequest(unsigned char *address64,unsigned char *address16,unsigned char type,unsigned char options, unsigned char frameID){
+void telemetryRequest(unsigned char *address64,unsigned char *address16,unsigned char type, unsigned char frameID){
 	*dataOUT='c';
-	*(dataOUT+1)=type;
-	*(dataOUT+2)=options;
+	*(dataOUT+1)=COMMANDS.TELEMETRY;
+	*(dataOUT+2)=type;
 	makeTRPacket(address64,address16,0x00,frameID,dataOUT,3);
 }
 void telemetryReceive(unsigned char *address64,unsigned char *address16,unsigned char type,float value){
@@ -96,6 +105,16 @@ void telemetryReceive(unsigned char *address64,unsigned char *address16,unsigned
 	}else if(type==TELEMETRIES.AILERON_VEL_CONTROLLER_OUTPUT){
 	
 	}else if(type==TELEMETRIES.ELEVATOR_VEL_CONTROLLER_OUTPUT){
+	
+	}else if(type==TELEMETRIES.THROTTLE_SETPOINT){
+	
+	}else if(type==TELEMETRIES.ELEVATOR_POS_SETPOINT){
+
+	}else if(type==TELEMETRIES.AILERON_POS_SETPOINT){
+	
+	}else if(type==TELEMETRIES.ELEVATOR_VEL_SETPOINT){
+	
+	}else if(type==TELEMETRIES.AILERON_VEL_SETPOINT){
 	
 	}
 }

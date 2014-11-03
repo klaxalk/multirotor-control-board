@@ -33,42 +33,42 @@ int main()
             scanf("%d",&decison);
                     switch(decison){
                         case 1:
-                            telemetryRequest(ADDRESS.K1,ADDRESS.UNKNOWN16,TELEMETRIES.GROUND_DISTANCE,TELREQOPT.SENDING_ONCE,0x01);
+                            telemetryRequest(ADDRESS.K1,ADDRESS.UNKNOWN16,TELEMETRIES.GROUND_DISTANCE,0x01);
                             packetHandler(readPacket());
                             packetHandler(readPacket());
                             packetHandler(readPacket());
                             packetHandler(readPacket());
                             break;
                         case 2:
-                            telemetryRequest(ADDRESS.K1,ADDRESS.UNKNOWN16,TELEMETRIES.ELEVATOR_SPEED,TELREQOPT.SENDING_ONCE,0x01);
+                            telemetryRequest(ADDRESS.K1,ADDRESS.UNKNOWN16,TELEMETRIES.ELEVATOR_SPEED,0x01);
                             packetHandler(readPacket());
                             packetHandler(readPacket());
                             packetHandler(readPacket());
                             packetHandler(readPacket());
                             break;
                         case 3:
-                            telemetryRequest(ADDRESS.K1,ADDRESS.UNKNOWN16,TELEMETRIES.AILERON_SPEED,TELREQOPT.SENDING_ONCE,0x01);
+                            telemetryRequest(ADDRESS.K1,ADDRESS.UNKNOWN16,TELEMETRIES.AILERON_SPEED,0x01);
                             packetHandler(readPacket());
                             packetHandler(readPacket());
                             packetHandler(readPacket());
                             packetHandler(readPacket());
                             break;
                         case 4:
-                            telemetryRequest(ADDRESS.K1,ADDRESS.UNKNOWN16,TELEMETRIES.ELEVATOR_POS_ESTIMATED,TELREQOPT.SENDING_ONCE,0x01);
+                            telemetryRequest(ADDRESS.K1,ADDRESS.UNKNOWN16,TELEMETRIES.ELEVATOR_POS_ESTIMATED,0x01);
                             packetHandler(readPacket());
                             packetHandler(readPacket());
                             packetHandler(readPacket());
                             packetHandler(readPacket());
                             break;
                         case 5:
-                            telemetryRequest(ADDRESS.K1,ADDRESS.UNKNOWN16,TELEMETRIES.AILERON_POS_ESTIMATED,TELREQOPT.SENDING_ONCE,0x01);
+                            telemetryRequest(ADDRESS.K1,ADDRESS.UNKNOWN16,TELEMETRIES.AILERON_POS_ESTIMATED,0x01);
                             packetHandler(readPacket());
                             packetHandler(readPacket());
                             packetHandler(readPacket());
                             packetHandler(readPacket());
                             break;
                         case 6:
-                            telemetryRequest(ADDRESS.K1,ADDRESS.UNKNOWN16,TELEMETRIES.THROTTLE_CONTROLLER_OUTPUT,TELREQOPT.SENDING_ONCE,0x01);
+                            telemetryRequest(ADDRESS.K1,ADDRESS.UNKNOWN16,TELEMETRIES.THROTTLE_CONTROLLER_OUTPUT,0x01);
                             packetHandler(readPacket());
                             packetHandler(readPacket());
                             packetHandler(readPacket());

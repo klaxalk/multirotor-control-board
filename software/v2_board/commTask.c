@@ -55,11 +55,7 @@ void commTask(void *p) {
 				if(zPosGumstixNew < -POSITION_MAXIMUM) zPosGumstixNew = -POSITION_MAXIMUM;
 
 				#if GUMSTIX_CAMERA_POINTING == FORWARD //camera led on up side
-					//~ Camera pointing forward and being PORTRAIT oriented
-					//~ elevatorGumstix = - (float)xPosGumstixNew / 1000;
-					//~ aileronGumstix  = - (float)zPosGumstixNew / 1000;
-					//~ throttleGumstix = + (float)yPosGumstixNew / 1000;
-					//~ Camera pointing forward and being LANDSCAPE oriented
+					//Camera pointing forward and being LANDSCAPE oriented
 					elevatorGumstix = - (float) xPosGumstixNew / 1000;
 					aileronGumstix  = - (float) yPosGumstixNew / 1000;
 					throttleGumstix = - (float) zPosGumstixNew / 1000;

@@ -8,11 +8,11 @@
 unsigned char dataOUT[25];
 
 //TELEMETRY
-void telemetryRequest(unsigned char *address64,unsigned char *address16,unsigned char type,unsigned char options,unsigned char frameID){
-    *dataOUT='c';
-    *(dataOUT+1)=type;
-    *(dataOUT+2)=options;
-    makeTRPacket(address64,address16,0x00,frameID,dataOUT,3);
+void telemetryRequest(unsigned char *address64,unsigned char *address16,unsigned char type, unsigned char frameID){
+	*dataOUT='c';
+	*(dataOUT+1)=COMMANDS.TELEMETRY;
+	*(dataOUT+2)=type;
+	makeTRPacket(address64,address16,0x00,frameID,dataOUT,3);
     #ifdef DEBUG
      printf("TELEMETRY REQUEST\n");
     #endif // DEBUG
@@ -46,6 +46,16 @@ void telemetryReceive(unsigned char *address64,unsigned char *address16,unsigned
         printf("Vel Aileron Controller Out: %f\n",value);
 	}else if(type==TELEMETRIES.ELEVATOR_VEL_CONTROLLER_OUTPUT){
         printf("Vel Elevator Controller Out: %f\n",value);
+	}else if(type==TELEMETRIES.THROTTLE_SETPOINT){
+		printf("Throttle Setpoint: %f\n",value);
+	}else if(type==TELEMETRIES.ELEVATOR_POS_SETPOINT){
+		printf("Elevator Pos Setpoint: %f\n",value);
+	}else if(type==TELEMETRIES.AILERON_POS_SETPOINT){
+		printf("Aileron Pos Setpoint: %f\n",value);
+	}else if(type==TELEMETRIES.ELEVATOR_VEL_SETPOINT){
+		printf("Elevator Vel Setpoint: %f\n",value);
+	}else if(type==TELEMETRIES.AILERON_VEL_SETPOINT){
+		printf("Aileron Vel Setpoint: %f\n",value);
 	}
 }
 

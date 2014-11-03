@@ -14,7 +14,6 @@ extern volatile int8_t trajMaxIndex;
 
 ADDRESST ADDRESS;
 TELEMETRIEST TELEMETRIES;
-TELREQOPTT TELREQOPT;
 ONOFFT ONOFF;
 SETPOINTST SETPOINTS;
 POSITIONST POSITIONS;
@@ -53,11 +52,11 @@ void constInit(){
 	TELEMETRIES.ELEVATOR_VEL_CONTROLLER_OUTPUT=0x0B;
 	TELEMETRIES.AILERON_POS_CONTROLLER_OUTPUT=0x0C;
 	TELEMETRIES.ELEVATOR_POS_CONTROLLER_OUTPUT=0x0D;
-
-    TELREQOPT.SENDING_OFF = 0x00;
-    TELREQOPT.SENDING_ON = 0x01;
-    TELREQOPT.SENDING_ONCE = 0x02;
-    TELREQOPT.SENDING_STATUS = 0x00;
+	TELEMETRIES.THROTTLE_SETPOINT=0x0E;
+	TELEMETRIES.ELEVATOR_POS_SETPOINT=0x0F;
+	TELEMETRIES.AILERON_POS_SETPOINT=0x10;
+	TELEMETRIES.ELEVATOR_VEL_SETPOINT=0x11;
+	TELEMETRIES.AILERON_VEL_SETPOINT=0x12;	
 		
 	ONOFF.ON=0x01;
 	ONOFF.OFF=0x02;
@@ -76,6 +75,7 @@ void constInit(){
 	CONTROLLERS.POSITION=0x03;
 	CONTROLLERS.BOTH=0x04;
 		
+	COMMANDS.TELEMETRY=0x01;	
 	COMMANDS.LANDING=0x11;
 	COMMANDS.SET_SETPOINTS=0x12;
 	COMMANDS.CONTROLLERS=0x13;
@@ -123,18 +123,8 @@ void packetHandler(unsigned char *inPacket){
                 //command
                 case 'c':
                         //TELEMETRY REQUESTS						
-                        if(*(dataIN+2)<0x10){
-                            //telemetry request options
-							//TODO
-                            if(      *(dataIN+3)==TELREQOPT.SENDING_OFF){
-
-                            }else if(*(dataIN+3)==TELREQOPT.SENDING_ON){
-
-                            }else if(*(dataIN+3)==TELREQOPT.SENDING_ONCE){ 								            
-                                telemetrySend(address64,address16,*(dataIN+2),0x00);
-                            }else if(*(dataIN+3)==GET_STATUS){
-
-                            }
+                        if(*(dataIN+2)==0x01){                            					            
+                            telemetrySend(address64,address16,*(dataIN+3),0x00);                            
                         } else
 						//LANDING REQUEST
 						if(*(dataIN+2)==COMMANDS.LANDING){

@@ -2,7 +2,7 @@
 #define COMMANDS_H
 
 void telemetrySend(unsigned char *address64,unsigned char *address16,unsigned char type,unsigned char frameID);
-void telemetryRequest(unsigned char *address64,unsigned char *address16,unsigned char type,unsigned char options, unsigned char frameID);
+void telemetryRequest(unsigned char *address64,unsigned char *address16,unsigned char type, unsigned char frameID);
 void telemetryReceive(unsigned char *address64,unsigned char *address16,unsigned char type,float value);
 
 void dataTypeError(unsigned char *address64,unsigned char *address16,unsigned char *data);
