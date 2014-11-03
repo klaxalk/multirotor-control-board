@@ -160,22 +160,22 @@ void mergeSignalsToOutput() {
 	outputElevator = RCchannel[ELEVATOR];
 	outputAileron = RCchannel[AILERON];
 
-	if(landingState==LS_FLIGHT){
-		if (velocityControllerEnabled == 1 || positionControllerEnabled == 1) {
-			outputThrottle += controllerThrottleOutput;
-		} 		
-		if (velocityControllerEnabled == 1 ) {
+	if (velocityControllerEnabled == 1 || positionControllerEnabled == 1) {
+		if(landingState==LS_FLIGHT){		
+			outputThrottle += controllerThrottleOutput;				
+			if (velocityControllerEnabled == 1 ) {
+				outputElevator += velocityControllerElevatorOutput;
+				outputAileron += velocityControllerAileronOutput;
+			}	
+			if (positionControllerEnabled == 1) {
+				outputElevator += positionControllerElevatorOutput;
+				outputAileron += positionControllerAileronOutput;
+			}		
+		}else{		
 			outputElevator += velocityControllerElevatorOutput;
 			outputAileron += velocityControllerAileronOutput;
-		}	
-		if (positionControllerEnabled == 1) {
-			outputElevator += positionControllerElevatorOutput;
-			outputAileron += positionControllerAileronOutput;
-		}		
-	}else{
-		outputElevator += velocityControllerElevatorOutput;
-		outputAileron += velocityControllerAileronOutput;
-		outputThrottle += landingThrottleOutput;		
+			outputThrottle += landingThrottleOutput;				
+		}
 	}
 
 	// Everything is *2 because the PPM incoming to this board is twice slower then the PPM goeing out

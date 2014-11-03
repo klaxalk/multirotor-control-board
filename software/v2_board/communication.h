@@ -7,6 +7,9 @@
 #define MAX_SENDE_BUFF 20
 #define MAX_EMPFANGS_BUFF 20
 
+	//XBee
+	extern volatile unsigned char leadK1enabled;
+
 	// data from px4flow
 	extern volatile float groundDistance;
 	extern volatile float elevatorSpeed;
@@ -29,7 +32,7 @@
 	extern volatile int8_t validGumstix;
 	extern volatile int8_t gumstixDataFlag;	
 
-//send XBee Packet
+void leadK1Altitude();
 void sendXBeePacket(unsigned char *packet);
 int8_t px4flowParseChar(uint8_t incomingChar);
 void gumstixParseChar(unsigned char incomingChar);

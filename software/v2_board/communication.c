@@ -5,7 +5,8 @@
 #include "communication.h"
 #include "system.h"
 
-
+//XBee values
+volatile unsigned char leadK1enabled=0;
 
 //px4flow values
 volatile float groundDistance = 0;
@@ -32,6 +33,15 @@ volatile float throttleGumstix = 0;
 volatile int8_t validGumstix = 0;
 volatile int8_t gumstixDataFlag = 0;
 volatile unsigned char gumstixParseCharCrc = 0;
+
+//setting K1 altitude setpoint 
+void leadK1Altitude(){
+	if (leadK1enabled){
+		//TODO
+		//kopterSetpointsSet(ADDRESS.K1,ADDRESS.UNKNOWN16,SETPOINTS.THROTTLE_SP,POSITIONS.ABSOLUT,estimatedThrottlePos);
+		//kopterSetpointsSet(ADDRESS.K1,ADDRESS.UNKNOWN16,SETPOINTS.THROTTLE_SP,POSITIONS.ABSOLUT,throttleDesiredSetpoint);
+	}
+}
 
 //send XBee packet
 void sendXBeePacket(unsigned char *packet){

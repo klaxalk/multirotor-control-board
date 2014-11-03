@@ -105,19 +105,15 @@ void disableLanding(){
 }
 
 void enableGumstix(){
-	if (gumstixEnabled ==0 ){		
+	if (gumstixEnabled ==0 ){	
+		//default position (safety)	
 		elevatorPositionSetpoint = DEFAULT_ELEVATOR_POSITION_SETPOINT;
 		aileronPositionSetpoint = DEFAULT_AILERON_POSITION_SETPOINT;
 		elevatorDesiredPositionSetpoint = DEFAULT_ELEVATOR_POSITION_SETPOINT;
 		aileronDesiredPositionSetpoint = DEFAULT_AILERON_POSITION_SETPOINT;	
 		
 		estimatedElevatorPos = elevatorPositionSetpoint;
-		estimatedAileronPos  = aileronPositionSetpoint;
-		
-		aileronVelocitySetpoint = DEFAULT_AILERON_VELOCITY_SETPOINT;
-		elevatorVelocitySetpoint = DEFAULT_ELEVATOR_VELOCITY_SETPOINT;
-		aileronDesiredVelocitySetpoint = DEFAULT_AILERON_VELOCITY_SETPOINT;
-		elevatorDesiredVelocitySetpoint = DEFAULT_ELEVATOR_VELOCITY_SETPOINT;			
+		estimatedAileronPos  = aileronPositionSetpoint;		
 	}
 	gumstixEnabled = 1;
 }
@@ -127,11 +123,13 @@ void disableGumstix(){
 }
 
 void enableVelocityController() {
+	//if both controllers was off then set altitude controller to default
 	if(velocityControllerEnabled==0 && positionControllerEnabled==0){
 		throttleIntegration = 0;
 		throttleSetpoint = DEFAULT_THROTTLE_SETPOINT;
 		throttleDesiredSetpoint = DEFAULT_THROTTLE_SETPOINT;
 	}
+	//set controller to default
 	if (velocityControllerEnabled == 0) {
 		elevatorVelocityIntegration = 0;
 		aileronVelocityIntegration = 0;		
@@ -149,11 +147,13 @@ void disableVelocityController() {
 }
 
 void enablePositionController() {
+	//if both controllers was off then set altitude controller to default
 	if(velocityControllerEnabled==0 && positionControllerEnabled==0){
 		throttleIntegration = 0;
 		throttleSetpoint = DEFAULT_THROTTLE_SETPOINT;
 		throttleDesiredSetpoint = DEFAULT_THROTTLE_SETPOINT;
 	}	
+	//set controller to default
 	if (positionControllerEnabled == 0) {
 		elevatorPositionIntegration = 0;
 		aileronPositionIntegration = 0;
@@ -182,12 +182,14 @@ void trajectorySetpoints(){
 	static float throttleIncrement;
 	
 	if(trajIndex < trajMaxIndex){
+		//if copter reaches desired position move to next waypoint
 		if(trajIndex < 0 
 		||(fabs(trajectory[trajIndex].throttlePos - estimatedThrottlePos) < 0.1 
 		&& fabs(trajectory[trajIndex].elevatorPos - estimatedElevatorPos) < 0.1 
 		&& fabs(trajectory[trajIndex].aileronPos  - estimatedAileronPos ) < 0.1)){
 			trajIndex++;
 			trajTimer=0;
+			//calculate increments to setpoints
 			dValue = (trajectory[trajIndex].elevatorPos - elevatorPositionSetpoint);
 			elevatorIncrement = dValue / trajectory[trajIndex].time;
 			dValue = (trajectory[trajIndex].aileronPos - aileronPositionSetpoint);
@@ -196,6 +198,7 @@ void trajectorySetpoints(){
 			throttleIncrement = dValue / trajectory[trajIndex].time;
 		}			
 		
+		//increment setpoints
 		if(trajTimer<trajectory[trajIndex].time){
 			trajTimer+=DT;
 			throttleSetpoint  += throttleIncrement*DT;
@@ -210,6 +213,7 @@ void trajectorySetpoints(){
 }
 
 void setpointsFilter(float throttleDSP,float aileronPosDSP,float elevatorPosDSP,float aileronVelDSP,float elevatorVelDSP) {	
+	//safety saturation
 	if(throttleDSP<THROTTLE_SP_LOW){throttleDSP=THROTTLE_SP_LOW;}
 	if(throttleDSP>THROTTLE_SP_HIGH){throttleDSP=THROTTLE_SP_HIGH;}
 		
@@ -219,9 +223,10 @@ void setpointsFilter(float throttleDSP,float aileronPosDSP,float elevatorPosDSP,
 	if(aileronDesiredVelocitySetpoint<-SPEED_MAX){aileronDesiredVelocitySetpoint=-SPEED_MAX;}
 	if(aileronDesiredVelocitySetpoint>SPEED_MAX){aileronDesiredVelocitySetpoint=SPEED_MAX;}
 			
-		
+	//filter	
 	elevatorPositionSetpoint += (elevatorPosDSP-elevatorPositionSetpoint) * (DT/SETPOINT_FILTER_CONST);
 	aileronPositionSetpoint += (aileronPosDSP-aileronPositionSetpoint) * (DT/SETPOINT_FILTER_CONST);
+	
 	throttleSetpoint += (throttleDSP-throttleSetpoint) * (DT/SETPOINT_FILTER_CONST);
 	
 	elevatorVelocitySetpoint += (elevatorVelDSP-elevatorVelocitySetpoint) * (DT/SETPOINT_FILTER_CONST);

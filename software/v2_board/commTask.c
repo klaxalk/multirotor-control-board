@@ -14,8 +14,17 @@ void commTask(void *p) {
 	unsigned char inChar;
 	unsigned char packet[60];	
 	int8_t i;
+	int16_t counter=0;
 	
 	while (1) {		
+		
+		//counting
+		if (counter++>10){
+			counter=0;
+			leadK1Altitude();
+		}
+		
+		
 		// XBee
 		if (usartBufferGetByte(usart_buffer_xbee, &inChar, 0)) {					
 			 //packet received

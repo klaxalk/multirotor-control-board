@@ -129,13 +129,9 @@ void packetHandler(unsigned char *inPacket){
 						//LANDING REQUEST
 						if(*(dataIN+2)==COMMANDS.LANDING){
 							if(		 *(dataIN+3)==ONOFF.ON){
-								kopterLand(address64,address16,1);
-								kopterLandReport(address64,address16,0x00);
-								
+								kopterLand(address64,address16,1);								
 							}else if(*(dataIN+3)==ONOFF.OFF){
-								kopterLand(address64,address16,0);
-								kopterLandReport(address64,address16,0x00);
-								
+								kopterLand(address64,address16,0);								
 							}else if(*(dataIN+3)==GET_STATUS){
 								kopterLandReport(address64,address16,0x00);								
 							}
@@ -144,12 +140,8 @@ void packetHandler(unsigned char *inPacket){
 						if(*(dataIN+2)==COMMANDS.TRAJECTORY_FOLLOW){
 							if(		 *(dataIN+3)==ONOFF.ON){
 								kopterTrajectory(address64,address16,1);
-								kopterTrajectoryReport(address64,address16,0x00);
-								
 							}else if(*(dataIN+3)==ONOFF.OFF){
 								kopterTrajectory(address64,address16,0);
-								kopterTrajectoryReport(address64,address16,0x00);
-								
 							}else if(*(dataIN+3)==GET_STATUS){
 								kopterTrajectoryReport(address64,address16,0x00);								
 							}
@@ -165,8 +157,7 @@ void packetHandler(unsigned char *inPacket){
 								ch2[0]=*(dataIN+9); ch2[1]=*(dataIN+10); ch2[2]=*(dataIN+11); ch2[3]=*(dataIN+12); f2=(float *)ch2;
 								ch3[0]=*(dataIN+13); ch3[1]=*(dataIN+14); ch3[2]=*(dataIN+15); ch3[3]=*(dataIN+16); f3=(float *)ch3;
 								ch4[0]=*(dataIN+17); ch4[1]=*(dataIN+18); ch4[2]=*(dataIN+19); ch4[3]=*(dataIN+20); f4=(float *)ch4;
-								kopterTrajectoryAddPoint(address64,address16,*(dataIN+4),*f1,*f2,*f3,*f4);	
-								kopterTrajectoryPointReport(address64,address16,*(dataIN+4),0x00);																							
+								kopterTrajectoryAddPoint(address64,address16,*(dataIN+4),*f1,*f2,*f3,*f4);																															
 							}
 						} else																		
 						//SETPOINTS REQUEST
@@ -180,7 +171,6 @@ void packetHandler(unsigned char *inPacket){
 								ch1[3]=*(dataIN+8);
 								f1=(float *)ch1;
 								kopterSetpointsSet(address64,address64,*(dataIN+3),*(dataIN+4),*f1);
-								kopterSetpointsReport(address64,address16,*(dataIN+3),0x00);
 							}
 						}else
 						//CONTROLLERS ON/OFF
@@ -189,7 +179,6 @@ void packetHandler(unsigned char *inPacket){
 								kopterControllersReport(address64,address16,0x13);
 							}else{
 								kopterControllers(address64,address16,*(dataIN+3));
-								kopterControllersReport(address64,address16,0x00);
 							}															
 						}else
 						//GUMSTIX ON/OFF
@@ -198,7 +187,6 @@ void packetHandler(unsigned char *inPacket){
 								kopterGumstixReport(address64,address16,0x13);
 							}else{
 								kopterGumstix(address64,address16,*(dataIN+3));
-								kopterGumstixReport(address64,address16,0x00);
 							}
 						}						
                     break;
