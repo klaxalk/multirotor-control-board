@@ -40,6 +40,9 @@ volatile float elevatorSetpoint = -1.5;
 volatile float aileronSetpoint  = (AILERON_SP_LOW  + AILERON_SP_HIGH )/2;
 //~ volatile float throttleSetpoint = (THROTTLE_SP_LOW + THROTTLE_SP_HIGH)/2;
 volatile float throttleSetpoint = 0.75;
+volatile float elevatorVelocitySetpoint = 0;
+volatile float aileronVelocitySetpoint = 0;
+volatile float throttleVelocitySetpoint = 0;
 
 //auto-landing variables
 volatile unsigned char landingRequest = 0;
@@ -60,7 +63,6 @@ void setpoints() {
 	static float aileronIncrement;
 	static float elevatorIncrement;
 	static float throttleIncrement;
-
 
 	//trajectory following
 	if(trajectoryEnabled && positionControllerEnabled){
@@ -86,11 +88,12 @@ void setpoints() {
 
 		} //else End of Trajectory - do nothing
 
-	//manual setpoints from RC transmitter
-	}else{
+		//manual setpoints from RC transmitter
+	} else {
 
 #endif //TRAJECTORY_FOLLOWING == ENABLED
 
+		// TODO: ???
 		//sp_new = ELEVATOR_SP_HIGH * constant2 + ELEVATOR_SP_LOW * (1-constant2);
 		sp_new = (ELEVATOR_SP_LOW + ELEVATOR_SP_HIGH)/2;
 		elevatorSetpoint += (sp_new-elevatorSetpoint) * (DT/SETPOINT_FILTER_CONST);
@@ -104,7 +107,7 @@ void setpoints() {
 		// zakomentovano, Tomáš Báèa, 24.6.2014
 		// sp_new = (THROTTLE_SP_LOW + THROTTLE_SP_HIGH)/2;
 		
-		sp_new = 1;
+		sp_new = 1; // TODO: why 1 ?
 		
 		throttleSetpoint += (sp_new-throttleSetpoint) * (DT/SETPOINT_FILTER_CONST);
 
@@ -213,9 +216,8 @@ void positionController() {
 		if(vd > +POSITION_SPEED_MAX) vd = +POSITION_SPEED_MAX;
 		if(vd < -POSITION_SPEED_MAX) vd = -POSITION_SPEED_MAX;
 	} else { //velocity controller
-		// TODO [HCH] add requested velocity setpoint
-		vd = 0;
-		error = - estimatedElevatorVel;
+		vd = elevatorVelocitySetpoint;
+		error = elevatorVelocitySetpoint - estimatedElevatorVel;
 	}
 
 	elevatorIntegration += KI * error * DT;
@@ -246,9 +248,8 @@ void positionController() {
 		if(vd > +POSITION_SPEED_MAX) vd = +POSITION_SPEED_MAX;
 		if(vd < -POSITION_SPEED_MAX) vd = -POSITION_SPEED_MAX;
 	} else { //velocity controller
-		// TODO [HCH] add requested velocity setpoint
-		vd = 0;
-		error = - estimatedAileronVel;
+		vd = aileronVelocitySetpoint;
+		error = aileronVelocitySetpoint - estimatedAileronVel;
 	}
 
 	aileronIntegration += KI * error * DT;
@@ -337,7 +338,7 @@ void altitudeController() {
 		KI = ALTITUDE_KI;
 		KV = ALTITUDE_KV;
 
-		error =(throttleSetpoint - estimatedThrottlePos);
+		error = (throttleSetpoint - estimatedThrottlePos);
 		vd = KX * error;
 		if(vd > +ALTITUDE_SPEED_MAX) vd = +ALTITUDE_SPEED_MAX;
 		if(vd < -ALTITUDE_SPEED_MAX) vd = -ALTITUDE_SPEED_MAX;

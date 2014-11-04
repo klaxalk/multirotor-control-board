@@ -10,7 +10,7 @@
 #define MAINTASK_H_
 
 // constants = AUX channels from the RC transmitter
-extern volatile float constant1;
+extern volatile float constant1; // TODO: better names for constants
 extern volatile float constant2;
 extern volatile float constant5;
 

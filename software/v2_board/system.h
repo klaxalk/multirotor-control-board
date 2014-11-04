@@ -20,7 +20,12 @@
 #define	ORANGE	IOPORT_CREATE_PIN(PORTB, 2)
 #define	GREEN	IOPORT_CREATE_PIN(PORTB, 6)
 #define	YELLOW	IOPORT_CREATE_PIN(PORTB, 7)
-#define	OUT1	IOPORT_CREATE_PIN(PORTD, 5)
+#define	PPM_OUT	IOPORT_CREATE_PIN(PORTD, 6)
+
+#define	OUT1	IOPORT_CREATE_PIN(PORTA, 0)
+#define	OUT2	IOPORT_CREATE_PIN(PORTA, 1)
+#define	OUT3	IOPORT_CREATE_PIN(PORTA, 2)
+#define	OUT4	IOPORT_CREATE_PIN(PORTA, 3)
 
 /* -------------------------------------------------------------------- */
 /*	LED macros															*/
@@ -44,8 +49,17 @@
 /* -------------------------------------------------------------------- */
 /*	PPM output macro													*/
 /* -------------------------------------------------------------------- */
-#define ppm_out_on()		ioport_set_pin_level(OUT1, true)
-#define ppm_out_off()		ioport_set_pin_level(OUT1, false)
+#define ppm_out_on()		ioport_set_pin_level(PPM_OUT, true)
+#define ppm_out_off()		ioport_set_pin_level(PPM_OUT, false)
+
+#define ppm_out1_on()		ioport_set_pin_level(OUT1, true)
+#define ppm_out1_off()		ioport_set_pin_level(OUT1, false)
+#define ppm_out2_on()		ioport_set_pin_level(OUT2, true)
+#define ppm_out2_off()		ioport_set_pin_level(OUT2, false)
+#define ppm_out3_on()		ioport_set_pin_level(OUT3, true)
+#define ppm_out3_off()		ioport_set_pin_level(OUT3, false)
+#define ppm_out4_on()		ioport_set_pin_level(OUT4, true)
+#define ppm_out4_off()		ioport_set_pin_level(OUT4, false)
 
 /* -------------------------------------------------------------------- */
 /*	Constants for PPM input timing										*/

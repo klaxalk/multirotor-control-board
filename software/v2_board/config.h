@@ -76,11 +76,24 @@
 	DISABLED
 */
 
+
+//~ --------------------------------------------------------------------
+//~ communication with onboard PC
+//~ --------------------------------------------------------------------
+
+#define PC_COMMUNICATION DISABLED
+/*
+	ENABLED
+	DISABLED
+*/
+
 // disable the trajectory following IF there are no data for control
 #if (PX4FLOW_DATA_RECEIVE == DISABLED && GUMSTIX_DATA_RECEIVE == DISABLED)
 
 	#undef	TRAJECTORY_FOLLOWING
 	#define	TRAJECTORY_FOLLOWING	DISABLED
+
+	#warning TRAJECTORY_FOLLOWING DISABLED because PX4FLOW_DATA_RECEIVE and GUMSTIX_DATA_RECEIVE is disabled
 
 #endif 
 

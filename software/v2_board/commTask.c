@@ -84,12 +84,13 @@ void commTask(void *p) {
 		}
 		
 		#if GUMSTIX_DATA_RECEIVE == ENABLED
+		// gumstix communication
 		if (usartBufferGetByte(usart_buffer_4, &inChar, 0)) {
-
 			gumstixParseChar(inChar);
 		}
 		
 		if (gumstixDataFlag == 1) {
+			// gumstix message received
 			
 			if (validGumstix == 1) { // whether the blob detector outputs valid data
 
@@ -137,11 +138,12 @@ void commTask(void *p) {
 
 		#if PX4FLOW_DATA_RECEIVE == ENABLED
 		if (usartBufferGetByte(usart_buffer_1, &inChar, 0)) {
-
+			// receive data from PX4Flow
 			px4flowParseChar((uint8_t) inChar);
 		}
 
 		if (opticalFlowDataFlag == 1) {
+			// PX4Flow message received
 
 			// decode the message (there will be new values in opticalFlowData...
 			mavlink_msg_optical_flow_decode(&mavlinkMessage, &opticalFlowData);
@@ -174,5 +176,14 @@ void commTask(void *p) {
 			opticalFlowDataFlag = 0;
 		}
 		#endif // PX4FLOW_DATA_RECEIVE == ENABLED
+
+		#if PC_COMMUNICATION == ENABLED
+		if (usartBufferGetByte(PC_USART_BUFFER, &inChar, 0)) { // TODO define PC_USART_BUFFER somewhere
+			// receive data from PX4Flow
+			if (pcParseChar((uint8_t) inChar) != 0) {
+				// TODO: process received PC message
+			}
+		}
+		#endif
 	}
 }

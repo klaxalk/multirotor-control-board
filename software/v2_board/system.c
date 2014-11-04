@@ -14,6 +14,10 @@
 #include "usart_driver_RTOS.h"
 #include "communication.h"
 
+#ifndef MULTI_OUTPUT_PPM
+#warning MULTI_OUTPUT_PPM is disabled
+#endif
+
 /* -------------------------------------------------------------------- */
 /*	Variables for PPM input capture										*/
 /* -------------------------------------------------------------------- */
@@ -64,32 +68,32 @@ UsartBuffer * usart_buffer_4;
 /*	Basic initialization of the MCU, peripherals and i/o				*/
 /* -------------------------------------------------------------------- */
 void boardInit() {
-	
+
 	/* -------------------------------------------------------------------- */
 	/*	Setup GPIO for LEDs and PPM i/o										*/
 	/* -------------------------------------------------------------------- */
-	
+
 	ioport_init();
-	
+
 	ioport_set_pin_dir(RED, IOPORT_DIR_OUTPUT);
 	ioport_set_pin_dir(BLUE, IOPORT_DIR_OUTPUT);
 	ioport_set_pin_dir(ORANGE, IOPORT_DIR_OUTPUT);
 	ioport_set_pin_dir(GREEN, IOPORT_DIR_OUTPUT);
 	ioport_set_pin_dir(YELLOW, IOPORT_DIR_OUTPUT);
 	ioport_set_pin_dir(OUT1, IOPORT_DIR_OUTPUT);
-	
+
 	ioport_set_pin_level(RED, true);
 	ioport_set_pin_level(BLUE, true);
 	ioport_set_pin_level(ORANGE, true);
 	ioport_set_pin_level(GREEN, true);
 	ioport_set_pin_level(YELLOW, true);
-	
+
 	/* -------------------------------------------------------------------- */
 	/*	Enable system clock for all peripheral modules						*/
 	/* -------------------------------------------------------------------- */
-	
+
 	sysclk_init();
-	
+
 	sysclk_enable_module(SYSCLK_PORT_GEN, 0xff);
 	sysclk_enable_module(SYSCLK_PORT_A, 0xff);
 	sysclk_enable_module(SYSCLK_PORT_B, 0xff);
@@ -97,44 +101,44 @@ void boardInit() {
 	sysclk_enable_module(SYSCLK_PORT_D, 0xff);
 	sysclk_enable_module(SYSCLK_PORT_E, 0xff);
 	sysclk_enable_module(SYSCLK_PORT_F, 0xff);
-	
+
 	/* -------------------------------------------------------------------- */
 	/*	Timer TCD1 for measuring incoming PPM with RC Receiver Data			*/
 	/* -------------------------------------------------------------------- */
-	
+
 	// select the clock source and pre-scaler by 8
 	TC1_ConfigClockSource(&TCD1, TC_CLKSEL_DIV8_gc);
 
 	/* -------------------------------------------------------------------- */
 	/*	Timer TCD0 for output PPM generation								*/
 	/* -------------------------------------------------------------------- */
-	
+
 	// select the clock source and pre-scaler by 8
 	TC0_ConfigClockSource(&TCD0, TC_CLKSEL_DIV8_gc);
-	
+
 	// enable compare A
 	TC0_EnableCCChannels(&TCD0, TC0_CCAEN_bm);
-	
+
 	// set the overflow interrupt
 	TC0_SetOverflowIntLevel(&TCD0, TC_OVFINTLVL_LO_gc);
-	
+
 	// set the compare A low level interrupt
 	TC0_SetCCAIntLevel(&TCD0, TC_CCAINTLVL_LO_gc);
 
 	// set the length of PPM pulse beginning
 	TC_SetCompareA(&TCD0, PPM_PULSE);
-	
+
 	/* -------------------------------------------------------------------- */
 	/*	setup PD4 as a PPM input with interrupt								*/
 	/* -------------------------------------------------------------------- */
-	
+
 	// self explanatory
 	PORT_ConfigurePins(&PORTD, 0x10, false, false, PORT_OPC_TOTEM_gc, PORT_ISC_RISING_gc);
 	PORT_SetPinsAsInput(&PORTD, 0x10);
-	
+
 	// configure interrupt on PD4
 	PORT_ConfigureInterrupt0(&PORTD, PORT_INT0LVL_LO_gc, 0x10);
-	
+
 	/* -------------------------------------------------------------------- */
 	/*	Initialize USARTs													*/
 	/* -------------------------------------------------------------------- */
@@ -145,11 +149,11 @@ void boardInit() {
 	usart_buffer_stm = usartBufferInitialize(&USART_STM, USART_STM_BAUDRATE, 128);
 	usart_buffer_xbee = usartBufferInitialize(&USART_XBEE, USART_XBEE_BAUDRATE, 128);
 	usart_buffer_log = usartBufferInitialize(&USART_LOG, USART_LOG_BAUDRATE, 128);
-	
+
 	/* -------------------------------------------------------------------- */
 	/*	enable low-level interrupts											*/
 	/* -------------------------------------------------------------------- */
-	
+
 	PMIC_EnableLowLevel();
 }
 
@@ -176,8 +180,8 @@ void mergeSignalsToOutput() {
 		outputElevator += controllerElevatorOutput;
 		outputAileron += controllerAileronOutput;
 		// we do not have a rudder controller, yet
-		//~ outputRudder += controllerRudderOutput; 
-		} else {
+		// TODO outputRudder += controllerRudderOutput; 
+	} else {
 
 		led_red_off();
 	}
@@ -193,41 +197,41 @@ void mergeSignalsToOutput() {
 /*	Interrupt for receiving PPM with RC Receiver signals, DO NOT MODIFY!*/
 /* -------------------------------------------------------------------- */
 ISR(PORTD_INT0_vect) {
-	
+
 	// stores the current time as and END of the last PPM pulse
 	uint16_t PPM_in_end = TCD1.CNT;
 	uint16_t PPM_in_length = 0;
-	
+
 	// if the timer has not overflown
 	if (PPM_in_end > PPM_in_start) {
-		
+
 		// computes the PPM pulse length
 		PPM_in_length = PPM_in_end - PPM_in_start;
-		
+
 	} else { // if the time has overflown
-		
+
 		// computes the PPM pulse length
 		PPM_in_length = 65535;
 		PPM_in_length += PPM_in_end;
 		PPM_in_length -= PPM_in_start;
 	}
-	
+
 	// if the PPM is longer then threshold => synchronizing pulse
 	if (PPM_in_length > PPM_IN_TRESHOLD) {
-		
+
 		PPM_in_current_channel = 0;
-		
-	// if it is within the boundaries of desired PPM pulse
+
+		// if it is within the boundaries of desired PPM pulse
 	} else if ((PPM_in_length >= PPM_IN_MIN_LENGTH) && (PPM_in_length <= PPM_IN_MAX_LENGTH)) {
-		
+
 		// stores the value into the RCchannel array
 		RCchannel[PPM_in_current_channel] = PPM_in_length;
 		PPM_in_current_channel++;
 	} else {
-		
+
 		PPM_in_current_channel++;
 	}
-	
+
 	PPM_in_start = PPM_in_end;
 }
 
@@ -240,20 +244,29 @@ ISR(TCD0_OVF_vect) {
 	ppm_out_on();
 
 	if (currentChannelOut < NUMBER_OF_CHANNELS_OUT) {
-		
+
+#ifdef MULTI_OUTPUT_PPM
+		switch(currentChannelOut) {
+			case 0: ppm_out1_on(); break;
+			case 1: ppm_out2_on(); break;
+			case 2: ppm_out3_on(); break;
+			case 3: ppm_out4_on(); break;
+		}
+#endif
+
 		TC_SetPeriod(&TCD0, outputChannels[currentChannelOut]);
-		
+
 		currentChannelOut++;
 
-		} else {
+	} else {
 
 		int i = 0;
 		int outputSum = 0;
-		
+
 		for (i = 0; i < NUMBER_OF_CHANNELS_OUT; i++) {
 			outputSum += outputChannels[i];
 		}
-		
+
 		currentChannelOut = 0;
 
 		// if the next space is the sync space, calculates it's length
@@ -273,24 +286,24 @@ void enableController() {
 
 	if (controllerEnabled == 0) {
 
-		#if PX4FLOW_DATA_RECEIVE == ENABLED
+#if PX4FLOW_DATA_RECEIVE == ENABLED
 
 		elevatorIntegration = 0;
 		aileronIntegration = 0;
 		throttleIntegration = 0;
 
-		#if GUMSTIX_DATA_RECEIVE == ENABLED
+#if GUMSTIX_DATA_RECEIVE == ENABLED
 		if(validGumstix != 1) {
 
 			estimatedElevatorPos = elevatorSetpoint;
 			estimatedAileronPos  = aileronSetpoint;
 		}
-		#else
-			estimatedElevatorPos = elevatorSetpoint;
-			estimatedAileronPos  = aileronSetpoint;
-		#endif // GUMSTIX_DATA_RECEIVE == ENABLED
+#else
+		estimatedElevatorPos = elevatorSetpoint;
+		estimatedAileronPos  = aileronSetpoint;
+#endif // GUMSTIX_DATA_RECEIVE == ENABLED
 
-		#endif
+#endif
 	}
 	controllerEnabled = 1;
 }
@@ -311,8 +324,17 @@ void enablePositionController() {
 /* -------------------------------------------------------------------- */
 /*	Interrupt for timing the PPM output pulse, DO NOT MODIFY!			*/
 /* -------------------------------------------------------------------- */
-ISR(TCD0_CCA_vect) {
-	
+ISR(TCD0_CCA_vect)
+{
+
 	// shut down the output PPM pulse
 	ppm_out_off();
+#ifdef MULTI_OUTPUT_PPM
+	ppm_out1_off();
+	ppm_out2_off();
+	ppm_out3_off();
+	ppm_out4_off();
+#endif
+
 }
+

@@ -221,7 +221,7 @@ OUTPUT_FILE_DEP:= ./makedep.mk
 
 LIB_DEP+= 
 
-include ../Mk/local.mk
+-include ../Mk/local.mk
 
 # AVR32/GNU C Compiler
 

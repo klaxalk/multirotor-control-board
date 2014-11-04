@@ -82,6 +82,9 @@ extern volatile float throttleIntegration;
 extern volatile float elevatorSetpoint;
 extern volatile float aileronSetpoint;
 extern volatile float throttleSetpoint;
+extern volatile float elevatorVelocitySetpoint;
+extern volatile float aileronVelocitySetpoint;
+extern volatile float throttleVelocitySetpoint;
 
 //auto-landing variables and state defines
 extern volatile unsigned char landingRequest;
