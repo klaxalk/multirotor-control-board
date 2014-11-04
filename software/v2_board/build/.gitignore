@@ -1,0 +1,13 @@
+*.o
+*.d
+*.eep
+*.elf
+*.hex
+*.map
+*.lss
+*.srec
+*.mk
+FreeRTOS
+MyDrivers
+setup_dirs.sh
+src
