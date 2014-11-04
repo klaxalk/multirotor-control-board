@@ -6,7 +6,7 @@
 <setting alwaysvectorfont="no"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="50" unitdist="mil" unit="mil" style="lines" multiple="1" display="no" altdistance="1" altunitdist="mil" altunit="mil"/>
+<grid distance="5" unitdist="mil" unit="mil" style="lines" multiple="1" display="no" altdistance="5" altunitdist="mil" altunit="mil"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="yes" active="yes"/>
 <layer number="2" name="Route2" color="1" fill="3" visible="no" active="no"/>
@@ -29,13 +29,13 @@
 <layer number="19" name="Unrouted" color="6" fill="1" visible="yes" active="yes"/>
 <layer number="20" name="Dimension" color="15" fill="1" visible="yes" active="yes"/>
 <layer number="21" name="tPlace" color="7" fill="1" visible="yes" active="yes"/>
-<layer number="22" name="bPlace" color="7" fill="6" visible="no" active="yes"/>
-<layer number="23" name="tOrigins" color="15" fill="1" visible="yes" active="yes"/>
+<layer number="22" name="bPlace" color="7" fill="1" visible="no" active="yes"/>
+<layer number="23" name="tOrigins" color="15" fill="1" visible="no" active="yes"/>
 <layer number="24" name="bOrigins" color="15" fill="1" visible="no" active="yes"/>
 <layer number="25" name="tNames" color="7" fill="1" visible="yes" active="yes"/>
-<layer number="26" name="bNames" color="7" fill="5" visible="no" active="yes"/>
+<layer number="26" name="bNames" color="7" fill="1" visible="no" active="yes"/>
 <layer number="27" name="tValues" color="7" fill="1" visible="no" active="yes"/>
-<layer number="28" name="bValues" color="7" fill="6" visible="no" active="yes"/>
+<layer number="28" name="bValues" color="7" fill="1" visible="no" active="yes"/>
 <layer number="29" name="tStop" color="7" fill="3" visible="no" active="yes"/>
 <layer number="30" name="bStop" color="7" fill="6" visible="no" active="yes"/>
 <layer number="31" name="tCream" color="7" fill="4" visible="no" active="yes"/>
@@ -184,6 +184,24 @@ Tomas Baca</text>
 <wire x1="0.8128" y1="-0.3556" x2="0.8128" y2="-3.7338" width="0.254" layer="21"/>
 <text x="15.748" y="39.243" size="1.016" layer="21" font="vector" ratio="20" rot="R180" align="bottom-center">XMEGA OBC</text>
 <text x="38.862" y="8.382" size="1.016" layer="21" font="vector" ratio="20" rot="R180" align="bottom-center">STM</text>
+<text x="34.798" y="32.131" size="1.27" layer="27" rot="R270" align="center">TSR 1-2433</text>
+<text x="44.323" y="36.068" size="1.27" layer="27" align="center">8.2uH</text>
+<text x="44.323" y="36.068" size="1.27" layer="27" align="center">8.2uH</text>
+<text x="15.621" y="32.766" size="1.27" layer="27" align="center">ATXmega128a3u</text>
+<text x="38.735" y="11.43" size="1.27" layer="27" align="center">STM32F415
+RGT6</text>
+<text x="14.478" y="40.132" size="1.27" layer="28" rot="MR90" align="center">1nF</text>
+<text x="21.209" y="39.751" size="1.27" layer="28" rot="MR90" align="center">1nF</text>
+<text x="18.923" y="32.004" size="1.27" layer="28" rot="MR90" align="center">1nF</text>
+<text x="19.431" y="36.957" size="1.27" layer="28" rot="MR0" align="center">1nF</text>
+<text x="11.684" y="32.639" size="1.27" layer="28" rot="MR0" align="center">1nF</text>
+<text x="11.684" y="37.465" size="1.27" layer="28" rot="MR0" align="center">1nF</text>
+<text x="19.431" y="35.052" size="0.762" layer="28" rot="MR0" align="center">100nF</text>
+<text x="11.557" y="30.734" size="0.762" layer="28" rot="MR0" align="center">100nF</text>
+<text x="11.684" y="35.56" size="0.762" layer="28" rot="MR0" align="center">100nF</text>
+<text x="20.828" y="32.004" size="0.762" layer="28" rot="MR270" align="center">100nF</text>
+<text x="19.431" y="39.751" size="0.762" layer="28" rot="MR270" align="center">100nF</text>
+<text x="12.573" y="40.132" size="0.762" layer="28" rot="MR270" align="center">100nF</text>
 </plain>
 <libraries>
 <library name="SparkFun">
@@ -1404,21 +1422,22 @@ design rules under a new name.</description>
 </pass>
 </autorouter>
 <elements>
-<element name="C20" library="#ControlBoardV2" package="C0805" value="0.1uF" x="13.0175" y="5.5245" smashed="yes" rot="MR270">
-<attribute name="NAME" x="13.1699" y="7.3025" size="0.508" layer="26" font="vector" ratio="20" rot="MR0" align="bottom-center"/>
+<element name="C20" library="#ControlBoardV2" package="C0805" value="100nF" x="13.0175" y="5.5245" smashed="yes" rot="MR270">
+<attribute name="NAME" x="13.0175" y="3.7465" size="0.508" layer="26" font="vector" ratio="20" rot="MR180" align="bottom-center"/>
+<attribute name="VALUE" x="13.0175" y="5.5245" size="0.762" layer="28" rot="MR270" align="center"/>
 </element>
 <element name="U1" library="SparkFun" package="TQFP32-08" value="ATMEGA168" x="19.05" y="6.35" smashed="yes" rot="MR0">
-<attribute name="VALUE" x="21.59" y="0" size="0.4064" layer="28" rot="MR0"/>
+<attribute name="VALUE" x="19.05" y="4.318" size="0.762" layer="28" rot="MR0" align="center"/>
 </element>
-<element name="C21" library="#ControlBoardV2" package="C0805" value="0.1uF" x="18.3515" y="21.59" smashed="yes" rot="MR90">
-<attribute name="NAME" x="18.3515" y="23.4188" size="0.508" layer="26" font="vector" ratio="20" rot="MR0" align="bottom-center"/>
+<element name="C21" library="#ControlBoardV2" package="C0805" value="100nF" x="18.3515" y="21.59" smashed="yes" rot="MR90">
+<attribute name="NAME" x="18.3515" y="23.368" size="0.508" layer="26" font="vector" ratio="20" rot="MR0" align="bottom-center"/>
+<attribute name="VALUE" x="18.288" y="21.6535" size="0.762" layer="28" ratio="20" rot="MR90" align="center"/>
 </element>
 <element name="R4" library="#ControlBoardV2" package="C0805" value="10k" x="17.526" y="18.7325" smashed="yes" rot="MR0">
-<attribute name="NAME" x="17.5133" y="17.653" size="0.508" layer="26" font="vector" ratio="20" rot="MR180" align="bottom-center"/>
+<attribute name="NAME" x="17.4625" y="17.653" size="0.508" layer="26" font="vector" ratio="20" rot="MR180" align="bottom-center"/>
+<attribute name="VALUE" x="17.5895" y="18.796" size="0.889" layer="28" ratio="20" rot="MR0" align="center"/>
 </element>
-<element name="IC1" library="xmega" package="TQFP64" value="AVR_XMEGA_A3_" x="15.55759375" y="35.87809375" smashed="yes" rot="R90">
-<attribute name="VALUE" x="25.83989375" y="29.82809375" size="1.27" layer="27" rot="R90"/>
-</element>
+<element name="IC1" library="xmega" package="TQFP64" value="AVR_XMEGA_A3_" x="15.55759375" y="35.87809375" smashed="yes" rot="R90"/>
 <element name="U2" library="#ControlBoardV2" package="QFP50P1200X1200X160-64N" value="STM32F415RGT6" x="38.789471875" y="9.261975" smashed="yes" rot="R180">
 <attribute name="PACKAGE" value="64LQFP" x="38.789471875" y="9.261975" size="1.778" layer="27" rot="R180" display="off"/>
 <attribute name="OC_NEWARK" value="73T2335" x="38.789471875" y="9.261975" size="1.778" layer="27" rot="R180" display="off"/>
@@ -1426,33 +1445,33 @@ design rules under a new name.</description>
 <attribute name="SUPPLIER" value="STMicroelectronics" x="38.789471875" y="9.261975" size="1.778" layer="27" rot="R180" display="off"/>
 <attribute name="OC_FARNELL" value="2064370" x="38.789471875" y="9.261975" size="1.778" layer="27" rot="R180" display="off"/>
 </element>
-<element name="R5" library="#ControlBoardV2" package="R0805" value="10k" x="23.8125" y="48.895" smashed="yes" rot="R270">
+<element name="R5" library="#ControlBoardV2" package="R0805" value="1k" x="23.8125" y="48.895" smashed="yes" rot="R270">
 <attribute name="NAME" x="23.8125" y="47.117" size="0.508" layer="25" font="vector" ratio="20" rot="R180" align="bottom-center"/>
-<attribute name="VALUE" x="21.5265" y="49.657" size="1.27" layer="27" rot="R270"/>
+<attribute name="VALUE" x="23.8125" y="48.895" size="1.27" layer="27" rot="R270" align="center"/>
 </element>
-<element name="R6" library="#ControlBoardV2" package="R0805" value="10k" x="21.74875" y="48.895" smashed="yes" rot="R270">
+<element name="R6" library="#ControlBoardV2" package="R0805" value="1k" x="21.74875" y="48.895" smashed="yes" rot="R270">
 <attribute name="NAME" x="21.74875" y="47.117" size="0.508" layer="25" font="vector" ratio="20" rot="R180" align="bottom-center"/>
-<attribute name="VALUE" x="19.46275" y="49.657" size="1.27" layer="27" rot="R270"/>
+<attribute name="VALUE" x="21.74875" y="48.895" size="1.27" layer="27" rot="R270" align="center"/>
 </element>
-<element name="R8" library="#ControlBoardV2" package="R0805" value="10k" x="9.23925" y="48.895" smashed="yes" rot="R270">
+<element name="R8" library="#ControlBoardV2" package="R0805" value="1k" x="9.23925" y="48.895" smashed="yes" rot="R270">
 <attribute name="NAME" x="9.36625" y="47.0916" size="0.508" layer="25" font="vector" ratio="20" rot="R180" align="bottom-center"/>
-<attribute name="VALUE" x="6.95325" y="49.657" size="1.27" layer="27" rot="R270"/>
+<attribute name="VALUE" x="9.23925" y="48.895" size="1.27" layer="27" rot="R270" align="center"/>
 </element>
-<element name="R9" library="#ControlBoardV2" package="R0805" value="10k" x="19.685" y="47.625" smashed="yes" rot="R270">
+<element name="R9" library="#ControlBoardV2" package="R0805" value="1k" x="19.685" y="47.625" smashed="yes" rot="R270">
 <attribute name="NAME" x="21.209" y="46.355" size="0.508" layer="25" font="vector" ratio="20" rot="R180" align="bottom-center"/>
-<attribute name="VALUE" x="17.399" y="48.387" size="1.27" layer="27" rot="R270"/>
+<attribute name="VALUE" x="19.685" y="47.625" size="1.27" layer="27" rot="R270" align="center"/>
 </element>
-<element name="R10" library="#ControlBoardV2" package="R0805" value="10k" x="17.62125" y="48.895" smashed="yes" rot="R270">
+<element name="R10" library="#ControlBoardV2" package="R0805" value="1k" x="17.62125" y="48.895" smashed="yes" rot="R270">
 <attribute name="NAME" x="17.62125" y="47.117" size="0.508" layer="25" font="vector" ratio="20" rot="R180" align="bottom-center"/>
-<attribute name="VALUE" x="15.33525" y="49.657" size="1.27" layer="27" rot="R270"/>
+<attribute name="VALUE" x="17.62125" y="48.895" size="1.27" layer="27" rot="R270" align="center"/>
 </element>
-<element name="R11" library="#ControlBoardV2" package="R0805" value="10k" x="15.5575" y="47.625" smashed="yes" rot="R270">
+<element name="R11" library="#ControlBoardV2" package="R0805" value="1k" x="15.5575" y="47.625" smashed="yes" rot="R270">
 <attribute name="NAME" x="15.5575" y="45.847" size="0.508" layer="25" font="vector" ratio="20" rot="R180" align="bottom-center"/>
-<attribute name="VALUE" x="13.2715" y="48.387" size="1.27" layer="27" rot="R270"/>
+<attribute name="VALUE" x="15.5575" y="47.625" size="1.27" layer="27" rot="R270" align="center"/>
 </element>
-<element name="R12" library="#ControlBoardV2" package="R0805" value="10k" x="13.49375" y="48.895" smashed="yes" rot="R270">
+<element name="R12" library="#ControlBoardV2" package="R0805" value="1k" x="13.49375" y="48.895" smashed="yes" rot="R270">
 <attribute name="NAME" x="13.589" y="47.08525" size="0.508" layer="25" font="vector" ratio="20" rot="R180" align="bottom-center"/>
-<attribute name="VALUE" x="11.20775" y="49.657" size="1.27" layer="27" rot="R270"/>
+<attribute name="VALUE" x="13.49375" y="48.895" size="1.27" layer="27" rot="R270" align="center"/>
 </element>
 <element name="UART2" library="#ControlBoardV2" package="S1G3_JUM" value="S1G3_JUMP" x="20.6375" y="54.9275" rot="R90"/>
 <element name="UART3" library="#ControlBoardV2" package="S1G3_JUM" value="S1G3_JUMP" x="18.0975" y="54.9275" rot="R90"/>
@@ -1483,19 +1502,19 @@ design rules under a new name.</description>
 </element>
 <element name="R13" library="#ControlBoardV2" package="R0805" value="10k" x="28.8925" y="43.08475" smashed="yes" rot="R90">
 <attribute name="NAME" x="29.0195" y="41.24325" size="0.508" layer="25" font="vector" ratio="20" rot="R180" align="bottom-center"/>
-<attribute name="VALUE" x="31.1785" y="42.32275" size="1.27" layer="27" rot="R90"/>
+<attribute name="VALUE" x="28.8925" y="43.08475" size="1.27" layer="27" rot="R90" align="center"/>
 </element>
 <element name="R14" library="#ControlBoardV2" package="R0805" value="10k" x="30.06725" y="46.9265" smashed="yes" rot="R90">
 <attribute name="NAME" x="30.06725" y="48.7045" size="0.508" layer="25" font="vector" ratio="20" align="bottom-center"/>
-<attribute name="VALUE" x="32.35325" y="46.1645" size="1.27" layer="27" rot="R90"/>
+<attribute name="VALUE" x="30.06725" y="46.9265" size="1.27" layer="27" rot="R90" align="center"/>
 </element>
 <element name="R15" library="#ControlBoardV2" package="R0805" value="10k" x="25.7683" y="46.8757" smashed="yes" rot="R90">
 <attribute name="NAME" x="25.7683" y="48.6537" size="0.508" layer="25" font="vector" ratio="20" align="bottom-center"/>
-<attribute name="VALUE" x="28.0543" y="46.1137" size="1.27" layer="27" rot="R90"/>
+<attribute name="VALUE" x="25.7683" y="46.8757" size="1.27" layer="27" rot="R90" align="center"/>
 </element>
 <element name="R16" library="#ControlBoardV2" package="R0805" value="10k" x="26.8605" y="43.08475" smashed="yes" rot="R90">
 <attribute name="NAME" x="26.9875" y="41.24325" size="0.508" layer="25" font="vector" ratio="20" rot="R180" align="bottom-center"/>
-<attribute name="VALUE" x="29.1465" y="42.32275" size="1.27" layer="27" rot="R90"/>
+<attribute name="VALUE" x="26.8605" y="43.08475" size="1.27" layer="27" rot="R90" align="center"/>
 </element>
 <element name="C4" library="#ControlBoardV2" package="C0805" value="1nF" x="21.255925" y="39.7651125" smashed="yes" rot="MR90">
 <attribute name="NAME" x="22.254275" y="40.7020875" size="0.508" layer="26" font="vector" ratio="20" rot="MR180" align="center-left"/>
@@ -1525,43 +1544,45 @@ design rules under a new name.</description>
 <attribute name="NAME" x="11.43136875" y="40.897090625" size="0.508" layer="26" font="vector" ratio="20" rot="MR180" align="center-right"/>
 <attribute name="VALUE" x="11.43136875" y="39.754090625" size="0.508" layer="26" font="vector" ratio="20" rot="MR0" align="center-left"/>
 </element>
-<element name="C14" library="#ControlBoardV2" package="C0805" value="0.1uF" x="41.996221875" y="-0.231271875" smashed="yes">
+<element name="C14" library="#ControlBoardV2" package="C0805" value="100nF" x="41.996221875" y="-0.231271875" smashed="yes">
 <attribute name="NAME" x="43.812328125" y="-0.289421875" size="0.508" layer="25" font="vector" ratio="20" rot="R180" align="center-right"/>
-<attribute name="VALUE" x="41.107221875" y="-2.517271875" size="1.27" layer="27"/>
+<attribute name="VALUE" x="41.996221875" y="-0.231271875" size="0.762" layer="27" align="center"/>
 </element>
-<element name="C15" library="#ControlBoardV2" package="C0805" value="0.1uF" x="42.110521875" y="18.786975" smashed="yes" rot="R180">
+<element name="C15" library="#ControlBoardV2" package="C0805" value="100nF" x="42.110521875" y="18.786975" smashed="yes" rot="R180">
 <attribute name="NAME" x="43.983775" y="18.773278125" size="0.508" layer="25" font="vector" ratio="20" align="center-left"/>
-<attribute name="VALUE" x="42.999521875" y="21.072975" size="1.27" layer="27" rot="R180"/>
+<attribute name="VALUE" x="42.237521875" y="18.786975" size="0.762" layer="27" rot="R180" align="center"/>
 </element>
-<element name="C16" library="#ControlBoardV2" package="C0805" value="0.1uF" x="33.86821875" y="18.786975" smashed="yes">
+<element name="C16" library="#ControlBoardV2" package="C0805" value="100nF" x="33.86821875" y="18.786975" smashed="yes">
 <attribute name="NAME" x="31.994975" y="18.70978125" size="0.508" layer="25" font="vector" ratio="20" rot="R180" align="center-left"/>
-<attribute name="VALUE" x="32.97921875" y="16.500975" size="1.27" layer="27"/>
+<attribute name="VALUE" x="33.86821875" y="18.786975" size="0.762" layer="27" align="center"/>
 </element>
-<element name="C17" library="#ControlBoardV2" package="C0805" value="0.1uF" x="47.3075" y="13.49375" smashed="yes">
+<element name="C17" library="#ControlBoardV2" package="C0805" value="100nF" x="47.3075" y="13.49375" smashed="yes">
 <attribute name="NAME" x="47.47895" y="12.3825" size="0.508" layer="25" font="vector" ratio="20" rot="R180" align="bottom-center"/>
-<attribute name="VALUE" x="46.4185" y="11.20775" size="1.27" layer="27"/>
+<attribute name="VALUE" x="47.3075" y="13.49375" size="0.762" layer="27" align="center"/>
 </element>
 <element name="C19" library="#ControlBoardV2" package="C0805" value="1nF" x="33.868221875" y="16.881975" smashed="yes">
 <attribute name="NAME" x="32.013025" y="16.850221875" size="0.508" layer="25" font="vector" ratio="20" align="center-right"/>
-<attribute name="VALUE" x="32.979221875" y="14.595975" size="1.27" layer="27"/>
+<attribute name="VALUE" x="33.868221875" y="16.881975" size="1.27" layer="27" align="center"/>
 </element>
 <element name="C24" library="#ControlBoardV2" package="C0805" value="1nF" x="41.996221875" y="1.641978125" smashed="yes">
 <attribute name="NAME" x="40.395021875" y="1.610221875" size="0.508" layer="25" font="vector" ratio="20" align="center-right"/>
-<attribute name="VALUE" x="41.107221875" y="-0.644021875" size="1.27" layer="27"/>
+<attribute name="VALUE" x="41.996221875" y="1.641978125" size="1.27" layer="27" align="center"/>
 </element>
 <element name="C26" library="#ControlBoardV2" package="C0805" value="1nF" x="42.110521875" y="16.881975" smashed="yes" rot="R180">
 <attribute name="NAME" x="43.983775" y="16.868278125" size="0.508" layer="25" font="vector" ratio="20" align="center-left"/>
-<attribute name="VALUE" x="42.999521875" y="19.167975" size="1.27" layer="27" rot="R180"/>
+<attribute name="VALUE" x="42.110521875" y="16.881975" size="1.27" layer="27" rot="R180" align="center"/>
 </element>
 <element name="C27" library="#ControlBoardV2" package="C0805" value="1nF" x="37.982021875" y="5.914528125" smashed="yes" rot="MR0">
-<attribute name="NAME" x="38.662471875" y="4.835021875" size="0.508" layer="26" font="vector" ratio="20" rot="MR180" align="bottom-center"/>
+<attribute name="NAME" x="38.789471875" y="4.835021875" size="0.508" layer="26" font="vector" ratio="20" rot="MR180" align="bottom-center"/>
+<attribute name="VALUE" x="38.027471875" y="5.851021875" size="0.762" layer="28" ratio="20" rot="MR0" align="center"/>
 </element>
 <element name="C28" library="#ControlBoardV2" package="C0805" value="1nF" x="47.3075" y="15.4178" smashed="yes">
 <attribute name="NAME" x="47.244" y="16.4973" size="0.508" layer="25" font="vector" ratio="20" align="bottom-center"/>
-<attribute name="VALUE" x="46.4185" y="13.1318" size="1.27" layer="27"/>
+<attribute name="VALUE" x="47.3075" y="15.4178" size="1.27" layer="27" align="center"/>
 </element>
-<element name="C30" library="#ControlBoardV2" package="C0805" value="0.1uF" x="37.982025" y="7.91478125" smashed="yes" rot="MR0">
-<attribute name="NAME" x="38.64878125" y="9.007975" size="0.508" layer="26" font="vector" ratio="20" rot="MR0" align="bottom-center"/>
+<element name="C30" library="#ControlBoardV2" package="C0805" value="100nF" x="37.982025" y="7.91478125" smashed="yes" rot="MR0">
+<attribute name="NAME" x="38.77578125" y="9.007975" size="0.508" layer="26" font="vector" ratio="20" rot="MR0" align="bottom-center"/>
+<attribute name="VALUE" x="37.93221875" y="7.883025" size="0.762" layer="28" ratio="20" rot="MR0" align="center"/>
 </element>
 <element name="U$1" library="#ControlBoardV2" package="LOGGER_ISP" value="LOGGER_ISP" x="10.00125" y="0.3175" smashed="yes" rot="MR90"/>
 <element name="XB1" library="xbee" package="XBEE-PRO" value="XBEE-PRO" x="18.4785" y="5.3975" smashed="yes" rot="R180">
@@ -1569,11 +1590,10 @@ design rules under a new name.</description>
 <attribute name="MPN" value="XBP24-AWI-001" x="18.4785" y="5.3975" size="1.778" layer="27" rot="R180" display="off"/>
 <attribute name="MF" value="" x="18.4785" y="5.3975" size="1.778" layer="27" rot="R180" display="off"/>
 <attribute name="OC_FARNELL" value="1337916" x="18.4785" y="5.3975" size="1.778" layer="27" rot="R180" display="off"/>
-<attribute name="VALUE" x="29.9085" y="24.6975" size="1.27" layer="27" rot="R180"/>
 </element>
 <element name="R17" library="#ControlBoardV2" package="R0805" value="10k" x="33.0708" y="52.7431" smashed="yes" rot="R90">
 <attribute name="NAME" x="32.1056" y="50.9651" size="0.508" layer="25" font="vector" ratio="20" rot="R180" align="bottom-center"/>
-<attribute name="VALUE" x="35.3568" y="51.9811" size="1.27" layer="27" rot="R90"/>
+<attribute name="VALUE" x="33.0708" y="52.7431" size="1.27" layer="27" rot="R90" align="center"/>
 </element>
 <element name="SC1" library="#ControlBoardV2" package="SOLDER_SWITCH" value="SOLDER_SWITCH_ONE" x="34.6075" y="42.545" smashed="yes">
 <attribute name="NAME" x="34.6075" y="41.529" size="0.508" layer="25" font="vector" ratio="20" align="center"/>
@@ -1583,12 +1603,12 @@ design rules under a new name.</description>
 </element>
 <element name="R18" library="#ControlBoardV2" package="R0805" value="10k" x="33.274" y="44.4881" smashed="yes" rot="R180">
 <attribute name="NAME" x="31.8643" y="43.4594" size="0.508" layer="25" font="vector" ratio="20" rot="R180" align="bottom-center"/>
-<attribute name="VALUE" x="34.036" y="46.7741" size="1.27" layer="27" rot="R180"/>
+<attribute name="VALUE" x="33.274" y="44.4881" size="1.27" layer="27" rot="R180" align="center"/>
 </element>
 <element name="IN1" library="#ControlBoardV2" package="S1G3_JUM" value="S1G3_JUMP" x="38.2905" y="54.9275" rot="R90"/>
 <element name="R19" library="#ControlBoardV2" package="R0805" value="10k" x="40.74795" y="52.71135" smashed="yes" rot="R90">
 <attribute name="NAME" x="41.87825" y="50.92065" size="0.508" layer="25" font="vector" ratio="20" rot="R180" align="bottom-center"/>
-<attribute name="VALUE" x="43.03395" y="51.94935" size="1.27" layer="27" rot="R90"/>
+<attribute name="VALUE" x="40.74795" y="52.71135" size="1.27" layer="27" rot="R90" align="center"/>
 </element>
 <element name="SC3" library="#ControlBoardV2" package="SOLDER_SWITCH" value="SOLDER_SWITCH_ONE" x="39.0525" y="49.8475" smashed="yes" rot="R180">
 <attribute name="NAME" x="39.0525" y="48.8315" size="0.508" layer="25" font="vector" ratio="20" rot="R180" align="center"/>
@@ -1598,23 +1618,21 @@ design rules under a new name.</description>
 </element>
 <element name="R20" library="#ControlBoardV2" package="R0805" value="10k" x="41.2115" y="44.5516" smashed="yes" rot="R180">
 <attribute name="NAME" x="42.672" y="45.6565" size="0.508" layer="25" font="vector" ratio="20" align="bottom-center"/>
-<attribute name="VALUE" x="41.9735" y="46.8376" size="1.27" layer="27" rot="R180"/>
+<attribute name="VALUE" x="41.2115" y="44.5516" size="1.27" layer="27" rot="R180" align="center"/>
 </element>
-<element name="C18" library="#ControlBoardV2" package="C0805" value="0.1uF" x="48.26" y="-4.953" smashed="yes" rot="R90">
+<element name="C18" library="#ControlBoardV2" package="C0805" value="100nF" x="48.26" y="-4.953" smashed="yes" rot="R90">
 <attribute name="NAME" x="48.26" y="-3.175" size="0.508" layer="25" font="vector" ratio="20" align="bottom-center"/>
-<attribute name="VALUE" x="50.546" y="-5.842" size="1.27" layer="27" rot="R90"/>
+<attribute name="VALUE" x="48.26" y="-4.953" size="0.762" layer="27" rot="R90" align="center"/>
 </element>
-<element name="C29" library="#ControlBoardV2" package="C0805" value="0.1uF" x="47.3075" y="7.6835" smashed="yes">
+<element name="C29" library="#ControlBoardV2" package="C0805" value="100nF" x="47.3075" y="7.6835" smashed="yes">
 <attribute name="NAME" x="47.3075" y="6.6675" size="0.508" layer="25" font="vector" ratio="20" rot="R180" align="bottom-center"/>
-<attribute name="VALUE" x="46.4185" y="5.3975" size="1.27" layer="27"/>
+<attribute name="VALUE" x="47.3075" y="7.6835" size="0.762" layer="27" align="center"/>
 </element>
 <element name="C31" library="#ControlBoardV2" package="C0805" value="1nF" x="47.3075" y="9.68375" smashed="yes">
 <attribute name="NAME" x="47.49165" y="10.7315" size="0.508" layer="25" font="vector" ratio="20" align="bottom-center"/>
-<attribute name="VALUE" x="46.4185" y="7.39775" size="1.27" layer="27"/>
+<attribute name="VALUE" x="47.3075" y="9.68375" size="1.27" layer="27" align="center"/>
 </element>
-<element name="S1" library="#ControlBoardV1" package="DTSM-6" value="DTSM-6" x="6.2865" y="55.1815" smashed="yes">
-<attribute name="VALUE" x="3.7465" y="50.1015" size="1.27" layer="27"/>
-</element>
+<element name="S1" library="#ControlBoardV1" package="DTSM-6" value="DTSM-6" x="6.2865" y="55.1815" smashed="yes"/>
 <element name="PDI" library="#ControlBoardV2" package="S1G3_JUM" value="S1G3_JUMP" x="12.954" y="54.9275" smashed="yes" rot="R90">
 <attribute name="NAME" x="12.9652" y="58.8457" size="0.508" layer="25" font="vector" ratio="20" rot="R180" align="top-center"/>
 </element>
@@ -1628,59 +1646,76 @@ design rules under a new name.</description>
 </element>
 <element name="R1" library="#ControlBoardV2" package="R0805" value="22k" x="35.65525" y="25.11425" smashed="yes" rot="MR270">
 <attribute name="NAME" x="35.65525" y="23.33625" size="0.508" layer="26" font="vector" ratio="20" rot="MR180" align="bottom-center"/>
+<attribute name="VALUE" x="35.65525" y="25.11425" size="1.27" layer="28" rot="MR270" align="center"/>
 </element>
 <element name="R3" library="#ControlBoardV2" package="R0805" value="22k" x="37.81425" y="25.11425" smashed="yes" rot="MR270">
 <attribute name="NAME" x="37.81425" y="23.33625" size="0.508" layer="26" font="vector" ratio="20" rot="MR180" align="bottom-center"/>
+<attribute name="VALUE" x="37.81425" y="25.11425" size="1.27" layer="28" rot="MR270" align="center"/>
 </element>
 <element name="C32" library="#ControlBoardV2" package="C0805" value="2.2uF" x="37.30625" y="16.881975" smashed="yes" rot="R180">
 <attribute name="NAME" x="32.553775" y="15.24635" size="0.508" layer="25" font="vector" ratio="20" align="bottom-center"/>
-<attribute name="VALUE" x="38.19525" y="19.167975" size="1.27" layer="27" rot="R180"/>
+<attribute name="VALUE" x="37.30625" y="16.881975" size="0.762" layer="27" rot="R180" align="center"/>
 </element>
 <element name="C33" library="#ControlBoardV2" package="C0805" value="2.2uF" x="31.28645" y="7.1628" smashed="yes" rot="R270">
 <attribute name="NAME" x="31.28645" y="5.3848" size="0.508" layer="25" font="vector" ratio="20" rot="R180" align="bottom-center"/>
-<attribute name="VALUE" x="29.00045" y="8.0518" size="1.27" layer="27" rot="R270"/>
+<attribute name="VALUE" x="31.28645" y="7.1628" size="0.762" layer="27" rot="R270" align="center"/>
 </element>
 <element name="TSR" library="#ControlBoardV2" package="TSR1" value="TSR1" x="38.2651" y="32.385" smashed="yes" rot="R90">
 <attribute name="NAME" x="32.5628" y="32.3977" size="1.016" layer="25" font="vector" ratio="20" align="center-right"/>
 </element>
 <element name="L1" library="#ControlBoardV2" package="SDR0604" value="1" x="44.29125" y="36.35375" smashed="yes">
-<attribute name="NAME" x="40.43045" y="39.19855" size="0.508" layer="21" font="vector" ratio="20" align="center-right"/>
+<attribute name="NAME" x="40.43045" y="39.19855" size="0.508" layer="25" font="vector" ratio="20" align="center-right"/>
 </element>
 <element name="C34" library="#ControlBoardV2" package="C0805" value="100nF" x="42.70375" y="41.75125" smashed="yes" rot="R270">
 <attribute name="NAME" x="41.72585" y="40.87495" size="0.508" layer="25" font="vector" ratio="20" align="center-right"/>
-<attribute name="VALUE" x="40.41775" y="42.64025" size="1.27" layer="27" rot="R270"/>
+<attribute name="VALUE" x="42.70375" y="41.75125" size="0.762" layer="27" rot="R270" align="center"/>
 </element>
 <element name="C35" library="#ControlBoardV2" package="C0805" value="100nF" x="44.92625" y="31.27375" smashed="yes" rot="R180">
 <attribute name="NAME" x="44.92625" y="30.19425" size="0.508" layer="25" font="vector" ratio="20" rot="R180" align="bottom-center"/>
-<attribute name="VALUE" x="45.81525" y="33.55975" size="1.27" layer="27" rot="R180"/>
+<attribute name="VALUE" x="44.92625" y="31.27375" size="0.762" layer="27" rot="R180" align="center"/>
 </element>
-<element name="R2" library="#ControlBoardV2" package="R0805" value="330R" x="11.557" y="20.701" rot="R270"/>
-<element name="R21" library="#ControlBoardV2" package="R0805" value="330R" x="15.875" y="20.701" smashed="yes" rot="R270">
+<element name="R2" library="#ControlBoardV2" package="R0805" value="470R" x="11.557" y="20.701" smashed="yes" rot="R270">
+<attribute name="NAME" x="11.557" y="18.923" size="0.508" layer="25" font="vector" ratio="20" rot="R180" align="bottom-center"/>
+<attribute name="VALUE" x="11.557" y="20.701" size="0.762" layer="27" rot="R270" align="center"/>
+</element>
+<element name="R21" library="#ControlBoardV2" package="R0805" value="470R" x="15.875" y="20.701" smashed="yes" rot="R270">
 <attribute name="NAME" x="16.383" y="18.923" size="0.508" layer="25" font="vector" ratio="20" rot="R180" align="bottom-center"/>
-<attribute name="VALUE" x="13.589" y="21.463" size="1.27" layer="27" rot="R270"/>
+<attribute name="VALUE" x="15.875" y="20.701" size="0.762" layer="27" rot="R270" align="center"/>
 </element>
-<element name="R22" library="#ControlBoardV2" package="R0805" value="330R" x="13.716" y="20.701" rot="R270"/>
+<element name="R22" library="#ControlBoardV2" package="R0805" value="1k" x="13.716" y="20.701" smashed="yes" rot="R270">
+<attribute name="NAME" x="13.716" y="18.923" size="0.508" layer="25" font="vector" ratio="20" rot="R180" align="bottom-center"/>
+<attribute name="VALUE" x="13.716" y="20.701" size="1.27" layer="27" rot="R270" align="center"/>
+</element>
 <element name="U$10" library="#ControlBoardV2" package="PIN" value="PIN" x="2.794" y="21.59" smashed="yes" rot="R270"/>
-<element name="R23" library="#ControlBoardV2" package="R0805" value="330R" x="11.557" y="25.273" rot="R270"/>
+<element name="R23" library="#ControlBoardV2" package="R0805" value="120R" x="11.557" y="25.273" smashed="yes" rot="R270">
+<attribute name="NAME" x="11.557" y="23.495" size="0.508" layer="25" font="vector" ratio="20" rot="R180" align="bottom-center"/>
+<attribute name="VALUE" x="11.557" y="25.273" size="0.762" layer="27" rot="R270" align="center"/>
+</element>
 <element name="U$11" library="#ControlBoardV2" package="PIN" value="PIN" x="2.794" y="24.13" smashed="yes" rot="R270"/>
-<element name="R24" library="#ControlBoardV2" package="R0805" value="330R" x="9.398" y="25.273" rot="R270"/>
+<element name="R24" library="#ControlBoardV2" package="R0805" value="120R" x="9.398" y="25.273" smashed="yes" rot="R270">
+<attribute name="NAME" x="9.398" y="23.495" size="0.508" layer="25" font="vector" ratio="20" rot="R180" align="bottom-center"/>
+<attribute name="VALUE" x="9.398" y="25.273" size="0.762" layer="27" rot="R270" align="center"/>
+</element>
 <element name="U$12" library="#ControlBoardV2" package="PIN" value="PIN" x="2.794" y="26.67" smashed="yes" rot="R90"/>
-<element name="R25" library="#ControlBoardV2" package="R0805" value="330R" x="7.239" y="25.273" rot="R270"/>
+<element name="R25" library="#ControlBoardV2" package="R0805" value="120R" x="7.239" y="25.273" smashed="yes" rot="R270">
+<attribute name="NAME" x="7.239" y="23.495" size="0.508" layer="25" font="vector" ratio="20" rot="R180" align="bottom-center"/>
+<attribute name="VALUE" x="7.239" y="25.273" size="0.762" layer="27" rot="R270" align="center"/>
+</element>
 <element name="LED1" library="#ControlBoardV1" package="SML0805" value="RED" x="13.589" y="24.892" smashed="yes" rot="R270">
-<attribute name="VALUE" x="11.589" y="26.392" size="1.27" layer="27" rot="R270"/>
+<attribute name="VALUE" x="13.113" y="24.868" size="0.508" layer="27" rot="R270" align="center"/>
 </element>
 <element name="LED2" library="#ControlBoardV1" package="SML0805" value="BLUE" x="17.399" y="24.892" smashed="yes" rot="R270">
-<attribute name="VALUE" x="15.399" y="26.392" size="1.27" layer="27" rot="R270"/>
+<attribute name="VALUE" x="16.923" y="24.868" size="0.508" layer="27" rot="R270" align="center"/>
 </element>
 <element name="LED3" library="#ControlBoardV1" package="SML0805" value="ORANGE" x="15.494" y="24.892" smashed="yes" rot="R270">
-<attribute name="VALUE" x="13.494" y="26.392" size="1.27" layer="27" rot="R270"/>
+<attribute name="VALUE" x="15.018" y="24.868" size="0.508" layer="27" rot="R270" align="center"/>
 </element>
-<element name="R26" library="#ControlBoardV2" package="R0805" value="330R" x="17.907" y="20.701" smashed="yes" rot="R270">
+<element name="R26" library="#ControlBoardV2" package="R0805" value="470R" x="17.907" y="20.701" smashed="yes" rot="R270">
 <attribute name="NAME" x="17.907" y="18.923" size="0.508" layer="25" font="vector" ratio="20" rot="R180" align="bottom-center"/>
-<attribute name="VALUE" x="15.621" y="21.463" size="1.27" layer="27" rot="R270"/>
+<attribute name="VALUE" x="17.907" y="20.701" size="0.762" layer="27" rot="R270" align="center"/>
 </element>
 <element name="LED4" library="#ControlBoardV1" package="SML0805" value="GREEN" x="19.304" y="24.892" smashed="yes" rot="R270">
-<attribute name="VALUE" x="17.304" y="26.392" size="1.27" layer="27" rot="R270"/>
+<attribute name="VALUE" x="18.828" y="24.868" size="0.508" layer="27" rot="R270" align="center"/>
 </element>
 <element name="AUX5" library="#ControlBoardV2" package="PIN" value="PIN" x="2.794" y="29.21" rot="R270"/>
 <element name="AUX4" library="#ControlBoardV2" package="PIN" value="PIN" x="2.794" y="31.75" rot="R270"/>
@@ -1695,83 +1730,86 @@ design rules under a new name.</description>
 <element name="U$20" library="#ControlBoardV2" package="PIN" value="PIN" x="2.794" y="26.67" smashed="yes" rot="MR90"/>
 <element name="U$21" library="#ControlBoardV2" package="PIN" value="PIN" x="2.794" y="24.13" smashed="yes" rot="MR270"/>
 <element name="U$22" library="#ControlBoardV2" package="PIN" value="PIN" x="2.794" y="21.59" smashed="yes" rot="MR90"/>
-<element name="R27" library="#ControlBoardV2" package="R0805" value="330R" x="19.939" y="20.701" smashed="yes" rot="R270">
+<element name="R27" library="#ControlBoardV2" package="R0805" value="470R" x="19.939" y="20.701" smashed="yes" rot="R270">
 <attribute name="NAME" x="19.685" y="18.923" size="0.508" layer="25" font="vector" ratio="20" rot="R180" align="bottom-center"/>
-<attribute name="VALUE" x="17.653" y="21.463" size="1.27" layer="27" rot="R270"/>
+<attribute name="VALUE" x="19.939" y="20.701" size="0.762" layer="27" rot="R270" align="center"/>
 </element>
 <element name="LED5" library="#ControlBoardV1" package="SML0805" value="YELLOW" x="21.209" y="24.892" smashed="yes" rot="R270">
-<attribute name="VALUE" x="19.209" y="26.392" size="1.27" layer="27" rot="R270"/>
+<attribute name="VALUE" x="20.733" y="24.868" size="0.508" layer="27" rot="R270" align="center"/>
 </element>
 <element name="JUM7" library="#ControlBoardV1" package="S1G2_JUM" value="S1G2_JUMP" x="44.45" y="56.2102" smashed="yes" rot="R90"/>
 <element name="JUM8" library="#ControlBoardV1" package="S1G2_JUM" value="S1G2_JUMP" x="46.99" y="56.2102" smashed="yes" rot="R90"/>
-<element name="R28" library="#ControlBoardV2" package="R0805" value="330R" x="47.752" y="26.67" smashed="yes" rot="R90">
+<element name="R28" library="#ControlBoardV2" package="R0805" value="1k" x="47.752" y="26.67" smashed="yes" rot="R90">
 <attribute name="NAME" x="47.752" y="28.448" size="0.508" layer="25" font="vector" ratio="20" align="bottom-center"/>
-<attribute name="VALUE" x="50.038" y="25.908" size="1.27" layer="27" rot="R90"/>
+<attribute name="VALUE" x="47.752" y="26.67" size="1.27" layer="27" rot="R90" align="center"/>
 </element>
-<element name="R29" library="#ControlBoardV2" package="R0805" value="330R" x="47.752" y="22.86" rot="R270"/>
+<element name="R29" library="#ControlBoardV2" package="R0805" value="270R" x="47.752" y="22.86" smashed="yes" rot="R270">
+<attribute name="NAME" x="47.752" y="21.082" size="0.508" layer="25" font="vector" ratio="20" rot="R180" align="bottom-center"/>
+<attribute name="VALUE" x="47.752" y="22.86" size="0.889" layer="27" rot="R270" align="center"/>
+</element>
 <element name="LED6" library="#ControlBoardV1" package="SML0805" value="RED" x="44.45" y="25.908" smashed="yes">
-<attribute name="VALUE" x="42.95" y="23.908" size="1.27" layer="27"/>
+<attribute name="VALUE" x="44.474" y="25.432" size="0.508" layer="27" align="center"/>
 </element>
 <element name="LED7" library="#ControlBoardV1" package="SML0805" value="GREEN" x="44.45" y="23.622" smashed="yes">
-<attribute name="VALUE" x="42.95" y="21.622" size="1.27" layer="27"/>
+<attribute name="VALUE" x="44.474" y="23.146" size="0.508" layer="27" align="center"/>
 </element>
 <element name="C1" library="#ControlBoardV2" package="B" value="100uF" x="37.846" y="21.336" smashed="yes" rot="R270">
 <attribute name="NAME" x="39.4335" y="21.209" size="0.508" layer="25" font="vector" ratio="20" align="center-left"/>
-<attribute name="VALUE" x="34.671" y="23.241" size="1.27" layer="27" rot="R270"/>
+<attribute name="VALUE" x="37.846" y="21.336" size="1.27" layer="27" rot="R270" align="center"/>
 </element>
 <element name="C2" library="#ControlBoardV2" package="B" value="100uF" x="29.718" y="38.354" smashed="yes" rot="R180">
 <attribute name="NAME" x="29.6545" y="36.703" size="0.508" layer="25" font="vector" ratio="20" rot="R180" align="bottom-center"/>
-<attribute name="VALUE" x="31.623" y="41.529" size="1.27" layer="27" rot="R180"/>
+<attribute name="VALUE" x="31.877" y="38.989" size="1.27" layer="27" rot="R180"/>
 </element>
 <element name="C3" library="#ControlBoardV2" package="B" value="100uF" x="23.622" y="16.129" smashed="yes" rot="R270">
 <attribute name="NAME" x="22.0345" y="16.002" size="0.508" layer="25" font="vector" ratio="20" align="center-right"/>
-<attribute name="VALUE" x="20.447" y="18.034" size="1.27" layer="27" rot="R270"/>
+<attribute name="VALUE" x="23.622" y="16.129" size="1.27" layer="27" rot="R270" align="center"/>
 </element>
-<element name="R30" library="#ControlBoardV2" package="R0805" value="330R" x="11.303" y="15.24" smashed="yes">
+<element name="R30" library="#ControlBoardV2" package="R0805" value="470R" x="11.303" y="15.24" smashed="yes">
 <attribute name="NAME" x="13.081" y="15.24" size="0.508" layer="25" font="vector" ratio="20" align="center-left"/>
-<attribute name="VALUE" x="10.541" y="12.954" size="1.27" layer="27"/>
+<attribute name="VALUE" x="11.303" y="15.24" size="0.762" layer="27" align="center"/>
 </element>
-<element name="R31" library="#ControlBoardV2" package="R0805" value="330R" x="11.303" y="17.272" smashed="yes">
+<element name="R31" library="#ControlBoardV2" package="R0805" value="470R" x="11.303" y="17.272" smashed="yes">
 <attribute name="NAME" x="13.081" y="17.145" size="0.508" layer="25" font="vector" ratio="20" align="center-left"/>
-<attribute name="VALUE" x="10.541" y="14.986" size="1.27" layer="27"/>
+<attribute name="VALUE" x="11.303" y="17.272" size="0.762" layer="27" align="center"/>
 </element>
-<element name="LED8" library="#ControlBoardV1" package="SML0805" value="RED" x="2.921" y="14.224" smashed="yes" rot="R180">
-<attribute name="VALUE" x="4.421" y="16.224" size="1.27" layer="27" rot="R180"/>
+<element name="LED8" library="#ControlBoardV1" package="SML0805" value="YELLOW" x="2.921" y="14.224" smashed="yes" rot="R180">
+<attribute name="VALUE" x="2.897" y="14.7" size="0.508" layer="27" rot="R180" align="center"/>
 </element>
-<element name="LED9" library="#ControlBoardV1" package="SML0805" value="GREEN" x="2.921" y="16.256" smashed="yes" rot="R180">
-<attribute name="VALUE" x="4.421" y="18.256" size="1.27" layer="27" rot="R180"/>
+<element name="LED9" library="#ControlBoardV1" package="SML0805" value="YELLOW" x="2.921" y="16.256" smashed="yes" rot="R180">
+<attribute name="VALUE" x="2.897" y="16.732" size="0.508" layer="27" rot="R180" align="center"/>
 </element>
-<element name="R32" library="#ControlBoardV2" package="R0805" value="330R" x="15.875" y="13.716" smashed="yes">
+<element name="R32" library="#ControlBoardV2" package="R0805" value="470R" x="15.875" y="13.716" smashed="yes">
 <attribute name="NAME" x="17.653" y="13.716" size="0.508" layer="25" font="vector" ratio="20" align="center-left"/>
-<attribute name="VALUE" x="15.113" y="11.43" size="1.27" layer="27"/>
+<attribute name="VALUE" x="15.875" y="13.716" size="0.762" layer="27" align="center"/>
 </element>
-<element name="R33" library="#ControlBoardV2" package="R0805" value="330R" x="17.78" y="11.176" smashed="yes">
+<element name="R33" library="#ControlBoardV2" package="R0805" value="470R" x="17.78" y="11.176" smashed="yes">
 <attribute name="NAME" x="19.558" y="11.176" size="0.508" layer="25" font="vector" ratio="20" align="center-left"/>
-<attribute name="VALUE" x="17.018" y="8.89" size="1.27" layer="27"/>
+<attribute name="VALUE" x="17.78" y="11.176" size="0.762" layer="27" align="center"/>
 </element>
-<element name="LED10" library="#ControlBoardV1" package="SML0805" value="RED" x="2.921" y="10.795" smashed="yes" rot="R180">
-<attribute name="VALUE" x="4.421" y="12.795" size="1.27" layer="27" rot="R180"/>
+<element name="LED10" library="#ControlBoardV1" package="SML0805" value="YELLOW" x="2.921" y="10.795" smashed="yes" rot="R180">
+<attribute name="VALUE" x="2.897" y="11.271" size="0.508" layer="27" rot="R180" align="center"/>
 </element>
-<element name="LED11" library="#ControlBoardV1" package="SML0805" value="GREEN" x="2.921" y="8.763" smashed="yes" rot="R180">
-<attribute name="VALUE" x="4.421" y="10.763" size="1.27" layer="27" rot="R180"/>
+<element name="LED11" library="#ControlBoardV1" package="SML0805" value="YELLOW" x="2.921" y="8.763" smashed="yes" rot="R180">
+<attribute name="VALUE" x="2.897" y="9.366" size="0.508" layer="27" rot="R180" align="center"/>
 </element>
-<element name="R34" library="#ControlBoardV2" package="R0805" value="330R" x="31.75" y="11.811" smashed="yes" rot="MR90">
+<element name="R34" library="#ControlBoardV2" package="R0805" value="470R" x="31.75" y="11.811" smashed="yes" rot="MR90">
 <attribute name="NAME" x="31.75" y="9.652" size="0.508" layer="26" font="vector" ratio="20" rot="MR0" align="bottom-center"/>
-<attribute name="VALUE" x="29.464" y="11.049" size="1.27" layer="28" rot="MR90"/>
+<attribute name="VALUE" x="31.75" y="11.811" size="0.762" layer="28" rot="MR90" align="center"/>
 </element>
-<element name="R35" library="#ControlBoardV2" package="R0805" value="330R" x="33.655" y="11.811" smashed="yes" rot="MR90">
+<element name="R35" library="#ControlBoardV2" package="R0805" value="470R" x="33.655" y="11.811" smashed="yes" rot="MR90">
 <attribute name="NAME" x="33.528" y="9.652" size="0.508" layer="26" font="vector" ratio="20" rot="MR0" align="bottom-center"/>
-<attribute name="VALUE" x="31.369" y="11.049" size="1.27" layer="28" rot="MR90"/>
+<attribute name="VALUE" x="33.655" y="11.811" size="0.762" layer="28" rot="MR90" align="center"/>
 </element>
-<element name="LED12" library="#ControlBoardV1" package="SML0805" value="RED" x="36.957" y="-0.635" smashed="yes">
-<attribute name="VALUE" x="35.457" y="-2.635" size="1.27" layer="27"/>
+<element name="LED12" library="#ControlBoardV1" package="SML0805" value="YELLOW" x="36.957" y="-0.635" smashed="yes">
+<attribute name="VALUE" x="36.981" y="-1.111" size="0.508" layer="27" align="center"/>
 </element>
-<element name="LED13" library="#ControlBoardV1" package="SML0805" value="GREEN" x="36.957" y="1.27" smashed="yes">
-<attribute name="VALUE" x="35.457" y="-0.73" size="1.27" layer="27"/>
+<element name="LED13" library="#ControlBoardV1" package="SML0805" value="YELLOW" x="36.957" y="1.27" smashed="yes">
+<attribute name="VALUE" x="36.854" y="0.794" size="0.508" layer="27" align="center"/>
 </element>
-<element name="Q1" library="#SparkFun" package="RESONATOR-SMD" value="RESONATORSMD" x="25.527" y="2.413" smashed="yes" rot="MR270">
+<element name="Q1" library="#SparkFun" package="RESONATOR-SMD" value="16MHz" x="25.527" y="2.413" smashed="yes" rot="MR270">
 <attribute name="NAME" x="27.178" y="2.413" size="0.508" layer="26" font="vector" ratio="20" rot="MR180" align="center-left"/>
-<attribute name="VALUE" x="27.432" y="3.302" size="0.4064" layer="28" rot="MR270"/>
+<attribute name="VALUE" x="25.527" y="2.413" size="0.762" layer="28" rot="MR270" align="center"/>
 </element>
 <element name="U3" library="#ControlBoardV2" package="SOT-23" value="" x="33.2842" y="47.143" smashed="yes">
 <attribute name="VALUE" x="32.0142" y="44.6029" size="1.016" layer="27" font="vector"/>
@@ -1782,15 +1820,15 @@ design rules under a new name.</description>
 <attribute name="NAME" x="40.8687" y="47.7838" size="0.508" layer="25" font="vector" ratio="20"/>
 </element>
 <element name="U16" library="medipix" package="SOT-23" value="BSS138AKA" x="7.62" y="51.435" smashed="yes" rot="MR0">
-<attribute name="VALUE" x="8.89" y="48.8949" size="1.016" layer="28" font="vector" rot="MR0"/>
+<attribute name="VALUE" x="7.62" y="50.6729" size="0.508" layer="28" font="vector" rot="MR0" align="center"/>
 <attribute name="NAME" x="6.9087" y="52.1272" size="0.508" layer="26" font="vector" ratio="20" rot="MR0"/>
 </element>
-<element name="R7" library="#ControlBoardV2" package="R0805" value="10k" x="11.3792" y="47.7012" smashed="yes" rot="R270">
+<element name="R7" library="#ControlBoardV2" package="R0805" value="1k" x="11.3792" y="47.7012" smashed="yes" rot="R270">
 <attribute name="NAME" x="11.7856" y="45.8724" size="0.508" layer="25" font="vector" ratio="20" rot="R180" align="bottom-center"/>
-<attribute name="VALUE" x="9.0932" y="48.4632" size="1.27" layer="27" rot="R270"/>
+<attribute name="VALUE" x="11.3792" y="47.7012" size="1.27" layer="27" rot="R270" align="center"/>
 </element>
 <element name="U6" library="medipix" package="SOT-23" value="BSS138AKA" x="15.24" y="45.72" smashed="yes" rot="MR90">
-<attribute name="VALUE" x="12.6999" y="44.45" size="1.016" layer="28" font="vector" rot="MR90"/>
+<attribute name="VALUE" x="15.8749" y="43.815" size="0.508" layer="28" font="vector" rot="MR90"/>
 <attribute name="NAME" x="15.6971" y="47.2758" size="0.508" layer="26" font="vector" ratio="20" rot="MR0"/>
 </element>
 <element name="SC7" library="#ControlBoardV2" package="SOLDER_SWITCH_2" value="SOLDER_SWITCH_2" x="12.9794" y="45.1866" smashed="yes" rot="MR270">
@@ -1801,19 +1839,19 @@ design rules under a new name.</description>
 </element>
 <element name="R38" library="#ControlBoardV2" package="R0805" value="10k" x="10.9474" y="47.5742" smashed="yes" rot="MR270">
 <attribute name="NAME" x="10.4648" y="49.4538" size="0.508" layer="26" font="vector" ratio="20" rot="MR0" align="bottom-center"/>
-<attribute name="VALUE" x="13.2334" y="48.3362" size="1.27" layer="28" rot="MR270"/>
+<attribute name="VALUE" x="10.9474" y="47.5742" size="1.27" layer="28" rot="MR270" align="center"/>
 </element>
 <element name="R39" library="#ControlBoardV2" package="R0805" value="10k" x="18.034" y="48.514" smashed="yes" rot="MR270">
 <attribute name="NAME" x="16.9672" y="48.4632" size="0.508" layer="26" font="vector" ratio="20" rot="MR270" align="bottom-center"/>
-<attribute name="VALUE" x="20.32" y="49.276" size="1.27" layer="28" rot="MR270"/>
+<attribute name="VALUE" x="18.034" y="48.514" size="1.27" layer="28" rot="MR270" align="center"/>
 </element>
 <element name="R36" library="#ControlBoardV2" package="R0805" value="10k" x="7.6454" y="44.069" smashed="yes" rot="MR90">
 <attribute name="NAME" x="7.5946" y="42.291" size="0.508" layer="26" font="vector" ratio="20" rot="MR180" align="bottom-center"/>
-<attribute name="VALUE" x="5.3594" y="43.307" size="1.27" layer="28" rot="MR90"/>
+<attribute name="VALUE" x="7.6454" y="44.069" size="1.27" layer="28" rot="MR90" align="center"/>
 </element>
 <element name="R37" library="#ControlBoardV2" package="R0805" value="10k" x="9.9568" y="55.9816" smashed="yes" rot="MR270">
 <attribute name="NAME" x="8.1534" y="55.5752" size="0.508" layer="26" font="vector" ratio="20" rot="MR0" align="bottom-center"/>
-<attribute name="VALUE" x="12.2428" y="56.7436" size="1.27" layer="28" rot="MR270"/>
+<attribute name="VALUE" x="9.9568" y="55.9816" size="1.27" layer="28" rot="MR270" align="center"/>
 </element>
 <element name="SC5" library="#ControlBoardV2" package="SOLDER_SWITCH_2" value="SOLDER_SWITCH_2" x="8.4074" y="49.0982" smashed="yes" rot="MR180">
 <attribute name="NAME" x="7.7978" y="48.0314" size="0.508" layer="26" font="vector" ratio="20" rot="MR0" align="center"/>
@@ -1821,17 +1859,26 @@ design rules under a new name.</description>
 <element name="SC6" library="#ControlBoardV2" package="SOLDER_SWITCH_2" value="SOLDER_SWITCH_2" x="9.3726" y="52.959" smashed="yes" rot="MR0">
 <attribute name="NAME" x="10.033" y="52.197" size="0.508" layer="26" font="vector" ratio="20" rot="MR0" align="top-center"/>
 </element>
-<element name="R40" library="#ControlBoardV2" package="R0805" value="330R" x="9.652" y="-3.302" rot="MR90"/>
-<element name="LED14" library="#ControlBoardV1" package="SML0805" value="" x="2.794" y="-5.588" smashed="yes">
-<attribute name="VALUE" x="1.294" y="-7.588" size="1.27" layer="27"/>
+<element name="R40" library="#ControlBoardV2" package="R0805" value="470R" x="9.652" y="-3.302" smashed="yes" rot="MR90">
+<attribute name="NAME" x="9.652" y="-1.524" size="0.508" layer="26" font="vector" ratio="20" rot="MR0" align="bottom-center"/>
+<attribute name="VALUE" x="9.652" y="-3.302" size="0.762" layer="28" rot="MR90" align="center"/>
 </element>
-<element name="R41" library="#ControlBoardV2" package="R0805" value="330R" x="25.908" y="-5.207" rot="MR180"/>
-<element name="RSSI" library="#ControlBoardV1" package="SML0805" value="BLUE" x="2.794" y="-7.62" smashed="yes">
-<attribute name="VALUE" x="1.294" y="-9.62" size="1.27" layer="27"/>
+<element name="LED14" library="#ControlBoardV1" package="SML0805" value="BLUE" x="2.794" y="-5.588" smashed="yes">
+<attribute name="VALUE" x="2.818" y="-6.064" size="0.508" layer="27" align="center"/>
 </element>
-<element name="R42" library="#ControlBoardV2" package="R0805" value="330R" x="36.83" y="0" rot="MR90"/>
-<element name="LED15" library="#ControlBoardV1" package="SML0805" value="" x="29.7434" y="-7.239" smashed="yes" rot="R90">
-<attribute name="VALUE" x="31.7434" y="-8.739" size="1.27" layer="27" rot="R90"/>
+<element name="R41" library="#ControlBoardV2" package="R0805" value="470R" x="25.908" y="-5.207" smashed="yes" rot="MR180">
+<attribute name="NAME" x="27.686" y="-5.207" size="0.508" layer="26" font="vector" ratio="20" rot="MR90" align="bottom-center"/>
+<attribute name="VALUE" x="25.908" y="-5.207" size="0.762" layer="28" rot="MR180" align="center"/>
+</element>
+<element name="RSSI" library="#ControlBoardV1" package="SML0805" value="YELLOW" x="2.794" y="-7.62" smashed="yes">
+<attribute name="VALUE" x="2.818" y="-8.096" size="0.508" layer="27" align="center"/>
+</element>
+<element name="R42" library="#ControlBoardV2" package="R0805" value="270R" x="36.83" y="0" smashed="yes" rot="MR90">
+<attribute name="NAME" x="36.83" y="1.778" size="0.508" layer="26" font="vector" ratio="20" rot="MR0" align="bottom-center"/>
+<attribute name="VALUE" x="36.83" y="0" size="0.762" layer="28" rot="MR90" align="center"/>
+</element>
+<element name="LED15" library="#ControlBoardV1" package="SML0805" value="YELLOW" x="29.7434" y="-7.239" smashed="yes" rot="R90">
+<attribute name="VALUE" x="30.2194" y="-7.342" size="0.508" layer="27" rot="R90" align="center"/>
 </element>
 <element name="U$2" library="basestation1" package="MICROSD_HOLDER-HIROSE-DM3AT" value="MICROSD-HIROSE" x="17.145" y="7.62"/>
 </elements>

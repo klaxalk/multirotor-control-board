@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="6.4">
+<eagle version="6.5.0">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
@@ -9041,7 +9041,7 @@ by exp-lbrs.ulp</description>
 </class>
 </classes>
 <parts>
-<part name="C20" library="#ControlBoardV2" deviceset="C-EU" device="C0805" value="0.1uF"/>
+<part name="C20" library="#ControlBoardV2" deviceset="C-EU" device="C0805" value="100nF"/>
 <part name="GND1" library="SparkFun" deviceset="GND" device=""/>
 <part name="P+11" library="SparkFun" deviceset="3.3V" device=""/>
 <part name="P+15" library="SparkFun" deviceset="3.3V" device=""/>
@@ -9049,22 +9049,22 @@ by exp-lbrs.ulp</description>
 <part name="U1" library="SparkFun" deviceset="ATMEGA168" device="" value="ATMEGA168"/>
 <part name="P+1" library="SparkFun" deviceset="3.3V" device=""/>
 <part name="GND5" library="SparkFun" deviceset="GND" device=""/>
-<part name="C21" library="#ControlBoardV2" deviceset="C-EU" device="C0805" value="0.1uF"/>
+<part name="C21" library="#ControlBoardV2" deviceset="C-EU" device="C0805" value="100nF"/>
 <part name="R4" library="#ControlBoardV2" deviceset="C-EU" device="C0805" value="10k"/>
 <part name="IC1" library="xmega" deviceset="AVR_XMEGA_A3_" device=""/>
 <part name="U2" library="#ControlBoardV2" deviceset="STM32F415RGT6" device=""/>
 <part name="GND6" library="SparkFun" deviceset="GND" device=""/>
 <part name="P+3" library="SparkFun" deviceset="3.3V" device=""/>
-<part name="R5" library="#ControlBoardV2" deviceset="R-EU_" device="R0805" value="10k"/>
-<part name="R6" library="#ControlBoardV2" deviceset="R-EU_" device="R0805" value="10k"/>
+<part name="R5" library="#ControlBoardV2" deviceset="R-EU_" device="R0805" value="1k"/>
+<part name="R6" library="#ControlBoardV2" deviceset="R-EU_" device="R0805" value="1k"/>
 <part name="GND7" library="SparkFun" deviceset="GND" device=""/>
-<part name="R8" library="#ControlBoardV2" deviceset="R-EU_" device="R0805" value="10k"/>
+<part name="R8" library="#ControlBoardV2" deviceset="R-EU_" device="R0805" value="1k"/>
 <part name="GND9" library="SparkFun" deviceset="GND" device=""/>
-<part name="R9" library="#ControlBoardV2" deviceset="R-EU_" device="R0805" value="10k"/>
-<part name="R10" library="#ControlBoardV2" deviceset="R-EU_" device="R0805" value="10k"/>
+<part name="R9" library="#ControlBoardV2" deviceset="R-EU_" device="R0805" value="1k"/>
+<part name="R10" library="#ControlBoardV2" deviceset="R-EU_" device="R0805" value="1k"/>
 <part name="GND10" library="SparkFun" deviceset="GND" device=""/>
-<part name="R11" library="#ControlBoardV2" deviceset="R-EU_" device="R0805" value="10k"/>
-<part name="R12" library="#ControlBoardV2" deviceset="R-EU_" device="R0805" value="10k"/>
+<part name="R11" library="#ControlBoardV2" deviceset="R-EU_" device="R0805" value="1k"/>
+<part name="R12" library="#ControlBoardV2" deviceset="R-EU_" device="R0805" value="1k"/>
 <part name="GND11" library="SparkFun" deviceset="GND" device=""/>
 <part name="GND13" library="SparkFun" deviceset="GND" device=""/>
 <part name="GND14" library="SparkFun" deviceset="GND" device=""/>
@@ -9101,12 +9101,12 @@ by exp-lbrs.ulp</description>
 <part name="C13" library="#ControlBoardV2" deviceset="C-EU" device="C0805" value="0.1uF"/>
 <part name="P+13" library="SparkFun" deviceset="3.3V" device=""/>
 <part name="GND19" library="SparkFun" deviceset="GND" device=""/>
-<part name="C14" library="#ControlBoardV2" deviceset="C-EU" device="C0805" value="0.1uF"/>
+<part name="C14" library="#ControlBoardV2" deviceset="C-EU" device="C0805" value="100nF"/>
 <part name="GND20" library="SparkFun" deviceset="GND" device=""/>
 <part name="P+14" library="SparkFun" deviceset="3.3V" device=""/>
-<part name="C15" library="#ControlBoardV2" deviceset="C-EU" device="C0805" value="0.1uF"/>
-<part name="C16" library="#ControlBoardV2" deviceset="C-EU" device="C0805" value="0.1uF"/>
-<part name="C17" library="#ControlBoardV2" deviceset="C-EU" device="C0805" value="0.1uF"/>
+<part name="C15" library="#ControlBoardV2" deviceset="C-EU" device="C0805" value="100nF"/>
+<part name="C16" library="#ControlBoardV2" deviceset="C-EU" device="C0805" value="100nF"/>
+<part name="C17" library="#ControlBoardV2" deviceset="C-EU" device="C0805" value="100nF"/>
 <part name="C19" library="#ControlBoardV2" deviceset="C-EU" device="C0805" value="1nF"/>
 <part name="GND21" library="SparkFun" deviceset="GND" device=""/>
 <part name="P+16" library="SparkFun" deviceset="3.3V" device=""/>
@@ -9114,7 +9114,7 @@ by exp-lbrs.ulp</description>
 <part name="C26" library="#ControlBoardV2" deviceset="C-EU" device="C0805" value="1nF"/>
 <part name="C27" library="#ControlBoardV2" deviceset="C-EU" device="C0805" value="1nF"/>
 <part name="C28" library="#ControlBoardV2" deviceset="C-EU" device="C0805" value="1nF"/>
-<part name="C30" library="#ControlBoardV2" deviceset="C-EU" device="C0805" value="0.1uF"/>
+<part name="C30" library="#ControlBoardV2" deviceset="C-EU" device="C0805" value="100nF"/>
 <part name="FRAME1" library="frames" deviceset="TABL_L" device="" value="Baf"/>
 <part name="U$1" library="#ControlBoardV2" deviceset="LOGGER_ISP" device=""/>
 <part name="GND2" library="SparkFun" deviceset="GND" device=""/>
@@ -9133,10 +9133,10 @@ by exp-lbrs.ulp</description>
 <part name="R20" library="#ControlBoardV2" deviceset="R-EU_" device="R0805" value="10k"/>
 <part name="GND25" library="SparkFun" deviceset="GND" device=""/>
 <part name="P+18" library="SparkFun" deviceset="3.3V" device=""/>
-<part name="C18" library="#ControlBoardV2" deviceset="C-EU" device="C0805" value="0.1uF"/>
+<part name="C18" library="#ControlBoardV2" deviceset="C-EU" device="C0805" value="100nF"/>
 <part name="GND8" library="SparkFun" deviceset="GND" device=""/>
 <part name="GND26" library="SparkFun" deviceset="GND" device=""/>
-<part name="C29" library="#ControlBoardV2" deviceset="C-EU" device="C0805" value="0.1uF"/>
+<part name="C29" library="#ControlBoardV2" deviceset="C-EU" device="C0805" value="100nF"/>
 <part name="C31" library="#ControlBoardV2" deviceset="C-EU" device="C0805" value="1nF"/>
 <part name="S1" library="#ControlBoardV1" deviceset="DTSM-6" device=""/>
 <part name="GND27" library="SparkFun" deviceset="GND" device=""/>
@@ -9156,20 +9156,20 @@ by exp-lbrs.ulp</description>
 <part name="C35" library="#ControlBoardV2" deviceset="C-EU" device="C0805" value="100nF"/>
 <part name="GND30" library="SparkFun" deviceset="GND" device=""/>
 <part name="P+19" library="#SparkFun" deviceset="3.3V" device=""/>
-<part name="R2" library="#ControlBoardV2" deviceset="R-EU_" device="R0805" value="330R"/>
-<part name="R21" library="#ControlBoardV2" deviceset="R-EU_" device="R0805" value="330R"/>
-<part name="R22" library="#ControlBoardV2" deviceset="R-EU_" device="R0805" value="330R"/>
+<part name="R2" library="#ControlBoardV2" deviceset="R-EU_" device="R0805" value="470R"/>
+<part name="R21" library="#ControlBoardV2" deviceset="R-EU_" device="R0805" value="470R"/>
+<part name="R22" library="#ControlBoardV2" deviceset="R-EU_" device="R0805" value="1k"/>
 <part name="U$10" library="#ControlBoardV2" deviceset="PIN" device=""/>
-<part name="R23" library="#ControlBoardV2" deviceset="R-EU_" device="R0805" value="330R"/>
+<part name="R23" library="#ControlBoardV2" deviceset="R-EU_" device="R0805" value="120R"/>
 <part name="U$11" library="#ControlBoardV2" deviceset="PIN" device=""/>
-<part name="R24" library="#ControlBoardV2" deviceset="R-EU_" device="R0805" value="330R"/>
+<part name="R24" library="#ControlBoardV2" deviceset="R-EU_" device="R0805" value="120R"/>
 <part name="U$12" library="#ControlBoardV2" deviceset="PIN" device=""/>
-<part name="R25" library="#ControlBoardV2" deviceset="R-EU_" device="R0805" value="330R"/>
+<part name="R25" library="#ControlBoardV2" deviceset="R-EU_" device="R0805" value="120R"/>
 <part name="P+6" library="SparkFun" deviceset="3.3V" device=""/>
 <part name="LED1" library="#ControlBoardV1" deviceset="LED" device="SML0805" value="RED"/>
 <part name="LED2" library="#ControlBoardV1" deviceset="LED" device="SML0805" value="BLUE"/>
 <part name="LED3" library="#ControlBoardV1" deviceset="LED" device="SML0805" value="ORANGE"/>
-<part name="R26" library="#ControlBoardV2" deviceset="R-EU_" device="R0805" value="330R"/>
+<part name="R26" library="#ControlBoardV2" deviceset="R-EU_" device="R0805" value="470R"/>
 <part name="LED4" library="#ControlBoardV1" deviceset="LED" device="SML0805" value="GREEN"/>
 <part name="AUX5" library="#ControlBoardV2" deviceset="PIN" device=""/>
 <part name="AUX4" library="#ControlBoardV2" deviceset="PIN" device=""/>
@@ -9185,13 +9185,13 @@ by exp-lbrs.ulp</description>
 <part name="U$21" library="#ControlBoardV2" deviceset="PIN" device=""/>
 <part name="U$22" library="#ControlBoardV2" deviceset="PIN" device=""/>
 <part name="GND16" library="SparkFun" deviceset="GND" device=""/>
-<part name="R27" library="#ControlBoardV2" deviceset="R-EU_" device="R0805" value="330R"/>
+<part name="R27" library="#ControlBoardV2" deviceset="R-EU_" device="R0805" value="470R"/>
 <part name="LED5" library="#ControlBoardV1" deviceset="LED" device="SML0805" value="YELLOW"/>
 <part name="JUM7" library="#ControlBoardV1" deviceset="S1G2_JUMP" device=""/>
 <part name="JUM8" library="#ControlBoardV1" deviceset="S1G2_JUMP" device=""/>
 <part name="GND17" library="SparkFun" deviceset="GND" device=""/>
-<part name="R28" library="#ControlBoardV2" deviceset="R-EU_" device="R0805" value="330R"/>
-<part name="R29" library="#ControlBoardV2" deviceset="R-EU_" device="R0805" value="330R"/>
+<part name="R28" library="#ControlBoardV2" deviceset="R-EU_" device="R0805" value="1k"/>
+<part name="R29" library="#ControlBoardV2" deviceset="R-EU_" device="R0805" value="270R"/>
 <part name="LED6" library="#ControlBoardV1" deviceset="LED" device="SML0805" value="RED"/>
 <part name="LED7" library="#ControlBoardV1" deviceset="LED" device="SML0805" value="GREEN"/>
 <part name="GND3" library="SparkFun" deviceset="GND" device=""/>
@@ -9201,23 +9201,23 @@ by exp-lbrs.ulp</description>
 <part name="GND33" library="SparkFun" deviceset="GND" device=""/>
 <part name="GND34" library="SparkFun" deviceset="GND" device=""/>
 <part name="C3" library="#ControlBoardV2" deviceset="CAPACITOR_TANTAL" device="" value="100uF"/>
-<part name="R30" library="#ControlBoardV2" deviceset="R-EU_" device="R0805" value="330R"/>
-<part name="R31" library="#ControlBoardV2" deviceset="R-EU_" device="R0805" value="330R"/>
-<part name="LED8" library="#ControlBoardV1" deviceset="LED" device="SML0805" value="RED"/>
-<part name="LED9" library="#ControlBoardV1" deviceset="LED" device="SML0805" value="GREEN"/>
-<part name="R32" library="#ControlBoardV2" deviceset="R-EU_" device="R0805" value="330R"/>
-<part name="R33" library="#ControlBoardV2" deviceset="R-EU_" device="R0805" value="330R"/>
-<part name="LED10" library="#ControlBoardV1" deviceset="LED" device="SML0805" value="RED"/>
-<part name="LED11" library="#ControlBoardV1" deviceset="LED" device="SML0805" value="GREEN"/>
-<part name="R34" library="#ControlBoardV2" deviceset="R-EU_" device="R0805" value="330R"/>
-<part name="R35" library="#ControlBoardV2" deviceset="R-EU_" device="R0805" value="330R"/>
-<part name="LED12" library="#ControlBoardV1" deviceset="LED" device="SML0805" value="RED"/>
-<part name="LED13" library="#ControlBoardV1" deviceset="LED" device="SML0805" value="GREEN"/>
-<part name="Q1" library="#SparkFun" deviceset="RESONATOR" device="SMD"/>
+<part name="R30" library="#ControlBoardV2" deviceset="R-EU_" device="R0805" value="470R"/>
+<part name="R31" library="#ControlBoardV2" deviceset="R-EU_" device="R0805" value="470R"/>
+<part name="LED8" library="#ControlBoardV1" deviceset="LED" device="SML0805" value="YELLOW"/>
+<part name="LED9" library="#ControlBoardV1" deviceset="LED" device="SML0805" value="YELLOW"/>
+<part name="R32" library="#ControlBoardV2" deviceset="R-EU_" device="R0805" value="470R"/>
+<part name="R33" library="#ControlBoardV2" deviceset="R-EU_" device="R0805" value="470R"/>
+<part name="LED10" library="#ControlBoardV1" deviceset="LED" device="SML0805" value="YELLOW"/>
+<part name="LED11" library="#ControlBoardV1" deviceset="LED" device="SML0805" value="YELLOW"/>
+<part name="R34" library="#ControlBoardV2" deviceset="R-EU_" device="R0805" value="470R"/>
+<part name="R35" library="#ControlBoardV2" deviceset="R-EU_" device="R0805" value="470R"/>
+<part name="LED12" library="#ControlBoardV1" deviceset="LED" device="SML0805" value="YELLOW"/>
+<part name="LED13" library="#ControlBoardV1" deviceset="LED" device="SML0805" value="YELLOW"/>
+<part name="Q1" library="#SparkFun" deviceset="RESONATOR" device="SMD" value="16MHz"/>
 <part name="U3" library="#ControlBoardV2" deviceset="BSS138AKA" device=""/>
 <part name="U5" library="#ControlBoardV2" deviceset="BSS138AKA" device=""/>
 <part name="U16" library="medipix" deviceset="BSS138AKA" device="" value="BSS138AKA"/>
-<part name="R7" library="#ControlBoardV2" deviceset="R-EU_" device="R0805" value="10k"/>
+<part name="R7" library="#ControlBoardV2" deviceset="R-EU_" device="R0805" value="1k"/>
 <part name="U6" library="medipix" deviceset="BSS138AKA" device="" value="BSS138AKA"/>
 <part name="SC7" library="#ControlBoardV2" deviceset="SOLDER_SWITCH_2" device=""/>
 <part name="SC8" library="#ControlBoardV2" deviceset="SOLDER_SWITCH_2" device=""/>
@@ -9232,13 +9232,13 @@ by exp-lbrs.ulp</description>
 <part name="P+22" library="SparkFun" deviceset="3.3V" device=""/>
 <part name="P+17" library="SparkFun" deviceset="3.3V" device=""/>
 <part name="P+23" library="SparkFun" deviceset="3.3V" device=""/>
-<part name="R40" library="#ControlBoardV2" deviceset="R-EU_" device="R0805" value="330R"/>
-<part name="LED14" library="#ControlBoardV1" deviceset="LED" device="SML0805"/>
-<part name="R41" library="#ControlBoardV2" deviceset="R-EU_" device="R0805" value="330R"/>
-<part name="RSSI" library="#ControlBoardV1" deviceset="LED" device="SML0805" value="BLUE"/>
+<part name="R40" library="#ControlBoardV2" deviceset="R-EU_" device="R0805" value="470R"/>
+<part name="LED14" library="#ControlBoardV1" deviceset="LED" device="SML0805" value="BLUE"/>
+<part name="R41" library="#ControlBoardV2" deviceset="R-EU_" device="R0805" value="470R"/>
+<part name="RSSI" library="#ControlBoardV1" deviceset="LED" device="SML0805" value="YELLOW"/>
 <part name="GND22" library="SparkFun" deviceset="GND" device=""/>
-<part name="R42" library="#ControlBoardV2" deviceset="R-EU_" device="R0805" value="330R"/>
-<part name="LED15" library="#ControlBoardV1" deviceset="LED" device="SML0805"/>
+<part name="R42" library="#ControlBoardV2" deviceset="R-EU_" device="R0805" value="270R"/>
+<part name="LED15" library="#ControlBoardV1" deviceset="LED" device="SML0805" value="YELLOW"/>
 <part name="U$2" library="basestation1" deviceset="MICROSD-HIROSE" device=""/>
 <part name="GND24" library="SparkFun" deviceset="GND" device=""/>
 <part name="P+24" library="SparkFun" deviceset="3.3V" device=""/>
