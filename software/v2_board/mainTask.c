@@ -5,14 +5,12 @@
 #include <stdio.h> // sprintf
 #include <stdlib.h> // abs
 
-#include "packets.h"
-
 // constants from RC transmitter
 volatile float constant1 = 0;
 volatile float constant5 = 0;
 
 //AUX channels switchers reacts just for changeS
-unsigned char previous_AUX2 = 5;
+unsigned char previous_AUX1 = 5;
 unsigned char previous_AUX3 = 5;
 unsigned char previous_AUX4 = 5;
 unsigned char previous_AUX5 = 5;
@@ -62,7 +60,7 @@ void mainTask(void *p) {
 		}
 
 		//velocity null setpoints
-		if(RCchannel[AUX1]<PPM_IN_MIDDLE_LENGTH){
+		if(RCchannel[AUX2]<(PPM_IN_MIDDLE_LENGTH)){
 		}else{
 			aileronDesiredVelocitySetpoint = DEFAULT_AILERON_VELOCITY_SETPOINT;			
 			elevatorDesiredVelocitySetpoint = DEFAULT_ELEVATOR_VELOCITY_SETPOINT;		
@@ -70,26 +68,30 @@ void mainTask(void *p) {
 
 
 		//gumstix enable
-		if(RCchannel[AUX2]<PPM_IN_MIDDLE_LENGTH){
-			if(previous_AUX2!=0){
+		if(RCchannel[AUX1]<PPM_IN_MIDDLE_LENGTH){
+			if(previous_AUX1!=0){
+				led_red_on();
 				disableGumstix();
-				previous_AUX2=0;
+				previous_AUX1=0;
 			}
 		}else{
-			if(previous_AUX2!=1){
+			if(previous_AUX1!=1){
+				led_red_off();
 				enableGumstix();
-				previous_AUX2=1;
+				previous_AUX1=1;
 			}
 		}
 	
 		//leading enable
 		if(RCchannel[AUX5]<PPM_IN_MIDDLE_LENGTH){
 			if(previous_AUX5!=0){
+				led_yellow_on();
 				leadK1enabled=0;
 				previous_AUX5=0;
 			}
 		}else{
 			if(previous_AUX5!=1){
+				led_yellow_off();
 				leadK1enabled=1;
 				previous_AUX5=1;
 			}

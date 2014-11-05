@@ -26,7 +26,7 @@ void telemetrySend(unsigned char *address64,unsigned char *address16,unsigned ch
 	if(type==TELEMETRIES.GROUND_DISTANCE_ESTIMATED){
 		f=estimatedThrottlePos;	
 	}else if(type==TELEMETRIES.GROUND_DISTANCE){
-		f=groundDistance;		
+		f=groundDistance;			
 	}else if(type==TELEMETRIES.ELEVATOR_SPEED){
 		f=elevatorSpeed;		
 	}else if(type==TELEMETRIES.AILERON_SPEED){
