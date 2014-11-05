@@ -475,7 +475,7 @@ void landingStateAutomat(){
 				landingThrottleSetpoint = throttleDesiredSetpoint;
 			}else{
 				landingThrottleOutput-=10;
-				if(landingThrottleOutput == -CONTROLLER_THROTTLE_SATURATION){
+				if(landingThrottleOutput <= -CONTROLLER_THROTTLE_SATURATION){
 					landingState = LS_ON_GROUND;
 				}
 			}

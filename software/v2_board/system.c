@@ -60,7 +60,6 @@ void boardInit() {
 	/* -------------------------------------------------------------------- */
 	/*	Setup GPIO for LEDs and PPM i/o										*/
 	/* -------------------------------------------------------------------- */
-	
 	ioport_init();
 	
 	ioport_set_pin_dir(RED, IOPORT_DIR_OUTPUT);
@@ -145,6 +144,12 @@ void boardInit() {
 	PMIC_EnableLowLevel();
 }
 
+int16_t saturation(int16_t variable,int16_t maxValue){
+	if(variable>maxValue){return maxValue;}
+	else if(variable<-maxValue){return -maxValue;}
+	else {return variable;} 			
+}
+
 /* -------------------------------------------------------------------- */
 /*	Merge signals from RC Receiver with the controller outputs			*/
 /* -------------------------------------------------------------------- */
@@ -162,19 +167,19 @@ void mergeSignalsToOutput() {
 
 	if (velocityControllerEnabled == 1 || positionControllerEnabled == 1) {
 		if(landingState==LS_FLIGHT){		
-			outputThrottle += controllerThrottleOutput;				
+			outputThrottle += saturation(controllerThrottleOutput,CONTROLLER_THROTTLE_SATURATION);				
 			if (velocityControllerEnabled == 1 ) {
-				outputElevator += velocityControllerElevatorOutput;
-				outputAileron += velocityControllerAileronOutput;
+				outputElevator += saturation(velocityControllerElevatorOutput,CONTROLLER_ELEVATOR_SATURATION);
+				outputAileron += saturation(velocityControllerAileronOutput,CONTROLLER_AILERON_SATURATION);
 			}	
 			if (positionControllerEnabled == 1) {
-				outputElevator += positionControllerElevatorOutput;
-				outputAileron += positionControllerAileronOutput;
+				outputElevator += saturation(positionControllerElevatorOutput,CONTROLLER_ELEVATOR_SATURATION);
+				outputAileron += saturation(positionControllerAileronOutput,CONTROLLER_AILERON_SATURATION);
 			}		
 		}else{		
-			outputElevator += velocityControllerElevatorOutput;
-			outputAileron += velocityControllerAileronOutput;
-			outputThrottle += landingThrottleOutput;				
+			outputElevator += saturation(velocityControllerElevatorOutput,CONTROLLER_ELEVATOR_SATURATION);
+			outputAileron += saturation(velocityControllerAileronOutput,CONTROLLER_AILERON_SATURATION);
+			outputThrottle += saturation(landingThrottleOutput,CONTROLLER_THROTTLE_SATURATION);				
 		}
 	}
 
