@@ -107,13 +107,11 @@ void disableLanding(){
 void enableGumstix(){
 	if (gumstixEnabled ==0 ){	
 		//default position (safety)	
-		elevatorPositionSetpoint = DEFAULT_ELEVATOR_POSITION_SETPOINT;
-		aileronPositionSetpoint = DEFAULT_AILERON_POSITION_SETPOINT;
 		elevatorDesiredPositionSetpoint = DEFAULT_ELEVATOR_POSITION_SETPOINT;
 		aileronDesiredPositionSetpoint = DEFAULT_AILERON_POSITION_SETPOINT;	
 		
-		estimatedElevatorPos = elevatorPositionSetpoint;
-		estimatedAileronPos  = aileronPositionSetpoint;		
+		estimatedElevatorPos = elevatorDesiredPositionSetpoint;
+		estimatedAileronPos  = aileronDesiredPositionSetpoint;		
 	}
 	gumstixEnabled = 1;
 }
@@ -126,7 +124,6 @@ void enableVelocityController() {
 	//if both controllers was off then set altitude controller to default
 	if(velocityControllerEnabled==0 && positionControllerEnabled==0){
 		throttleIntegration = 0;
-		throttleSetpoint = DEFAULT_THROTTLE_SETPOINT;
 		throttleDesiredSetpoint = DEFAULT_THROTTLE_SETPOINT;
 	}
 	//set controller to default
@@ -134,8 +131,6 @@ void enableVelocityController() {
 		elevatorVelocityIntegration = 0;
 		aileronVelocityIntegration = 0;		
 						
-		aileronVelocitySetpoint = DEFAULT_AILERON_VELOCITY_SETPOINT;		
-		elevatorVelocitySetpoint = DEFAULT_ELEVATOR_VELOCITY_SETPOINT;
 		aileronDesiredVelocitySetpoint = DEFAULT_AILERON_VELOCITY_SETPOINT;
 		elevatorDesiredVelocitySetpoint = DEFAULT_ELEVATOR_VELOCITY_SETPOINT;
 	}
@@ -150,7 +145,6 @@ void enablePositionController() {
 	//if both controllers was off then set altitude controller to default
 	if(velocityControllerEnabled==0 && positionControllerEnabled==0){
 		throttleIntegration = 0;
-		throttleSetpoint = DEFAULT_THROTTLE_SETPOINT;
 		throttleDesiredSetpoint = DEFAULT_THROTTLE_SETPOINT;
 	}	
 	//set controller to default

@@ -323,15 +323,15 @@ void kopterSetpointsReport(unsigned char *address64,unsigned char *address16,uns
 	*(dataOUT+2)=type;
 	//TODO add desired
 	if(type==SETPOINTS.THROTTLE_SP){
-		f=throttleSetpoint;
+		f=throttleDesiredSetpoint;
 	}else if(type==SETPOINTS.ELEVATOR_POSITION){
-		f=elevatorPositionSetpoint;
+		f=elevatorDesiredPositionSetpoint;
 	}else if(type==SETPOINTS.AILERON_POSITION){
-		f=aileronPositionSetpoint;
+		f=aileronDesiredPositionSetpoint;
 	}else if(type==SETPOINTS.ELEVATOR_VELOCITY){
-		f=elevatorVelocitySetpoint;
+		f=elevatorDesiredVelocitySetpoint;
 	}else if(type==SETPOINTS.AILERON_VELOCITY){
-		f=aileronVelocitySetpoint;
+		f=aileronDesiredVelocitySetpoint;
 	}
 		
 	ch=(unsigned char *) &f;
@@ -367,7 +367,7 @@ void kopterControllers(unsigned char *address64,unsigned char *address16,unsigne
 			disableVelocityController();			
 		}else if(option==CONTROLLERS.POSITION){
 			disableVelocityController();
-			enablePositionController();
+			enablePositionController();			 
 		}else if(option==CONTROLLERS.VELOCITY){
 			disablePositionController();
 			enableVelocityController();
@@ -385,7 +385,7 @@ void kopterControllersStatusRequest(unsigned char *address64,unsigned char *addr
 void kopterControllersReport(unsigned char *address64,unsigned char *address16,unsigned char frameID){
 	*(dataOUT)='r';
 	*(dataOUT+1)=COMMANDS.CONTROLLERS;		
-	if(positionControllerEnabled && velocityControllerEnabled){
+	if(positionControllerEnabled==1 && velocityControllerEnabled==1){
 		*(dataOUT+2)=CONTROLLERS.BOTH;
 	}else if(positionControllerEnabled){
 		*(dataOUT+2)=CONTROLLERS.POSITION;

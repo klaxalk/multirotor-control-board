@@ -28,7 +28,7 @@ int main()
             printf("BYE\n");
             break;
         case 1:
-            printf("\nTELEMTRY: 1 - GROUND DISTANCE   2 - ELEVATOR SPEED   3 - AILERON SPEED   4 - ELEVATOR POS   5 - AILERON POS   6 - THROTTLE CONT OUT\n");
+            printf("\nTELEMTRY: 1 - GROUND DISTANCE   2 - ELEVATOR SPEED   3 - AILERON SPEED   4 - ELEVATOR POS   5 - AILERON POS   6 - THROTTLE SETPOINT   7 - ELEVATOR VEL SETPOINT   8 - AILERON VEL SETPOINT\n");
             printf("DECISION:");
             scanf("%d",&decison);
                     switch(decison){
@@ -68,7 +68,21 @@ int main()
                             packetHandler(readPacket());
                             break;
                         case 6:
-                            telemetryRequest(ADDRESS.K1,ADDRESS.UNKNOWN16,TELEMETRIES.THROTTLE_CONTROLLER_OUTPUT,0x01);
+                            telemetryRequest(ADDRESS.K1,ADDRESS.UNKNOWN16,TELEMETRIES.THROTTLE_SETPOINT,0x01);
+                            packetHandler(readPacket());
+                            packetHandler(readPacket());
+                            packetHandler(readPacket());
+                            packetHandler(readPacket());
+                            break;
+                        case 7:
+                            telemetryRequest(ADDRESS.K1,ADDRESS.UNKNOWN16,TELEMETRIES.ELEVATOR_VEL_SETPOINT,0x01);
+                            packetHandler(readPacket());
+                            packetHandler(readPacket());
+                            packetHandler(readPacket());
+                            packetHandler(readPacket());
+                            break;
+                        case 8:
+                            telemetryRequest(ADDRESS.K1,ADDRESS.UNKNOWN16,TELEMETRIES.AILERON_VEL_SETPOINT,0x01);
                             packetHandler(readPacket());
                             packetHandler(readPacket());
                             packetHandler(readPacket());
@@ -221,6 +235,7 @@ int main()
                             packetHandler(readPacket());
                             packetHandler(readPacket());
                             packetHandler(readPacket());
+                         break;
                     case 4:
                         kopterControllersRequest(ADDRESS.K1,ADDRESS.UNKNOWN16,CONTROLLERS.BOTH,0x13);
                             packetHandler(readPacket());

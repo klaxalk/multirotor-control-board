@@ -46,6 +46,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="main.h" />
+		<Unit filename="openLog.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="openLog.h" />
 		<Unit filename="packets.c">
 			<Option compilerVar="CC" />
 		</Unit>

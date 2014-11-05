@@ -46,7 +46,7 @@
 #define LANDING_SPEED     -0.4 //in m/s, must be negative!
 
 #define THROTTLE_SP_HIGH  2.0
-#define THROTTLE_SP_LOW   0.5
+#define THROTTLE_SP_LOW   ALTITUDE_MINIMUM
 
 #define ALTITUDE_KP 180
 #define ALTITUDE_KI 120

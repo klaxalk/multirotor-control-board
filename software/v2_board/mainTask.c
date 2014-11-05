@@ -5,6 +5,8 @@
 #include <stdio.h> // sprintf
 #include <stdlib.h> // abs
 
+#include "packets.h"
+
 // constants from RC transmitter
 volatile float constant1 = 0;
 volatile float constant5 = 0;
@@ -20,8 +22,8 @@ void mainTask(void *p) {
 		// controllers on/off
 		if (abs(RCchannel[AUX3] - PPM_IN_MIDDLE_LENGTH) < 200) {
 			if (previous_AUX3 != 1) {
-				disableVelocityController();
-				disablePositionController();
+				enableVelocityController();
+				disablePositionController();								
 				previous_AUX3 = 1;
 			}
 		} else if (RCchannel[AUX3] > (PPM_IN_MIDDLE_LENGTH + 200)) {
@@ -32,7 +34,7 @@ void mainTask(void *p) {
 			}			
 		} else {
 			if (previous_AUX3 != 0) {
-				enableVelocityController();
+				disableVelocityController();
 				disablePositionController();
 				previous_AUX3 = 0;
 			}
@@ -42,7 +44,7 @@ void mainTask(void *p) {
 		if (RCchannel[AUX4] < (PPM_IN_MIDDLE_LENGTH - 200)) {
 			if(previous_AUX4!=0){
 				enableLanding();
-				trajectoryEnabled = 0;
+				trajectoryEnabled = 0;				
 				previous_AUX4 = 0;
 			}
 		} else if(RCchannel[AUX4] > (PPM_IN_MIDDLE_LENGTH + 200)) {

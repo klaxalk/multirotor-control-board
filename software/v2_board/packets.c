@@ -176,7 +176,7 @@ void packetHandler(unsigned char *inPacket){
 						//CONTROLLERS ON/OFF
 						if(*(dataIN+2)==COMMANDS.CONTROLLERS){
 							if(*(dataIN+3)==GET_STATUS){
-								kopterControllersReport(address64,address16,0x13);
+								kopterControllersReport(address64,address16,0x00);
 							}else{
 								kopterControllers(address64,address16,*(dataIN+3));
 							}															

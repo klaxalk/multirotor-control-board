@@ -130,7 +130,7 @@
 	"commands.h"
 	"serialLink.h"
 
-1415038826 source:c:\users\jirka\documents\github\multirotor-control-board\software\xbeewindows\commands.c
+1415184825 source:c:\users\jirka\documents\github\multirotor-control-board\software\xbeewindows\commands.c
 	<stdio.h>
 	"packets.h"
 	"commands.h"
@@ -138,18 +138,18 @@
 	"main.h"
 	"defines.h"
 
-1415038678 c:\users\jirka\documents\github\multirotor-control-board\software\xbeewindows\packets.h
+1415184825 c:\users\jirka\documents\github\multirotor-control-board\software\xbeewindows\packets.h
 
-1415038844 c:\users\jirka\documents\github\multirotor-control-board\software\xbeewindows\commands.h
+1415184825 c:\users\jirka\documents\github\multirotor-control-board\software\xbeewindows\commands.h
 	"defines.h"
 
-1414791462 c:\users\jirka\documents\github\multirotor-control-board\software\xbeewindows\seriallink.h
+1414143792 c:\users\jirka\documents\github\multirotor-control-board\software\xbeewindows\seriallink.h
 	<windows.h>
 
-1414791462 c:\users\jirka\documents\github\multirotor-control-board\software\xbeewindows\main.h
+1414143792 c:\users\jirka\documents\github\multirotor-control-board\software\xbeewindows\main.h
 	<windows.h>
 
-1415039051 source:c:\users\jirka\documents\github\multirotor-control-board\software\xbeewindows\main.c
+1415191972 source:c:\users\jirka\documents\github\multirotor-control-board\software\xbeewindows\main.c
 	<stdio.h>
 	<windows.h>
 	"XBeeComm.h"
@@ -157,9 +157,9 @@
 	"commands.h"
 	"serialLink.h"
 
-1414791462 c:\users\jirka\documents\github\multirotor-control-board\software\xbeewindows\xbeecomm.h
+1414143792 c:\users\jirka\documents\github\multirotor-control-board\software\xbeewindows\xbeecomm.h
 
-1415039062 source:c:\users\jirka\documents\github\multirotor-control-board\software\xbeewindows\packets.c
+1415191416 source:c:\users\jirka\documents\github\multirotor-control-board\software\xbeewindows\packets.c
 	<stdio.h>
 	"packets.h"
 	"defines.h"
@@ -168,18 +168,23 @@
 	"main.h"
 	"openLog.h"
 
-1414791462 c:\users\jirka\documents\github\multirotor-control-board\software\xbeewindows\defines.h
+1414143792 c:\users\jirka\documents\github\multirotor-control-board\software\xbeewindows\defines.h
 	<stdio.h>
 	<stdlib.h>
 
-1414791462 source:c:\users\jirka\documents\github\multirotor-control-board\software\xbeewindows\seriallink.c
+1414143792 source:c:\users\jirka\documents\github\multirotor-control-board\software\xbeewindows\seriallink.c
 	<stdio.h>
 	<windows.h>
 
-1414791462 source:c:\users\jirka\documents\github\multirotor-control-board\software\xbeewindows\xbeecomm.c
+1414143792 source:c:\users\jirka\documents\github\multirotor-control-board\software\xbeewindows\xbeecomm.c
 	<stdio.h>
 	"serialLink.h"
 	"defines.h"
 
-1414791462 c:\users\jirka\documents\github\multirotor-control-board\software\xbeewindows\openlog.h
+1415184825 c:\users\jirka\documents\github\multirotor-control-board\software\xbeewindows\openlog.h
+
+1415184825 source:c:\users\jirka\documents\github\multirotor-control-board\software\xbeewindows\openlog.c
+	<stdio.h>
+	"openLog.h"
+	"packets.h"
 
