@@ -6,6 +6,7 @@ typedef struct
 	unsigned char COORDINATOR[8];
 	unsigned char KC1[8];
 	unsigned char K1[8];
+	unsigned char K2[8];
 	unsigned char BROADCAST[8];
 	unsigned char UNKNOWN16[2];
 } ADDRESST;

@@ -107,6 +107,8 @@ void disableLanding(){
 void enableGumstix(){
 	if (gumstixEnabled ==0 ){	
 		//default position (safety)	
+		elevatorPositionSetpoint = DEFAULT_ELEVATOR_POSITION_SETPOINT;
+		aileronPositionSetpoint = DEFAULT_AILERON_POSITION_SETPOINT;	
 		elevatorDesiredPositionSetpoint = DEFAULT_ELEVATOR_POSITION_SETPOINT;
 		aileronDesiredPositionSetpoint = DEFAULT_AILERON_POSITION_SETPOINT;	
 		

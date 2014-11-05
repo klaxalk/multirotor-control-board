@@ -61,12 +61,15 @@ void mainTask(void *p) {
 			}
 		}
 
+		//velocity null setpoints
 		if(RCchannel[AUX1]<PPM_IN_MIDDLE_LENGTH){
 		}else{
 			aileronDesiredVelocitySetpoint = DEFAULT_AILERON_VELOCITY_SETPOINT;			
 			elevatorDesiredVelocitySetpoint = DEFAULT_ELEVATOR_VELOCITY_SETPOINT;		
 		}
 
+
+		//gumstix enable
 		if(RCchannel[AUX2]<PPM_IN_MIDDLE_LENGTH){
 			if(previous_AUX2!=0){
 				disableGumstix();
@@ -79,6 +82,7 @@ void mainTask(void *p) {
 			}
 		}
 	
+		//leading enable
 		if(RCchannel[AUX5]<PPM_IN_MIDDLE_LENGTH){
 			if(previous_AUX5!=0){
 				leadK1enabled=0;
