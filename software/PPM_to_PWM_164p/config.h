@@ -17,6 +17,7 @@
 #define PPM_FRAME_LENGTH 46080	// PWM and PPM
 
 #define	PULSE_OUT_MIN	1152
+#define	PULSE_OUT_MIDDLE	1728
 
 // Constants for 16 Mhz
 /*
