@@ -43,6 +43,7 @@ volatile float throttleSetpoint = 0.75;
 volatile float elevatorVelocitySetpoint = 0;
 volatile float aileronVelocitySetpoint = 0;
 volatile float throttleVelocitySetpoint = 0;
+// TODO: yaw control
 
 //auto-landing variables
 volatile unsigned char landingRequest = 0;

@@ -93,6 +93,7 @@ C_SRCS +=  \
 ../src/ASF/common/services/clock/xmega/sysclk.c \
 ../src/ASF/common/services/ioport/xmega/ioport_compat.c \
 ../src/ASF/xmega/drivers/nvm/nvm.c \
+../pc_communication.c \
 
 
 PREPROCESSING_SRCS +=  \
@@ -129,87 +130,13 @@ src/ASF/common/services/ioport/xmega/ioport_compat.o \
 src/ASF/xmega/drivers/nvm/nvm.o \
 src/ASF/xmega/drivers/nvm/nvm_asm.o \
 src/ASF/xmega/drivers/cpu/ccp.o \
+pc_communication.o \
 
-OBJS_AS_ARGS +=  \
-commTask.o \
-communication.o \
-controllers.o \
-controllersTask.o \
-FreeRTOS/Port/heap_1.o \
-FreeRTOS/Port/port.o \
-FreeRTOS/Source/croutine.o \
-FreeRTOS/Source/list.o \
-FreeRTOS/Source/queue.o \
-FreeRTOS/Source/tasks.o \
-FreeRTOS/Source/timers.o \
-main.o \
-mainTask.o \
-MyDrivers/pmic_driver.o \
-MyDrivers/port_driver.o \
-MyDrivers/TC_driver.o \
-MyDrivers/twi_master_driver.o \
-MyDrivers/twi_slave_driver.o \
-MyDrivers/usart_driver_RTOS.o \
-system.o \
-src/ASF/common/services/clock/xmega/sysclk.o \
-src/ASF/common/services/ioport/xmega/ioport_compat.o \
-src/ASF/xmega/drivers/nvm/nvm.o \
-src/ASF/xmega/drivers/nvm/nvm_asm.o \
-src/ASF/xmega/drivers/cpu/ccp.o \
+OBJS_AS_ARGS = $(OBJS)
 
-C_DEPS +=  \
-commTask.d \
-communication.d \
-controllers.d \
-controllersTask.d \
-FreeRTOS/Port/heap_1.d \
-FreeRTOS/Port/port.d \
-FreeRTOS/Source/croutine.d \
-FreeRTOS/Source/list.d \
-FreeRTOS/Source/queue.d \
-FreeRTOS/Source/tasks.d \
-FreeRTOS/Source/timers.d \
-main.d \
-mainTask.d \
-MyDrivers/pmic_driver.d \
-MyDrivers/port_driver.d \
-MyDrivers/TC_driver.d \
-MyDrivers/twi_master_driver.d \
-MyDrivers/twi_slave_driver.d \
-MyDrivers/usart_driver_RTOS.d \
-system.d \
-src/ASF/common/services/clock/xmega/sysclk.d \
-src/ASF/common/services/ioport/xmega/ioport_compat.d \
-src/ASF/xmega/drivers/nvm/nvm.d \
-src/ASF/xmega/drivers/nvm/nvm_asm.d \
-src/ASF/xmega/drivers/cpu/ccp.d \
+C_DEPS = $(OBJS:%.o=%.d)
 
-C_DEPS_AS_ARGS +=  \
-commTask.d \
-communication.d \
-controllers.d \
-controllersTask.d \
-FreeRTOS/Port/heap_1.d \
-FreeRTOS/Port/port.d \
-FreeRTOS/Source/croutine.d \
-FreeRTOS/Source/list.d \
-FreeRTOS/Source/queue.d \
-FreeRTOS/Source/tasks.d \
-FreeRTOS/Source/timers.d \
-main.d \
-mainTask.d \
-MyDrivers/pmic_driver.d \
-MyDrivers/port_driver.d \
-MyDrivers/TC_driver.d \
-MyDrivers/twi_master_driver.d \
-MyDrivers/twi_slave_driver.d \
-MyDrivers/usart_driver_RTOS.d \
-system.d \
-src/ASF/common/services/clock/xmega/sysclk.d \
-src/ASF/common/services/ioport/xmega/ioport_compat.d \
-src/ASF/xmega/drivers/nvm/nvm.d \
-src/ASF/xmega/drivers/nvm/nvm_asm.d \
-src/ASF/xmega/drivers/cpu/ccp.d \
+C_DEPS_AS_ARGS = $(C_DEPS)
 
 OUTPUT_FILE_PATH +=main.elf
 
@@ -221,6 +148,13 @@ OUTPUT_FILE_DEP:= ./makedep.mk
 
 LIB_DEP+= 
 
+CFLAGS=-x c -funsigned-char -funsigned-bitfields -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -mrelax -std=gnu99
+CFLAGS+=-g2 -Wall -O1
+CFLAGS+=-mmcu=$(MCU)
+
+GLOBAL_DEFINES=-DDEBUG -DIOPORT_XMEGA_COMPAT
+INCLUDES=-I".." -I"../AtmelDrivers" -I"../FreeRTOS/Port" -I"../FreeRTOS/Source/include" -I"../FreeRTOS/Source" -I"../FreeRTOS" -I"../src/ASF/xmega/drivers/cpu" -I"../src/ASF/xmega/drivers/nvm" -I"../src/Config" -I"../src/ASF/common/services/clock" -I"../src/ASF/common/utils" -I"../src/ASF/xmega/utils/preprocessor" -I"../src/ASF/xmega/utils" -I"../src/ASF/common/services/ioport" -I"../MyDrivers" -I"../src/ASF/common/boards" -I"../mavlink" -I"../mavlink/v1.0/common" -I"../mavlink/v1.0/ardupilotmega" -I"../mavlink/v0.9/common" -I"../mavlink/v0.9/ardupilotmega"
+
 -include ../Mk/local.mk
 
 # AVR32/GNU C Compiler
@@ -231,49 +165,49 @@ obj: $(OBJS)
 ./%.o: .././%.c
 	@echo Building file: $<
 	@#echo Invoking: AVR/GNU C Compiler
-	$(TOOLCHAINDIR)avr-gcc  -x c -funsigned-char -funsigned-bitfields -DDEBUG -DIOPORT_XMEGA_COMPAT $(DEFINES) -I".." -I"../AtmelDrivers" -I"../FreeRTOS/Port" -I"../FreeRTOS/Source/include" -I"../FreeRTOS/Source" -I"../FreeRTOS" -I"../src/ASF/xmega/drivers/cpu" -I"../src/ASF/xmega/drivers/nvm" -I"../src/Config" -I"../src/ASF/common/services/clock" -I"../src/ASF/common/utils" -I"../src/ASF/xmega/utils/preprocessor" -I"../src/ASF/xmega/utils" -I"../src/ASF/common/services/ioport" -I"../MyDrivers" -I"../src/ASF/common/boards" -I"../mavlink" -I"../mavlink/v1.0/common" -I"../mavlink/v1.0/ardupilotmega" -I"../mavlink/v0.9/common" -I"../mavlink/v0.9/ardupilotmega"  -O1 -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -mrelax -g2 -Wall -mmcu=$(MCU) -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
+	$(TOOLCHAINDIR)avr-gcc  $(CFLAGS) $(GLOBAL_DEFINES) $(DEFINES) $(INCLUDES) -c -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
 	@#echo Finished building: $<
 	
 
 FreeRTOS/Port/%.o: ../FreeRTOS/Port/%.c
 	@echo Building file: $<
 	@#echo Invoking: AVR/GNU C Compiler
-	$(TOOLCHAINDIR)avr-gcc  -x c -funsigned-char -funsigned-bitfields -DDEBUG -DIOPORT_XMEGA_COMPAT  -I".." -I"../AtmelDrivers" -I"../FreeRTOS/Port" -I"../FreeRTOS/Source/include" -I"../FreeRTOS/Source" -I"../FreeRTOS" -I"../src/ASF/xmega/drivers/cpu" -I"../src/ASF/xmega/drivers/nvm" -I"../src/Config" -I"../src/ASF/common/services/clock" -I"../src/ASF/common/utils" -I"../src/ASF/xmega/utils/preprocessor" -I"../src/ASF/xmega/utils" -I"../src/ASF/common/services/ioport" -I"../MyDrivers" -I"../src/ASF/common/boards" -I"../mavlink" -I"../mavlink/v1.0/common" -I"../mavlink/v1.0/ardupilotmega" -I"../mavlink/v0.9/common" -I"../mavlink/v0.9/ardupilotmega"  -O1 -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -mrelax -g2 -Wall -mmcu=$(MCU) -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
+	$(TOOLCHAINDIR)avr-gcc  $(CFLAGS) $(GLOBAL_DEFINES)  $(INCLUDES) -c -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
 	@#echo Finished building: $<
 	
 
 FreeRTOS/Source/%.o: ../FreeRTOS/Source/%.c
 	@echo Building file: $<
 	@#echo Invoking: AVR/GNU C Compiler
-	$(TOOLCHAINDIR)avr-gcc  -x c -funsigned-char -funsigned-bitfields -DDEBUG -DIOPORT_XMEGA_COMPAT  -I".." -I"../AtmelDrivers" -I"../FreeRTOS/Port" -I"../FreeRTOS/Source/include" -I"../FreeRTOS/Source" -I"../FreeRTOS" -I"../src/ASF/xmega/drivers/cpu" -I"../src/ASF/xmega/drivers/nvm" -I"../src/Config" -I"../src/ASF/common/services/clock" -I"../src/ASF/common/utils" -I"../src/ASF/xmega/utils/preprocessor" -I"../src/ASF/xmega/utils" -I"../src/ASF/common/services/ioport" -I"../MyDrivers" -I"../src/ASF/common/boards" -I"../mavlink" -I"../mavlink/v1.0/common" -I"../mavlink/v1.0/ardupilotmega" -I"../mavlink/v0.9/common" -I"../mavlink/v0.9/ardupilotmega"  -O1 -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -mrelax -g2 -Wall -mmcu=$(MCU) -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
+	$(TOOLCHAINDIR)avr-gcc  $(CFLAGS) $(GLOBAL_DEFINES)  $(INCLUDES) -c -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
 	@#echo Finished building: $<
 	
 
 MyDrivers/%.o: ../MyDrivers/%.c
 	@echo Building file: $<
 	@#echo Invoking: AVR/GNU C Compiler
-	$(TOOLCHAINDIR)avr-gcc  -x c -funsigned-char -funsigned-bitfields -DDEBUG -DIOPORT_XMEGA_COMPAT  -I".." -I"../AtmelDrivers" -I"../FreeRTOS/Port" -I"../FreeRTOS/Source/include" -I"../FreeRTOS/Source" -I"../FreeRTOS" -I"../src/ASF/xmega/drivers/cpu" -I"../src/ASF/xmega/drivers/nvm" -I"../src/Config" -I"../src/ASF/common/services/clock" -I"../src/ASF/common/utils" -I"../src/ASF/xmega/utils/preprocessor" -I"../src/ASF/xmega/utils" -I"../src/ASF/common/services/ioport" -I"../MyDrivers" -I"../src/ASF/common/boards" -I"../mavlink" -I"../mavlink/v1.0/common" -I"../mavlink/v1.0/ardupilotmega" -I"../mavlink/v0.9/common" -I"../mavlink/v0.9/ardupilotmega"  -O1 -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -mrelax -g2 -Wall -mmcu=$(MCU) -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
+	$(TOOLCHAINDIR)avr-gcc  $(CFLAGS) $(GLOBAL_DEFINES)  $(INCLUDES) -c -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
 	@#echo Finished building: $<
 	
 
 src/ASF/common/services/clock/xmega/%.o: ../src/ASF/common/services/clock/xmega/%.c
 	@echo Building file: $<
 	@#echo Invoking: AVR/GNU C Compiler
-	$(TOOLCHAINDIR)avr-gcc  -x c -funsigned-char -funsigned-bitfields -DDEBUG -DIOPORT_XMEGA_COMPAT  -I".." -I"../AtmelDrivers" -I"../FreeRTOS/Port" -I"../FreeRTOS/Source/include" -I"../FreeRTOS/Source" -I"../FreeRTOS" -I"../src/ASF/xmega/drivers/cpu" -I"../src/ASF/xmega/drivers/nvm" -I"../src/Config" -I"../src/ASF/common/services/clock" -I"../src/ASF/common/utils" -I"../src/ASF/xmega/utils/preprocessor" -I"../src/ASF/xmega/utils" -I"../src/ASF/common/services/ioport" -I"../MyDrivers" -I"../src/ASF/common/boards" -I"../mavlink" -I"../mavlink/v1.0/common" -I"../mavlink/v1.0/ardupilotmega" -I"../mavlink/v0.9/common" -I"../mavlink/v0.9/ardupilotmega"  -O1 -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -mrelax -g2 -Wall -mmcu=$(MCU) -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
+	$(TOOLCHAINDIR)avr-gcc  $(CFLAGS) $(GLOBAL_DEFINES)  $(INCLUDES)  -c -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
 	@#echo Finished building: $<
 	
 
 src/ASF/common/services/ioport/xmega/%.o: ../src/ASF/common/services/ioport/xmega/%.c
 	@echo Building file: $<
 	@#echo Invoking: AVR/GNU C Compiler
-	$(TOOLCHAINDIR)avr-gcc  -x c -funsigned-char -funsigned-bitfields -DDEBUG -DIOPORT_XMEGA_COMPAT  -I".." -I"../AtmelDrivers" -I"../FreeRTOS/Port" -I"../FreeRTOS/Source/include" -I"../FreeRTOS/Source" -I"../FreeRTOS" -I"../src/ASF/xmega/drivers/cpu" -I"../src/ASF/xmega/drivers/nvm" -I"../src/Config" -I"../src/ASF/common/services/clock" -I"../src/ASF/common/utils" -I"../src/ASF/xmega/utils/preprocessor" -I"../src/ASF/xmega/utils" -I"../src/ASF/common/services/ioport" -I"../MyDrivers" -I"../src/ASF/common/boards" -I"../mavlink" -I"../mavlink/v1.0/common" -I"../mavlink/v1.0/ardupilotmega" -I"../mavlink/v0.9/common" -I"../mavlink/v0.9/ardupilotmega"  -O1 -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -mrelax -g2 -Wall -mmcu=$(MCU) -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
+	$(TOOLCHAINDIR)avr-gcc  $(CFLAGS) $(GLOBAL_DEFINES)  $(INCLUDES)  -c -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
 	@#echo Finished building: $<
 	
 
 src/ASF/xmega/drivers/nvm/%.o: ../src/ASF/xmega/drivers/nvm/%.c
 	@echo Building file: $<
 	@#echo Invoking: AVR/GNU C Compiler
-	$(TOOLCHAINDIR)avr-gcc  -x c -funsigned-char -funsigned-bitfields -DDEBUG -DIOPORT_XMEGA_COMPAT  -I".." -I"../AtmelDrivers" -I"../FreeRTOS/Port" -I"../FreeRTOS/Source/include" -I"../FreeRTOS/Source" -I"../FreeRTOS" -I"../src/ASF/xmega/drivers/cpu" -I"../src/ASF/xmega/drivers/nvm" -I"../src/Config" -I"../src/ASF/common/services/clock" -I"../src/ASF/common/utils" -I"../src/ASF/xmega/utils/preprocessor" -I"../src/ASF/xmega/utils" -I"../src/ASF/common/services/ioport" -I"../MyDrivers" -I"../src/ASF/common/boards" -I"../mavlink" -I"../mavlink/v1.0/common" -I"../mavlink/v1.0/ardupilotmega" -I"../mavlink/v0.9/common" -I"../mavlink/v0.9/ardupilotmega"  -O1 -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -mrelax -g2 -Wall -mmcu=$(MCU) -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
+	$(TOOLCHAINDIR)avr-gcc  $(CFLAGS) $(GLOBAL_DEFINES)  $(INCLUDES)  -c -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
 	@#echo Finished building: $<
 	
 
@@ -281,20 +215,21 @@ src/ASF/xmega/drivers/nvm/%.o: ../src/ASF/xmega/drivers/nvm/%.c
 
 # AVR32/GNU Preprocessing Assembler
 
-
+ASMFLAGS=-Wa,-gdwarf2 -x assembler-with-cpp -mmcu=$(MCU) -mrelax -Wa,-g
+ASMINCLUDES=-I "../src/ASF/xmega/drivers/cpu" -I "../src/ASF/xmega/drivers/nvm" -I "../src/Config" -I "../src/ASF/common/services/clock" -I "../src/ASF/common/utils" -I "../src/ASF/xmega/utils/preprocessor" -I "../src/ASF/xmega/utils" -I "../src/ASF/common/services/ioport" -I "../src/ASF/common/boards"
 
 # AVR32/GNU Assembler
 src/ASF/xmega/drivers/nvm/nvm_asm.o: ../src/ASF/xmega/drivers/nvm/nvm_asm.s
 	@echo Building file: $<
 	@#echo Invoking: AVR32/GNU Assembler
-	$(TOOLCHAINDIR)avr-gcc -Wa,-gdwarf2 -x assembler-with-cpp -c -mmcu=$(MCU) -I "../src/ASF/xmega/drivers/cpu" -I "../src/ASF/xmega/drivers/nvm" -I "../src/Config" -I "../src/ASF/common/services/clock" -I "../src/ASF/common/utils" -I "../src/ASF/xmega/utils/preprocessor" -I "../src/ASF/xmega/utils" -I "../src/ASF/common/services/ioport" -I "../src/ASF/common/boards"  -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)" -mrelax -Wa,-g   -o "$@" "$<" 
+	$(TOOLCHAINDIR)avr-gcc $(ASMFLAGS) -c $(ASMINCLUDES)  -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
 	@#echo Finished building: $<
 	
 
 src/ASF/xmega/drivers/cpu/ccp.o: ../src/ASF/xmega/drivers/cpu/ccp.s
 	@echo Building file: $<
 	@#echo Invoking: AVR32/GNU Assembler
-	$(TOOLCHAINDIR)avr-gcc -Wa,-gdwarf2 -x assembler-with-cpp -c -mmcu=$(MCU) -I "../src/ASF/xmega/drivers/cpu" -I "../src/ASF/xmega/drivers/nvm" -I "../src/Config" -I "../src/ASF/common/services/clock" -I "../src/ASF/common/utils" -I "../src/ASF/xmega/utils/preprocessor" -I "../src/ASF/xmega/utils" -I "../src/ASF/common/services/ioport" -I "../src/ASF/common/boards"  -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)" -mrelax -Wa,-g   -o "$@" "$<" 
+	$(TOOLCHAINDIR)avr-gcc $(ASMFLAGS) -c $(ASMINCLUDES)  -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
 	@#echo Finished building: $<
 	
 
@@ -302,14 +237,14 @@ src/ASF/xmega/drivers/cpu/ccp.o: ../src/ASF/xmega/drivers/cpu/ccp.s
 src/ASF/xmega/drivers/nvm/%.o: ../src/ASF/xmega/drivers/nvm/%.s
 	@echo Building file: $<
 	@#echo Invoking: AVR32/GNU Assembler
-	$(TOOLCHAINDIR)avr-gcc -Wa,-gdwarf2 -x assembler-with-cpp -c -mmcu=$(MCU) -I "../src/ASF/xmega/drivers/cpu" -I "../src/ASF/xmega/drivers/nvm" -I "../src/Config" -I "../src/ASF/common/services/clock" -I "../src/ASF/common/utils" -I "../src/ASF/xmega/utils/preprocessor" -I "../src/ASF/xmega/utils" -I "../src/ASF/common/services/ioport" -I "../src/ASF/common/boards"  -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)" -mrelax -Wa,-g   -o "$@" "$<" 
+	$(TOOLCHAINDIR)avr-gcc $(ASMFLAGS) -c $(ASMINCLUDES)  -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
 	@#echo Finished building: $<
 	
 
 src/ASF/xmega/drivers/cpu/%.o: ../src/ASF/xmega/drivers/cpu/%.s
 	@echo Building file: $<
 	@#echo Invoking: AVR32/GNU Assembler
-	$(TOOLCHAINDIR)avr-gcc -Wa,-gdwarf2 -x assembler-with-cpp -c -mmcu=$(MCU) -I "../src/ASF/xmega/drivers/cpu" -I "../src/ASF/xmega/drivers/nvm" -I "../src/Config" -I "../src/ASF/common/services/clock" -I "../src/ASF/common/utils" -I "../src/ASF/xmega/utils/preprocessor" -I "../src/ASF/xmega/utils" -I "../src/ASF/common/services/ioport" -I "../src/ASF/common/boards"  -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)" -mrelax -Wa,-g   -o "$@" "$<" 
+	$(TOOLCHAINDIR)avr-gcc $(ASMFLAGS) -c $(ASMINCLUDES)  -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
 	@#echo Finished building: $<
 	
 
@@ -329,7 +264,7 @@ all: $(OUTPUT_FILE_PATH) $(ADDITIONAL_DEPENDENCIES)
 
 $(OUTPUT_FILE_PATH): $(OBJS) $(USER_OBJS) $(OUTPUT_FILE_DEP) $(LIB_DEP)
 	@echo Building target: $@
-	@echo Invoking: AVR/GNU Linker
+	@#echo Invoking: AVR/GNU Linker
 	$(TOOLCHAINDIR)avr-gcc -o$(OUTPUT_FILE_PATH_AS_ARGS) $(OBJS_AS_ARGS) $(USER_OBJS) $(LIBS) -Wl,-Map="main.map" -Wl,-u,vfprintf -Wl,--start-group -Wl,-lm -Wl,-lprintf_flt  -Wl,--end-group -Wl,--gc-sections -mrelax -mmcu=$(MCU)  
 	@echo Finished building target: $@
 	"$(TOOLCHAINDIR)avr-objcopy" -O ihex -R .eeprom -R .fuse -R .lock -R .signature -R .user_signatures  "main.elf" "main.hex"

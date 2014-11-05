@@ -45,11 +45,11 @@ int8_t px4flowParseChar(uint8_t incomingChar);
 
 #if GUMSTIX_DATA_RECEIVE == ENABLED
 
-extern volatile unsigned char gumstixParseCharState;
-extern volatile unsigned char gumstixParseCharByte;
-extern volatile unsigned char gumstixParseCharCrc;
-extern volatile int16_t gumstixParseTempInt;
-extern volatile int8_t validGumstix;
+//extern volatile unsigned char gumstixParseCharState;
+//extern volatile unsigned char gumstixParseCharByte;
+//extern volatile unsigned char gumstixParseCharCrc;
+//extern volatile int16_t gumstixParseTempInt;
+//extern volatile int8_t validGumstix;
 extern volatile int8_t gumstixDataFlag;
 
 extern volatile int16_t xPosGumstixNew;

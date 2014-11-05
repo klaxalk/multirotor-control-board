@@ -56,9 +56,9 @@ int8_t px4flowParseChar(uint8_t incomingChar) {
 /* -------------------------------------------------------------------- */
 /*	Variables for gumstix												*/
 /* -------------------------------------------------------------------- */
-volatile unsigned char gumstixParseCharState = 0;
-volatile unsigned char gumstixParseCharByte = 0;
-volatile int16_t gumstixParseTempInt;
+static volatile unsigned char gumstixParseCharState = 0;
+static volatile unsigned char gumstixParseCharByte = 0;
+static volatile int16_t gumstixParseTempInt;
 volatile int16_t xPosGumstixNew = 0;
 volatile int16_t yPosGumstixNew = 0;
 volatile int16_t zPosGumstixNew = 0;
@@ -67,7 +67,7 @@ volatile float aileronGumstix = 0;
 volatile float throttleGumstix = 0;
 volatile int8_t validGumstix = 0;
 volatile int8_t gumstixDataFlag = 0;
-volatile unsigned char gumstixParseCharCrc = 0;
+static volatile unsigned char gumstixParseCharCrc = 0;
 
 void gumstixParseChar(unsigned char incomingChar) {
 

@@ -21,7 +21,7 @@
 
 // constants for position and velocity controllers
 #define POSITION_MAXIMUM   2000 //in mm, must be positive! crops Gumstix values
-#define ELEVATOR_SP_HIGH  -1.0
+#define ELEVATOR_SP_HIGH  -1.0 // TODO: !!! zkontrolovat
 #define ELEVATOR_SP_LOW   -2.0
 
 #define AILERON_SP_HIGH   +0.5

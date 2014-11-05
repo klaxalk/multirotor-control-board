@@ -14,6 +14,9 @@
 #include "communication.h"
 #include <stdio.h>
 #include "controllers.h"
+#if PC_COMMUNICATION == ENABLED
+#include "pc_communication.h"
+#endif
 
 void commTask(void *p) {
 	
@@ -178,10 +181,20 @@ void commTask(void *p) {
 		#endif // PX4FLOW_DATA_RECEIVE == ENABLED
 
 		#if PC_COMMUNICATION == ENABLED
-		if (usartBufferGetByte(PC_USART_BUFFER, &inChar, 0)) { // TODO define PC_USART_BUFFER somewhere
+		if (usartBufferGetByte(PC_USART_BUFFER, &inChar, 0)) {
 			// receive data from PX4Flow
-			if (pcParseChar((uint8_t) inChar) != 0) {
-				// TODO: process received PC message
+			TPcMessageType pcmsg = pcParseChar((uint8_t) inChar);
+			switch (pcmsg) {
+			case PC_MSG_VELOCITY:
+				elevatorVelocitySetpoint = pcVelocityMessageValue[PC_VELOCITY_ELEVATOR];
+				aileronVelocitySetpoint = pcVelocityMessageValue[PC_VELOCITY_AILERON];
+				// TODO: yaw velocity setpoint = pcVelocityMessageValue[PC_VELOCITY_YAW];
+				throttleVelocitySetpoint = pcVelocityMessageValue[PC_VELOCITY_CLIMB]; // TODO: setpoints() may overwrite my value
+				// TODO: implement watchdog resetting setpoints when data are not updated
+				break;
+			case PC_MSG_NONE:
+			case PC_MSG_NUMBER:
+				;
 			}
 		}
 		#endif
