@@ -63,6 +63,7 @@ extern volatile unsigned char landingMode;
 // controllers saturations
 #define CONTROLLER_ELEVATOR_SATURATION 100
 #define CONTROLLER_AILERON_SATURATION  100
+#define CONTROLLER_RUDDER_SATURATION  100
 #define CONTROLLER_THROTTLE_SATURATION 300
 
 #if PX4FLOW_DATA_RECEIVE == ENABLED
@@ -85,6 +86,7 @@ extern volatile float throttleSetpoint;
 extern volatile float elevatorVelocitySetpoint;
 extern volatile float aileronVelocitySetpoint;
 extern volatile float throttleVelocitySetpoint;
+extern volatile float yawVelocitySetpoint;
 
 //auto-landing variables and state defines
 extern volatile unsigned char landingRequest;

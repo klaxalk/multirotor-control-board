@@ -204,8 +204,7 @@ void mergeSignalsToOutput() {
 		outputThrottle += controllerThrottleOutput;
 		outputElevator += controllerElevatorOutput;
 		outputAileron += controllerAileronOutput;
-		// we do not have a rudder controller, yet
-		// TODO outputRudder += controllerRudderOutput; 
+		outputRudder += controllerRudderOutput; 
 	} else {
 
 		led_red_off();
@@ -218,7 +217,16 @@ void mergeSignalsToOutput() {
 	outputChannels[OUTPUT_AILERON] = outputAileron*2;
 
 #if FLIGHT_CONTROLLER == NAZA
-	outputChannels[OUTPUT_AUX3] = RCchannel[8]*2; // IN7->U TODO: make configurable
+	// generate MODE signal for NAZA flight controller
+	uint16_t mode_out = RCchannel[8] * 2;
+	// filtering
+	if (mode_out >=3795 && mode_out <= 3815) {
+		mode_out = 3804;
+	}
+	if (mode_out >=2415 && mode_out <= 2445) {
+		mode_out = 2430;
+	}
+	outputChannels[OUTPUT_AUX3] = mode_out; // IN7->U TODO: [low] make configurable
 #endif
 
 	//portEXIT_CRITICAL();

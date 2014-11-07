@@ -5,6 +5,8 @@
  */
 
 #include "pc_communication.h"
+#include "config.h"
+#include "system.h"
 #include "debugcomm.h"
 
 // communication protocol:
@@ -144,7 +146,7 @@ TPcMessageType pcParseVelocityMessage(uint8_t incomingChar)
 }
 
 void pcSendMessage(char * message) {
-	// TODO ...
+	usartBufferPutString(PC_USART_BUFFER, message, 0);
 }
 
 void pcResetAll()

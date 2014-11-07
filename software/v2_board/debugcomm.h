@@ -13,7 +13,7 @@
 
 #ifndef DEBUG_USART_BUFFER
 #define DEBUG_USART_BUFFER usart_buffer_stm
-// TODO: check if STM communication is disabled
+// TODO: [low] check if STM communication is disabled
 #endif
 
 void debugMessage(char * message);

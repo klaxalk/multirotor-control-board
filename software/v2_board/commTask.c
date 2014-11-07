@@ -190,7 +190,7 @@ void commTask(void *p) {
 			case PC_MSG_VELOCITY:
 				elevatorVelocitySetpoint = pcVelocityMessageValue[PC_VELOCITY_ELEVATOR];
 				aileronVelocitySetpoint = pcVelocityMessageValue[PC_VELOCITY_AILERON];
-				// TODO: yaw velocity setpoint = pcVelocityMessageValue[PC_VELOCITY_YAW];
+				yawVelocitySetpoint = pcVelocityMessageValue[PC_VELOCITY_YAW];
 				throttleVelocitySetpoint = pcVelocityMessageValue[PC_VELOCITY_CLIMB]; // TODO: setpoints() may overwrite my value
 				// TODO: implement watchdog resetting setpoints when data are not updated
 				debugMessageF("PC %.3f, %.3f, %.3f\r\n", pcVelocityMessageValue[PC_VELOCITY_ELEVATOR], pcVelocityMessageValue[PC_VELOCITY_AILERON], pcVelocityMessageValue[PC_VELOCITY_CLIMB]);

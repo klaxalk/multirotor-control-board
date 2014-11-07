@@ -43,7 +43,7 @@ volatile float throttleSetpoint = 0.75;
 volatile float elevatorVelocitySetpoint = 0;
 volatile float aileronVelocitySetpoint = 0;
 volatile float throttleVelocitySetpoint = 0;
-// TODO: yaw control
+volatile float yawVelocitySetpoint = 0;
 
 //auto-landing variables
 volatile unsigned char landingRequest = 0;
@@ -94,7 +94,8 @@ void setpoints() {
 
 #endif //TRAJECTORY_FOLLOWING == ENABLED
 
-		// TODO: ???
+#if 0
+		// TODO: remove all following code, it should not be necessary
 		//sp_new = ELEVATOR_SP_HIGH * constant2 + ELEVATOR_SP_LOW * (1-constant2);
 		sp_new = (ELEVATOR_SP_LOW + ELEVATOR_SP_HIGH)/2;
 		elevatorSetpoint += (sp_new-elevatorSetpoint) * (DT/SETPOINT_FILTER_CONST);
@@ -111,6 +112,7 @@ void setpoints() {
 		sp_new = 1; // TODO: why 1 ?
 		
 		throttleSetpoint += (sp_new-throttleSetpoint) * (DT/SETPOINT_FILTER_CONST);
+#endif
 
 #if TRAJECTORY_FOLLOWING == ENABLED
 
@@ -176,8 +178,8 @@ void positionEstimator() {
 //~ ------------------------------------------------------------------------ ~//
 //~ Position Controller - stabilizes Elevator and Aileron                    ~//
 //~ ------------------------------------------------------------------------ ~//
-void positionController() {
-
+void positionController()
+{
 	static float elevatorSpeed_prev = 0;
 	static float elevatorAcc_filt  = 0;
 	static float aileronSpeed_prev = 0;
@@ -191,7 +193,7 @@ void positionController() {
 	float KX, KI, KP, KV, KA;
 
 	//set controller constants
-	if(positionControllerEnabled && landingState == LS_FLIGHT) {
+	if (positionControllerEnabled && landingState == LS_FLIGHT) {
 		KI = POSITION_KI;
 		KP = POSITION_KP; // * (0.5 + constant1);
 		KV = POSITION_KV; // * (0.5 + constant2);
@@ -200,14 +202,11 @@ void positionController() {
 		//KV = POSITION_KV;
 		//KA = POSITION_KA;
 		KX = KP / KV;
-
-
 	} else { //velocity controller
 		KI = VELOCITY_KI;
 		KV = VELOCITY_KV;
 		KA = VELOCITY_KA;
 		KX = 0;
- 
 	}
 
 	//elevator controller
@@ -233,14 +232,13 @@ void positionController() {
 	elevatorAcc_filt += (acc_new - elevatorAcc_filt) * (DT/PX4FLOW_FILTER_CONST);
 	derivative2 = -1 * KA * elevatorAcc_filt;
 
-	controllerElevatorOutput =
-		KV * (vd - estimatedElevatorVel) + elevatorIntegration + derivative2;
-	if (controllerElevatorOutput > CONTROLLER_ELEVATOR_SATURATION) {
-		controllerElevatorOutput = CONTROLLER_ELEVATOR_SATURATION;
-	} else if (controllerElevatorOutput < -CONTROLLER_ELEVATOR_SATURATION) {
-		controllerElevatorOutput = -CONTROLLER_ELEVATOR_SATURATION;
+	int16_t elevatorOutput = KV * (vd - estimatedElevatorVel) + elevatorIntegration + derivative2;
+	if (elevatorOutput > CONTROLLER_ELEVATOR_SATURATION) {
+		elevatorOutput = CONTROLLER_ELEVATOR_SATURATION;
+	} else if (elevatorOutput < -CONTROLLER_ELEVATOR_SATURATION) {
+		elevatorOutput = -CONTROLLER_ELEVATOR_SATURATION;
 	}
-
+	controllerElevatorOutput = elevatorOutput;
 
 	//aileron controller
 	if(positionControllerEnabled && landingState == LS_FLIGHT) {
@@ -265,13 +263,22 @@ void positionController() {
 	aileronAcc_filt += (acc_new - aileronAcc_filt) * (DT/PX4FLOW_FILTER_CONST);
 	derivative2 = -1 * KA * aileronAcc_filt;
 
-	controllerAileronOutput =
-		KV * (vd - estimatedAileronVel) + aileronIntegration + derivative2;
-	if (controllerAileronOutput > CONTROLLER_AILERON_SATURATION) {
-		controllerAileronOutput = CONTROLLER_AILERON_SATURATION;
-	} else if (controllerAileronOutput < -CONTROLLER_AILERON_SATURATION) {
-		controllerAileronOutput = -CONTROLLER_AILERON_SATURATION;
+	int16_t aileronOutput = KV * (vd - estimatedAileronVel) + aileronIntegration + derivative2;
+	if (aileronOutput > CONTROLLER_AILERON_SATURATION) {
+		aileronOutput = CONTROLLER_AILERON_SATURATION;
+	} else if (aileronOutput < -CONTROLLER_AILERON_SATURATION) {
+		aileronOutput = -CONTROLLER_AILERON_SATURATION;
 	}
+	controllerAileronOutput = aileronOutput;
+
+	// yaw controller
+	int16_t rudderOutput = yawVelocitySetpoint; // TODO: !!! setpoint -> output calculation
+	if (rudderOutput > CONTROLLER_RUDDER_SATURATION) {
+		rudderOutput = CONTROLLER_RUDDER_SATURATION;
+	} else if (rudderOutput < -CONTROLLER_RUDDER_SATURATION) {
+		rudderOutput = -CONTROLLER_RUDDER_SATURATION;
+	}
+	controllerRudderOutput = rudderOutput;
 
 }
 

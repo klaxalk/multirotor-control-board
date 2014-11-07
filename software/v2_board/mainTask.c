@@ -5,15 +5,19 @@
  *  Author: Tomas Baca
  */ 
 
+#ifdef WITH_PRINTF
+#include <stdio.h> // sprintf
+#endif
+#include <stdlib.h> // abs
+
 #include "mainTask.h"
 #include "system.h"
 #include "controllers.h"
 #include "communication.h"
 #include "debugcomm.h"
-#ifdef WITH_PRINTF
-#include <stdio.h> // sprintf
+#if PC_COMMUNICATION == ENABLED
+#include "pc_communication.h"
 #endif
-#include <stdlib.h> // abs
 
 // constants = AUX channels from the RC transmitter
 volatile float constant1 = 0;
@@ -52,11 +56,11 @@ void writeTrajectory1(){
 // TODO: support for different RC transmitters
 
 #define RC_SWITCH_COUNT 5
-#define PPM_IN_1_3 (PPM_IN_MIN_LENGTH + (PPM_IN_MAX_LENGTH - PPM_IN_MIN_LENGTH) / 3)
-#define PPM_IN_2_3 (PPM_IN_MAX_LENGTH - (PPM_IN_MAX_LENGTH - PPM_IN_MIN_LENGTH) / 3)
+#define PPM_IN_1_3 (PPM_IN_MIN_LENGTH + 0.365 * (PPM_IN_MAX_LENGTH - PPM_IN_MIN_LENGTH))
+#define PPM_IN_2_3 (PPM_IN_MIN_LENGTH + 0.750 * (PPM_IN_MAX_LENGTH - PPM_IN_MIN_LENGTH))
 #define RC_SWITCH_CHANNELS { AUX1, AUX2, AUX3, AUX4, AUX5 }
-#define RC_SWITCH_THRESHOLDS { PPM_IN_MIDDLE_LENGTH, PPM_IN_MIDDLE_LENGTH, PPM_IN_1_3, PPM_IN_2_3, PPM_IN_MIDDLE_LENGTH }
-#define RC_SWITCH_THRESHOLDS2 { PPM_IN_TRESHOLD, PPM_IN_TRESHOLD, PPM_IN_1_3, PPM_IN_2_3, PPM_IN_TRESHOLD }
+#define RC_SWITCH_THRESHOLDS_LOW { PPM_IN_MIDDLE_LENGTH, PPM_IN_MIDDLE_LENGTH, PPM_IN_1_3, PPM_IN_1_3, PPM_IN_MIDDLE_LENGTH }
+#define RC_SWITCH_THRESHOLDS_HIGH { PPM_IN_TRESHOLD, PPM_IN_TRESHOLD, PPM_IN_2_3, PPM_IN_2_3, PPM_IN_TRESHOLD }
 
 #define RC_SWITCH_STATE_UNDEFINED 0xFF
 
@@ -66,8 +70,8 @@ void writeTrajectory1(){
 #define RADIO_LANDING_SWITCH 3
 
 static const uint8_t rcSwitchChannel[RC_SWITCH_COUNT] = RC_SWITCH_CHANNELS;
-static const uint16_t rcSwitchThreshold[RC_SWITCH_COUNT] = RC_SWITCH_THRESHOLDS;
-static const uint16_t rcSwitchThreshold2[RC_SWITCH_COUNT] = RC_SWITCH_THRESHOLDS2;
+static const uint16_t rcSwitchThreshold[RC_SWITCH_COUNT] = RC_SWITCH_THRESHOLDS_LOW;
+static const uint16_t rcSwitchThreshold2[RC_SWITCH_COUNT] = RC_SWITCH_THRESHOLDS_HIGH;
 
 #define RADIO_AURORA9
 // #define RADIO_HCH
@@ -100,6 +104,10 @@ static const uint16_t rcSwitchThreshold2[RC_SWITCH_COUNT] = RC_SWITCH_THRESHOLDS
 
 #if ! defined(RADIO_AURORA9) && ! defined(RADIO_HCH)
 	#error No radio transmitter defined
+#endif
+
+#if PC_COMMUNICATION == ENABLED
+static uint8_t in_trajectory_mode = 0;
 #endif
 
 void mainTask(void *p)
@@ -136,7 +144,9 @@ void mainTask(void *p)
 			}
 			switches[i] = inState;
 			if (inState != old_switches[i]) {
-				debugMessageF("switch %d %d->%d\r\n", i, old_switches[i], inState);
+				if (inState != RC_SWITCH_STATE_UNDEFINED) { // TODO
+					debugMessageF("switch %d %d->%d\r\n", i, old_switches[i], inState);
+				}
 			}
 		}
 
@@ -205,32 +215,51 @@ void mainTask(void *p)
 		if(constant5 < 0) constant5 = 0;
 #endif
 
+#if PC_COMMUNICATION == ENABLED
 #if SURFSTAB_MODE == ENABLED
 		// position control switch (AUX4)
-		switch (switches[3]) {
-		case 0:
-			// no position control
-			break;
-		case 1:
-			// position control - stay
-			break;
-		case 2:
-			// position control - trajectory
-			break;
-		default:
-			// input error
-			;
+		if (switches[3] != old_switches[3]) {
+			debugMessageF("pos-ctrl switch %d\r\n", switches[3]);
+			switch (switches[3]) {
+			case 0:
+				// no position control
+				pcStay();
+				in_trajectory_mode = 0;
+				break;
+			case 1:
+				// position control - stay
+				pcStay();
+				in_trajectory_mode = 0;
+				break;
+			case 2:
+				// position control - trajectory
+				pcFollowTrajectory();
+				in_trajectory_mode = 1;
+				break;
+			default:
+				// input error
+				;
+			}
 		}
 
 		// reset switch (AUX2)
 		if ((switches[1] == 1) && (old_switches[1] == 0)) {
+			debugMessageF("reset switch\r\n");
 			// reset condition
+			if (in_trajectory_mode) {
+				pcGotoHome();
+			} else {
+				pcResetAll();
+			}
 		}
 
 		// switch F / AUX1
 		if ((switches[0] == 1) && (old_switches[0] == 0)) {
+			debugMessageF("F switch\r\n");
+			pcNewTrajectoryPoint();
 			// F switch on
 		}
+#endif
 #endif
 
 		// TODO: detekce vstupniho signalu a generovani fail-safe vystupu
