@@ -25,4 +25,8 @@
 #define DOWNWARD 2
 #define BACKWARD 3
 
+// flight controller IDs
+#define MICROCOPTER 1
+#define NAZA 2
+
 #endif // _DEFINES_H

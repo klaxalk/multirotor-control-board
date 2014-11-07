@@ -14,8 +14,31 @@
 #include "usart_driver_RTOS.h"
 #include "communication.h"
 
-#ifndef MULTI_OUTPUT_PPM
-#warning MULTI_OUTPUT_PPM is disabled
+#define NUMBER_OF_CHANNELS_OUT	6
+
+#ifndef FLIGHT_CONTROLLER
+#define OUTPUT_THROTTLE 0
+#define OUTPUT_RUDDER 1
+#define OUTPUT_ELEVATOR 2
+#define OUTPUT_AILERON 3
+#define OUTPUT_AUX1 4
+#define OUTPUT_AUX2 5
+#define OUTPUT_AUX3 6
+#define OUTPUT_CHANNEL_DEFAULTS {PULSE_OUT_MIN, PULSE_OUT_MIDDLE, PULSE_OUT_MIDDLE, PULSE_OUT_MIDDLE, PULSE_OUT_MIN, PULSE_OUT_MIN}
+#endif
+
+#if FLIGHT_CONTROLLER == NAZA
+#define OUTPUT_THROTTLE 2
+#define OUTPUT_RUDDER 3
+#define OUTPUT_ELEVATOR 1
+#define OUTPUT_AILERON 0
+#define OUTPUT_AUX1 4
+#define OUTPUT_AUX2 5
+#define OUTPUT_AUX3 6
+#undef NUMBER_OF_CHANNELS_OUT
+#define NUMBER_OF_CHANNELS_OUT 7
+#define OUTPUT_CHANNEL_DEFAULTS {PULSE_OUT_MIDDLE, PULSE_OUT_MIDDLE, PULSE_OUT_MIN, PULSE_OUT_MIDDLE, PULSE_OUT_MIN, PULSE_OUT_MIN, PULSE_OUT_MIN}
+//#warning NAZA FLIGHT CONTROLLER
 #endif
 
 /* -------------------------------------------------------------------- */
@@ -28,7 +51,7 @@ volatile uint16_t RCchannel[9] = {PPM_IN_MIN_LENGTH, PPM_IN_MIDDLE_LENGTH, PPM_I
 /* -------------------------------------------------------------------- */
 /*	Variables for PPM output generation									*/
 /* -------------------------------------------------------------------- */
-volatile uint16_t outputChannels[6] = {PULSE_OUT_MIN, PULSE_OUT_MIDDLE, PULSE_OUT_MIDDLE, PULSE_OUT_MIDDLE, PULSE_OUT_MIN, PULSE_OUT_MIN};
+volatile uint16_t outputChannels[NUMBER_OF_CHANNELS_OUT] = OUTPUT_CHANNEL_DEFAULTS;
 volatile uint8_t currentChannelOut = 0;
 
 /* -------------------------------------------------------------------- */
@@ -56,12 +79,12 @@ UsartBuffer * usart_buffer_4;
 /* -------------------------------------------------------------------- */
 /*	USART baud rates													*/
 /* -------------------------------------------------------------------- */
-#define USART_STM_BAUDRATE		BAUD9600
+#define USART_STM_BAUDRATE		BAUD57600
 #define USART_XBEE_BAUDRATE		BAUD19200
 #define USART_LOG_BAUDRATE		BAUD9600
 #define USART_1_BAUDRATE		BAUDPX4FLOW
 #define USART_2_BAUDRATE		BAUD19200
-#define USART_3_BAUDRATE		BAUD19200
+#define USART_3_BAUDRATE		BAUD115200
 #define USART_4_BAUDRATE		BAUD57600
 
 /* -------------------------------------------------------------------- */
@@ -80,7 +103,7 @@ void boardInit() {
 	ioport_set_pin_dir(ORANGE, IOPORT_DIR_OUTPUT);
 	ioport_set_pin_dir(GREEN, IOPORT_DIR_OUTPUT);
 	ioport_set_pin_dir(YELLOW, IOPORT_DIR_OUTPUT);
-	ioport_set_pin_dir(OUT1, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_dir(PPM_OUT, IOPORT_DIR_OUTPUT);
 
 	ioport_set_pin_level(RED, true);
 	ioport_set_pin_level(BLUE, true);
@@ -167,6 +190,8 @@ void mergeSignalsToOutput() {
 	int16_t outputAileron = PULSE_OUT_MIDDLE;
 	int16_t outputRudder = PULSE_OUT_MIDDLE;
 
+	//portENTER_CRITICAL();
+
 	outputThrottle = RCchannel[THROTTLE];
 	outputRudder = RCchannel[RUDDER];
 	outputElevator = RCchannel[ELEVATOR];
@@ -187,10 +212,16 @@ void mergeSignalsToOutput() {
 	}
 
 	// Everithing is *2 because the PPM incoming to this board is twice slower then the PPM goeing out
-	outputChannels[0] = outputThrottle*2;
-	outputChannels[1] = outputRudder*2;
-	outputChannels[2] = outputElevator*2;
-	outputChannels[3] = outputAileron*2;
+	outputChannels[OUTPUT_THROTTLE] = outputThrottle*2;
+	outputChannels[OUTPUT_RUDDER] = outputRudder*2;
+	outputChannels[OUTPUT_ELEVATOR] = outputElevator*2;
+	outputChannels[OUTPUT_AILERON] = outputAileron*2;
+
+#if FLIGHT_CONTROLLER == NAZA
+	outputChannels[OUTPUT_AUX3] = RCchannel[8]*2; // IN7->U TODO: make configurable
+#endif
+
+	//portEXIT_CRITICAL();
 }
 
 /* -------------------------------------------------------------------- */
@@ -336,5 +367,10 @@ ISR(TCD0_CCA_vect)
 	ppm_out4_off();
 #endif
 
+}
+
+uint16_t getOutputChannelValue(uint8_t index)
+{
+	return outputChannels[index];
 }
 

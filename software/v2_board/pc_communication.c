@@ -5,6 +5,7 @@
  */
 
 #include "pc_communication.h"
+#include "debugcomm.h"
 
 // communication protocol:
 // - start character '^'
@@ -22,7 +23,7 @@
 
 static volatile uint8_t pcParseState = 0;
 static volatile uint8_t pcParsePtr = 0;
-static volatile char pcParseMessageTypeBuffer[PC_PARSE_MESSAGE_TYPE_MAX_LENGTH];
+static volatile char pcParseMessageTypeBuffer[PC_PARSE_MESSAGE_TYPE_MAX_LENGTH+1];
 static volatile TPcMessageType pcParseMessageType = PC_MSG_NONE;
 static volatile uint8_t pcParseMessageComplete = 0;
 static volatile uint8_t pcParseParameter = PARAMETER_PARSE_INIT;
@@ -38,24 +39,33 @@ TPcMessageType pcParseChar(uint8_t incomingChar)
 		if (incomingChar == PC_COMM_HEADER_CHARACTER) {
 			pcParsePtr = 0;
 			pcParseState = 1;
+			//debugMessage("PC parse 0->1\r\n");
 		}
 		break;
 	case 1: // parse message type
 		if (incomingChar != ',') {
-			if (pcParsePtr < PC_PARSE_MESSAGE_TYPE_MAX_LENGTH) {
-				pcParseMessageTypeBuffer[pcParsePtr++] = incomingChar;
+			if (incomingChar == PC_COMM_HEADER_CHARACTER) {
+				pcParsePtr = 0;
+			} else {
+				if (pcParsePtr < PC_PARSE_MESSAGE_TYPE_MAX_LENGTH) {
+					pcParseMessageTypeBuffer[pcParsePtr++] = incomingChar;
+				}
 			}
 		} else {
 			pcParseMessageType = PC_MSG_NONE;
 			if (pcParsePtr==1 && pcParseMessageTypeBuffer[0] == 'V') {
 				pcParseMessageType = PC_MSG_VELOCITY;
 				pcParseParameter = PARAMETER_PARSE_INIT;
+				//debugMessage("PC parse MSG V\r\n");
 			} else {
 				// unknown message
+				pcParseMessageTypeBuffer[pcParsePtr] = 0;
+				debugMessageF("PC parse MSG UNKN '%s'\r\n", pcParseMessageTypeBuffer);
 				pcParseState = 0;
 			}
 			if (pcParseMessageType != PC_MSG_NONE) pcParseState = 2;
 		}
+		break;
 	case 2: // parse parameters
 		result = PC_MSG_NUMBER;
 		switch (pcParseMessageType) {
@@ -70,6 +80,10 @@ TPcMessageType pcParseChar(uint8_t incomingChar)
 			// error in parameters parsing
 			pcParseState = 0;
 			result = PC_MSG_NONE;
+			debugMessage("PC parse MSG ARGERR\r\n");
+		} else if (result != PC_MSG_NONE) {
+			// received whole message
+			pcParseState = 0;
 		}
 	}
 	return result;
@@ -92,7 +106,7 @@ TPcMessageType pcParseVelocityMessage(uint8_t incomingChar)
 		float_sign = 0;
 	}
 	if (incomingChar == ' ') return PC_MSG_NONE;
-	if (incomingChar=='\n') {
+	if (incomingChar=='\n' || incomingChar=='\r') {
 		if (pcParseParameter == 3) {
 			pcVelocityMessageValue[3] = (float_sign?(-1):1) * float_value / float_divider;
 			return PC_MSG_VELOCITY;
@@ -102,6 +116,7 @@ TPcMessageType pcParseVelocityMessage(uint8_t incomingChar)
 	} else
 	if (incomingChar==',') {
 		if (pcParseParameter < 4) {
+			debugMessageF("PC parse num %d\r\n", (int)float_value);
 			pcVelocityMessageValue[pcParseParameter++] = (float_sign?(-1):1) * float_value / float_divider;
 			float_value = 0;
 			float_dot = 0;

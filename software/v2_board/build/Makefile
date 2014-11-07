@@ -1,6 +1,3 @@
-################################################################################
-# Automatically-generated file. Do not edit!
-################################################################################
 
 MCU=atxmega128a3u
 #MCU=atxmega128a3
@@ -11,62 +8,17 @@ RM := rm -rf
 USER_OBJS :=
 
 LIBS := 
-PROJ := 
 
-O_SRCS := 
 C_SRCS := 
-S_SRCS := 
-S_UPPER_SRCS := 
-OBJ_SRCS := 
-ASM_SRCS := 
 PREPROCESSING_SRCS := 
 OBJS := 
 OBJS_AS_ARGS := 
 C_DEPS := 
 C_DEPS_AS_ARGS := 
-EXECUTABLES := 
 OUTPUT_FILE_PATH :=
 OUTPUT_FILE_PATH_AS_ARGS :=
-AVR_APP_PATH :=$$$AVR_APP_PATH$$$
-ADDITIONAL_DEPENDENCIES:=
 OUTPUT_FILE_DEP:=
-LIB_DEP:=
-
-TOOLCHAIN_DIR=
-
-# Every subdirectory with source files must be described here
-SUBDIRS :=  \
-../FreeRTOS \
-../FreeRTOS/Source \
-../FreeRTOS/Port \
-../FreeRTOS/Source/include \
-../mavlink/ \
-../mavlink/v1.0/ \
-../mavlink/v1.0/ardupilotmega/ \
-../mavlink/v1.0/common/ \
-../MyDrivers \
-../src/ \
-../src/ASF/ \
-../src/ASF/common/ \
-../src/ASF/common/boards/ \
-../src/ASF/common/services/ \
-../src/ASF/common/services/clock/ \
-../src/ASF/common/services/clock/xmega/ \
-../src/ASF/common/services/ioport/ \
-../src/ASF/common/services/ioport/xmega/ \
-../src/ASF/common/utils/ \
-../src/ASF/common/utils/interrupt/ \
-../src/ASF/common/utils/make/ \
-../src/ASF/xmega/ \
-../src/ASF/xmega/drivers/ \
-../src/ASF/xmega/drivers/cpu/ \
-../src/ASF/xmega/drivers/nvm/ \
-../src/ASF/xmega/utils/ \
-../src/ASF/xmega/utils/assembler/ \
-../src/ASF/xmega/utils/bit_handling/ \
-../src/ASF/xmega/utils/preprocessor/ \
-../src/Config/
-
+TOOLCHAINDIR=
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS +=  \
@@ -94,14 +46,12 @@ C_SRCS +=  \
 ../src/ASF/common/services/ioport/xmega/ioport_compat.c \
 ../src/ASF/xmega/drivers/nvm/nvm.c \
 ../pc_communication.c \
+../debugcomm.c \
 
 
 PREPROCESSING_SRCS +=  \
 ../src/ASF/xmega/drivers/nvm/nvm_asm.s \
 ../src/ASF/xmega/drivers/cpu/ccp.s
-
-
-ASM_SRCS += 
 
 
 OBJS +=  \
@@ -131,6 +81,7 @@ src/ASF/xmega/drivers/nvm/nvm.o \
 src/ASF/xmega/drivers/nvm/nvm_asm.o \
 src/ASF/xmega/drivers/cpu/ccp.o \
 pc_communication.o \
+debugcomm.o \
 
 OBJS_AS_ARGS = $(OBJS)
 
@@ -142,11 +93,7 @@ OUTPUT_FILE_PATH +=main.elf
 
 OUTPUT_FILE_PATH_AS_ARGS +=main.elf
 
-ADDITIONAL_DEPENDENCIES:=
-
 OUTPUT_FILE_DEP:= ./makedep.mk
-
-LIB_DEP+= 
 
 CFLAGS=-x c -funsigned-char -funsigned-bitfields -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -mrelax -std=gnu99
 CFLAGS+=-g2 -Wall -O1
@@ -260,9 +207,9 @@ endif
 # Add inputs and outputs from these tool invocations to the build variables 
 
 # All Target
-all: $(OUTPUT_FILE_PATH) $(ADDITIONAL_DEPENDENCIES)
+all: $(OUTPUT_FILE_PATH)
 
-$(OUTPUT_FILE_PATH): $(OBJS) $(USER_OBJS) $(OUTPUT_FILE_DEP) $(LIB_DEP)
+$(OUTPUT_FILE_PATH): $(OBJS) $(USER_OBJS) $(OUTPUT_FILE_DEP)
 	@echo Building target: $@
 	@#echo Invoking: AVR/GNU Linker
 	$(TOOLCHAINDIR)avr-gcc -o$(OUTPUT_FILE_PATH_AS_ARGS) $(OBJS_AS_ARGS) $(USER_OBJS) $(LIBS) -Wl,-Map="main.map" -Wl,-u,vfprintf -Wl,--start-group -Wl,-lm -Wl,-lprintf_flt  -Wl,--end-group -Wl,--gc-sections -mrelax -mmcu=$(MCU)  
@@ -275,7 +222,7 @@ $(OUTPUT_FILE_PATH): $(OBJS) $(USER_OBJS) $(OUTPUT_FILE_DEP) $(LIB_DEP)
 
 # Other Targets
 clean:
-	-$(RM) $(OBJS_AS_ARGS) $(EXECUTABLES)  
+	-$(RM) $(OBJS_AS_ARGS)
 	-$(RM) $(C_DEPS_AS_ARGS)   
 	rm -rf "main.elf" "main.a" "main.hex" "main.lss" "main.eep" "main.map" "main.srec" "main.usersignatures"
 	

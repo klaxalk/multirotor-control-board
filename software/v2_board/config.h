@@ -59,7 +59,9 @@
 //~ --------------------------------------------------------------------
 
 // on/off the receiving of data from the GumStix
+#ifndef GUMSTIX_DATA_RECEIVE
 #define GUMSTIX_DATA_RECEIVE ENABLED
+#endif
 /*
 	ENABLED
 	DISABLED
@@ -91,7 +93,7 @@
 
 #if PC_COMMUNICATION == ENABLED
 	#ifndef PC_USART_BUFFER
-	#define PC_USART_BUFFER usart_buffer_1 // TODO: set properly to used port
+	#define PC_USART_BUFFER usart_buffer_4 // TODO: better configurable
 	#endif
 #endif
 
@@ -104,5 +106,9 @@
 	#warning TRAJECTORY_FOLLOWING DISABLED because PX4FLOW_DATA_RECEIVE and GUMSTIX_DATA_RECEIVE is disabled
 
 #endif 
+
+#if GUMSTIX_DATA_RECEIVE == ENABLED && PC_COMMUNICATION == ENABLED
+	#error GUMSTIX_DATA_RECEIVE and PC_COMMUNICATION can not be both enabled at same time
+#endif
 
 #endif // _CONFIG_H

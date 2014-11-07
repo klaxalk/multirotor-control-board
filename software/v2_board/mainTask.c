@@ -9,7 +9,10 @@
 #include "system.h"
 #include "controllers.h"
 #include "communication.h"
+#include "debugcomm.h"
+#ifdef WITH_PRINTF
 #include <stdio.h> // sprintf
+#endif
 #include <stdlib.h> // abs
 
 // constants = AUX channels from the RC transmitter
@@ -20,9 +23,7 @@ volatile float constant5 = 0;
 // timestamp for debug and logging
 volatile double timeStamp = 0;
 volatile uint16_t main_cycle = 0;
-
-// for controller on-off
-int8_t previous_RADIO_CONTROLLER_ON_OFF_SWITCH = 0;
+volatile uint8_t dbg1 = 0;
 
 #if TRAJECTORY_FOLLOWING == ENABLED
 
@@ -50,14 +51,32 @@ void writeTrajectory1(){
 
 // TODO: support for different RC transmitters
 
+#define RC_SWITCH_COUNT 5
+#define PPM_IN_1_3 (PPM_IN_MIN_LENGTH + (PPM_IN_MAX_LENGTH - PPM_IN_MIN_LENGTH) / 3)
+#define PPM_IN_2_3 (PPM_IN_MAX_LENGTH - (PPM_IN_MAX_LENGTH - PPM_IN_MIN_LENGTH) / 3)
+#define RC_SWITCH_CHANNELS { AUX1, AUX2, AUX3, AUX4, AUX5 }
+#define RC_SWITCH_THRESHOLDS { PPM_IN_MIDDLE_LENGTH, PPM_IN_MIDDLE_LENGTH, PPM_IN_1_3, PPM_IN_2_3, PPM_IN_MIDDLE_LENGTH }
+#define RC_SWITCH_THRESHOLDS2 { PPM_IN_TRESHOLD, PPM_IN_TRESHOLD, PPM_IN_1_3, PPM_IN_2_3, PPM_IN_TRESHOLD }
+
+#define RC_SWITCH_STATE_UNDEFINED 0xFF
+
+#define PPM_IN_DEADZONE 200
+
+#define RADIO_CONTROLLER_ON_OFF_SWITCH 2
+#define RADIO_LANDING_SWITCH 3
+
+static const uint8_t rcSwitchChannel[RC_SWITCH_COUNT] = RC_SWITCH_CHANNELS;
+static const uint16_t rcSwitchThreshold[RC_SWITCH_COUNT] = RC_SWITCH_THRESHOLDS;
+static const uint16_t rcSwitchThreshold2[RC_SWITCH_COUNT] = RC_SWITCH_THRESHOLDS2;
+
 #define RADIO_AURORA9
 // #define RADIO_HCH
 
 #define NOT_AVAILABLE (-1)
 
 #ifdef RADIO_AURORA9
-	#define RADIO_CONTROLLER_ON_OFF_SWITCH AUX3
-	#define RADIO_LANDING_SWITCH AUX4
+	#define RADIO_CONTROLLER_ON_OFF_CHANNEL AUX3
+	#define RADIO_LANDING_CHANNEL AUX4
 	#define RADIO_CONSTANT1 AUX1
 	#define RADIO_CONSTANT2 AUX2
 	#define RADIO_CONSTANT5 AUX5
@@ -68,8 +87,8 @@ void writeTrajectory1(){
 #endif // RADIO_AURORA9
 
 #ifdef RADIO_HCH
-	#define RADIO_CONTROLLER_ON_OFF_SWITCH AUX3 // TODO
-	#define RADIO_LANDING_SWITCH AUX4 // TODO
+	#define RADIO_CONTROLLER_ON_OFF_CHANNEL AUX3 // TODO
+	#define RADIO_LANDING_CHANNEL AUX4 // TODO
 	#define RADIO_CONSTANT1 NOT_AVAILABLE
 	#define RADIO_CONSTANT2 NOT_AVAILABLE
 	#define RADIO_CONSTANT5 NOT_AVAILABLE
@@ -90,42 +109,80 @@ void mainTask(void *p)
 	writeTrajectory1();
 #endif
 
+	uint8_t old_switches[RC_SWITCH_COUNT];
+	for (uint8_t i = 0; i < RC_SWITCH_COUNT; i++) old_switches[i] = RC_SWITCH_STATE_UNDEFINED;
+
 	while (1) {
 
 		main_cycle++;
 
+		// read switch values
+		uint8_t switches[RC_SWITCH_COUNT];
+		for (uint8_t i = 0; i < RC_SWITCH_COUNT; i++) {
+			uint16_t inValue = RCchannel[rcSwitchChannel[i]];
+			uint8_t inState;
+			if (inValue <= rcSwitchThreshold[i] - PPM_IN_DEADZONE) {
+				inState = 0;
+			} else if (inValue > rcSwitchThreshold[i] + PPM_IN_DEADZONE) {
+				if (inValue <= rcSwitchThreshold2[i] - PPM_IN_DEADZONE) {
+					inState = 1;
+				} else if (inValue > rcSwitchThreshold2[i] + PPM_IN_DEADZONE) {
+					inState = 2;
+				} else {
+					inState = RC_SWITCH_STATE_UNDEFINED;
+				}
+			} else {
+				inState = RC_SWITCH_STATE_UNDEFINED;
+			}
+			switches[i] = inState;
+			if (inState != old_switches[i]) {
+				debugMessageF("switch %d %d->%d\r\n", i, old_switches[i], inState);
+			}
+		}
+
 		// controller on/off
-		if (abs(RCchannel[RADIO_CONTROLLER_ON_OFF_SWITCH] - PPM_IN_MIDDLE_LENGTH) < 200) {
-			if (previous_RADIO_CONTROLLER_ON_OFF_SWITCH == 0) {
-				enableController();
+		uint8_t swControllerState = switches[RADIO_CONTROLLER_ON_OFF_SWITCH];
+		if (swControllerState != old_switches[RADIO_CONTROLLER_ON_OFF_SWITCH]) {
+			if (swControllerState != RC_SWITCH_STATE_UNDEFINED) {
+				if (swControllerState > 0) {
+					if (old_switches[RADIO_CONTROLLER_ON_OFF_SWITCH] == 0) {
+						// controller off->on
+						enableController();
+					}
+					if (swControllerState == 2) {
+						enablePositionController(); // TODO: option to disable position controller globally
+					} else {
+						if (old_switches[RADIO_CONTROLLER_ON_OFF_SWITCH] == 2) {
+							disablePositionController();
+						}
+					}
+				} else {
+					if (old_switches[RADIO_CONTROLLER_ON_OFF_SWITCH] == 2) {
+						disablePositionController();
+					}
+					disableController();
+				}
+			} else {
+				// TODO: invalid input signal?
 			}
-			disablePositionController();
-			previous_RADIO_CONTROLLER_ON_OFF_SWITCH = 1;
-		} else if (RCchannel[RADIO_CONTROLLER_ON_OFF_SWITCH] > (PPM_IN_MIDDLE_LENGTH + 200)) {
-			if (previous_RADIO_CONTROLLER_ON_OFF_SWITCH == 1) {
-				enablePositionController();
-			}
-			previous_RADIO_CONTROLLER_ON_OFF_SWITCH = 2;
-		} else {
-			disableController();
-			disablePositionController();
-			previous_RADIO_CONTROLLER_ON_OFF_SWITCH = 0;
 		}
 
 #if PX4FLOW_DATA_RECEIVE == ENABLED
 
 		// landing on/off, trajectory on/off
-		if (RCchannel[RADIO_LANDING_SWITCH] < (PPM_IN_MIDDLE_LENGTH - 200)) {
+		switch (switches[RADIO_LANDING_SWITCH]) {
+		case 0:
 			landingRequest = 1;
 			trajectoryEnabled = 0;
-		} else if(RCchannel[RADIO_LANDING_SWITCH] > (PPM_IN_MIDDLE_LENGTH + 200)) {
+			break;
+		case 1:
+		case 2:
 			landingRequest = 0;
 			trajectoryEnabled = 1;
-		}else{
+		default:
 			landingRequest = 0;
 			trajectoryEnabled = 0;
 		}
-
 #endif // PX4FLOW_DATA_RECEIVE == ENABLED
 
 		// load the constant values from the RC
@@ -148,6 +205,56 @@ void mainTask(void *p)
 		if(constant5 < 0) constant5 = 0;
 #endif
 
+#if SURFSTAB_MODE == ENABLED
+		// position control switch (AUX4)
+		switch (switches[3]) {
+		case 0:
+			// no position control
+			break;
+		case 1:
+			// position control - stay
+			break;
+		case 2:
+			// position control - trajectory
+			break;
+		default:
+			// input error
+			;
+		}
+
+		// reset switch (AUX2)
+		if ((switches[1] == 1) && (old_switches[1] == 0)) {
+			// reset condition
+		}
+
+		// switch F / AUX1
+		if ((switches[0] == 1) && (old_switches[0] == 0)) {
+			// F switch on
+		}
+#endif
+
+		// TODO: detekce vstupniho signalu a generovani fail-safe vystupu
+
 		mergeSignalsToOutput();
+
+		if ((main_cycle & 0x1FFF) == 0) {
+			debugMessageF("RC=%d,%d,%d,%d,%d,%d,%d,%d,%d\r\n", RCchannel[0], RCchannel[1], RCchannel[2], RCchannel[3], RCchannel[4], RCchannel[5], RCchannel[6],RCchannel[7], RCchannel[8]);
+			debugMessageF("OUT=%d,%d,%d,%d\r\n", getOutputChannelValue(0), getOutputChannelValue(1), getOutputChannelValue(2), getOutputChannelValue(3));
+		}
+
+		if ((main_cycle & 0x1000) != 0) {
+			led_green_on();
+			if (dbg1 == 0) {
+				debugMessage(".\r\n");
+				dbg1 = 1;
+			}
+		} else {
+			led_green_off();
+			dbg1 = 0;
+		}
+
+		for (uint8_t i = 0; i < RC_SWITCH_COUNT; i++) {
+			if (switches[i] != RC_SWITCH_STATE_UNDEFINED) old_switches[i] = switches[i];
+		}
 	}
 }

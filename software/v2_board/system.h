@@ -20,7 +20,7 @@
 #define	ORANGE	IOPORT_CREATE_PIN(PORTB, 2)
 #define	GREEN	IOPORT_CREATE_PIN(PORTB, 6)
 #define	YELLOW	IOPORT_CREATE_PIN(PORTB, 7)
-#define	PPM_OUT	IOPORT_CREATE_PIN(PORTD, 6)
+#define	PPM_OUT	IOPORT_CREATE_PIN(PORTD, 5)
 
 #define	OUT1	IOPORT_CREATE_PIN(PORTA, 0)
 #define	OUT2	IOPORT_CREATE_PIN(PORTA, 1)
@@ -75,7 +75,7 @@
 #define PULSE_OUT_MIN			4000
 #define PULSE_OUT_MIDDLE		6000
 #define PULSE_OUT_MAX			8000
-#define NUMBER_OF_CHANNELS_OUT	6
+//#define NUMBER_OF_CHANNELS_OUT	6 // moved by HCH to system.c
 #define PPM_FRAME_LENGTH		80000
 #define PPM_PULSE				1600
 
@@ -95,7 +95,7 @@
 /* -------------------------------------------------------------------- */
 #define THROTTLE		0
 #define RUDDER			1
-#define AILERON			2
+#define AILERON		2
 #define ELEVATOR		3
 #define AUX1			4
 #define AUX2			5
@@ -140,5 +140,7 @@ void enableController();
 void disablePositionController();
 
 void enablePositionController();
+
+uint16_t getOutputChannelValue(uint8_t index);
 
 #endif /* SYSTEM_H_ */

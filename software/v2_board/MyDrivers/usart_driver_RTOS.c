@@ -175,6 +175,8 @@ UsartBuffer * usartBufferInitialize(USART_t * usart, Baudrate_enum baudrate ,cha
 			break;
 		default:
 			//use default, TODO: report error here with LED
+			port = NULL; // prevent compiler warning
+			usartBuffer = NULL;
 			break;
 	}
 

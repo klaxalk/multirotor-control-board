@@ -17,11 +17,11 @@
 #if PC_COMMUNICATION == ENABLED
 #include "pc_communication.h"
 #endif
+#include "debugcomm.h"
 
 void commTask(void *p) {
 	
 	unsigned char inChar;
-	char* ukazatel;
 	
 	while (1) {
 
@@ -31,6 +31,7 @@ void commTask(void *p) {
 			#if (GUMSTIX_DATA_RECEIVE == ENABLED) && (PX4FLOW_DATA_RECEIVE == ENABLED)
 			// prototype of answering with log to xBee
 			if (inChar == 'b') {
+				char* ukazatel;
 
 				ukazatel = (char*) &estimatedElevatorPos;
 				usartBufferPutByte(usart_buffer_xbee, *(ukazatel), 10);
@@ -183,6 +184,7 @@ void commTask(void *p) {
 		#if PC_COMMUNICATION == ENABLED
 		if (usartBufferGetByte(PC_USART_BUFFER, &inChar, 0)) {
 			// receive data from PX4Flow
+			//debugMessageF("PC in %c (%d)\r\n", inChar, inChar);
 			TPcMessageType pcmsg = pcParseChar((uint8_t) inChar);
 			switch (pcmsg) {
 			case PC_MSG_VELOCITY:
@@ -191,6 +193,7 @@ void commTask(void *p) {
 				// TODO: yaw velocity setpoint = pcVelocityMessageValue[PC_VELOCITY_YAW];
 				throttleVelocitySetpoint = pcVelocityMessageValue[PC_VELOCITY_CLIMB]; // TODO: setpoints() may overwrite my value
 				// TODO: implement watchdog resetting setpoints when data are not updated
+				debugMessageF("PC %.3f, %.3f, %.3f\r\n", pcVelocityMessageValue[PC_VELOCITY_ELEVATOR], pcVelocityMessageValue[PC_VELOCITY_AILERON], pcVelocityMessageValue[PC_VELOCITY_CLIMB]);
 				break;
 			case PC_MSG_NONE:
 			case PC_MSG_NUMBER:
