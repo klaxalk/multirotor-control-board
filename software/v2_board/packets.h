@@ -76,6 +76,7 @@ typedef struct
 	unsigned char GESTURES;
 	unsigned char TRAJECTORY;
 	unsigned char TRAJECTORY_POINTS;
+	unsigned char OPENLOG;
 }COMMANDST;
 
 extern unsigned char GET_STATUS;

@@ -274,11 +274,11 @@ void kopterSetpointsReport(unsigned char *address64,unsigned char *address16,uns
 	*(data+2)=type;
 	
 	if(type==SETPOINTS.THROTTLE){
-		f=throttleDesiredSetpoint;
+		f=throttleSetpoint;
 	}else if(type==SETPOINTS.ELEVATOR){
-		f=elevatorDesiredSetpoint;
+		f=elevatorSetpoint;
 	}else if(type==SETPOINTS.AILERON){
-		f=aileronDesiredSetpoint;
+		f=aileronSetpoint;
 	}
 	
 	

@@ -13,6 +13,7 @@ extern volatile uint16_t RCchannel[9];
 extern UsartBuffer * usart_buffer_xbee;
 extern UsartBuffer * usart_buffer_1;
 extern UsartBuffer * usart_buffer_4;
+extern UsartBuffer * usart_buffer_log;
 
 //PX4Flow
 extern volatile float groundDistance;
@@ -26,6 +27,8 @@ extern mavlink_status_t mavlinkStatus;
 extern int8_t mavlinkFlag;
 extern mavlink_optical_flow_t opticalFlowData;
 extern int8_t opticalFlowDataFlag;
+
+
 
 
 
@@ -51,10 +54,9 @@ void sendPacketUART(unsigned char *packet){
 void commTask(void *p) {
 	unsigned char inChar;
 	unsigned char packet[60];
-
-	int i;
-
-	while (1) {						
+	int i=0;
+	
+	while (1) {			
 		// XBEE received
 		if (usartBufferGetByte(usart_buffer_xbee, &inChar, 0)) {																				
             //packet received
@@ -68,8 +70,7 @@ void commTask(void *p) {
                 packetHandler(packet);
             }		
 		}
-
-
+		
 		//PX4Flow
 		if (usartBufferGetByte(usart_buffer_1, &inChar, 0)) {
 			px4flowParseChar((uint8_t) inChar);
@@ -97,6 +98,8 @@ void commTask(void *p) {
 			if (opticalFlowData.ground_distance < ALTITUDE_MAXIMUM &&
 			opticalFlowData.ground_distance > 0.3) {
 				groundDistance = opticalFlowData.ground_distance;
+				
+				
 			}
 
 			px4Confidence = opticalFlowData.quality;

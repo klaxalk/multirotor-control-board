@@ -14,6 +14,9 @@
 #include "twi_slave_driver.h"
 #include "usart_driver_RTOS.h"
 
+// openLog
+#include "openLog.h"
+
 //xbee protocol
 #include "packets.h"
 
@@ -28,6 +31,9 @@
 
 // the controllersTask
 #include "controllersTask.h"
+
+// the logTask
+#include "logTask.h"
 
 /*! Defining an example slave address. */
 #define SLAVE_ADDRESS    0x55
@@ -130,6 +136,9 @@ int main(void)
 
 	//Start the main task routine
 	xTaskCreate(controllersTask, (signed char*) "contTasks", 1024, NULL, 2, NULL);
+	
+	//Start the openLog task routine
+	xTaskCreate(logTask, (signed char*) "logTasks", 1024, NULL, 2, NULL);
 	
 	//Start the FreeRTOS scheduler
 	vTaskStartScheduler();

@@ -181,3 +181,54 @@
 	"serialLink.h"
 	"defines.h"
 
+1413984181 source:c:\users\martin\documents\github\quadro\multirotor-control-board\software\xbeewindows\commands.c
+	<stdio.h>
+	"packets.h"
+	"commands.h"
+	"serialLink.h"
+	"main.h"
+	"defines.h"
+
+1413984181 c:\users\martin\documents\github\quadro\multirotor-control-board\software\xbeewindows\packets.h
+
+1413984181 c:\users\martin\documents\github\quadro\multirotor-control-board\software\xbeewindows\commands.h
+	"defines.h"
+
+1413984181 c:\users\martin\documents\github\quadro\multirotor-control-board\software\xbeewindows\defines.h
+	<stdio.h>
+	<stdlib.h>
+
+1413984181 c:\users\martin\documents\github\quadro\multirotor-control-board\software\xbeewindows\seriallink.h
+	<windows.h>
+
+1413984181 c:\users\martin\documents\github\quadro\multirotor-control-board\software\xbeewindows\main.h
+	<windows.h>
+
+1413984181 source:c:\users\martin\documents\github\quadro\multirotor-control-board\software\xbeewindows\main.c
+	<stdio.h>
+	<windows.h>
+	"XBeeComm.h"
+	"packets.h"
+	"commands.h"
+	"serialLink.h"
+
+1413984181 c:\users\martin\documents\github\quadro\multirotor-control-board\software\xbeewindows\xbeecomm.h
+
+1413984181 source:c:\users\martin\documents\github\quadro\multirotor-control-board\software\xbeewindows\packets.c
+	<stdio.h>
+	"packets.h"
+	"defines.h"
+	"commands.h"
+	"commTask.h"
+	"XBEEComm.h"
+	"main.h"
+
+1413984181 source:c:\users\martin\documents\github\quadro\multirotor-control-board\software\xbeewindows\seriallink.c
+	<stdio.h>
+	<windows.h>
+
+1413984181 source:c:\users\martin\documents\github\quadro\multirotor-control-board\software\xbeewindows\xbeecomm.c
+	<stdio.h>
+	"serialLink.h"
+	"defines.h"
+

@@ -4,6 +4,7 @@
 #include "commands.h"
 #include "commTask.h"
 #include "usart_driver_RTOS.h"
+#include "openLog.h"
 
 extern UsartBuffer * usart_buffer_4;
 extern volatile unsigned char trajMaxIndex;
@@ -74,6 +75,7 @@ void constInit(){
 	COMMANDS.GESTURES=0x14;
 	COMMANDS.TRAJECTORY=0x15;
 	COMMANDS.TRAJECTORY_POINTS=0x16;
+	COMMANDS.OPENLOG=0x20;
 	
 	GET_STATUS=0x95;
 }
@@ -114,6 +116,7 @@ void packetHandler(unsigned char *inPacket){
             switch ((int)*(data+1)){
                 //command
                 case 'c':
+
                         //TELEMETRY REQUESTS						
                         if(*(data+2)<0x10){
                             //telemetry request options

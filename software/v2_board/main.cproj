@@ -236,9 +236,6 @@
     <Compile Include="commTask.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="commTask.h">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="communication.c">
       <SubType>compile</SubType>
     </Compile>
@@ -321,6 +318,12 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="FreeRTOS\Source\timers.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="logTask.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="logTask.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="main.c">
@@ -719,6 +722,9 @@
     <Compile Include="mavlink\v1.0\protocol.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="MyDrivers\commTask.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="MyDrivers\pmic_driver.c">
       <SubType>compile</SubType>
     </Compile>
@@ -756,6 +762,12 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="MyDrivers\usart_driver_RTOS.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="openLog.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="openLog.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="packets.c">
