@@ -55,7 +55,7 @@ UsartBuffer * usart_buffer_4;
 /*	USART baud rates													*/
 /* -------------------------------------------------------------------- */
 #define USART_STM_BAUDRATE		BAUD9600
-#define USART_XBEE_BAUDRATE		BAUD9600
+#define USART_XBEE_BAUDRATE		BAUD19200
 #define USART_LOG_BAUDRATE		BAUD115200
 #define USART_1_BAUDRATE		BAUDPX4FLOW
 #define USART_2_BAUDRATE		BAUD19200

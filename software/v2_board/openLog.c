@@ -8,42 +8,47 @@
 #include <stdio.h>
 #include "system.h"
 #include "usart_driver_RTOS.h"
-//#include <stdio.h> // sprintf
-//#include <stdlib.h> // abs
+#include <stdio.h> 
+#include <stdlib.h> 
 #include <string.h>
 #include "ioport.h"
 
-extern volatile float groundDistance;
-extern volatile float elevatorSpeed;
+extern volatile float groundDistance;			
+extern volatile float elevatorSpeed;			
 extern volatile float aileronSpeed;
+extern volatile float estimatedAileronPos;
+extern volatile float estimatedElevatorPos;
+
 
 extern UsartBuffer * usart_buffer_log;
-extern UsartBuffer * usart_buffer_4;
 char fileName[12];
 int i=0;
 
 void stopLogging(){
 	usartBufferPutString(usart_buffer_log,"$$$",0);
-	delay_us(400000);
+	// waiting for 
+	vTaskDelay(200);
 }
 
-void startLogging(char newfileName[]){
+void startLogging(char * newfileName){
 	stopLogging();
+	
+	// exception length of fileName
 	if(strlen(newfileName)>12) sprintf(fileName, "LOG.TXT");
 	else sprintf(fileName, "%s",newfileName);
+	
+	// 
 	sprintf(fileName, "%s",strupr(fileName));
-	usartBufferPutString(usart_buffer_4,fileName,0);
-	char string[64];
-	sprintf(string, "\rappend %s\rLogging started:\n",fileName);
-	usartBufferPutString(usart_buffer_log,string,0);
-	usartBufferPutString(usart_buffer_4,string,0);
+	char str[64];
+	sprintf(str, "\rappend %s\rLogging started:\n",fileName);
+	usartBufferPutString(usart_buffer_log,str,0);
 }
 
 void loggingData(){
 	i++;
-	char string[64];
-	sprintf(string, "%d,%f,%f,%f\n", i,groundDistance,elevatorSpeed,aileronSpeed);
-	usartBufferPutString(usart_buffer_log,string,0);
+	char str[128];
+	sprintf(str, "%d,%f,%f,%f,%f,%f\n", i,groundDistance,elevatorSpeed,aileronSpeed,estimatedAileronPos,estimatedElevatorPos);
+	usartBufferPutString(usart_buffer_log,str,0);
 	}
 	
 void setTelemetry(){

@@ -14,10 +14,7 @@
 #include "twi_slave_driver.h"
 #include "usart_driver_RTOS.h"
 
-// openLog
-#include "openLog.h"
-
-//xbee protocol
+// xbee protocol
 #include "packets.h"
 
 // basic system functions
@@ -135,7 +132,7 @@ int main(void)
 	xTaskCreate(mainTask, (signed char*) "mainTask", 1024, NULL, 2, NULL);
 
 	//Start the main task routine
-	xTaskCreate(controllersTask, (signed char*) "contTasks", 1024, NULL, 2, NULL);
+	xTaskCreate(controllersTask, (signed char*) "contTask", 1024, NULL, 2, NULL);
 	
 	//Start the openLog task routine
 	xTaskCreate(logTask, (signed char*) "logTasks", 1024, NULL, 2, NULL);

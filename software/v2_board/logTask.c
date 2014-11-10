@@ -17,7 +17,7 @@
 
 void logTask(void *p) {
 	
-	startLogging("yeaaaaaaaaaaaaaaaaaaaaa.txt");
+	startLogging("yea.txt");
 		 
 	while (1) {
 		loggingData();

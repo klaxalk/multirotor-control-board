@@ -236,6 +236,9 @@
     <Compile Include="commTask.c">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="commTask.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="communication.c">
       <SubType>compile</SubType>
     </Compile>
@@ -720,9 +723,6 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="mavlink\v1.0\protocol.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="MyDrivers\commTask.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="MyDrivers\pmic_driver.c">

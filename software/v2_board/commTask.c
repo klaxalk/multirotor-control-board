@@ -13,7 +13,6 @@ extern volatile uint16_t RCchannel[9];
 extern UsartBuffer * usart_buffer_xbee;
 extern UsartBuffer * usart_buffer_1;
 extern UsartBuffer * usart_buffer_4;
-extern UsartBuffer * usart_buffer_log;
 
 //PX4Flow
 extern volatile float groundDistance;
@@ -50,12 +49,10 @@ void sendPacketUART(unsigned char *packet){
 	}
 }
 
-
 void commTask(void *p) {
 	unsigned char inChar;
 	unsigned char packet[60];
-	int i=0;
-	
+	int i;
 	while (1) {			
 		// XBEE received
 		if (usartBufferGetByte(usart_buffer_xbee, &inChar, 0)) {																				
