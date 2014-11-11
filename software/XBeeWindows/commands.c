@@ -84,11 +84,17 @@ void kopterLandStatusRequest(unsigned char *address64,unsigned char *address16,u
 		makeTRPacket(address64,address16,0x00,frameID,dataOUT,3);
 }
 void kopterLandReportRecieved(unsigned char *address64,unsigned char *address16,unsigned char status){
-    if(status==ONOFF.ON){
-        printf("LANDING ON\n");
-    }else if(status==ONOFF.OFF){
-        printf("LANDING OFF\n");
-    }
+	if(status==LS_LANDING){
+        printf("LANDING\n");
+	}else if(status==LS_FLIGHT){
+        printf("FLIGHT\n");
+	}else if(status==LS_STABILIZATION){
+        printf("STABILIZATION\n");
+	}else if(status==LS_ON_GROUND){
+        printf("ON GROUND\n");
+	}else if(status==LS_TAKEOFF){
+        printf("TAKE OFF\n");
+	}
 }
 
 //TRAJECTORY

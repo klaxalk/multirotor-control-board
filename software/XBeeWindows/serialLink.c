@@ -22,7 +22,7 @@ HANDLE openSerialLine(int port){
         if (!GetCommState(hSerial, &dcbSerialParams)) {
             printf("ERROR in getting state \n");
         }
-        dcbSerialParams.BaudRate=CBR_9600;
+        dcbSerialParams.BaudRate=CBR_19200;
         dcbSerialParams.ByteSize=8;
         dcbSerialParams.StopBits=ONESTOPBIT;
         dcbSerialParams.Parity=NOPARITY;

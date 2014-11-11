@@ -142,18 +142,20 @@ void kopterLandStatusRequest(unsigned char *address64,unsigned char *address16,u
 void kopterLandReport(unsigned char *address64,unsigned char *address16,unsigned char frameID){
 	*dataOUT='r';
 	*(dataOUT+1)=COMMANDS.LANDING;
-	if(landingRequest){
-		*(dataOUT+2)=ONOFF.ON;
-		}else{
-		*(dataOUT+2)=ONOFF.OFF;
-	}
+	*(dataOUT+2)=landingState;	
 	makeTRPacket(address64,address16,0x00,frameID,dataOUT,3);
 }
 void kopterLandReportRecieved(unsigned char *address64,unsigned char *address16,unsigned char status){
-	if(status==ONOFF.ON){
+	if(status==LS_LANDING){
 		
-		}else if(status==ONOFF.OFF){
+	}else if(status==LS_FLIGHT){
 		
+	}else if(status==LS_STABILIZATION){
+	
+	}else if(status==LS_ON_GROUND){
+
+	}else if(status==LS_TAKEOFF){
+
 	}
 }
 
