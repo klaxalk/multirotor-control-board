@@ -11,7 +11,7 @@
 
 
 //void availableLogging(uint8_t ID);
-void startLogging(char fileName[]);
+void startLogging(char * fileName);
 void stopLogging();
 void loggingData();
 void setTelemetry();

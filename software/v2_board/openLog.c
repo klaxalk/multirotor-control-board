@@ -8,8 +8,6 @@
 #include <stdio.h>
 #include "system.h"
 #include "usart_driver_RTOS.h"
-#include <stdio.h> 
-#include <stdlib.h> 
 #include <string.h>
 #include "ioport.h"
 
@@ -21,26 +19,23 @@ extern volatile float estimatedElevatorPos;
 
 
 extern UsartBuffer * usart_buffer_log;
-char fileName[12];
+char fileName[12]; 
 int i=0;
 
 void stopLogging(){
 	usartBufferPutString(usart_buffer_log,"$$$",0);
-	// waiting for 
+	// 
 	vTaskDelay(200);
 }
 
-void startLogging(char * newfileName){
+void startLogging(char * newFileName){
 	stopLogging();
-	
-	// exception length of fileName
-	if(strlen(newfileName)>12) sprintf(fileName, "LOG.TXT");
-	else sprintf(fileName, "%s",newfileName);
-	
-	// 
-	sprintf(fileName, "%s",strupr(fileName));
+	i=0;
+	if(strlen(newFileName)>12) strcpy (fileName,"log.txt");
+	else strcpy (fileName,newFileName);
+	strcpy (fileName,strupr(fileName));
 	char str[64];
-	sprintf(str, "\rappend %s\rLogging started:\n",fileName);
+	sprintf(str, "\rappend %s\rStart:\n",fileName);
 	usartBufferPutString(usart_buffer_log,str,0);
 }
 

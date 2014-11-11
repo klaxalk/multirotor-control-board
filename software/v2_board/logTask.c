@@ -16,8 +16,7 @@
 //#define USART_LOG_BAUDRATE	BAUD115200 + SD card
 
 void logTask(void *p) {
-	
-	startLogging("yea.txt");
+	startLogging("fileLog.txt");
 		 
 	while (1) {
 		loggingData();
