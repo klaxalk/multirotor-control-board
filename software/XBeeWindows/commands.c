@@ -59,7 +59,7 @@ void telemetryReceive(unsigned char *address64,unsigned char *address16,unsigned
 	}
 }
 
-void telemetryToCoordinatorRequest(unsigned char *address64,unsigned char *address16,unsigned char type,unsigned char on, unsigned char frameID){
+void telemetryToCoordinatorSet(unsigned char *address64,unsigned char *address16,unsigned char type,unsigned char on, unsigned char frameID){
 	*dataOUT='c';
 	*(dataOUT+1)=COMMANDS.TELEMETRY_COORDINATOR;
 	*(dataOUT+2)=type;

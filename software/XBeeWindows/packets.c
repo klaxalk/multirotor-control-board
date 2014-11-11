@@ -54,8 +54,9 @@ void constInit(){
 	TELEMETRIES.ELEVATOR_VEL_SETPOINT=0x11;
 	TELEMETRIES.AILERON_VEL_SETPOINT=0x12;
 
+    ONOFF.OFF=0x00;
 	ONOFF.ON=0x01;
-	ONOFF.OFF=0x02;
+
 
 	SETPOINTS.THROTTLE=0x01;
 	SETPOINTS.ELEVATOR_POSITION=0x02;
@@ -99,6 +100,7 @@ void packetHandler(unsigned char *inPacket){
 	char ch2[4];
 	char ch3[4];
 	char ch4[4];
+	unsigned char usc;
 
     switch ((int)*(inPacket+3)) {
     //Modem Status
@@ -134,15 +136,18 @@ void packetHandler(unsigned char *inPacket){
                         #ifdef DEBUG
                           printf("TELEMETRY RECEIVED\n");
                         #endif // DEBUG
-                        ch1[0]=*(dataIN+3);
-                        ch1[1]=*(dataIN+4);
-                        ch1[2]=*(dataIN+5);
-                        ch1[3]=*(dataIN+6);
-                        f1=(float *)ch1;
-                        #ifdef MATLAB
+                    for (i=0;i<(*dataIN-1)/5;i++){
+                           usc=*(dataIN+2+i*5);
+						ch1[0]=*(dataIN+3+i*5);
+						ch1[1]=*(dataIN+4+i*5);
+						ch1[2]=*(dataIN+5+i*5);
+						ch1[3]=*(dataIN+6+i*5);
+						f1=(float *)ch1;
+						telemetryReceive(address64,address16,usc,*f1);
+						#ifdef MATLAB
                         sendBytes(matlabH,ch1,4);
                         #endif // MATLAB
-                        telemetryReceive(address64,address16,*(dataIN+2),*f1);
+                    }
                     break;
                 //report
                 case 'r':

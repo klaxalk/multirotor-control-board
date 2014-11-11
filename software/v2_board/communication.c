@@ -4,6 +4,7 @@
 #include "controllers.h"
 #include "communication.h"
 #include "system.h"
+#include "packets.h"
 
 //XBee values
 volatile unsigned char leadK1enabled=0;
@@ -34,8 +35,6 @@ volatile int8_t validGumstix = 0;
 volatile int8_t gumstixDataFlag = 0;
 volatile unsigned char gumstixParseCharCrc = 0;
 
-//Telemtery sending
-unsigned char telemetryToCoordinatorArr[13]={0};
 
 //setting K1 altitude setpoint 
 void leadK1Altitude(){

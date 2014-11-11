@@ -5,24 +5,31 @@
 #include "controllers.h"
 #include "system.h"
 #include "packets.h"
+#include "commands.h"
 
 
 
 
 
 void commTask(void *p) {	
+	//cca 40kHz	
 	unsigned char inChar;
 	unsigned char packet[60];	
 	int8_t i;
-	int16_t counter=0;
+	int16_t counter50Hz=0;
+	int16_t counter10Hz=0;
 	
 	while (1) {		
 		
-		//cca 80Hz
-		if (counter++>500){
-			counter=0;
+		if (counter50Hz++>800){
+			counter50Hz=0;
 			leadK1Altitude();
 		}
+		
+		if (counter10Hz++>4000){
+			counter10Hz=0;
+			telemetryToCoordinatorSend();
+		}		
 		
 		
 		// XBee

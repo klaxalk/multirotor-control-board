@@ -5,7 +5,8 @@ void telemetrySend(unsigned char *address64,unsigned char *address16,unsigned ch
 void telemetryRequest(unsigned char *address64,unsigned char *address16,unsigned char type, unsigned char frameID);
 void telemetryReceive(unsigned char *address64,unsigned char *address16,unsigned char type,float value);
 
-void telemetryToCoordinatorRequest(unsigned char *address64,unsigned char *address16,unsigned char type,unsigned char on, unsigned char frameID);
+void telemetryToCoordinatorSend();
+void telemetryToCoordinatorSet(unsigned char *address64,unsigned char *address16,unsigned char type,unsigned char on, unsigned char frameID);
 void telemetryToCoordinator(unsigned char *address64,unsigned char *address16,unsigned char type,unsigned char on);
 void telemetryToCoordinatorStatusRequest(unsigned char *address64,unsigned char *address16,unsigned char type,unsigned char frameID);
 void telemetryToCoordinatorReport(unsigned char *address64,unsigned char *address16,unsigned char type,unsigned char frameID);

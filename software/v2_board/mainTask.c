@@ -70,13 +70,11 @@ void mainTask(void *p) {
 		//gumstix enable
 		if(RCchannel[AUX1]<PPM_IN_MIDDLE_LENGTH){
 			if(previous_AUX1!=0){
-				led_red_on();
 				disableGumstix();
 				previous_AUX1=0;
 			}
 		}else{
 			if(previous_AUX1!=1){
-				led_red_off();
 				enableGumstix();
 				previous_AUX1=1;
 			}
@@ -85,13 +83,11 @@ void mainTask(void *p) {
 		//leading enable
 		if(RCchannel[AUX5]<PPM_IN_MIDDLE_LENGTH){
 			if(previous_AUX5!=0){
-				led_yellow_on();
 				leadK1enabled=0;
 				previous_AUX5=0;
 			}
 		}else{
 			if(previous_AUX5!=1){
-				led_yellow_off();
 				leadK1enabled=1;
 				previous_AUX5=1;
 			}

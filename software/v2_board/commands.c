@@ -119,7 +119,70 @@ void telemetryReceive(unsigned char *address64,unsigned char *address16,unsigned
 	}
 }
 
-void telemetryToCoordinatorRequest(unsigned char *address64,unsigned char *address16,unsigned char type,unsigned char on, unsigned char frameID){
+void telemetryToCoordinatorSend(){
+	float f=0;
+	unsigned char *ch;
+	unsigned char type=0xFF;
+	unsigned char i=0;
+	unsigned char counter=0;
+	
+	*dataOUT='t';
+	for(i=0;i<TELEMETRY_VARIABLES;i++){
+		if(telemetryToCoordinatorArr[i]==ONOFF.ON){			
+			type=i;			
+
+			if(type==TELEMETRIES.GROUND_DISTANCE_ESTIMATED){
+				f=estimatedThrottlePos;
+			}else if(type==TELEMETRIES.GROUND_DISTANCE){
+				f=groundDistance;
+			}else if(type==TELEMETRIES.ELEVATOR_SPEED){
+				f=elevatorSpeed;
+			}else if(type==TELEMETRIES.AILERON_SPEED){
+				f=aileronSpeed;
+			}else if(type==TELEMETRIES.ELEVATOR_SPEED_ESTIMATED){
+				f=estimatedElevatorVel;
+			}else if(type==TELEMETRIES.AILERON_SPEED_ESTIMATED){
+				f=estimatedAileronVel;
+			}else if(type==TELEMETRIES.ELEVATOR_POS_ESTIMATED){
+				f=estimatedElevatorPos;
+			}else if(type==TELEMETRIES.AILERON_POS_ESTIMATED){
+				f=estimatedAileronPos;
+			}else if(type==TELEMETRIES.THROTTLE_CONTROLLER_OUTPUT){
+				f=controllerThrottleOutput;
+			}else if(type==TELEMETRIES.THROTTLE_SPEED){
+				f=estimatedThrottleVel;
+			}else if(type==TELEMETRIES.AILERON_POS_CONTROLLER_OUTPUT){
+				f=positionControllerAileronOutput;
+			}else if(type==TELEMETRIES.ELEVATOR_POS_CONTROLLER_OUTPUT){
+				f=positionControllerElevatorOutput;
+			}else if(type==TELEMETRIES.AILERON_VEL_CONTROLLER_OUTPUT){
+				f=velocityControllerAileronOutput;
+			}else if(type==TELEMETRIES.ELEVATOR_VEL_CONTROLLER_OUTPUT){
+				f=velocityControllerElevatorOutput;
+			}else if(type==TELEMETRIES.THROTTLE_SETPOINT){
+				f=throttleSetpoint;
+			}else if(type==TELEMETRIES.ELEVATOR_POS_SETPOINT){
+				f=elevatorPositionSetpoint;
+			}else if(type==TELEMETRIES.AILERON_POS_SETPOINT){
+				f=aileronPositionSetpoint;
+			}else if(type==TELEMETRIES.ELEVATOR_VEL_SETPOINT){
+				f=elevatorVelocitySetpoint;
+			}else if(type==TELEMETRIES.AILERON_VEL_SETPOINT){
+				f=aileronVelocitySetpoint;
+			}
+		
+			ch=(unsigned char *) &f;		
+			*(dataOUT+1+counter*5)=type;
+			*(dataOUT+2+counter*5)=*ch;
+			*(dataOUT+3+counter*5)=*(ch+1);
+			*(dataOUT+4+counter*5)=*(ch+2);
+			*(dataOUT+5+counter*5)=*(ch+3);
+			counter++;
+		}
+	}
+	if(counter>0){makeTRPacket(ADDRESS.COORDINATOR,ADDRESS.UNKNOWN16,0x01,0x00,dataOUT,counter*5+1);}
+}
+void telemetryToCoordinatorSet(unsigned char *address64,unsigned char *address16,unsigned char type,unsigned char on, unsigned char frameID){
 	*dataOUT='c';
 	*(dataOUT+1)=COMMANDS.TELEMETRY_COORDINATOR;
 	*(dataOUT+2)=type;

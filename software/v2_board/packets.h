@@ -35,6 +35,8 @@ typedef struct
 	unsigned char AILERON_VEL_SETPOINT;		
 } TELEMETRIEST;
 
+#define TELEMETRY_VARIABLES 19
+
 
 typedef struct
 {
@@ -77,6 +79,9 @@ typedef struct
 	unsigned char GUMSTIX;
 
 }COMMANDST;
+
+
+extern volatile unsigned char telemetryToCoordinatorArr[TELEMETRY_VARIABLES];
 
 extern unsigned char GET_STATUS;
 
