@@ -6,10 +6,7 @@
 #include "usart_driver_RTOS.h"
 #include "openLog.h"
 
-extern UsartBuffer * usart_buffer_4;
 extern volatile int8_t trajMaxIndex;
-
-
 
 
 ADDRESST ADDRESS;
@@ -20,6 +17,7 @@ POSITIONST POSITIONS;
 CONTROLLERST CONTROLLERS;
 COMMANDST COMMANDS;
 unsigned char GET_STATUS;
+
 
 void makeTRPacket(unsigned char *adr64,unsigned char *adr16,unsigned char options,unsigned char frameID,unsigned char *data, unsigned char dataLength);
 void parMSPacket(unsigned char *inPacket,unsigned char *status);
@@ -78,12 +76,14 @@ void constInit(){
 	CONTROLLERS.BOTH=0x04;
 		
 	COMMANDS.TELEMETRY=0x01;	
+	COMMANDS.TELEMETRY_COORDINATOR=0x02;	
 	COMMANDS.LANDING=0x11;
 	COMMANDS.SET_SETPOINTS=0x12;
 	COMMANDS.CONTROLLERS=0x13;
 	COMMANDS.TRAJECTORY_FOLLOW=0x15;
 	COMMANDS.TRAJECTORY_POINTS=0x16;
 	COMMANDS.GUMSTIX=0x17;
+
 	
 	GET_STATUS=0x95;
 }
@@ -125,9 +125,16 @@ void packetHandler(unsigned char *inPacket){
                 //command
                 case 'c':
                         //TELEMETRY REQUESTS						
-                        if(*(dataIN+2)==0x01){                            					            
+                        if(*(dataIN+2)==COMMANDS.TELEMETRY){                            					            
                             telemetrySend(address64,address16,*(dataIN+3),0x00);                            
-                        } else
+                        }else
+						 if(*(dataIN+2)==COMMANDS.TELEMETRY_COORDINATOR){  
+							if(*(dataIN+3)==GET_STATUS){
+								telemetryToCoordinatorReport(address64,address16,*(dataIN+4),0x00);
+							}else{
+								telemetryToCoordinator(address64,address16,*(dataIN+3),*(dataIN+4));
+							}
+						}else
 						//LANDING REQUEST
 						if(*(dataIN+2)==COMMANDS.LANDING){
 							if(		 *(dataIN+3)==ONOFF.ON){
@@ -203,6 +210,10 @@ void packetHandler(unsigned char *inPacket){
                     break;
                 //report
                 case 'r':
+						 //TELEMETRY TO COORDINATOR STATUS
+						 if(*(dataIN+2)==COMMANDS.TELEMETRY_COORDINATOR){
+							 telemetryToCoordinatorReportRecieved(address64,address16,*(dataIN+3),*(dataIN+4));
+						 } else				
 						 //LANDING STATUS	
 				         if(*(dataIN+2)==COMMANDS.LANDING){
 					         kopterLandReportRecieved(address64,address16,*(dataIN+3));

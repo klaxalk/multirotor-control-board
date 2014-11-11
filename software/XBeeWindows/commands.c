@@ -59,6 +59,24 @@ void telemetryReceive(unsigned char *address64,unsigned char *address16,unsigned
 	}
 }
 
+void telemetryToCoordinatorRequest(unsigned char *address64,unsigned char *address16,unsigned char type,unsigned char on, unsigned char frameID){
+	*dataOUT='c';
+	*(dataOUT+1)=COMMANDS.TELEMETRY_COORDINATOR;
+	*(dataOUT+2)=type;
+	*(dataOUT+3)=on;
+	makeTRPacket(address64,address16,0x00,frameID,dataOUT,4);
+}
+void telemetryToCoordinatorStatusRequest(unsigned char *address64,unsigned char *address16,unsigned char type,unsigned char frameID){
+	*dataOUT='c';
+	*(dataOUT+1)=COMMANDS.TELEMETRY_COORDINATOR;
+	*(dataOUT+2)=GET_STATUS;
+	*(dataOUT+3)=type;
+	makeTRPacket(address64,address16,0x00,frameID,dataOUT,4);
+}
+void telemetryToCoordinatorReportRecieved(unsigned char *address64,unsigned char *address16,unsigned char type,unsigned char status){
+	printf("Type:%d = %d",type,status);
+}
+
 //GENERAL
 void dataTypeError(unsigned char *address64,unsigned char *address16,unsigned char *dataOUT){
 }

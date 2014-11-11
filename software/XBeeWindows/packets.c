@@ -72,6 +72,7 @@ void constInit(){
 	CONTROLLERS.BOTH=0x04;
 
     COMMANDS.TELEMETRY=0x01;
+    COMMANDS.TELEMETRY_COORDINATOR=0x02;
 	COMMANDS.LANDING=0x11;
 	COMMANDS.SET_SETPOINTS=0x12;
 	COMMANDS.CONTROLLERS=0x13;
@@ -145,6 +146,10 @@ void packetHandler(unsigned char *inPacket){
                     break;
                 //report
                 case 'r':
+                    //TELEMETRY TO COORDINATOR STATUS
+                    if(*(dataIN+2)==COMMANDS.TELEMETRY_COORDINATOR){
+                        telemetryToCoordinatorReportRecieved(address64,address16,*(dataIN+3),*(dataIN+4));
+                    } else
                      //LANDING STATUS
                     if(*(dataIN+2)==COMMANDS.LANDING){
                         kopterLandReportRecieved(address64,address16,*(dataIN+3));

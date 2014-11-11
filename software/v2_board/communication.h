@@ -31,6 +31,9 @@
 	extern volatile int16_t zPosGumstixNew;	
 	extern volatile int8_t validGumstix;
 	extern volatile int8_t gumstixDataFlag;	
+	
+	//Telemtery sending
+	extern unsigned char telemetryToCoordinatorArr[13];	
 
 void leadK1Altitude();
 void sendXBeePacket(unsigned char *packet);

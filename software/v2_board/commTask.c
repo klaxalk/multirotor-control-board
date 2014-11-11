@@ -18,8 +18,8 @@ void commTask(void *p) {
 	
 	while (1) {		
 		
-		//counting
-		if (counter++>10){
+		//cca 80Hz
+		if (counter++>500){
 			counter=0;
 			leadK1Altitude();
 		}

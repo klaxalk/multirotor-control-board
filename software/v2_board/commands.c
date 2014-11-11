@@ -119,6 +119,34 @@ void telemetryReceive(unsigned char *address64,unsigned char *address16,unsigned
 	}
 }
 
+void telemetryToCoordinatorRequest(unsigned char *address64,unsigned char *address16,unsigned char type,unsigned char on, unsigned char frameID){
+	*dataOUT='c';
+	*(dataOUT+1)=COMMANDS.TELEMETRY_COORDINATOR;
+	*(dataOUT+2)=type;
+	*(dataOUT+3)=on;
+	makeTRPacket(address64,address16,0x00,frameID,dataOUT,4);
+}
+void telemetryToCoordinator(unsigned char *address64,unsigned char *address16,unsigned char type,unsigned char on){
+	telemetryToCoordinatorArr[type]=on;
+}
+void telemetryToCoordinatorStatusRequest(unsigned char *address64,unsigned char *address16,unsigned char type,unsigned char frameID){
+	*dataOUT='c';
+	*(dataOUT+1)=COMMANDS.TELEMETRY_COORDINATOR;
+	*(dataOUT+2)=GET_STATUS;
+	*(dataOUT+3)=type;
+	makeTRPacket(address64,address16,0x00,frameID,dataOUT,4);
+}
+void telemetryToCoordinatorReport(unsigned char *address64,unsigned char *address16,unsigned char type,unsigned char frameID){
+	*dataOUT='r';
+	*(dataOUT+1)=COMMANDS.TELEMETRY_COORDINATOR;
+	*(dataOUT+2)=type;
+	*(dataOUT+3)=telemetryToCoordinatorArr[type];
+	makeTRPacket(address64,address16,0x00,frameID,dataOUT,4);
+}
+void telemetryToCoordinatorReportRecieved(unsigned char *address64,unsigned char *address16,unsigned char type,unsigned char status){
+	
+}
+
 //LANDING
 void kopterLandRequest(unsigned char *address64,unsigned char *address16,unsigned char options,unsigned char frameID){
 	*(dataOUT)='c';

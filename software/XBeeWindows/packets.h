@@ -68,13 +68,13 @@ typedef struct
 typedef struct
 {
     unsigned char TELEMETRY;
+	unsigned char TELEMETRY_COORDINATOR;
 	unsigned char LANDING;
 	unsigned char SET_SETPOINTS;
 	unsigned char CONTROLLERS;
 	unsigned char TRAJECTORY_FOLLOW;
 	unsigned char TRAJECTORY_POINTS;
 	unsigned char GUMSTIX;
-	unsigned char OPEN_LOG;
 }COMMANDST;
 
 
