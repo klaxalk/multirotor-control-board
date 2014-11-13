@@ -90,6 +90,11 @@ void constInit(){
 
 	
 	GET_STATUS=0x95;
+	
+	telemetryToCoordinatorArr[TELEMETRIES.GROUND_DISTANCE_ESTIMATED]=1;
+	telemetryToCoordinatorArr[TELEMETRIES.GROUND_DISTANCE]=1;
+	telemetryToCoordinatorArr[TELEMETRIES.THROTTLE_SETPOINT]=1;
+	telemetryToCoordinatorArr[TELEMETRIES.THROTTLE_SPEED]=1;
 }
 
 

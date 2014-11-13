@@ -5,6 +5,7 @@
 #include "communication.h"
 #include "system.h"
 #include "packets.h"
+#include "commands.h"
 
 //XBee values
 volatile unsigned char leadK1enabled=0;
@@ -38,10 +39,9 @@ volatile unsigned char gumstixParseCharCrc = 0;
 
 //setting K1 altitude setpoint 
 void leadK1Altitude(){
+	
 	if (leadK1enabled){
-		//TODO
-		//kopterSetpointsSetRequest(ADDRESS.K1,ADDRESS.UNKNOWN16,SETPOINTS.THROTTLE_SP,POSITIONS.ABSOLUT,estimatedThrottlePos,0x00);
-		//kopterSetpointsSetRequest(ADDRESS.K1,ADDRESS.UNKNOWN16,SETPOINTS.THROTTLE_SP,POSITIONS.ABSOLUT,throttleDesiredSetpoint,0x00);
+		kopterSetpointsSetRequest(ADDRESS.K1,ADDRESS.UNKNOWN16,SETPOINTS.THROTTLE_SP,POSITIONS.ABSOLUT,estimatedThrottlePos,0x00);
 	}
 }
 

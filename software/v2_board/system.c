@@ -69,6 +69,7 @@ void boardInit() {
 	ioport_set_pin_dir(YELLOW, IOPORT_DIR_OUTPUT);
 	ioport_set_pin_dir(OUT1, IOPORT_DIR_OUTPUT);
 	
+	
 	ioport_set_pin_level(RED, true);
 	ioport_set_pin_level(BLUE, true);
 	ioport_set_pin_level(ORANGE, true);

@@ -73,6 +73,9 @@ extern volatile unsigned char velocityControllerEnabled;
 extern volatile unsigned char positionControllerEnabled;
 
 //vars for estimators
+extern volatile float estimatedElevatorVel2;
+extern volatile float estimatedAileronVel2;
+
 extern volatile float estimatedElevatorPos;
 extern volatile float estimatedAileronPos;
 extern volatile float estimatedThrottlePos;

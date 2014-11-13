@@ -17,7 +17,10 @@ void commTask(void *p) {
 	unsigned char packet[60];	
 	int8_t i;
 	int16_t counter50Hz=0;
-	int16_t counter10Hz=0;
+	int16_t counter40Hz=0;
+	
+	//wait for XBee
+	vTaskDelay(1000);
 	
 	while (1) {		
 		
@@ -26,8 +29,9 @@ void commTask(void *p) {
 			leadK1Altitude();
 		}
 		
-		if (counter10Hz++>4000){
-			counter10Hz=0;
+		if (counter40Hz++>1000){
+			counter40Hz=0;
+			led_yellow_toggle();
 			telemetryToCoordinatorSend();
 		}		
 		
@@ -101,8 +105,8 @@ void commTask(void *p) {
 				elevatorSpeed = - opticalFlowData.flow_comp_m_x;
 				aileronSpeed  = + opticalFlowData.flow_comp_m_y;
 
-			if (opticalFlowData.ground_distance < ALTITUDE_MAXIMUM &&
-			opticalFlowData.ground_distance > 0.3) {
+			if (opticalFlowData.ground_distance < ALTITUDE_MAXIMUM 
+			&& opticalFlowData.ground_distance > 0.3 ) {
 				groundDistance = opticalFlowData.ground_distance;
 			}
 			px4Confidence = opticalFlowData.quality;

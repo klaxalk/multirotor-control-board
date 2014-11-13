@@ -22,8 +22,11 @@ volatile float estimatedElevatorPos = 0;
 volatile float estimatedAileronPos  = 0;
 volatile float estimatedThrottlePos = 0;
 
+
 volatile float estimatedElevatorVel = 0;
+volatile float estimatedElevatorVel2 = 0;
 volatile float estimatedAileronVel  = 0;
+volatile float estimatedAileronVel2 = 0;
 volatile float estimatedThrottleVel = 0;
 volatile float estimatedElevatorVel_Prev = 0;
 volatile float estimatedAileronVel_Prev  = 0;
@@ -237,7 +240,7 @@ void positionEstimator() {
 	static uint8_t gumstix_counter = 0;
 	uint8_t gumstix_delay = 7;
 
-	if(validGumstix == 1 && gumstixEnabled) {
+	if(validGumstix == 1 && gumstixEnabled==1) {
 		if(gumstix_counter < gumstix_delay) gumstix_counter++;
 	} else {
 		gumstix_counter = 0;
@@ -245,37 +248,39 @@ void positionEstimator() {
 
 	//elevator velocity
 	estimatedElevatorVel += (elevatorSpeed-estimatedElevatorVel) * (DT/PX4FLOW_FILTER_CONST);
+	estimatedElevatorVel2 += (estimatedElevatorVel-estimatedElevatorVel2)* (DT/(PX4FLOW_FILTER_CONST));
 	
 	//elevator acceleration
-	acc_new = (estimatedElevatorVel - estimatedElevatorVel_Prev) / DT;
-	estimatedElevatorVel_Prev = estimatedElevatorVel;
+	acc_new = (estimatedElevatorVel2 - estimatedElevatorVel_Prev) / DT;
+	estimatedElevatorVel_Prev = estimatedElevatorVel2;
 	estimatedElevatorAcc += (acc_new - estimatedElevatorAcc) * (DT/PX4FLOW_FILTER_CONST);
 
 	//elevator position
 	if(gumstix_counter == gumstix_delay) {
 		estimatedElevatorPos += (elevatorGumstix-estimatedElevatorPos) * (DT/GUMSTIX_FILTER_CONST);
 	}else{
-		estimatedElevatorPos += estimatedElevatorVel * DT;
+		estimatedElevatorPos += estimatedElevatorVel2 * DT;
 	}
 
 	//aileron velocity
 	estimatedAileronVel += (aileronSpeed-estimatedAileronVel) * (DT/PX4FLOW_FILTER_CONST);
+	estimatedAileronVel2 += (estimatedAileronVel-estimatedAileronVel2) * (DT/PX4FLOW_FILTER_CONST);
 	
 	//aileron acceleration
-	acc_new = (estimatedAileronVel - estimatedAileronVel_Prev) / DT;
-	estimatedAileronVel_Prev = estimatedAileronVel;
+	acc_new = (estimatedAileronVel2 - estimatedAileronVel_Prev) / DT;
+	estimatedAileronVel_Prev = estimatedAileronVel2;
 	estimatedAileronAcc += (acc_new - estimatedAileronAcc) * (DT/PX4FLOW_FILTER_CONST);
 
 	//aileron position
 	if(gumstix_counter == gumstix_delay) {
 		estimatedAileronPos += (aileronGumstix-estimatedAileronPos) * (DT/GUMSTIX_FILTER_CONST);
 	}else{
-        estimatedAileronPos += estimatedAileronVel * DT;
+        estimatedAileronPos += estimatedAileronVel2 * DT;
 	}
 	
 	//safety land
 	if (gumstix_counter == gumstix_delay && validGumstix == 1 && estimatedElevatorPos > -0.5){
-		enableLanding();
+		//enableLanding();
 	}
 }
 
@@ -289,7 +294,7 @@ void velocityController() {
 	KA = VELOCITY_KA;
 
 	//velocity controller
-	error = elevatorVelocitySetpoint - estimatedElevatorVel;
+	error = elevatorVelocitySetpoint - estimatedElevatorVel2;
 
 	elevatorVelocityIntegration += KI * error * DT;
 	if (elevatorVelocityIntegration > CONTROLLER_ELEVATOR_SATURATION/4) {elevatorVelocityIntegration = CONTROLLER_ELEVATOR_SATURATION/4;} else
@@ -301,7 +306,7 @@ void velocityController() {
 
 
 	//aileron controller
-	error = aileronVelocitySetpoint - estimatedAileronVel;	
+	error = aileronVelocitySetpoint - estimatedAileronVel2;	
 
 	aileronVelocityIntegration += KI * error * DT;
 	if (aileronVelocityIntegration > CONTROLLER_AILERON_SATURATION/4) {aileronVelocityIntegration = CONTROLLER_AILERON_SATURATION/4;} else 
@@ -336,7 +341,7 @@ void positionController() {
 	if (elevatorPositionIntegration > CONTROLLER_ELEVATOR_SATURATION/4) {elevatorPositionIntegration = CONTROLLER_ELEVATOR_SATURATION/4;} else 
 	if (elevatorPositionIntegration < -CONTROLLER_ELEVATOR_SATURATION/4) {elevatorPositionIntegration = -CONTROLLER_ELEVATOR_SATURATION/4;}
 
-	positionControllerElevatorOutput = KV * (vd - estimatedElevatorVel) + elevatorPositionIntegration - (KA * estimatedElevatorAcc);
+	positionControllerElevatorOutput = KV * (vd - estimatedElevatorVel2) + elevatorPositionIntegration - (KA * estimatedElevatorAcc);
 	if (positionControllerElevatorOutput > CONTROLLER_ELEVATOR_SATURATION) {positionControllerElevatorOutput = CONTROLLER_ELEVATOR_SATURATION;} else 
 	if (positionControllerElevatorOutput < -CONTROLLER_ELEVATOR_SATURATION) {positionControllerElevatorOutput = -CONTROLLER_ELEVATOR_SATURATION;}
 
@@ -351,7 +356,7 @@ void positionController() {
 	if (aileronPositionIntegration > CONTROLLER_AILERON_SATURATION/4) {aileronPositionIntegration = CONTROLLER_AILERON_SATURATION/4;} else 
 	if (aileronPositionIntegration < -CONTROLLER_AILERON_SATURATION/4) {aileronPositionIntegration = -CONTROLLER_AILERON_SATURATION/4;} 
 
-	positionControllerAileronOutput = KV * (vd - estimatedAileronVel) + aileronPositionIntegration - (KA * estimatedAileronAcc);
+	positionControllerAileronOutput = KV * (vd - estimatedAileronVel2) + aileronPositionIntegration - (KA * estimatedAileronAcc);
 	if (positionControllerAileronOutput > CONTROLLER_AILERON_SATURATION) {positionControllerAileronOutput = CONTROLLER_AILERON_SATURATION;} else 
 	if (positionControllerAileronOutput < -CONTROLLER_AILERON_SATURATION) {positionControllerAileronOutput = -CONTROLLER_AILERON_SATURATION;}
 

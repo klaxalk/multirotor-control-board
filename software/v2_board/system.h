@@ -22,6 +22,7 @@
 #define	YELLOW	IOPORT_CREATE_PIN(PORTB, 7)
 #define	OUT1	IOPORT_CREATE_PIN(PORTD, 5)
 
+
 /* -------------------------------------------------------------------- */
 /*	LED macros															*/
 /* -------------------------------------------------------------------- */
@@ -40,6 +41,7 @@
 #define led_yellow_on()		ioport_set_pin_level(YELLOW, false)
 #define led_yellow_off()	ioport_set_pin_level(YELLOW, true)
 #define led_yellow_toggle()	ioport_toggle_pin_level(YELLOW)
+
 
 /* -------------------------------------------------------------------- */
 /*	PPM output macro													*/

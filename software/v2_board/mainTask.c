@@ -68,7 +68,8 @@ void mainTask(void *p) {
 
 
 		//gumstix enable
-		if(RCchannel[AUX1]<PPM_IN_MIDDLE_LENGTH){
+		enableGumstix();
+		/*if(RCchannel[AUX1]<PPM_IN_MIDDLE_LENGTH){
 			if(previous_AUX1!=0){
 				disableGumstix();
 				previous_AUX1=0;
@@ -78,7 +79,7 @@ void mainTask(void *p) {
 				enableGumstix();
 				previous_AUX1=1;
 			}
-		}
+		}*/
 	
 		//leading enable
 		if(RCchannel[AUX5]<PPM_IN_MIDDLE_LENGTH){
