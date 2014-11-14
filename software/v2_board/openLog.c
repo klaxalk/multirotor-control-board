@@ -65,7 +65,7 @@ void startLogging(char * newFileName){
 	else strcpy (fileName,newFileName);
 	strcpy (fileName,strupr(fileName));
 	char str[64];
-	sprintf(str, "\rappend %s\rS:\n",fileName);
+	sprintf(str, "\rappend %s\rStart logging:\n",fileName);
 	usartBufferPutString(usart_buffer_log,str,0);
 }
 

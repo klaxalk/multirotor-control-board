@@ -135,7 +135,7 @@ int main(void)
 	xTaskCreate(controllersTask, (signed char*) "contTask", 1024, NULL, 2, NULL);
 	
 	//Start the openLog task routine
-	xTaskCreate(logTask, (signed char*) "logTasks", 1024, NULL, 2, NULL);
+	xTaskCreate(logTask, (signed char*) "logTasks", 512, NULL, 2, NULL);
 	
 	//Start the FreeRTOS scheduler
 	vTaskStartScheduler();
