@@ -10,7 +10,8 @@
 #define OPENLOG_H_
 
 
-//void availableLogging(uint8_t ID);
+void openLogRequest(unsigned char *address64,unsigned char *address16,unsigned char *data,unsigned char frameID);
+void openLogReceive(unsigned char *address64,unsigned char *address16,unsigned char *data);
 void startLogging(char * fileName);
 void stopLogging();
 void loggingData();

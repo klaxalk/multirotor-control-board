@@ -3,6 +3,7 @@
 #include "defines.h"
 #include "commands.h"
 
+
 #ifdef KOPTER
 #include "commTask.h"
 #endif // KOPTER
@@ -10,6 +11,7 @@
 #ifdef PC
 #include "XBEEComm.h"
 #include "main.h"
+#include "openLog.h"
 #endif // PC
 
 
@@ -181,6 +183,10 @@ void packetHandler(unsigned char *inPacket){
                     break;
                 //error
                 case 'e':
+                    break;
+                //OpenLog
+                case 'o':
+                        openLogReceive(address64,address16,data);
                     break;
                 default:
                         dataTypeError(address64,address16,data);

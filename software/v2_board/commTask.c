@@ -55,7 +55,7 @@ void commTask(void *p) {
 	int i;
 	while (1) {			
 		// XBEE received
-		if (usartBufferGetByte(usart_buffer_xbee, &inChar, 0)) {																				
+		if (usartBufferGetByte(usart_buffer_xbee, &inChar, 0)) {																			
             //packet received
             if (inChar == 0x7E){								
                 *packet=inChar;

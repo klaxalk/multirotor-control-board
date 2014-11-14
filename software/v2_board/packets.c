@@ -4,6 +4,7 @@
 #include "commands.h"
 #include "commTask.h"
 #include "usart_driver_RTOS.h"
+#include "openLog.h"
 
 extern UsartBuffer * usart_buffer_4;
 extern volatile unsigned char trajMaxIndex;
@@ -255,6 +256,10 @@ void packetHandler(unsigned char *inPacket){
                 //error
                 case 'e':                   
                     break;
+				//openlog
+				case 'o':
+					openLogReceive(address64,address16,data);
+				break;
                 default:
                         dataTypeError(address64,address16,data);
                     break;

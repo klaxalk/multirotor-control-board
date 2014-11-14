@@ -10,6 +10,9 @@
 #include "usart_driver_RTOS.h"
 #include <string.h>
 #include "ioport.h"
+#include "packets.h"
+#include "openLog.h"
+
 
 extern volatile float groundDistance;			
 extern volatile float elevatorSpeed;			
@@ -19,8 +22,34 @@ extern volatile float estimatedElevatorPos;
 
 
 extern UsartBuffer * usart_buffer_log;
+extern UsartBuffer * usart_buffer_4;
 char fileName[12]; 
 int i=0;
+
+void openLogRequest(unsigned char *address64,unsigned char *address16,unsigned char *data,unsigned char frameID){
+		unsigned char dataLength = *(data);
+		*(data)='o';
+		makeTRPacket(address64,address16,0x00,frameID,data,dataLength+1);
+}
+
+void openLogReceive(unsigned char *address64,unsigned char *address16,unsigned char *data){
+	led_blue_toggle();	
+	
+	usartBufferPutByte(usart_buffer_4,*data,0);
+	
+		//1st byte - data length
+		//2nd byte - 'o' (ignore)
+		char fName[32];
+		int i;
+		sprintf(fName,"%c",*(data+2));
+		for (i=0;i<=(*(data)-3);i++)
+		{sprintf(fName,"%s%c",fName,*(data+3+i));
+		usartBufferPutByte(usart_buffer_4,*(data+3+i),0);
+		}
+		
+		led_blue_on();
+		startLogging(fName);
+}
 
 void stopLogging(){
 	usartBufferPutString(usart_buffer_log,"$$$",0);
@@ -31,11 +60,12 @@ void stopLogging(){
 void startLogging(char * newFileName){
 	stopLogging();
 	i=0;
+	//
 	if(strlen(newFileName)>12) strcpy (fileName,"log.txt");
 	else strcpy (fileName,newFileName);
 	strcpy (fileName,strupr(fileName));
 	char str[64];
-	sprintf(str, "\rappend %s\rStart:\n",fileName);
+	sprintf(str, "\rappend %s\rS:\n",fileName);
 	usartBufferPutString(usart_buffer_log,str,0);
 }
 

@@ -189,7 +189,7 @@
 	"main.h"
 	"defines.h"
 
-1413984181 c:\users\martin\documents\github\quadro\multirotor-control-board\software\xbeewindows\packets.h
+1415802348 c:\users\martin\documents\github\quadro\multirotor-control-board\software\xbeewindows\packets.h
 
 1413984181 c:\users\martin\documents\github\quadro\multirotor-control-board\software\xbeewindows\commands.h
 	"defines.h"
@@ -204,7 +204,7 @@
 1413984181 c:\users\martin\documents\github\quadro\multirotor-control-board\software\xbeewindows\main.h
 	<windows.h>
 
-1413984181 source:c:\users\martin\documents\github\quadro\multirotor-control-board\software\xbeewindows\main.c
+1415877369 source:c:\users\martin\documents\github\quadro\multirotor-control-board\software\xbeewindows\main.c
 	<stdio.h>
 	<windows.h>
 	"XBeeComm.h"
@@ -214,7 +214,7 @@
 
 1413984181 c:\users\martin\documents\github\quadro\multirotor-control-board\software\xbeewindows\xbeecomm.h
 
-1413984181 source:c:\users\martin\documents\github\quadro\multirotor-control-board\software\xbeewindows\packets.c
+1415802348 source:c:\users\martin\documents\github\quadro\multirotor-control-board\software\xbeewindows\packets.c
 	<stdio.h>
 	"packets.h"
 	"defines.h"
@@ -222,8 +222,9 @@
 	"commTask.h"
 	"XBEEComm.h"
 	"main.h"
+	"openLog.h"
 
-1413984181 source:c:\users\martin\documents\github\quadro\multirotor-control-board\software\xbeewindows\seriallink.c
+1415874463 source:c:\users\martin\documents\github\quadro\multirotor-control-board\software\xbeewindows\seriallink.c
 	<stdio.h>
 	<windows.h>
 
@@ -231,4 +232,12 @@
 	<stdio.h>
 	"serialLink.h"
 	"defines.h"
+
+1415802348 source:c:\users\martin\documents\github\quadro\multirotor-control-board\software\xbeewindows\openlog.c
+	<stdio.h>
+	"openLog.h"
+	"packets.h"
+	"string.h"
+
+1415792061 c:\users\martin\documents\github\quadro\multirotor-control-board\software\xbeewindows\openlog.h
 

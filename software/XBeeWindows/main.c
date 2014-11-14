@@ -10,7 +10,10 @@ HANDLE matlabH;
 void main()
 {
     int decison;
+    int length;
     float f;
+    char fileName[64];
+    char data[64];
 
     constInit();
 
@@ -20,7 +23,7 @@ void main()
     #endif // MATLAB
 
     do{
-       printf("\n0 - EXIT\n1 - TELEMETRY\n2 - LANDING\n3 - SETPOINTS\n4 - GESTURES\n5 - CONTROLLERS\n6 - TRAJECTORY\n\n");
+       printf("\n0 - EXIT\n1 - TELEMETRY\n2 - LANDING\n3 - SETPOINTS\n4 - GESTURES\n5 - CONTROLLERS\n6 - TRAJECTORY\n7 - OPEN LOG\n");
        printf("DECISION:");
        scanf("%d",&decison);
        switch(decison){
@@ -257,6 +260,16 @@ void main()
                         break;
              }
              break;
+            case 7:
+            printf("FILE NAME OF LOGGING\n");
+            printf("ENTER FILE NAME:");
+            scanf("%s",&fileName);
+            length=strlen(fileName);
+            sprintf(data,"%d%s",0,fileName);
+            *data=(unsigned char) length;
+             openLogRequest(ADDRESS.K1,ADDRESS.UNKNOWN16,data,0);
+            printf("%s\n",data);
+            break;
         default:
                 printf("WRONG NUMBER\n");
             break;
