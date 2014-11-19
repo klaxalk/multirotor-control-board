@@ -172,8 +172,6 @@ void disablePositionController() {
 	positionControllerEnabled = 0;
 }
 
-
-
 void trajectorySetpoints(){
 	float dValue;
 	static float aileronIncrement;
@@ -216,11 +214,11 @@ void setpointsFilter(float throttleDSP,float aileronPosDSP,float elevatorPosDSP,
 	if(throttleDSP<THROTTLE_SP_LOW){throttleDSP=THROTTLE_SP_LOW;}
 	if(throttleDSP>THROTTLE_SP_HIGH){throttleDSP=THROTTLE_SP_HIGH;}
 		
-	if(elevatorDesiredVelocitySetpoint<-SPEED_MAX){elevatorDesiredVelocitySetpoint=-SPEED_MAX;}
-	if(elevatorDesiredVelocitySetpoint>SPEED_MAX){elevatorDesiredVelocitySetpoint=SPEED_MAX;}
+	if(elevatorVelDSP<-SPEED_MAX){elevatorVelDSP=-SPEED_MAX;}
+	if(elevatorVelDSP>SPEED_MAX){elevatorVelDSP=SPEED_MAX;}
 		
-	if(aileronDesiredVelocitySetpoint<-SPEED_MAX){aileronDesiredVelocitySetpoint=-SPEED_MAX;}
-	if(aileronDesiredVelocitySetpoint>SPEED_MAX){aileronDesiredVelocitySetpoint=SPEED_MAX;}
+	if(aileronVelDSP<-SPEED_MAX){aileronVelDSP=-SPEED_MAX;}
+	if(aileronVelDSP>SPEED_MAX){aileronVelDSP=SPEED_MAX;}
 			
 	//filter	
 	elevatorPositionSetpoint += (elevatorPosDSP-elevatorPositionSetpoint) * (DT/SETPOINT_FILTER_CONST);
@@ -248,7 +246,7 @@ void positionEstimator() {
 
 	//elevator velocity
 	estimatedElevatorVel += (elevatorSpeed-estimatedElevatorVel) * (DT/PX4FLOW_FILTER_CONST);
-	estimatedElevatorVel2 += (estimatedElevatorVel-estimatedElevatorVel2)* (DT/(PX4FLOW_FILTER_CONST));
+	estimatedElevatorVel2 += (estimatedElevatorVel-estimatedElevatorVel2)* (DT/(PX4FLOW_FILTER_CONST+0.02));
 	
 	//elevator acceleration
 	acc_new = (estimatedElevatorVel2 - estimatedElevatorVel_Prev) / DT;
@@ -259,12 +257,12 @@ void positionEstimator() {
 	if(gumstix_counter == gumstix_delay) {
 		estimatedElevatorPos += (elevatorGumstix-estimatedElevatorPos) * (DT/GUMSTIX_FILTER_CONST);
 	}else{
-		estimatedElevatorPos += estimatedElevatorVel2 * DT;
+		estimatedElevatorPos += estimatedElevatorVel * DT;
 	}
 
 	//aileron velocity
 	estimatedAileronVel += (aileronSpeed-estimatedAileronVel) * (DT/PX4FLOW_FILTER_CONST);
-	estimatedAileronVel2 += (estimatedAileronVel-estimatedAileronVel2) * (DT/PX4FLOW_FILTER_CONST);
+	estimatedAileronVel2 += (estimatedAileronVel-estimatedAileronVel2) * (DT/PX4FLOW_FILTER_CONST+0.02);
 	
 	//aileron acceleration
 	acc_new = (estimatedAileronVel2 - estimatedAileronVel_Prev) / DT;
@@ -275,12 +273,7 @@ void positionEstimator() {
 	if(gumstix_counter == gumstix_delay) {
 		estimatedAileronPos += (aileronGumstix-estimatedAileronPos) * (DT/GUMSTIX_FILTER_CONST);
 	}else{
-        estimatedAileronPos += estimatedAileronVel2 * DT;
-	}
-	
-	//safety land
-	if (gumstix_counter == gumstix_delay && validGumstix == 1 && estimatedElevatorPos > -0.5){
-		//enableLanding();
+        estimatedAileronPos += estimatedAileronVel * DT;
 	}
 }
 
@@ -338,8 +331,8 @@ void positionController() {
 	if(vd < -SPEED_MAX) vd = -SPEED_MAX;
 
 	elevatorPositionIntegration += KI * error * DT;
-	if (elevatorPositionIntegration > CONTROLLER_ELEVATOR_SATURATION/4) {elevatorPositionIntegration = CONTROLLER_ELEVATOR_SATURATION/4;} else 
-	if (elevatorPositionIntegration < -CONTROLLER_ELEVATOR_SATURATION/4) {elevatorPositionIntegration = -CONTROLLER_ELEVATOR_SATURATION/4;}
+	if (elevatorPositionIntegration > CONTROLLER_ELEVATOR_SATURATION/2) {elevatorPositionIntegration = CONTROLLER_ELEVATOR_SATURATION/2;} else 
+	if (elevatorPositionIntegration < -CONTROLLER_ELEVATOR_SATURATION/2) {elevatorPositionIntegration = -CONTROLLER_ELEVATOR_SATURATION/2;}
 
 	positionControllerElevatorOutput = KV * (vd - estimatedElevatorVel2) + elevatorPositionIntegration - (KA * estimatedElevatorAcc);
 	if (positionControllerElevatorOutput > CONTROLLER_ELEVATOR_SATURATION) {positionControllerElevatorOutput = CONTROLLER_ELEVATOR_SATURATION;} else 

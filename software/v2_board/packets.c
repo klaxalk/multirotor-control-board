@@ -91,10 +91,11 @@ void constInit(){
 	
 	GET_STATUS=0x95;
 	
-	telemetryToCoordinatorArr[TELEMETRIES.GROUND_DISTANCE_ESTIMATED]=1;
-	telemetryToCoordinatorArr[TELEMETRIES.GROUND_DISTANCE]=1;
-	telemetryToCoordinatorArr[TELEMETRIES.THROTTLE_SETPOINT]=1;
-	telemetryToCoordinatorArr[TELEMETRIES.THROTTLE_SPEED]=1;
+	telemetryToCoordinatorArr[TELEMETRIES.ELEVATOR_SPEED_ESTIMATED]=1;
+	telemetryToCoordinatorArr[TELEMETRIES.ELEVATOR_SPEED]=1;
+	telemetryToCoordinatorArr[TELEMETRIES.ELEVATOR_VEL_SETPOINT]=1;
+	telemetryToCoordinatorArr[TELEMETRIES.ELEVATOR_VEL_CONTROLLER_OUTPUT]=1;
+	telemetryToCoordinatorArr[TELEMETRIES.AILERON_SPEED]=1;
 }
 
 

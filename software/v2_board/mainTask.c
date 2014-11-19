@@ -2,6 +2,7 @@
 #include "controllers.h"
 #include "communication.h"
 #include "system.h"
+#include "packets.h"
 #include <stdio.h> // sprintf
 #include <stdlib.h> // abs
 
@@ -61,15 +62,17 @@ void mainTask(void *p) {
 
 		//velocity null setpoints
 		if(RCchannel[AUX2]<(PPM_IN_MIDDLE_LENGTH)){
+			aileronDesiredVelocitySetpoint = 0;
+			elevatorDesiredVelocitySetpoint = 0;
 		}else{
-			aileronDesiredVelocitySetpoint = DEFAULT_AILERON_VELOCITY_SETPOINT;			
-			elevatorDesiredVelocitySetpoint = DEFAULT_ELEVATOR_VELOCITY_SETPOINT;		
+			//aileronDesiredVelocitySetpoint = DEFAULT_AILERON_VELOCITY_SETPOINT;			
+			//elevatorDesiredVelocitySetpoint = DEFAULT_ELEVATOR_VELOCITY_SETPOINT;	
+			elevatorDesiredVelocitySetpoint = 0.3;	
 		}
 
 
 		//gumstix enable
-		enableGumstix();
-		/*if(RCchannel[AUX1]<PPM_IN_MIDDLE_LENGTH){
+		if(RCchannel[AUX1]<PPM_IN_MIDDLE_LENGTH){
 			if(previous_AUX1!=0){
 				disableGumstix();
 				previous_AUX1=0;
@@ -79,17 +82,17 @@ void mainTask(void *p) {
 				enableGumstix();
 				previous_AUX1=1;
 			}
-		}*/
+		}
 	
 		//leading enable
 		if(RCchannel[AUX5]<PPM_IN_MIDDLE_LENGTH){
 			if(previous_AUX5!=0){
-				leadK1enabled=0;
+				//leadKopter=ADDRESS.COORDINATOR;
 				previous_AUX5=0;
 			}
 		}else{
 			if(previous_AUX5!=1){
-				leadK1enabled=1;
+				//leadKopter=ADDRESS.K1;
 				previous_AUX5=1;
 			}
 		}

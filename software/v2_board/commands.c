@@ -136,9 +136,11 @@ void telemetryToCoordinatorSend(){
 			}else if(type==TELEMETRIES.GROUND_DISTANCE){
 				f=groundDistance;				
 			}else if(type==TELEMETRIES.ELEVATOR_SPEED){
-				f=elevatorSpeed;
+				//f=elevatorSpeed;
+				f=estimatedElevatorVel2;
 			}else if(type==TELEMETRIES.AILERON_SPEED){
-				f=aileronSpeed;
+				//f=aileronSpeed;
+				f=estimatedElevatorAcc;
 			}else if(type==TELEMETRIES.ELEVATOR_SPEED_ESTIMATED){
 				f=estimatedElevatorVel;
 			}else if(type==TELEMETRIES.AILERON_SPEED_ESTIMATED){
@@ -166,7 +168,7 @@ void telemetryToCoordinatorSend(){
 			}else if(type==TELEMETRIES.AILERON_POS_SETPOINT){
 				f=aileronPositionSetpoint;
 			}else if(type==TELEMETRIES.ELEVATOR_VEL_SETPOINT){
-				f=elevatorVelocitySetpoint;
+				f=elevatorVelocitySetpoint;				
 			}else if(type==TELEMETRIES.AILERON_VEL_SETPOINT){
 				f=aileronVelocitySetpoint;
 			}

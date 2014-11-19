@@ -8,7 +8,7 @@
 #include "commands.h"
 
 //XBee values
-volatile unsigned char leadK1enabled=0;
+volatile unsigned char leadKopter[8]={0x00};
 
 //px4flow values
 volatile float groundDistance = 0;
@@ -37,11 +37,22 @@ volatile int8_t gumstixDataFlag = 0;
 volatile unsigned char gumstixParseCharCrc = 0;
 
 
-//setting K1 altitude setpoint 
-void leadK1Altitude(){
-	
-	if (leadK1enabled){
-		kopterSetpointsSetRequest(ADDRESS.K1,ADDRESS.UNKNOWN16,SETPOINTS.THROTTLE_SP,POSITIONS.ABSOLUT,estimatedThrottlePos,0x00);
+//setting leading setpoints 
+void leadAltitude(){
+	if (leadKopter!=ADDRESS.COORDINATOR){
+		kopterSetpointsSetRequest(leadKopter,ADDRESS.UNKNOWN16,SETPOINTS.THROTTLE_SP,POSITIONS.ABSOLUT,estimatedThrottlePos,0x00);
+	}
+}
+
+void leadEleveatorVel(){
+	if (leadKopter!=ADDRESS.COORDINATOR){
+		kopterSetpointsSetRequest(leadKopter,ADDRESS.UNKNOWN16,SETPOINTS.ELEVATOR_VELOCITY,POSITIONS.ABSOLUT,estimatedElevatorVel2,0x00);
+	}
+}
+
+void leadAileronVel(){
+	if (leadKopter!=ADDRESS.COORDINATOR){
+		kopterSetpointsSetRequest(leadKopter,ADDRESS.UNKNOWN16,SETPOINTS.AILERON_VELOCITY,POSITIONS.ABSOLUT,estimatedAileronVel2,0x00);
 	}
 }
 

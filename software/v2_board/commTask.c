@@ -26,7 +26,7 @@ void commTask(void *p) {
 		
 		if (counter50Hz++>800){
 			counter50Hz=0;
-			leadK1Altitude();
+			leadAltitude();
 		}
 		
 		if (counter40Hz++>1000){
