@@ -15,10 +15,14 @@
 
 
 extern volatile float groundDistance;			
-extern volatile float elevatorSpeed;			
-extern volatile float aileronSpeed;
+extern volatile float estimatedAileronVel;			
+extern volatile float estimatedElevatorVel;
 extern volatile float estimatedAileronPos;
 extern volatile float estimatedElevatorPos;
+extern volatile float aileronSpeed;
+extern volatile float elevatorSpeed;
+extern volatile float opticalFlowData;
+extern volatile uint16_t outputChannels[6];
 
 
 extern UsartBuffer * usart_buffer_log;
@@ -33,7 +37,6 @@ void openLogRequest(unsigned char *address64,unsigned char *address16,unsigned c
 }
 
 void openLogReceive(unsigned char *address64,unsigned char *address16,unsigned char *data){
-	led_blue_toggle();	
 	
 	usartBufferPutByte(usart_buffer_4,*data,0);
 	
@@ -47,7 +50,6 @@ void openLogReceive(unsigned char *address64,unsigned char *address16,unsigned c
 		usartBufferPutByte(usart_buffer_4,*(data+3+i),0);
 		}
 		
-		led_blue_on();
 		startLogging(fName);
 }
 
@@ -72,7 +74,7 @@ void startLogging(char * newFileName){
 void loggingData(){
 	i++;
 	char str[128];
-	sprintf(str, "%d,%f,%f,%f,%f,%f\n", i,groundDistance,elevatorSpeed,aileronSpeed,estimatedAileronPos,estimatedElevatorPos);
+	sprintf(str, "%d,%f,%f,%f,%d,%d,%d,%d\n", i,groundDistance,elevatorSpeed,aileronSpeed,outputChannels[0],outputChannels[1],outputChannels[2],outputChannels[3]);
 	usartBufferPutString(usart_buffer_log,str,0);
 	}
 	

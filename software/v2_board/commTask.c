@@ -90,6 +90,10 @@ void commTask(void *p) {
 				elevatorSpeed = - opticalFlowData.flow_comp_m_x;
 				aileronSpeed  = + opticalFlowData.flow_comp_m_y;
 			#endif
+		
+			
+			
+			
 
 			//Ground distance saturation
 			if (opticalFlowData.ground_distance < ALTITUDE_MAXIMUM &&
