@@ -206,8 +206,14 @@ void kopterLandRequest(unsigned char *address64,unsigned char *address16,unsigne
 }
 void kopterLand(unsigned char *address64,unsigned char *address16,unsigned char on){
 	if(on){
+		#if (COOR_REPORTS==ENABLE)
+		sendXBeeMessage(ADDRESS.COORDINATOR,ADDRESS.UNKNOWN16,"XBEE LANDING ON",0x00);
+		#endif
 		enableLanding();
 	}else{
+		#if (COOR_REPORTS==ENABLE)
+		sendXBeeMessage(ADDRESS.COORDINATOR,ADDRESS.UNKNOWN16,"XBEE LANDING OFF",0x00);
+		#endif		
 		disableLanding();
 	}
 }
@@ -245,7 +251,17 @@ void kopterTrajectoryRequest(unsigned char *address64,unsigned char *address16,u
 	makeTRPacket(address64,address16,0x00,frameID,dataOUT,3);
 }
 void kopterTrajectory(unsigned char *address64,unsigned char *address16,unsigned char on){
-	trajectoryEnabled=on;
+	if(on==1){
+		#if (COOR_REPORTS==ENABLE)
+		sendXBeeMessage(ADDRESS.COORDINATOR,ADDRESS.UNKNOWN16,"XBEE TRAJ FOLLOW ON",0x00);
+		#endif		
+		enableTrajectoryFollow();
+	}else if(on==0){
+		#if (COOR_REPORTS==ENABLE)
+		sendXBeeMessage(ADDRESS.COORDINATOR,ADDRESS.UNKNOWN16,"XBEE TRAJ FOLLOW OFF",0x00);
+		#endif		
+		disableTrajectoryFollow();
+	}
 }
 void kopterTrajectoryStatusRequest(unsigned char *address64,unsigned char *address16,unsigned char frameID){
 	*dataOUT='c';
@@ -451,15 +467,27 @@ void kopterControllersRequest(unsigned char *address64,unsigned char *address16,
 }
 void kopterControllers(unsigned char *address64,unsigned char *address16,unsigned char option){	
 		if(		 option==CONTROLLERS.OFF){
+			#if (COOR_REPORTS==ENABLE)
+			sendXBeeMessage(ADDRESS.COORDINATOR,ADDRESS.UNKNOWN16,"XBEE OFF CONT",0x00);
+			#endif
 			disablePositionController();
 			disableVelocityController();			
 		}else if(option==CONTROLLERS.POSITION){
+			#if (COOR_REPORTS==ENABLE)
+			sendXBeeMessage(ADDRESS.COORDINATOR,ADDRESS.UNKNOWN16,"XBEE POS CONT",0x00);
+			#endif			
 			enablePositionController();					
 			disableVelocityController();	 
 		}else if(option==CONTROLLERS.VELOCITY){
+			#if (COOR_REPORTS==ENABLE)
+			sendXBeeMessage(ADDRESS.COORDINATOR,ADDRESS.UNKNOWN16,"XBEE VEL CONT",0x00);
+			#endif			
 			enableVelocityController();			
 			disablePositionController();
 		}else if(option==CONTROLLERS.BOTH){
+			#if (COOR_REPORTS==ENABLE)
+			sendXBeeMessage(ADDRESS.COORDINATOR,ADDRESS.UNKNOWN16,"XBEE BOTH CONT",0x00);
+			#endif			
 			enableVelocityController();
 			enablePositionController();
 		}
@@ -505,8 +533,14 @@ void kopterGumstixRequest(unsigned char *address64,unsigned char *address16,unsi
 }
 void kopterGumstix(unsigned char *address64,unsigned char *address16,unsigned char on){
 	if(on){
+		#if (COOR_REPORTS==ENABLE)
+		sendXBeeMessage(ADDRESS.COORDINATOR,ADDRESS.UNKNOWN16,"XBEE GUMSTIX ON",0x00);
+		#endif	
 		enableGumstix();	
 	}else{
+		#if (COOR_REPORTS==ENABLE)
+		sendXBeeMessage(ADDRESS.COORDINATOR,ADDRESS.UNKNOWN16,"XBEE GUMSTIX OFF",0x00);
+		#endif		
 		disableGumstix();
 	}
 }
