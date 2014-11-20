@@ -49,6 +49,11 @@ volatile float throttleDesiredSetpoint = DEFAULT_THROTTLE_SETPOINT;
 volatile float elevatorDesiredVelocitySetpoint = DEFAULT_ELEVATOR_VELOCITY_SETPOINT;
 volatile float aileronDesiredVelocitySetpoint  = DEFAULT_AILERON_VELOCITY_SETPOINT;
 
+volatile float elevatorDesiredVelocityPositionController = 0.0;
+volatile float aileronDesiredVelocityPositionController = 0.0;
+volatile float elevatorDesiredVelocityPositionControllerLeader = 0.0;
+volatile float aileronDesiredVelocityPositionControllerLeader = 0.0;
+
 
 //auto-landing variables
 volatile unsigned char landingRequest = 0;
@@ -342,8 +347,8 @@ void velocityController() {
 	error = elevatorVelocitySetpoint - estimatedElevatorVel2;
 
 	elevatorVelocityIntegration += KI * error * DT;
-	if (elevatorVelocityIntegration > CONTROLLER_ELEVATOR_SATURATION/4) {elevatorVelocityIntegration = CONTROLLER_ELEVATOR_SATURATION/4;} else
-	if (elevatorVelocityIntegration < -CONTROLLER_ELEVATOR_SATURATION/4) {elevatorVelocityIntegration = -CONTROLLER_ELEVATOR_SATURATION/4;}
+	if (elevatorVelocityIntegration > CONTROLLER_ELEVATOR_SATURATION/3) {elevatorVelocityIntegration = CONTROLLER_ELEVATOR_SATURATION/3;} else
+	if (elevatorVelocityIntegration < -CONTROLLER_ELEVATOR_SATURATION/3) {elevatorVelocityIntegration = -CONTROLLER_ELEVATOR_SATURATION/3;}
 
 	velocityControllerElevatorOutput = (KV * error) + elevatorPositionIntegration - (KA * estimatedElevatorAcc);
 	if (velocityControllerElevatorOutput > CONTROLLER_ELEVATOR_SATURATION) {velocityControllerElevatorOutput = CONTROLLER_ELEVATOR_SATURATION;} else 
@@ -354,8 +359,8 @@ void velocityController() {
 	error = aileronVelocitySetpoint - estimatedAileronVel2;	
 
 	aileronVelocityIntegration += KI * error * DT;
-	if (aileronVelocityIntegration > CONTROLLER_AILERON_SATURATION/4) {aileronVelocityIntegration = CONTROLLER_AILERON_SATURATION/4;} else 
-	if (aileronVelocityIntegration < -CONTROLLER_AILERON_SATURATION/4) {aileronVelocityIntegration = -CONTROLLER_AILERON_SATURATION/4;}
+	if (aileronVelocityIntegration > CONTROLLER_AILERON_SATURATION/3) {aileronVelocityIntegration = CONTROLLER_AILERON_SATURATION/3;} else 
+	if (aileronVelocityIntegration < -CONTROLLER_AILERON_SATURATION/3) {aileronVelocityIntegration = -CONTROLLER_AILERON_SATURATION/3;}
 
 	velocityControllerAileronOutput = (KV * error) + aileronPositionIntegration - (KA * estimatedAileronAcc);
 	if (velocityControllerAileronOutput > CONTROLLER_AILERON_SATURATION) {velocityControllerAileronOutput = CONTROLLER_AILERON_SATURATION;} else 
@@ -364,7 +369,6 @@ void velocityController() {
 
 void positionController() {
 	float error;
-	float vd; //desired velocity
 
 	float KX, KI, KP, KV, KA;
 
@@ -378,30 +382,30 @@ void positionController() {
 
 	//elevator controller
 	error = elevatorPositionSetpoint - estimatedElevatorPos;
-	vd = KX * error;
-	if(vd > +SPEED_MAX) vd = +SPEED_MAX;
-	if(vd < -SPEED_MAX) vd = -SPEED_MAX;
+	elevatorDesiredVelocityPositionController = KX * error + elevatorDesiredVelocityPositionControllerLeader;
+	if(elevatorDesiredVelocityPositionController > +SPEED_MAX) elevatorDesiredVelocityPositionController = +SPEED_MAX;
+	if(elevatorDesiredVelocityPositionController < -SPEED_MAX) elevatorDesiredVelocityPositionController = -SPEED_MAX;
 
 	elevatorPositionIntegration += KI * error * DT;
-	if (elevatorPositionIntegration > CONTROLLER_ELEVATOR_SATURATION/2) {elevatorPositionIntegration = CONTROLLER_ELEVATOR_SATURATION/2;} else 
-	if (elevatorPositionIntegration < -CONTROLLER_ELEVATOR_SATURATION/2) {elevatorPositionIntegration = -CONTROLLER_ELEVATOR_SATURATION/2;}
+	if (elevatorPositionIntegration > CONTROLLER_ELEVATOR_SATURATION/2) {elevatorPositionIntegration = CONTROLLER_ELEVATOR_SATURATION/4;} else 
+	if (elevatorPositionIntegration < -CONTROLLER_ELEVATOR_SATURATION/2) {elevatorPositionIntegration = -CONTROLLER_ELEVATOR_SATURATION/4;}
 
-	positionControllerElevatorOutput = KV * (vd - estimatedElevatorVel2) + elevatorPositionIntegration - (KA * estimatedElevatorAcc);
+	positionControllerElevatorOutput = KV * (elevatorDesiredVelocityPositionController - estimatedElevatorVel2) + elevatorPositionIntegration - (KA * estimatedElevatorAcc);
 	if (positionControllerElevatorOutput > CONTROLLER_ELEVATOR_SATURATION) {positionControllerElevatorOutput = CONTROLLER_ELEVATOR_SATURATION;} else 
 	if (positionControllerElevatorOutput < -CONTROLLER_ELEVATOR_SATURATION) {positionControllerElevatorOutput = -CONTROLLER_ELEVATOR_SATURATION;}
 
 
 	//aileron controller
 	error = aileronPositionSetpoint - estimatedAileronPos;
-	vd = KX * error;
-	if(vd > +SPEED_MAX) vd = +SPEED_MAX;
-	if(vd < -SPEED_MAX) vd = -SPEED_MAX;
+	aileronDesiredVelocityPositionController = KX * error + aileronDesiredVelocityPositionControllerLeader;
+	if(aileronDesiredVelocityPositionController > +SPEED_MAX) aileronDesiredVelocityPositionController = +SPEED_MAX;
+	if(aileronDesiredVelocityPositionController < -SPEED_MAX) aileronDesiredVelocityPositionController = -SPEED_MAX;
 
 	aileronPositionIntegration += KI * error * DT;
 	if (aileronPositionIntegration > CONTROLLER_AILERON_SATURATION/4) {aileronPositionIntegration = CONTROLLER_AILERON_SATURATION/4;} else 
 	if (aileronPositionIntegration < -CONTROLLER_AILERON_SATURATION/4) {aileronPositionIntegration = -CONTROLLER_AILERON_SATURATION/4;} 
 
-	positionControllerAileronOutput = KV * (vd - estimatedAileronVel2) + aileronPositionIntegration - (KA * estimatedAileronAcc);
+	positionControllerAileronOutput = KV * (aileronDesiredVelocityPositionController - estimatedAileronVel2) + aileronPositionIntegration - (KA * estimatedAileronAcc);
 	if (positionControllerAileronOutput > CONTROLLER_AILERON_SATURATION) {positionControllerAileronOutput = CONTROLLER_AILERON_SATURATION;} else 
 	if (positionControllerAileronOutput < -CONTROLLER_AILERON_SATURATION) {positionControllerAileronOutput = -CONTROLLER_AILERON_SATURATION;}
 
