@@ -573,7 +573,7 @@ void sendXBeeMessage(unsigned char *address64,unsigned char *address16,char *mes
 	char out[100];
 	sprintf(out,"%s%s","0",message);
 	*(out)='m';
-	makeTRPacket(address64,address16,0x00,frameID,message,(unsigned char)(strlen(message)+1));
+	makeTRPacket(address64,address16,0x00,frameID,(unsigned char*)out,(unsigned char)(strlen(message)+1));
 }
 void receiveXBeeMessage(unsigned char *address64,unsigned char *address16,unsigned char *message){
 	
