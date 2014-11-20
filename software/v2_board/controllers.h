@@ -43,7 +43,6 @@
 #define ALTITUDE_MAXIMUM  3.00 //used to crop values from PX4Flow
 #define ALTITUDE_MINIMUM  0.35 //used for landing (must be > 0.3)
 #define ALTITUDE_SPEED_MAX 0.8 //in m/s, must be positive!
-#define LANDING_SPEED     -0.4 //in m/s, must be negative!
 
 #define THROTTLE_SP_HIGH  2.0
 #define THROTTLE_SP_LOW   ALTITUDE_MINIMUM
@@ -75,7 +74,6 @@ extern volatile unsigned char positionControllerEnabled;
 //vars for estimators
 extern volatile float estimatedElevatorVel2;
 extern volatile float estimatedAileronVel2;
-
 extern volatile float estimatedElevatorPos;
 extern volatile float estimatedAileronPos;
 extern volatile float estimatedThrottlePos;

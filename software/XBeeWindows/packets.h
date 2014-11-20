@@ -34,6 +34,11 @@ typedef struct
 	unsigned char AILERON_POS_SETPOINT;
 	unsigned char ELEVATOR_VEL_SETPOINT;
 	unsigned char AILERON_VEL_SETPOINT;
+	unsigned char ELEVATOR_SPEED_ESTIMATED2;
+	unsigned char AILERON_SPEED_ESTIMATED2;
+	unsigned char ELEVATOR_ACC;
+	unsigned char AILERON_ACC;
+	unsigned char VALID_GUMSTIX;
 } TELEMETRIEST;
 
 typedef struct

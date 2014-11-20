@@ -17,5 +17,10 @@
 	DOWNWARD
 */
 
+#define COOR_REPORTS ENABLE
+/*
+	ENABLE
+	DISABLE
+*/
 
 #endif // _CONFIG_H

@@ -56,6 +56,16 @@ void telemetryReceive(unsigned char *address64,unsigned char *address16,unsigned
 		printf("Elevator Vel Setpoint: %f\n",value);
 	}else if(type==TELEMETRIES.AILERON_VEL_SETPOINT){
 		printf("Aileron Vel Setpoint: %f\n",value);
+	}else if(type==TELEMETRIES.ELEVATOR_SPEED_ESTIMATED2){
+        printf("Elevator Speed Est2: %f\n",value);
+	}else if(type==TELEMETRIES.AILERON_SPEED_ESTIMATED2){
+        printf("Aileron Speed Est2: %f\n",value);
+	}else if(type==TELEMETRIES.ELEVATOR_ACC){
+        printf("Elevator Acc: %f\n",value);
+	}else if(type==TELEMETRIES.AILERON_ACC){
+        printf("Aileron Acc: %f\n",value);
+	}else if(type==TELEMETRIES.VALID_GUMSTIX){
+        printf("Valid Gumstix: %f\n",value);
 	}
 }
 

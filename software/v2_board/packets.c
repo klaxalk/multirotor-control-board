@@ -60,6 +60,11 @@ void constInit(){
 	TELEMETRIES.AILERON_POS_SETPOINT=0x10;
 	TELEMETRIES.ELEVATOR_VEL_SETPOINT=0x11;
 	TELEMETRIES.AILERON_VEL_SETPOINT=0x12;
+	TELEMETRIES.ELEVATOR_SPEED_ESTIMATED2=0x13;
+	TELEMETRIES.AILERON_SPEED_ESTIMATED2=0x14;	
+	TELEMETRIES.ELEVATOR_ACC=0x15;
+	TELEMETRIES.AILERON_ACC=0x16;
+	TELEMETRIES.VALID_GUMSTIX=0x17;
 		
 	ONOFF.OFF=0x00;	
 	ONOFF.ON=0x01;
@@ -262,11 +267,9 @@ void packetHandler(unsigned char *inPacket){
 							 kopterGumstixReportRecieved(address64,address16,*(dataIN+3));
 						 }						 
                     break;
-                //warning
-                case 'w':
-                    break;
-                //error
-                case 'e':                   
+                //message
+                case 'm':
+						receiveXBeeMessage(address64,address16,dataIN);
                     break;
 				//openlog	
                 case 'o':
@@ -393,5 +396,4 @@ void parReceivePacket(unsigned char *inPacket,unsigned char *address64,unsigned 
     }
 
 }
-
 

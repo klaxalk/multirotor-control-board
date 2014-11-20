@@ -1,12 +1,8 @@
-/*
- * controllers.c
- *
- * Created: 11.9.2014 13:24:16
- *  Author: Tomas Baca
- */ 
-
 #include "controllers.h"
 #include "communication.h"
+#include "config.h"
+#include "packets.h"
+#include "commands.h"
 
 // controllers output variables
 volatile int16_t velocityControllerElevatorOutput;
@@ -89,26 +85,46 @@ void initTrajectory(){
 }
 
 void enableTrajectoryFollow(){
-	if (trajectoryEnabled==0){
+	if (trajectoryEnabled!=1){
 		trajIndex=-1;
-	}
-	trajectoryEnabled=1;
+		trajectoryEnabled=1;
+		#if (COOR_REPORTS==ENABLE)
+		kopterTrajectoryReport(ADDRESS.COORDINATOR,ADDRESS.UNKNOWN16,0x00);
+		#endif
+	}	
 }
 
 void disableTrajectoryFollow(){
-	trajectoryEnabled=0;
+	if (trajectoryEnabled!=0){
+		#if (COOR_REPORTS==ENABLE)
+		kopterTrajectoryReport(ADDRESS.COORDINATOR,ADDRESS.UNKNOWN16,0x00);
+		#endif
+		trajectoryEnabled=0;
+	}
 }
 
-void enableLanding(){	
-	landingRequest=1;
+void enableLanding(){
+	if(landingRequest!=1){	
+		landingRequest=1;
+		#if (COOR_REPORTS==ENABLE)
+		sendXBeeMessage(ADDRESS.COORDINATOR,ADDRESS.UNKNOWN16,"LANDING ON",0x00);
+		kopterLandReport(ADDRESS.COORDINATOR,ADDRESS.UNKNOWN16,0x00);
+		#endif
+	}	
 }
 
 void disableLanding(){	
-	landingRequest=0;
+	if(landingRequest!=0){	
+		landingRequest=0;	
+		#if (COOR_REPORTS==ENABLE)
+		sendXBeeMessage(ADDRESS.COORDINATOR,ADDRESS.UNKNOWN16,"LANDING OFF",0x00);
+		kopterLandReport(ADDRESS.COORDINATOR,ADDRESS.UNKNOWN16,0x00);
+		#endif
+	}	
 }
 
 void enableGumstix(){
-	if (gumstixEnabled ==0 ){	
+	if (gumstixEnabled!=1){	
 		//default position (safety)	
 		elevatorPositionSetpoint = DEFAULT_ELEVATOR_POSITION_SETPOINT;
 		aileronPositionSetpoint = DEFAULT_AILERON_POSITION_SETPOINT;	
@@ -116,13 +132,23 @@ void enableGumstix(){
 		aileronDesiredPositionSetpoint = DEFAULT_AILERON_POSITION_SETPOINT;	
 		
 		estimatedElevatorPos = elevatorDesiredPositionSetpoint;
-		estimatedAileronPos  = aileronDesiredPositionSetpoint;		
+		estimatedAileronPos  = aileronDesiredPositionSetpoint;
+		
+		gumstixEnabled = 1;			
+		
+		#if (COOR_REPORTS==ENABLE)
+		kopterGumstixReport(ADDRESS.COORDINATOR,ADDRESS.UNKNOWN16,0x00);
+		#endif
 	}
-	gumstixEnabled = 1;
 }
 
 void disableGumstix(){	
-	gumstixEnabled = 0;
+	if (gumstixEnabled!=0){		
+		gumstixEnabled = 0;
+		#if (COOR_REPORTS==ENABLE)
+		kopterGumstixReport(ADDRESS.COORDINATOR,ADDRESS.UNKNOWN16,0x00);
+		#endif	
+	}
 }
 
 void enableVelocityController() {
@@ -130,20 +156,33 @@ void enableVelocityController() {
 	if(velocityControllerEnabled==0 && positionControllerEnabled==0){
 		throttleIntegration = 0;
 		throttleDesiredSetpoint = DEFAULT_THROTTLE_SETPOINT;
+		#if (COOR_REPORTS==ENABLE)
+		sendXBeeMessage(ADDRESS.COORDINATOR,ADDRESS.UNKNOWN16,"Altitude Controller ON",0x00);
+		#endif
 	}
 	//set controller to default
-	if (velocityControllerEnabled == 0) {
+	if (velocityControllerEnabled != 1) {
 		elevatorVelocityIntegration = 0;
 		aileronVelocityIntegration = 0;		
 						
 		aileronDesiredVelocitySetpoint = DEFAULT_AILERON_VELOCITY_SETPOINT;
 		elevatorDesiredVelocitySetpoint = DEFAULT_ELEVATOR_VELOCITY_SETPOINT;
+		velocityControllerEnabled = 1;
+		
+		#if (COOR_REPORTS==ENABLE)
+		kopterControllersReport(ADDRESS.COORDINATOR,ADDRESS.UNKNOWN16,0x00);
+		#endif
 	}
-	velocityControllerEnabled = 1;
+	
 }
 
 void disableVelocityController() {
-	velocityControllerEnabled = 0;
+	if (velocityControllerEnabled != 0) {
+		velocityControllerEnabled = 0;
+		#if (COOR_REPORTS==ENABLE)
+		kopterControllersReport(ADDRESS.COORDINATOR,ADDRESS.UNKNOWN16,0x00);
+		#endif
+	}
 }
 
 void enablePositionController() {
@@ -151,9 +190,12 @@ void enablePositionController() {
 	if(velocityControllerEnabled==0 && positionControllerEnabled==0){
 		throttleIntegration = 0;
 		throttleDesiredSetpoint = DEFAULT_THROTTLE_SETPOINT;
+		#if (COOR_REPORTS==ENABLE)
+		sendXBeeMessage(ADDRESS.COORDINATOR,ADDRESS.UNKNOWN16,"Altitude Controller ON",0x00);
+		#endif		
 	}	
 	//set controller to default
-	if (positionControllerEnabled == 0) {
+	if (positionControllerEnabled != 1) {
 		elevatorPositionIntegration = 0;
 		aileronPositionIntegration = 0;
 		
@@ -164,12 +206,22 @@ void enablePositionController() {
 		
 		estimatedElevatorPos = elevatorPositionSetpoint;
 		estimatedAileronPos  = aileronPositionSetpoint;
+		positionControllerEnabled = 1;
+		
+		#if (COOR_REPORTS==ENABLE)
+		kopterControllersReport(ADDRESS.COORDINATOR,ADDRESS.UNKNOWN16,0x00);
+		#endif		
 	}
-	positionControllerEnabled = 1;
+
 }
 
 void disablePositionController() {
-	positionControllerEnabled = 0;
+	if (positionControllerEnabled != 0) {
+		positionControllerEnabled = 0;
+		#if (COOR_REPORTS==ENABLE)
+		kopterControllersReport(ADDRESS.COORDINATOR,ADDRESS.UNKNOWN16,0x00);
+		#endif		
+	}
 }
 
 void trajectorySetpoints(){
