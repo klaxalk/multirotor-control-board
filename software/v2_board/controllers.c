@@ -230,6 +230,8 @@ void positionController() {
 	elevatorAcc_filt += (acc_new - elevatorAcc_filt) * (DT/PX4FLOW_FILTER_CONST);
 	derivative2 = -1 * KA * elevatorAcc_filt;
 
+	portENTER_CRITICAL();
+	
 	controllerElevatorOutput =
 		KV * (vd - estimatedElevatorVel) + elevatorIntegration + derivative2;
 	if (controllerElevatorOutput > CONTROLLER_ELEVATOR_SATURATION) {
@@ -237,7 +239,8 @@ void positionController() {
 	} else if (controllerElevatorOutput < -CONTROLLER_ELEVATOR_SATURATION) {
 		controllerElevatorOutput = -CONTROLLER_ELEVATOR_SATURATION;
 	}
-
+	
+	portEXIT_CRITICAL();
 
 	//aileron controller
 	if(positionControllerEnabled && landingState == LS_FLIGHT) {
@@ -263,6 +266,8 @@ void positionController() {
 	aileronAcc_filt += (acc_new - aileronAcc_filt) * (DT/PX4FLOW_FILTER_CONST);
 	derivative2 = -1 * KA * aileronAcc_filt;
 
+	portENTER_CRITICAL();
+
 	controllerAileronOutput =
 		KV * (vd - estimatedAileronVel) + aileronIntegration + derivative2;
 	if (controllerAileronOutput > CONTROLLER_AILERON_SATURATION) {
@@ -270,6 +275,8 @@ void positionController() {
 	} else if (controllerAileronOutput < -CONTROLLER_AILERON_SATURATION) {
 		controllerAileronOutput = -CONTROLLER_AILERON_SATURATION;
 	}
+
+	portEXIT_CRITICAL();
 
 }
 
@@ -351,6 +358,8 @@ void altitudeController() {
 	if (throttleIntegration <  -CONTROLLER_THROTTLE_SATURATION*2/3) {
 		throttleIntegration = -CONTROLLER_THROTTLE_SATURATION*2/3;
 	}
+	
+	portENTER_CRITICAL();
 
 	//total output
 	controllerThrottleOutput =
@@ -361,6 +370,8 @@ void altitudeController() {
 	if (controllerThrottleOutput < -CONTROLLER_THROTTLE_SATURATION) {
 		controllerThrottleOutput = -CONTROLLER_THROTTLE_SATURATION;
 	}
+
+	portEXIT_CRITICAL();
 
 }
 
