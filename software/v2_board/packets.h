@@ -32,15 +32,10 @@ typedef struct
 	unsigned char ELEVATOR_POS_SETPOINT;
 	unsigned char AILERON_POS_SETPOINT;
 	unsigned char ELEVATOR_VEL_SETPOINT;
-	unsigned char AILERON_VEL_SETPOINT;	
-	unsigned char ELEVATOR_SPEED_ESTIMATED2;
-	unsigned char AILERON_SPEED_ESTIMATED2;		
-	unsigned char ELEVATOR_ACC;
-	unsigned char AILERON_ACC;	
-	unsigned char VALID_GUMSTIX;
+	unsigned char AILERON_VEL_SETPOINT;		
 } TELEMETRIEST;
 
-#define TELEMETRY_VARIABLES 24
+#define TELEMETRY_VARIABLES 19
 
 
 typedef struct

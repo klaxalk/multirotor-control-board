@@ -8,7 +8,7 @@
 #define MAX_EMPFANGS_BUFF 20
 
 	//XBee
-	extern unsigned char leadKopter[8];
+	extern volatile unsigned char leadKopter[8];
 
 	// data from px4flow
 	extern volatile float groundDistance;

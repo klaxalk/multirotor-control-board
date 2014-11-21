@@ -17,14 +17,18 @@ void dataTypeError(unsigned char *address64,unsigned char *address16,unsigned ch
 void packetTypeError(unsigned char *inPacket){
 }
 
-float telemetryValue(unsigned char type){
-	float f=0.0;
+
+//TELEMETRY
+void telemetrySend(unsigned char *address64,unsigned char *address16,unsigned char type,unsigned char frameID){
+	float f=0;
+	unsigned char *ch;
+
 	if(type==TELEMETRIES.GROUND_DISTANCE_ESTIMATED){
-		f=estimatedThrottlePos;
+		f=estimatedThrottlePos;	
 	}else if(type==TELEMETRIES.GROUND_DISTANCE){
-		f=groundDistance;
+		f=groundDistance;			
 	}else if(type==TELEMETRIES.ELEVATOR_SPEED){
-		f=elevatorSpeed;
+		f=elevatorSpeed;		
 	}else if(type==TELEMETRIES.AILERON_SPEED){
 		f=aileronSpeed;
 	}else if(type==TELEMETRIES.ELEVATOR_SPEED_ESTIMATED){
@@ -57,28 +61,7 @@ float telemetryValue(unsigned char type){
 		f=elevatorVelocitySetpoint;
 	}else if(type==TELEMETRIES.AILERON_VEL_SETPOINT){
 		f=aileronVelocitySetpoint;
-	}else if(type==TELEMETRIES.ELEVATOR_SPEED_ESTIMATED2){
-		f=estimatedElevatorVel2;
-	}else if(type==TELEMETRIES.AILERON_SPEED_ESTIMATED2){
-		f=estimatedAileronVel2;
-	}else if(type==TELEMETRIES.ELEVATOR_ACC){
-		f=estimatedElevatorAcc;
-	}else if(type==TELEMETRIES.AILERON_ACC){
-		f=estimatedAileronAcc;
-	}else if(type==TELEMETRIES.VALID_GUMSTIX){
-		f=validGumstix;
-	}
-	return f;
-}
-
-
-//TELEMETRY
-void telemetrySend(unsigned char *address64,unsigned char *address16,unsigned char type,unsigned char frameID){
-	float f=0;
-	unsigned char *ch;
-
-	f=telemetryValue(type);
-	
+	}	
 	ch=(unsigned char *) &f;
 	*dataOUT='t';
 	*(dataOUT+1)=type;
@@ -133,16 +116,6 @@ void telemetryReceive(unsigned char *address64,unsigned char *address16,unsigned
 	
 	}else if(type==TELEMETRIES.AILERON_VEL_SETPOINT){
 	
-	}else if(type==TELEMETRIES.ELEVATOR_SPEED_ESTIMATED2){
-	
-	}else if(type==TELEMETRIES.AILERON_SPEED_ESTIMATED2){
-
-	}else if(type==TELEMETRIES.ELEVATOR_ACC){
-	
-	}else if(type==TELEMETRIES.AILERON_ACC){
-	
-	}else if(type==TELEMETRIES.VALID_GUMSTIX){
-	
 	}
 }
 
@@ -157,7 +130,49 @@ void telemetryToCoordinatorSend(){
 	for(i=0;i<TELEMETRY_VARIABLES;i++){
 		if(telemetryToCoordinatorArr[i]==ONOFF.ON){			
 			type=i;			
-			f=telemetryValue(type);		
+
+			if(type==TELEMETRIES.GROUND_DISTANCE_ESTIMATED){
+				f=estimatedThrottlePos;				
+			}else if(type==TELEMETRIES.GROUND_DISTANCE){
+				f=groundDistance;				
+			}else if(type==TELEMETRIES.ELEVATOR_SPEED){
+				//f=elevatorSpeed;
+				f=estimatedElevatorVel2;
+			}else if(type==TELEMETRIES.AILERON_SPEED){
+				//f=aileronSpeed;
+				f=estimatedElevatorAcc;
+			}else if(type==TELEMETRIES.ELEVATOR_SPEED_ESTIMATED){
+				f=estimatedElevatorVel;
+			}else if(type==TELEMETRIES.AILERON_SPEED_ESTIMATED){
+				f=estimatedAileronVel;
+			}else if(type==TELEMETRIES.ELEVATOR_POS_ESTIMATED){
+				f=estimatedElevatorPos;
+			}else if(type==TELEMETRIES.AILERON_POS_ESTIMATED){
+				f=estimatedAileronPos;
+			}else if(type==TELEMETRIES.THROTTLE_CONTROLLER_OUTPUT){
+				f=controllerThrottleOutput;
+			}else if(type==TELEMETRIES.THROTTLE_SPEED){
+				f=estimatedThrottleVel;
+			}else if(type==TELEMETRIES.AILERON_POS_CONTROLLER_OUTPUT){
+				f=positionControllerAileronOutput;
+			}else if(type==TELEMETRIES.ELEVATOR_POS_CONTROLLER_OUTPUT){
+				f=positionControllerElevatorOutput;
+			}else if(type==TELEMETRIES.AILERON_VEL_CONTROLLER_OUTPUT){
+				f=velocityControllerAileronOutput;
+			}else if(type==TELEMETRIES.ELEVATOR_VEL_CONTROLLER_OUTPUT){
+				f=velocityControllerElevatorOutput;
+			}else if(type==TELEMETRIES.THROTTLE_SETPOINT){
+				f=throttleSetpoint;
+			}else if(type==TELEMETRIES.ELEVATOR_POS_SETPOINT){
+				f=elevatorPositionSetpoint;
+			}else if(type==TELEMETRIES.AILERON_POS_SETPOINT){
+				f=aileronPositionSetpoint;
+			}else if(type==TELEMETRIES.ELEVATOR_VEL_SETPOINT){
+				f=elevatorVelocitySetpoint;				
+			}else if(type==TELEMETRIES.AILERON_VEL_SETPOINT){
+				f=aileronVelocitySetpoint;
+			}
+		
 			ch=(unsigned char *) &f;		
 			*(dataOUT+1+counter*5)=type;
 			*(dataOUT+2+counter*5)=*ch;
@@ -206,14 +221,8 @@ void kopterLandRequest(unsigned char *address64,unsigned char *address16,unsigne
 }
 void kopterLand(unsigned char *address64,unsigned char *address16,unsigned char on){
 	if(on){
-		#if (COOR_REPORTS==ENABLE)
-		sendXBeeMessage(ADDRESS.COORDINATOR,ADDRESS.UNKNOWN16,"XBEE LANDING ON",0x00);
-		#endif
 		enableLanding();
 	}else{
-		#if (COOR_REPORTS==ENABLE)
-		sendXBeeMessage(ADDRESS.COORDINATOR,ADDRESS.UNKNOWN16,"XBEE LANDING OFF",0x00);
-		#endif		
 		disableLanding();
 	}
 }
@@ -251,17 +260,7 @@ void kopterTrajectoryRequest(unsigned char *address64,unsigned char *address16,u
 	makeTRPacket(address64,address16,0x00,frameID,dataOUT,3);
 }
 void kopterTrajectory(unsigned char *address64,unsigned char *address16,unsigned char on){
-	if(on==1){
-		#if (COOR_REPORTS==ENABLE)
-		sendXBeeMessage(ADDRESS.COORDINATOR,ADDRESS.UNKNOWN16,"XBEE TRAJ FOLLOW ON",0x00);
-		#endif		
-		enableTrajectoryFollow();
-	}else if(on==0){
-		#if (COOR_REPORTS==ENABLE)
-		sendXBeeMessage(ADDRESS.COORDINATOR,ADDRESS.UNKNOWN16,"XBEE TRAJ FOLLOW OFF",0x00);
-		#endif		
-		disableTrajectoryFollow();
-	}
+	trajectoryEnabled=on;
 }
 void kopterTrajectoryStatusRequest(unsigned char *address64,unsigned char *address16,unsigned char frameID){
 	*dataOUT='c';
@@ -367,48 +366,40 @@ void kopterSetpointsSetRequest(unsigned char *address64,unsigned char *address16
 }
 void kopterSetpointsSet(unsigned char *address64,unsigned char *address16,unsigned char type,unsigned char positionType,float value){
 	//positions setpoints
-	
-		//Throttle
 		if(type==SETPOINTS.THROTTLE_SP){
 			if(positionType==POSITIONS.ABSOLUT){
 				throttleDesiredSetpoint=value;
 			}else if(positionType==POSITIONS.RELATIV){
 				throttleDesiredSetpoint+=value;
 			}
-			if(throttleDesiredSetpoint<THROTTLE_SP_LOW){throttleDesiredSetpoint=THROTTLE_SP_LOW;}
-			if(throttleDesiredSetpoint>THROTTLE_SP_HIGH){throttleDesiredSetpoint=THROTTLE_SP_HIGH;}		
-		//Elevator POS			
+			
 		}else if(type==SETPOINTS.ELEVATOR_POSITION){
 			if(positionType==POSITIONS.ABSOLUT){
 				elevatorDesiredPositionSetpoint=value;
 			}else if(positionType==POSITIONS.RELATIV){
 				elevatorDesiredPositionSetpoint+=value;
 			}		
-		//Aileron POS		
+				
 		}else if(type==SETPOINTS.AILERON_POSITION){
 			if(positionType==POSITIONS.ABSOLUT){
 				aileronDesiredPositionSetpoint=value;
 			}else if(positionType==POSITIONS.RELATIV){
 				aileronDesiredPositionSetpoint+=value;
 			}		
-		//Elevator VEL		
+				
 		}else if(type==SETPOINTS.ELEVATOR_VELOCITY){
 			if(positionType==POSITIONS.ABSOLUT){
 				elevatorDesiredVelocitySetpoint=value;
 			}else if(positionType==POSITIONS.RELATIV){
 				elevatorDesiredVelocitySetpoint+=value;
 			}
-			if(elevatorDesiredVelocitySetpoint<-SPEED_MAX){elevatorDesiredVelocitySetpoint=-SPEED_MAX;}
-			if(elevatorDesiredVelocitySetpoint>SPEED_MAX){elevatorDesiredVelocitySetpoint=SPEED_MAX;}
-		//Aileron VEL
+		
 		}else if(type==SETPOINTS.AILERON_VELOCITY){
 			if(positionType==POSITIONS.ABSOLUT){
 				aileronDesiredVelocitySetpoint=value;
 			}else if(positionType==POSITIONS.RELATIV){
 				aileronDesiredVelocitySetpoint+=value;
 			}
-			if(aileronDesiredVelocitySetpoint<-SPEED_MAX){aileronDesiredVelocitySetpoint=-SPEED_MAX;}
-			if(aileronDesiredVelocitySetpoint>SPEED_MAX){aileronDesiredVelocitySetpoint=SPEED_MAX;}
 		}			
 }
 void kopterSetpointStatusRequest(unsigned char *address64,unsigned char *address16,unsigned char type,unsigned char frameID){
@@ -467,27 +458,15 @@ void kopterControllersRequest(unsigned char *address64,unsigned char *address16,
 }
 void kopterControllers(unsigned char *address64,unsigned char *address16,unsigned char option){	
 		if(		 option==CONTROLLERS.OFF){
-			#if (COOR_REPORTS==ENABLE)
-			sendXBeeMessage(ADDRESS.COORDINATOR,ADDRESS.UNKNOWN16,"XBEE OFF CONT",0x00);
-			#endif
 			disablePositionController();
 			disableVelocityController();			
 		}else if(option==CONTROLLERS.POSITION){
-			#if (COOR_REPORTS==ENABLE)
-			sendXBeeMessage(ADDRESS.COORDINATOR,ADDRESS.UNKNOWN16,"XBEE POS CONT",0x00);
-			#endif			
 			enablePositionController();					
 			disableVelocityController();	 
 		}else if(option==CONTROLLERS.VELOCITY){
-			#if (COOR_REPORTS==ENABLE)
-			sendXBeeMessage(ADDRESS.COORDINATOR,ADDRESS.UNKNOWN16,"XBEE VEL CONT",0x00);
-			#endif			
 			enableVelocityController();			
 			disablePositionController();
 		}else if(option==CONTROLLERS.BOTH){
-			#if (COOR_REPORTS==ENABLE)
-			sendXBeeMessage(ADDRESS.COORDINATOR,ADDRESS.UNKNOWN16,"XBEE BOTH CONT",0x00);
-			#endif			
 			enableVelocityController();
 			enablePositionController();
 		}
@@ -533,14 +512,8 @@ void kopterGumstixRequest(unsigned char *address64,unsigned char *address16,unsi
 }
 void kopterGumstix(unsigned char *address64,unsigned char *address16,unsigned char on){
 	if(on){
-		#if (COOR_REPORTS==ENABLE)
-		sendXBeeMessage(ADDRESS.COORDINATOR,ADDRESS.UNKNOWN16,"XBEE GUMSTIX ON",0x00);
-		#endif	
 		enableGumstix();	
 	}else{
-		#if (COOR_REPORTS==ENABLE)
-		sendXBeeMessage(ADDRESS.COORDINATOR,ADDRESS.UNKNOWN16,"XBEE GUMSTIX OFF",0x00);
-		#endif		
 		disableGumstix();
 	}
 }
@@ -566,15 +539,4 @@ void kopterGumstixReportRecieved(unsigned char *address64,unsigned char *address
 	}else if(status==ONOFF.OFF){
 		
 	}
-}
-
-//MESSAGES
-void sendXBeeMessage(unsigned char *address64,unsigned char *address16,char *message,unsigned char frameID){
-	char out[100];
-	sprintf(out,"%s%s","0",message);
-	*(out)='m';
-	makeTRPacket(address64,address16,0x00,frameID,(unsigned char*)out,(unsigned char)(strlen(message)+1));
-}
-void receiveXBeeMessage(unsigned char *address64,unsigned char *address16,unsigned char *message){
-	
 }
