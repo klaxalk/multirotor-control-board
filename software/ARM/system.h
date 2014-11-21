@@ -1,12 +1,19 @@
 /*
- * init_board.h
+ * system.h
  *
  * Created: 24.8.2014 21:05:19
  *  Author: klaxalk
  */
 
-#ifndef INIT_BOARD_H_
-#define INIT_BOARD_H_
+#ifndef SYSTEM_H_
+#define SYSTEM_H_
+
+#include "FreeRTOS.h"
+#include "queue.h"
+#include "task.h"
+
+// Must be included if using STM32F4 Discovery board or processor
+#include "stm32f4xx.h"
 
 // Must be included to setup general purpose I/O
 // Some peripherals require the setup of RCC (Reset and clock controller)
@@ -14,6 +21,9 @@
 
 // Must be included if using GPIO (General purpose I/O) peripheral
 #include "stm32f4xx_gpio.h"
+
+// UART driver
+#include "uart_driver.h"
 
 /**********************************************************************************
  *
@@ -25,10 +35,19 @@
  *
 **********************************************************************************/
 
-GPIO_InitTypeDef  GPIO_InitStruct;
+GPIO_InitTypeDef	GPIO_InitStruct;
 
+// uart input queue
+extern QueueHandle_t * uartQueue;
+
+#define led_toggle() GPIO_ToggleBits(GPIOC, GPIO_Pin_2)
+#define led_on() GPIO_WriteBit(GPIOC, GPIO_Pin_2, 1)
+#define led_off() GPIO_WriteBit(GPIOC, GPIO_Pin_2, 0)
+
+// Initialize the board
+void boardInit();
 
 // Initialization of GPIO ports
-void gpio_init();
+void gpioInit();
 
-#endif /* INIT_BOARD_H_ */
+#endif /* SYSTEM_H_ */

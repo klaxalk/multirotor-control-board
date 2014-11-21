@@ -91,21 +91,13 @@ void setpoints() {
 
 #endif //TRAJECTORY_FOLLOWING == ENABLED
 
-		//sp_new = ELEVATOR_SP_HIGH * constant2 + ELEVATOR_SP_LOW * (1-constant2);
 		sp_new = (ELEVATOR_SP_LOW + ELEVATOR_SP_HIGH)/2;
 		elevatorSetpoint += (sp_new-elevatorSetpoint) * (DT/SETPOINT_FILTER_CONST);
 
-		//sp_new = AILERON_SP_HIGH * constant2 + AILERON_SP_LOW * (1-constant2);
 		sp_new = (AILERON_SP_LOW  + AILERON_SP_HIGH )/2;
 		aileronSetpoint += (sp_new-aileronSetpoint) * (DT/SETPOINT_FILTER_CONST);
-
-		//sp_new = THROTTLE_SP_HIGH * constant1 + THROTTLE_SP_LOW * (1-constant1);
-		
-		// zakomentovano, Tomáš Báèa, 24.6.2014
-		// sp_new = (THROTTLE_SP_LOW + THROTTLE_SP_HIGH)/2;
 		
 		sp_new = 1;
-		
 		throttleSetpoint += (sp_new-throttleSetpoint) * (DT/SETPOINT_FILTER_CONST);
 
 #if TRAJECTORY_FOLLOWING == ENABLED
@@ -230,6 +222,8 @@ void positionController() {
 	elevatorAcc_filt += (acc_new - elevatorAcc_filt) * (DT/PX4FLOW_FILTER_CONST);
 	derivative2 = -1 * KA * elevatorAcc_filt;
 
+	portENTER_CRITICAL();
+	
 	controllerElevatorOutput =
 		KV * (vd - estimatedElevatorVel) + elevatorIntegration + derivative2;
 	if (controllerElevatorOutput > CONTROLLER_ELEVATOR_SATURATION) {
@@ -237,7 +231,8 @@ void positionController() {
 	} else if (controllerElevatorOutput < -CONTROLLER_ELEVATOR_SATURATION) {
 		controllerElevatorOutput = -CONTROLLER_ELEVATOR_SATURATION;
 	}
-
+	
+	portEXIT_CRITICAL();
 
 	//aileron controller
 	if(positionControllerEnabled && landingState == LS_FLIGHT) {
@@ -263,6 +258,8 @@ void positionController() {
 	aileronAcc_filt += (acc_new - aileronAcc_filt) * (DT/PX4FLOW_FILTER_CONST);
 	derivative2 = -1 * KA * aileronAcc_filt;
 
+	portENTER_CRITICAL();
+
 	controllerAileronOutput =
 		KV * (vd - estimatedAileronVel) + aileronIntegration + derivative2;
 	if (controllerAileronOutput > CONTROLLER_AILERON_SATURATION) {
@@ -270,6 +267,8 @@ void positionController() {
 	} else if (controllerAileronOutput < -CONTROLLER_AILERON_SATURATION) {
 		controllerAileronOutput = -CONTROLLER_AILERON_SATURATION;
 	}
+
+	portEXIT_CRITICAL();
 
 }
 
@@ -351,6 +350,8 @@ void altitudeController() {
 	if (throttleIntegration <  -CONTROLLER_THROTTLE_SATURATION*2/3) {
 		throttleIntegration = -CONTROLLER_THROTTLE_SATURATION*2/3;
 	}
+	
+	portENTER_CRITICAL();
 
 	//total output
 	controllerThrottleOutput =
@@ -361,6 +362,8 @@ void altitudeController() {
 	if (controllerThrottleOutput < -CONTROLLER_THROTTLE_SATURATION) {
 		controllerThrottleOutput = -CONTROLLER_THROTTLE_SATURATION;
 	}
+
+	portEXIT_CRITICAL();
 
 }
 

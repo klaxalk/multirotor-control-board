@@ -106,6 +106,17 @@ extern UsartBuffer * usart_buffer_3;
 extern UsartBuffer * usart_buffer_4;
 
 /* -------------------------------------------------------------------- */
+/*	USART baud rates													*/
+/* -------------------------------------------------------------------- */
+#define USART_STM_BAUDRATE		BAUD115200
+#define USART_XBEE_BAUDRATE		BAUD19200
+#define USART_LOG_BAUDRATE		BAUD9600
+#define USART_1_BAUDRATE		BAUDPX4FLOW
+#define USART_2_BAUDRATE		BAUD19200
+#define USART_3_BAUDRATE		BAUD19200
+#define USART_4_BAUDRATE		BAUD115200
+
+/* -------------------------------------------------------------------- */
 /*	Controllers output to mix with RC and send to FlightCTRL			*/
 /* -------------------------------------------------------------------- */
 extern volatile int16_t controllerElevatorOutput;

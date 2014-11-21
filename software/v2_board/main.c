@@ -32,17 +32,17 @@ int main(void)
 	xTaskCreate(commTask, (signed char*) "commTask", 1024, NULL, 2, NULL);
 	
 	/* -------------------------------------------------------------------- */
-	/*	Start the main task routine																					*/
+	/*	Start the main task routine											*/
 	/* -------------------------------------------------------------------- */
 	xTaskCreate(mainTask, (signed char*) "mainTask", 1024, NULL, 2, NULL);
 	
 	/* -------------------------------------------------------------------- */
-	/*	Start the main task routine																					*/
+	/*	Start the controllers task routine									*/
 	/* -------------------------------------------------------------------- */
 	xTaskCreate(controllersTask, (signed char*) "contTasks", 1024, NULL, 2, NULL);
 	
 	/* -------------------------------------------------------------------- */
-	/*	Start the FreeRTOS scheduler																				*/
+	/*	Start the FreeRTOS scheduler										*/
 	/* -------------------------------------------------------------------- */
 	vTaskStartScheduler();
 	

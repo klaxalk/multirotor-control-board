@@ -1,13 +1,28 @@
 /*
- * init_board.h
+ * system.h
  *
  * Created: 24.8.2014 21:05:19
  *  Author: klaxalk
  */
 
-#include "init_board.h"
+#include "system.h"
 
-void gpio_init() {
+QueueHandle_t * uartQueue;
+
+void boardInit() {
+
+	// set th clock and initialize the GPIO
+	gpioInit();
+
+	// set the UART
+    init_USART4(115200);
+    USART_puts(UART4, "Init complete! Hello World\n\r");
+
+    // create usart input buffer
+    uartQueue = xQueueCreate(24, sizeof(char));
+}
+
+void gpioInit() {
 
 		/**********************************************************************************
 	     *

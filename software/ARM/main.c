@@ -1,29 +1,6 @@
-/* Includes ------------------------------------------------------------------*/
-#include "FreeRTOS.h"
-#include "task.h"
-#include "queue.h"
-
-// Must be included if using STM32F4 Discovery board or processor
-#include "stm32f4xx.h"
-
-// Must be included to setup general purpose I/O
-// Some peripherals require the setup of RCC (Reset and clock controller)
-#include "stm32f4xx_rcc.h"
-
 // GPIO initialization and other minor stuff
-#include "init_board.h"
-
-// UART driver
-#include "uart_driver.h"
-
-void blikej(void *p) {
-
-	while (1) {
-
-		GPIO_ToggleBits(GPIOC, GPIO_Pin_2);
-		vTaskDelay(1000);
-	}
-}
+#include "system.h"
+#include "commTask.h"
 
 void pocitej(void *p) {
 
@@ -46,13 +23,19 @@ void pocitej(void *p) {
 int main(void)
 {
 
-    init_USART4(9600); // initialize USART4 @ 9600 baud
-    USART_puts(UART4, "Init complete! Hello World!rn"); // just send a message to indicate that it works
-    gpio_init();
+	// initialize the hardware
+    boardInit();
 
-	xTaskCreate(blikej, (char*) "blikej", 1024, NULL, 2, NULL);
+	/* -------------------------------------------------------------------- */
+	/*	Start the communication task routine								*/
+	/* -------------------------------------------------------------------- */
+	xTaskCreate(commTask, (char*) "commTask", 1024, NULL, 2, NULL);
+
 	xTaskCreate(pocitej, (char*) "pocitej", 1024, NULL, 2, NULL);
 
+	/* -------------------------------------------------------------------- */
+	/*	Start the FreeRTOS scheduler										*/
+	/* -------------------------------------------------------------------- */
 	vTaskStartScheduler();
 
 	return 0;

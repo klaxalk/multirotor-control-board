@@ -12,11 +12,6 @@
 #include <stdio.h> // sprintf
 #include <stdlib.h> // abs
 
-// constants = AUX channels from the RC transmitter
-volatile float constant1 = 0;
-volatile float constant2 = 0;
-volatile float constant5 = 0;
-
 // timestamp for debug and logging
 volatile double timeStamp = 0;
 volatile uint16_t main_cycle = 0;
@@ -91,20 +86,6 @@ void mainTask(void *p) {
 	}
 
 #endif // PX4FLOW_DATA_RECEIVE == ENABLED
-
-		// load the constant values from the RC
-		// <0; 1>
-		constant1 = ((float)(RCchannel[AUX1] - PPM_IN_MIN_LENGTH))/(PPM_IN_MAX_LENGTH - PPM_IN_MIN_LENGTH);
-		if(constant1 > 1) constant1 = 1;
-		if(constant1 < 0) constant1 = 0;
-
-		constant2 = ((float)(RCchannel[AUX2] - PPM_IN_MIN_LENGTH))/(PPM_IN_MAX_LENGTH - PPM_IN_MIN_LENGTH);
-		if(constant2 > 1) constant2 = 1;
-		if(constant2 < 0) constant2 = 0;
-
-		constant5 = ((float)(RCchannel[AUX5] - PPM_IN_MIN_LENGTH))/(PPM_IN_MAX_LENGTH - PPM_IN_MIN_LENGTH);
-		if(constant5 > 1) constant5 = 1;
-		if(constant5 < 0) constant5 = 0;
 		
 		mergeSignalsToOutput();
 	}

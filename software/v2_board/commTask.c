@@ -21,6 +21,16 @@ void commTask(void *p) {
 	char* ukazatel;
 	
 	while (1) {
+		
+		if (usartBufferGetByte(usart_buffer_4, &inChar, 0)) {
+
+			usartBufferPutByte(usart_buffer_stm, inChar, 0);
+		}
+		
+		if (usartBufferGetByte(usart_buffer_stm, &inChar, 0)) {
+
+			usartBufferPutByte(usart_buffer_4, inChar, 0);
+		}
 
 		// xBee received
 		if (usartBufferGetByte(usart_buffer_xbee, &inChar, 0)) {
@@ -83,6 +93,7 @@ void commTask(void *p) {
 			#endif // GUMSTIX_DATA_RECEIVE == ENABLED
 		}
 		
+		/*
 		#if GUMSTIX_DATA_RECEIVE == ENABLED
 		if (usartBufferGetByte(usart_buffer_4, &inChar, 0)) {
 
@@ -134,6 +145,7 @@ void commTask(void *p) {
 			gumstixDataFlag = 0;
 		}
 		#endif // GUMSTIX_DATA_RECEIVE == ENABLED
+		*/
 
 		#if PX4FLOW_DATA_RECEIVE == ENABLED
 		if (usartBufferGetByte(usart_buffer_1, &inChar, 0)) {

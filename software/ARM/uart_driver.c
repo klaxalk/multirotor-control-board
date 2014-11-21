@@ -6,6 +6,7 @@
  */
 
 #include "uart_driver.h"
+#include "system.h"
 
 /* This funcion initializes the USART4 peripheral
  *
@@ -115,19 +116,8 @@ void UART4_IRQHandler(void) {
 	if (USART_GetITStatus(UART4, USART_IT_RXNE)) {
 
 		static uint8_t cnt = 0; // this counter is used to determine the string length
-		char t = UART4->DR; // the character from the USART4 data register is saved in t
 
-		// check if the received character is not the LF character (used to determine end of string)
-		// or the if the maximum string length has been been reached
-		//
-		if( (t != 'n') && (cnt < MAX_STRLEN) ){
-			received_string[cnt] = t;
-			cnt++;
-		}
-		else{ // otherwise reset the character counter and print the received string
-			cnt = 0;
-			USART_puts(UART4, received_string);
-		}
+		xQueueSend(uartQueue, &UART4->DR, 1);
 	}
 }
 
