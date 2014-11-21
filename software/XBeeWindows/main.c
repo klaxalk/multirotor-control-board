@@ -14,7 +14,7 @@ int main()
 
     constInit();
 
-    openXBeeComm(4);
+    openXBeeComm(3);
     #ifdef MATLAB
     matlabH=openSerialLine(8);
     #endif // MATLAB

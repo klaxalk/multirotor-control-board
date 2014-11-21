@@ -8,6 +8,9 @@
 #include "controllers.h"
 #include "communication.h"
 
+#include "packets.h"
+#include "commands.h"
+
 // controllers output variables
 volatile int16_t velocityControllerElevatorOutput;
 volatile int16_t velocityControllerAileronOutput;

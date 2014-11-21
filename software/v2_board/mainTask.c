@@ -3,6 +3,7 @@
 #include "communication.h"
 #include "system.h"
 #include "packets.h"
+#include "commands.h"
 #include <stdio.h> // sprintf
 #include <stdlib.h> // abs
 
@@ -12,27 +13,28 @@ volatile float constant5 = 0;
 
 //AUX channels switchers reacts just for changeS
 unsigned char previous_AUX1 = 5;
+unsigned char previous_AUX2 = 5;
 unsigned char previous_AUX3 = 5;
 unsigned char previous_AUX4 = 5;
 unsigned char previous_AUX5 = 5;
 
-void mainTask(void *p) {		
+void mainTask(void *p) {	
 	while (1) {					
 		// controllers on/off
-		if (abs(RCchannel[AUX3] - PPM_IN_MIDDLE_LENGTH) < 200) {
-			if (previous_AUX3 != 1) {
+		if (       RCchannel[AUX3] < (PPM_IN_MIDDLE_LENGTH - 400)) {
+			if (previous_AUX3 != 1) {			
 				enableVelocityController();
-				disablePositionController();								
+				disablePositionController();						
 				previous_AUX3 = 1;
 			}
-		} else if (RCchannel[AUX3] > (PPM_IN_MIDDLE_LENGTH + 200)) {
-			if (previous_AUX3 != 2) {
+		} else if (RCchannel[AUX3] > (PPM_IN_MIDDLE_LENGTH + 400)) {
+			if (previous_AUX3 != 2) {			
 				enablePositionController();
 				disableVelocityController();
 				previous_AUX3 = 2;
 			}			
 		} else {
-			if (previous_AUX3 != 0) {
+			if (previous_AUX3 != 0) {			
 				disableVelocityController();
 				disablePositionController();
 				previous_AUX3 = 0;
@@ -40,34 +42,40 @@ void mainTask(void *p) {
 		}
 
 		// landing on/off, trajectory on/off
-		if (RCchannel[AUX4] < (PPM_IN_MIDDLE_LENGTH - 200)) {
-			if(previous_AUX4!=0){
+		if (RCchannel[AUX4] < (PPM_IN_MIDDLE_LENGTH - 400)) {
+			if(previous_AUX4!=0){				
 				enableLanding();
-				trajectoryEnabled = 0;				
+				trajectoryEnabled = 0;		
 				previous_AUX4 = 0;
 			}
-		} else if(RCchannel[AUX4] > (PPM_IN_MIDDLE_LENGTH + 200)) {
+		} else if(RCchannel[AUX4] > (PPM_IN_MIDDLE_LENGTH + 400)) {
 			if(previous_AUX4!=1){
 				disableLanding();
-				trajectoryEnabled = 1;
+				trajectoryEnabled = 1;					
 				previous_AUX4=1;
 			}
 		}else{
 			if(previous_AUX4!=2){
 				disableLanding();
-				trajectoryEnabled = 0;
+				trajectoryEnabled = 0;				
 				previous_AUX4=2;
 			}
 		}
 
 		//velocity null setpoints
 		if(RCchannel[AUX2]<(PPM_IN_MIDDLE_LENGTH)){
-			aileronDesiredVelocitySetpoint = 0;
-			elevatorDesiredVelocitySetpoint = 0;
+			if(previous_AUX2!=0){			
+				aileronDesiredVelocitySetpoint = 0;
+				elevatorDesiredVelocitySetpoint = 0;
+			previous_AUX2=0;
+			}
 		}else{
-			//aileronDesiredVelocitySetpoint = DEFAULT_AILERON_VELOCITY_SETPOINT;			
-			//elevatorDesiredVelocitySetpoint = DEFAULT_ELEVATOR_VELOCITY_SETPOINT;	
-			elevatorDesiredVelocitySetpoint = 0.3;	
+			if(previous_AUX2!=1){	
+				//aileronDesiredVelocitySetpoint = DEFAULT_AILERON_VELOCITY_SETPOINT;			
+				//elevatorDesiredVelocitySetpoint = DEFAULT_ELEVATOR_VELOCITY_SETPOINT;	
+				elevatorDesiredVelocitySetpoint = 0.3;					
+			previous_AUX2=1;
+			}
 		}
 
 

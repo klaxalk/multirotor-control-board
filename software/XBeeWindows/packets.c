@@ -210,7 +210,7 @@ void packetHandler(unsigned char *inPacket){
             }
         break;
     default:
-           packetTypeError(inPacket);
+           //packetTypeError(inPacket);
         break;
     }
 }

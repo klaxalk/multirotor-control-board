@@ -17,23 +17,21 @@ void closeXBeeComm(){
 unsigned char* readPacket(){
     DWORD bytesReaded;
     int i;
-    do{
-        if(!ReadFile(XBeeH,packet,1,&bytesReaded,NULL)){
-            packet[0]=0x00;
-        }
-    }while(packet[0]!=0x7E);
-
-    while(!ReadFile(XBeeH,packet+1,2,&bytesReaded,NULL));
-    ReadFile(XBeeH,packet+3,packet[2]+1,&bytesReaded,NULL);
-
+    packet[0]=0x00;
+    packet[3]=0x00;
+    if(!ReadFile(XBeeH,packet,1,&bytesReaded,NULL)){
+        packet[0]=0x00;
+    }
+    if(packet[0]==0x7E){
+        while(!ReadFile(XBeeH,packet+1,2,&bytesReaded,NULL));
+        ReadFile(XBeeH,packet+3,packet[2]+1,&bytesReaded,NULL);
+    }
     #ifdef DEBUG
      printf("packet received: ");
     for(i=0;i<*(packet+2)+4;i++){
         printf("%X ",packet[i]);
     }printf("\n");
     #endif // DEBUG
-
-
     return packet;
 }
 

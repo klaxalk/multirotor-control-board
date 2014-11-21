@@ -26,10 +26,11 @@ void commTask(void *p) {
 		
 		if (counter50Hz++>800){
 			counter50Hz=0;
-			leadAltitude();
+			//VYSILA PORAD SPATNA PODMINKA
+			//leadAltitude();
 		}
 		
-		if (counter40Hz++>1000){
+		if (counter40Hz++>1500){
 			counter40Hz=0;
 			led_yellow_toggle();
 			telemetryToCoordinatorSend();
