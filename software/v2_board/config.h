@@ -10,14 +10,6 @@
 
 #include "defines.h"
 
-// Choose if trajectory following is on
-#define TRAJECTORY_FOLLOWING ENABLED
-/*
-	ENABLED
-	DISABLED
-
-*/
-
 //~ --------------------------------------------------------------------
 //~ Choose a orientation of the quadcopter frame
 //~ --------------------------------------------------------------------
@@ -27,7 +19,6 @@
 /*
 	PLUS_COPTER
 	X_COPTER
-
 */
 
 //~ --------------------------------------------------------------------
@@ -39,7 +30,6 @@
 /*
 	FORWARD
 	DOWNWARD
-
 */
 
 //~ --------------------------------------------------------------------
@@ -51,37 +41,6 @@
 /*
 	FORWARD
 	BACKWARD
-
 */
-
-//~ --------------------------------------------------------------------
-//~ Receiving data from GumStix configuration
-//~ --------------------------------------------------------------------
-
-// on/off the receiving of data from the GumStix
-#define GUMSTIX_DATA_RECEIVE ENABLED
-/*
-	ENABLED
-	DISABLED
-*/
-
-//~ --------------------------------------------------------------------
-//~ Receiving data from px4flow configuration
-//~ --------------------------------------------------------------------
-
-// on/off the receiving of data from the px4flow
-#define PX4FLOW_DATA_RECEIVE ENABLED
-/*
-	ENABLED
-	DISABLED
-*/
-
-// disable the trajectory following IF there are no data for control
-#if (PX4FLOW_DATA_RECEIVE == DISABLED && GUMSTIX_DATA_RECEIVE == DISABLED)
-
-	#undef	TRAJECTORY_FOLLOWING
-	#define	TRAJECTORY_FOLLOWING	DISABLED
-
-#endif 
 
 #endif // _CONFIG_H

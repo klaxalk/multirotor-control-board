@@ -147,35 +147,42 @@ void boardInit() {
 /* -------------------------------------------------------------------- */
 void mergeSignalsToOutput() {
 
+	portENTER_CRITICAL();
+
 	int16_t outputThrottle = PULSE_OUT_MIN;
 	int16_t outputElevator = PULSE_OUT_MIDDLE;
 	int16_t outputAileron = PULSE_OUT_MIDDLE;
 	int16_t outputRudder = PULSE_OUT_MIDDLE;
 
 	outputThrottle = RCchannel[THROTTLE];
-	outputRudder = RCchannel[RUDDER];
 	outputElevator = RCchannel[ELEVATOR];
 	outputAileron = RCchannel[AILERON];
+	outputRudder = RCchannel[RUDDER];
 
-	if (controllerEnabled == 1) {
-
-		led_red_on();
+	// add altitude controller to output
+	if (altitudeControllerEnabled == true) {
 
 		outputThrottle += controllerThrottleOutput;
+		led_red_on();
+	} else
+		led_red_off();
+	
+	// add mpc controller controller to output
+	if (mpcControllerEnabled == true) {
+
 		outputElevator += controllerElevatorOutput;
 		outputAileron += controllerAileronOutput;
-		// we do not have a rudder controller, yet
-		//~ outputRudder += controllerRudderOutput; 
-		} else {
+		led_blue_on();
+	} else
+		led_blue_off();
 
-		led_red_off();
-	}
-
-	// Everithing is *2 because the PPM incoming to this board is twice slower then the PPM goeing out
+	// Everithing is *2 because the PPM incoming to this board is twice slower then the PPM going out
 	outputChannels[0] = outputThrottle*2;
 	outputChannels[1] = outputRudder*2;
 	outputChannels[2] = outputElevator*2;
 	outputChannels[3] = outputAileron*2;
+	
+	portEXIT_CRITICAL();
 }
 
 /* -------------------------------------------------------------------- */
@@ -249,52 +256,6 @@ ISR(TCD0_OVF_vect) {
 		uint32_t finalOutLen = PPM_FRAME_LENGTH - outputSum;
 		TC_SetPeriod(&TCD0, (uint16_t) finalOutLen);
 	}
-}
-
-// disable controllers
-void disableController() {
-
-	controllerEnabled = 0;
-}
-
-// enable controllers
-void enableController() {
-
-	if (controllerEnabled == 0) {
-
-		#if PX4FLOW_DATA_RECEIVE == ENABLED
-
-		elevatorIntegration = 0;
-		aileronIntegration = 0;
-		throttleIntegration = 0;
-
-		#if GUMSTIX_DATA_RECEIVE == ENABLED
-		if(validGumstix != 1) {
-
-			estimatedElevatorPos = elevatorSetpoint;
-			estimatedAileronPos  = aileronSetpoint;
-		}
-		#else
-			estimatedElevatorPos = elevatorSetpoint;
-			estimatedAileronPos  = aileronSetpoint;
-		#endif // GUMSTIX_DATA_RECEIVE == ENABLED
-
-		#endif
-	}
-	controllerEnabled = 1;
-}
-
-void disablePositionController() {
-
-	positionControllerEnabled = 0;
-}
-
-void enablePositionController() {
-
-	if (positionControllerEnabled == 0) {
-		// set integrated variables to default
-	}
-	positionControllerEnabled = 1;
 }
 
 /* -------------------------------------------------------------------- */

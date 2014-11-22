@@ -27,10 +27,10 @@ volatile uint16_t pulseEnd[9] = {0, 0, 0, 0, 0, 0, 0, 0, 0};
 volatile uint8_t pulseFlag[9] = {0, 0, 0, 0, 0, 0, 0, 0, 0};
 
 // values received from the RC
-volatile uint16_t RCchannel[9] = {PULSE_MIN, PULSE_MIDDLE, PULSE_MIDDLE, PULSE_MIDDLE, PULSE_MIN, PULSE_MIN, PULSE_MIN, PULSE_MIN, PULSE_MIN};
+volatile uint16_t RCchannel[9] = {PULSE_MIDDLE, PULSE_MIDDLE, PULSE_MIDDLE, PULSE_MIN, PULSE_MIN, PULSE_MIN, PULSE_MIN, PULSE_MIN, PULSE_MIN};
 
 // values to transmite to Flight-CTRL
-volatile uint16_t outputChannels[9] = {PULSE_OUT_MIDDLE, PULSE_OUT_MIDDLE, PULSE_OUT_MIDDLE, PULSE_OUT_MIN, PULSE_OUT_MIN, PULSE_OUT_MIN, PULSE_OUT_MIN, PULSE_OUT_MIN, PULSE_OUT_MIN};
+volatile uint16_t outputChannels[9] = {PULSE_OUT_MIN, PULSE_OUT_MIDDLE, PULSE_OUT_MIDDLE, PULSE_OUT_MIDDLE, PULSE_OUT_MIN, PULSE_OUT_MIN, PULSE_OUT_MIN, PULSE_OUT_MIN, PULSE_OUT_MIN};
 
 // port mask of PC inputs
 volatile uint8_t portMask = 0;
