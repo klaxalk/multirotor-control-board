@@ -11,6 +11,7 @@
 #include "communication.h"
 #include <stdio.h> // sprintf
 #include <stdlib.h> // abs
+#include "kalman.h"
 
 // timestamp for debug and logging
 volatile double timeStamp = 0;
@@ -20,7 +21,7 @@ volatile uint16_t main_cycle = 0;
 int8_t previous_AUX3 = 0;
 
 void mainTask(void *p) {
-	
+		
 	while (1) {
 		
 		main_cycle++;

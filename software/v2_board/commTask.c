@@ -5,12 +5,8 @@
  *  Author: Tomas Baca
  */ 
 
-#include "commTask.h"
 #include "system.h"
-#include "ioport.h"
-#include "FreeRTOS.h"
-#include "task.h"
-#include "usart_driver_RTOS.h"
+#include "commTask.h"
 #include "communication.h"
 #include <stdio.h>
 #include "controllers.h"

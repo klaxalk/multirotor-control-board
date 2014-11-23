@@ -179,6 +179,11 @@
             <Value>../src/ASF/common/services/ioport</Value>
             <Value>../MyDrivers</Value>
             <Value>../src/ASF/common/boards</Value>
+            <Value>../gsl</Value>
+            <Value>../gsl/matrix</Value>
+            <Value>../gsl/block</Value>
+            <Value>../gsl/err</Value>
+            <Value>../gsl/vector</Value>
           </ListValues>
         </avrgcc.compiler.directories.IncludePaths>
         <avrgcc.compiler.optimization.level>Optimize (-O1)</avrgcc.compiler.optimization.level>
@@ -301,6 +306,12 @@
     <Compile Include="FreeRTOS\Source\timers.c">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="kalman.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="kalman.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="main.c">
       <SubType>compile</SubType>
     </Compile>
@@ -308,6 +319,12 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="mainTask.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="matrixLib\matrixLib.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="matrixLib\matrixLib.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="mavlink\ardupilotmega\ardupilotmega.h">
@@ -863,6 +880,7 @@
     <Folder Include="mavlink\ardupilotmega\" />
     <Folder Include="mavlink\common\" />
     <Folder Include="MyDrivers" />
+    <Folder Include="matrixLib" />
     <Folder Include="src\" />
     <Folder Include="src\ASF\" />
     <Folder Include="src\ASF\common\" />
