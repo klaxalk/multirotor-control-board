@@ -30,28 +30,43 @@ matrix_float * matrix_float_alloc(const int16_t h, const int16_t w);
 // deallocation
 void matrix_float_free(matrix_float * m);
 
+// set the particular cell of the vector
+void vector_float_set(vector_float * v, const int16_t pos, const float value);
+
+// set the particular cell of the vector
+float vector_float_get(vector_float * v, const int16_t pos);
+
 // set particular cell of the matrix
 void matrix_float_set(matrix_float * m, const int16_t h, const int16_t w, const float value);
 
-// matrix transposition
-int matrix_float_transpose(matrix_float * m);
+// get the particular cell of the matrix
+float matrix_float_get(const matrix_float * m, const int16_t h, const int16_t w);
 
-// set matrix to zeros
-int matrix_float_set_zero(matrix_float * m);
+// matrix transposition
+void matrix_float_transpose(matrix_float * m);
 
 // set all cells to value
-int matrix_float_set_all(matrix_float * m, const float value);
+void matrix_float_set_all(matrix_float * m, const float value);
+
+// set matrix to zeros
+void matrix_float_set_zero(matrix_float * m);
 
 // set matrix to identity matrix
-int matrix_float_set_identity(matrix_float * m);
+void matrix_float_set_identity(matrix_float * m);
 
 // add two matrices
-int matrix_float_add(matrix_float * a, const matrix_float *b);
+void matrix_float_add(matrix_float * a, const matrix_float *b);
 
 // subtract two matrices
-int matrix_float_sub(matrix_float * a, const matrix_float *b);
+void matrix_float_sub(matrix_float * a, const matrix_float *b);
+
+// get row from matrix
+void matrix_float_get_row(const matrix_float * m, vector_float * v, const int16_t row);
+
+// get column from matrix
+void matrix_float_get_col(const matrix_float * m, vector_float * v, const int16_t col);
 
 // multiply two matrices
-int matrix_float_mul(const matrix_float * a, const matrix_float * b, matrix_float * C);
+void matrix_float_mul(const matrix_float * a, const matrix_float * b, matrix_float * C);
 
 #endif /* MATRIXLIB_H_ */
