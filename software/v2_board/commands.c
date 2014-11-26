@@ -69,6 +69,14 @@ float telemetryValue(unsigned char type){
 		f=estimatedAileronAcc;
 	}else if(type==TELEMETRIES.VALID_GUMSTIX){
 		f=validGumstix;
+	}else if(type==TELEMETRIES.ELEVATOR_DESIRED_SPEED_POS_CONT){
+		f=elevatorDesiredSpeedPosController;
+	}else if(type==TELEMETRIES.AILERON_DESIRED_SPEED_POS_CONT){
+		f=aileronDesiredSpeedPosController;
+	}else if(type==TELEMETRIES.ELEVATOR_DESIRED_SPEED_POS_CONT_LEADER){
+		f=elevatorDesiredSpeedPosControllerLeader;
+	}else if(type==TELEMETRIES.AILERON_DESIRED_SPEED_POS_CONT_LEADER){
+		f=aileronDesiredSpeedPosControllerLeader;
 	}
 	return f;
 }
@@ -143,7 +151,15 @@ void telemetryReceive(unsigned char *address64,unsigned char *address16,unsigned
 		
 		}else if(type==TELEMETRIES.VALID_GUMSTIX){
 		
-	}
+		}else if(type==TELEMETRIES.ELEVATOR_DESIRED_SPEED_POS_CONT){
+
+		}else if(type==TELEMETRIES.AILERON_DESIRED_SPEED_POS_CONT){
+		
+		}else if(type==TELEMETRIES.ELEVATOR_DESIRED_SPEED_POS_CONT_LEADER){
+		
+		}else if(type==TELEMETRIES.AILERON_DESIRED_SPEED_POS_CONT_LEADER){
+		
+		}
 }
 
 void telemetryToCoordinatorSend(){
@@ -359,6 +375,8 @@ void kopterSetpointsSet(unsigned char *address64,unsigned char *address16,unsign
 			}else if(positionType==POSITIONS.RELATIV){
 				throttleDesiredSetpoint+=value;
 			}
+			if(throttleDesiredSetpoint > +THROTTLE_SP_HIGH) throttleDesiredSetpoint = +THROTTLE_SP_HIGH;
+			if(throttleDesiredSetpoint < -THROTTLE_SP_LOW)  throttleDesiredSetpoint = -THROTTLE_SP_LOW;
 			
 		}else if(type==SETPOINTS.ELEVATOR_POSITION){
 			if(positionType==POSITIONS.ABSOLUT){
@@ -380,6 +398,8 @@ void kopterSetpointsSet(unsigned char *address64,unsigned char *address16,unsign
 			}else if(positionType==POSITIONS.RELATIV){
 				elevatorDesiredVelocitySetpoint+=value;
 			}
+			if(elevatorDesiredVelocitySetpoint > +SPEED_MAX) elevatorDesiredVelocitySetpoint = +SPEED_MAX;
+			if(elevatorDesiredVelocitySetpoint < -SPEED_MAX) elevatorDesiredVelocitySetpoint = -SPEED_MAX;
 		
 		}else if(type==SETPOINTS.AILERON_VELOCITY){
 			if(positionType==POSITIONS.ABSOLUT){
@@ -387,7 +407,27 @@ void kopterSetpointsSet(unsigned char *address64,unsigned char *address16,unsign
 			}else if(positionType==POSITIONS.RELATIV){
 				aileronDesiredVelocitySetpoint+=value;
 			}
-		}			
+			if(aileronDesiredVelocitySetpoint > +SPEED_MAX) aileronDesiredVelocitySetpoint = +SPEED_MAX;
+			if(aileronDesiredVelocitySetpoint < -SPEED_MAX) aileronDesiredVelocitySetpoint = -SPEED_MAX;	
+		
+		}else if(type==SETPOINTS.ELEVATOR_VELOCITY_LEADER){
+				if(positionType==POSITIONS.ABSOLUT){
+			elevatorDesiredSpeedPosControllerLeader=value;
+			}else if(positionType==POSITIONS.RELATIV){
+				elevatorDesiredSpeedPosControllerLeader+=value;
+			}
+		if(elevatorDesiredSpeedPosControllerLeader > +SPEED_MAX) elevatorDesiredSpeedPosControllerLeader = +SPEED_MAX;
+		if(elevatorDesiredSpeedPosControllerLeader < -SPEED_MAX) elevatorDesiredSpeedPosControllerLeader = -SPEED_MAX;
+		
+		}else if(type==SETPOINTS.AILERON_VELOCITY_LEADER){
+			if(positionType==POSITIONS.ABSOLUT){
+				aileronDesiredSpeedPosControllerLeader=value;
+			}else if(positionType==POSITIONS.RELATIV){
+				aileronDesiredSpeedPosControllerLeader+=value;
+			}
+		if(aileronDesiredSpeedPosControllerLeader > +SPEED_MAX) aileronDesiredSpeedPosControllerLeader = +SPEED_MAX;
+		if(aileronDesiredSpeedPosControllerLeader < -SPEED_MAX) aileronDesiredSpeedPosControllerLeader = -SPEED_MAX;
+	}				
 }
 void kopterSetpointStatusRequest(unsigned char *address64,unsigned char *address16,unsigned char type,unsigned char frameID){
 	*(dataOUT)='c';
@@ -413,6 +453,10 @@ void kopterSetpointsReport(unsigned char *address64,unsigned char *address16,uns
 		f=elevatorDesiredVelocitySetpoint;
 	}else if(type==SETPOINTS.AILERON_VELOCITY){
 		f=aileronDesiredVelocitySetpoint;
+	}else if(type==SETPOINTS.ELEVATOR_VELOCITY_LEADER){
+		f=elevatorDesiredSpeedPosControllerLeader;
+	}else if(type==SETPOINTS.AILERON_VELOCITY_LEADER){
+		f=aileronDesiredSpeedPosControllerLeader;
 	}
 		
 	ch=(unsigned char *) &f;

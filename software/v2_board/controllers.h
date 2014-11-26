@@ -92,6 +92,11 @@ extern volatile float throttleSetpoint;
 extern volatile float elevatorVelocitySetpoint;
 extern volatile float aileronVelocitySetpoint;
 
+extern volatile float elevatorDesiredSpeedPosController;
+extern volatile float aileronDesiredSpeedPosController;
+extern volatile float elevatorDesiredSpeedPosControllerLeader;
+extern volatile float aileronDesiredSpeedPosControllerLeader;
+
 extern volatile float elevatorDesiredPositionSetpoint;
 extern volatile float aileronDesiredPositionSetpoint;
 extern volatile float throttleDesiredSetpoint;

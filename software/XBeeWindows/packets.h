@@ -39,6 +39,10 @@ typedef struct
 	unsigned char ELEVATOR_ACC;
 	unsigned char AILERON_ACC;
 	unsigned char VALID_GUMSTIX;
+	unsigned char ELEVATOR_DESIRED_SPEED_POS_CONT;
+	unsigned char AILERON_DESIRED_SPEED_POS_CONT;
+	unsigned char ELEVATOR_DESIRED_SPEED_POS_CONT_LEADER;
+	unsigned char AILERON_DESIRED_SPEED_POS_CONT_LEADER;
 } TELEMETRIEST;
 
 typedef struct
@@ -54,6 +58,8 @@ typedef struct
 	unsigned char AILERON_POSITION;
 	unsigned char ELEVATOR_VELOCITY;
 	unsigned char AILERON_VELOCITY;
+	unsigned char ELEVATOR_VELOCITY_LEADER;
+	unsigned char AILERON_VELOCITY_LEADER;
 } SETPOINTST;
 
 typedef struct
