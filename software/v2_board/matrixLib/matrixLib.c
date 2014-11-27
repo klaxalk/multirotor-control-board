@@ -10,16 +10,14 @@
 // dynamically allocate the matrix using FreeRTOS pvPortMalloc
 matrix_float * matrix_float_alloc(const int16_t h, const int16_t w) {
 	
-	matrix_float * m;
-	
-	m = 0;
+	matrix_float * m = 0;
 	
 	// dimensions must be positive
 	if ((h > 0) && (w > 0)) {
 		
 		m = (matrix_float *) pvPortMalloc(sizeof (matrix_float));
 		
-		// if failed to allocated the space
+		// if didn't failed to allocated the space
 		if (m != 0) {
 			
 			m->height = h;
@@ -31,11 +29,40 @@ matrix_float * matrix_float_alloc(const int16_t h, const int16_t w) {
 	return m;
 }
 
+// vector allocation
+vector_float * vector_float_alloc(const int16_t length, int8_t orientation) {
+	
+	vector_float * v = 0;
+	
+	// dimension must be positive
+	if (length > 0) {
+		
+		v = (vector_float *) pvPortMalloc(sizeof (vector_float));
+		
+		// if didn't failed to allocated the space
+		if (v != 0) {
+			
+			v->length = length;
+			v->orientation = orientation;
+			v->data = (float *) pvPortMalloc(length*sizeof(float));
+		}	
+	}
+	
+	return v;
+}
+
 // deallocate the matrix using FreeRTOS vPortFree
 void matrix_float_free(matrix_float * m) {
 	
 	vPortFree(m->data);
 	vPortFree(m);
+}
+
+// vector deallocation
+void vector_float_free(vector_float * v) {
+	
+	vPortFree(v->data);
+	vPortFree(v);
 }
 
 // set particular cell of the matrix
@@ -145,13 +172,24 @@ void matrix_float_sub(matrix_float * a, const matrix_float * b) {
 // set the particular cell of the vector
 void vector_float_set(vector_float * v, const int16_t pos, const float value) {
 	
-	//! TOTO implement
+	if (pos >= 1 && pos <= v->length) {
+	
+		v->data[pos-1] = value;	
+	} else {
+		
+		// index out of bounds
+	}
 }
 
 // set the particular cell of the vector
-float vector_float_get(vector_float * v, const int16_t pos) {
+float vector_float_get(const vector_float * v, const int16_t pos) {
 	
-	//! TODO implement
+	if (pos >= 1 && pos <= v->length) {
+	
+		return v->data[pos-1];	
+	}
+	
+	// else index out of bounds
 	return 0;
 }
 
@@ -168,6 +206,7 @@ void matrix_float_get_row(const matrix_float * m, vector_float * v, const int16_
 			vector_float_set(v, i, matrix_float_get(m, row, i));
 		}
 		
+		// set orientation to horizontal
 		v->orientation = 1;
 	}
 }
@@ -185,13 +224,82 @@ void matrix_float_get_col(const matrix_float * m, vector_float * v, const int16_
 			vector_float_set(v, i, matrix_float_get(m, i, col));
 		}
 		
+		// set orientation to vertical
 		v->orientation = 0;
 	}
 }
 
 // multiply two matrices
+// the naive way
 void matrix_float_mul(const matrix_float * a, const matrix_float * b, matrix_float * C) {
 	
-	//! TODO implement
+	int16_t i, j, k;
+	float tempSum;
+	
+	// dimensions must agree
+	if (a->width == b->height && a->height == C->height && b->width == C->width) {
+		
+		for (i = 1; i <= C->height; i++) {
+			
+			for (j = 1; j <= C->width; j++) {
+				
+				tempSum = 0;
+				for (k = 1; k <= a->width; k++) {
+					tempSum += matrix_float_get(a, i, k)*matrix_float_get(b, k, j);
+				}
+				
+				matrix_float_set(C, i, j, tempSum);
+			}
+		}
+	} 
 }
 
+// multiply a matrix by a vector from the right
+void matrix_float_mul_vec_right(const matrix_float * m, const vector_float * v, vector_float * C) {
+	
+	int16_t i, j;
+	float tempSum;
+	
+	// dimensions must agree
+	if (m->width == v->length) {
+		
+		for (i = 1; i <= m->height; i++) {
+			
+			tempSum = 0;
+			
+			for (j = 1; j <= v->length; j++) {
+			
+				tempSum += matrix_float_get(m, i, j)*vector_float_get(v, j);	
+			}
+			vector_float_set(C, j, tempSum);
+		}
+	}	
+	
+	// set orientation to vertical
+	C->orientation = 0;
+}
+
+// multiply a matrix by a vector from the left
+void matrix_float_mul_vec_left(const matrix_float * m, const vector_float * v, vector_float * C) {
+	
+	int16_t i, j;
+	float tempSum;
+	
+	// dimensions must agree
+	if (m->height == v->length) {
+		
+		for (i = 1; i <= m->height; i++) {
+			
+			tempSum = 0;
+			
+			for (j = 1; j <= v->length; j++) {
+				
+				tempSum += matrix_float_get(m, j, i)*vector_float_get(v, j);
+			}
+			vector_float_set(C, j, tempSum);
+		}
+	}
+	
+	// set orientation to horizontal
+	C->orientation = 1;
+}

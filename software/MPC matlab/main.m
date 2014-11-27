@@ -25,6 +25,29 @@ u_size = size(B, 2);
 % delka predikcniho horizontu
 horizon_len = 200;
 
+%% Matice U
+
+n_variables = 38;
+
+U = zeros(horizon_len, n_variables);
+ 
+U(1:20, 1:20) = eye(20);
+
+for i=1:18
+    U((21+(i-1)*10):(20+i*10), 20+i) = ones(10, 1); 
+end
+
+% U(1:20, 1:20) = eye(20);
+ 
+% U(21:30, 21) = 1;
+% U(31:40, 22) = 1;
+% U(41:50, 23) = 1;
+% U(51:60, 24) = 1;
+
+% n_variables = 21;
+% 
+% U = zeros(horizon_len, n_variables);
+ 
 %% Matice A_roof
 % n = delka predikcniho horizontu
 % A_roof = [A;
@@ -55,6 +78,8 @@ for i=1:horizon_len
         B_roof((i-1)*n_states+1:i*n_states, ((j-1)*u_size+1):j*u_size) = (A^(i - j))*B;
     end
 end
+
+B_roof = B_roof*U;
 
 %% Matice Q_roof
 % n = pocet stavu
@@ -92,10 +117,14 @@ Q_roof(end-n_states+1:end, end-n_states+1:end) = S;
 
 P = 0.0005;
 
-P_roof = zeros(horizon_len, horizon_len);
+P_roof = zeros(n_variables, n_variables);
 
-for i=1:horizon_len
+for i=1:n_variables
     P_roof(i, i) = P;
+end
+
+for i=21:38
+    P_roof(i, i) = 10*P; 
 end
 
 %% Matice H
@@ -157,6 +186,8 @@ for i=2:simu_len
 
         u_cf = H_inv*(c./(-2));
         
+        u_cf = U*u_cf;
+        
         % simulace predikce z aktualniho vektoru akcnich zasahu
         x_cf(:, 1) = estimate(:, i);
         for j=2:horizon_len
@@ -179,7 +210,7 @@ for i=2:simu_len
     % spocti nove stavy podle modelu     
     x(:, i) = A*x(:, i-1) + B*u_sat;
     
-    if (mod(i, 4) == 0)
+    if (mod(i, 8) == 0)
         
         figure(1);
     
@@ -188,7 +219,7 @@ for i=2:simu_len
         plot(linspace(0, dt*simu_len, simu_len), x_ref(1:3:n_states*simu_len), 'r');
         hold on
         plot(time, estimate(1, 1:i), 'b');
-        plot(linspace(i*dt, dt*(i+horizon_len), horizon_len), x_cf(1, :),'--g');
+        plot(linspace(i*dt, dt*(i+horizon_len), horizon_len), x_cf(1, :),'--r');
         title('Position in time');
         ylabel('Position [m]');
         axis([0, dt*simu_len, -0.25, 1.25]);
