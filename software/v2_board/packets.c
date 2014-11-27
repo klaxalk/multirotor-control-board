@@ -18,8 +18,11 @@ CONTROLLERST CONTROLLERS;
 COMMANDST COMMANDS;
 unsigned char GET_STATUS;
 
-//Telemtery sending
+//Telemetry sending
 volatile unsigned char telemetryToCoordinatorArr[TELEMETRY_VARIABLES]={0};
+	
+//Leading received
+volatile unsigned char leadingDataReceived=0;
 
 
 void makeTRPacket(unsigned char *adr64,unsigned char *adr16,unsigned char options,unsigned char frameID,unsigned char *data, unsigned char dataLength);
@@ -79,8 +82,6 @@ void constInit(){
 	SETPOINTS.AILERON_POSITION=0x03;
 	SETPOINTS.ELEVATOR_VELOCITY=0x04;
 	SETPOINTS.AILERON_VELOCITY=0x05;
-	SETPOINTS.ELEVATOR_VELOCITY_LEADER=0x06;
-	SETPOINTS.AILERON_VELOCITY_LEADER=0x07;
 	
 	POSITIONS.ABSOLUT=0x01;
 	POSITIONS.RELATIV=0x02;
@@ -98,6 +99,7 @@ void constInit(){
 	COMMANDS.TRAJECTORY_FOLLOW=0x15;
 	COMMANDS.TRAJECTORY_POINTS=0x16;
 	COMMANDS.GUMSTIX=0x17;
+	COMMANDS.LEADING=0x18;
 
 	
 	GET_STATUS=0x95;
@@ -219,6 +221,13 @@ void packetHandler(unsigned char *inPacket){
 							}else{
 								kopterGumstix(address64,address16,*(dataIN+3));
 							}
+						}else
+						if(*(dataIN+2)==COMMANDS.LEADING){
+							leadingDataReceived++;
+							ch1[0]=*(dataIN+3); ch1[1]=*(dataIN+4); ch1[2]=*(dataIN+5); ch1[3]=*(dataIN+6); f1=(float *)ch1;
+							ch2[0]=*(dataIN+7); ch2[1]=*(dataIN+8); ch2[2]=*(dataIN+9); ch2[3]=*(dataIN+10); f2=(float *)ch2;
+							ch3[0]=*(dataIN+11); ch3[1]=*(dataIN+12); ch3[2]=*(dataIN+13); ch3[3]=*(dataIN+14); f3=(float *)ch3;
+							kopterLeadDataReceived(address64,address16,*f1,*f2,*f3);
 						}						
                     break;
                 //telemetry
@@ -276,8 +285,8 @@ void packetHandler(unsigned char *inPacket){
                 //warning
                 case 'w':
                     break;
-                //error
-                case 'e':                   
+                //message
+                case 'm':                   
                     break;
 				//openlog	
                 case 'o':

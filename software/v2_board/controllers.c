@@ -86,6 +86,22 @@ volatile trajectoryPoint_t trajectory[TRAJECTORY_LENGTH];
 static uint8_t estimator_cycle = 0;
 static float   estimatedThrottlePos_prev = 0;
 
+//no leading data counter
+volatile uint8_t neLeadCounter=0;
+
+void leadingDataActualCheck(){
+	if(leadingDataReceived>0){
+		neLeadCounter=0;
+	}else{
+		if(neLeadCounter<(LEADING_DATA_TTL/DT)){
+			neLeadCounter++;
+		}else{
+			elevatorDesiredSpeedPosControllerLeader=0;
+			aileronDesiredSpeedPosControllerLeader=0;
+		}
+	}
+	leadingDataReceived=0;
+}
 
 void initTrajectory(){
 	int8_t i=0;

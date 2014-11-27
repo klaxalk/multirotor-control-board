@@ -60,8 +60,6 @@ typedef struct
 	unsigned char AILERON_POSITION;	
 	unsigned char ELEVATOR_VELOCITY;
 	unsigned char AILERON_VELOCITY;	
-	unsigned char ELEVATOR_VELOCITY_LEADER;
-	unsigned char AILERON_VELOCITY_LEADER;
 } SETPOINTST;
 
 typedef struct
@@ -88,7 +86,7 @@ typedef struct
 	unsigned char TRAJECTORY_FOLLOW;
 	unsigned char TRAJECTORY_POINTS;
 	unsigned char GUMSTIX;
-
+	unsigned char LEADING;
 }COMMANDST;
 
 
@@ -103,6 +101,8 @@ extern SETPOINTST SETPOINTS;
 extern POSITIONST POSITIONS;
 extern CONTROLLERST CONTROLLERS;
 extern COMMANDST COMMANDS;
+
+extern volatile unsigned char leadingDataReceived;
 
 void constInit();
 void packetHandler(unsigned char *inPacket);

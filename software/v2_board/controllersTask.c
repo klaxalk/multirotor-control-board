@@ -15,6 +15,7 @@ void controllersTask(void *p) {
 	
 	initTrajectory();
 	while (1) {
+		leadingDataActualCheck();
 		positionEstimator();
 		altitudeEstimator();
 		
@@ -30,7 +31,7 @@ void controllersTask(void *p) {
 		
 		velocityController();
 		positionController();
-		altitudeController();
+		altitudeController();		
 					
 		// makes the 70Hz loop
 		vTaskDelay(14);

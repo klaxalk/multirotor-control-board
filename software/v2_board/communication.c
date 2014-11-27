@@ -37,25 +37,6 @@ volatile int8_t gumstixDataFlag = 0;
 volatile unsigned char gumstixParseCharCrc = 0;
 
 
-//setting leading setpoints 
-void leadAltitude(){
-	if (leadKopter!=ADDRESS.COORDINATOR){
-		kopterSetpointsSetRequest(leadKopter,ADDRESS.UNKNOWN16,SETPOINTS.THROTTLE_SP,POSITIONS.ABSOLUT,estimatedThrottlePos,0x00);
-	}
-}
-
-void leadEleveatorVel(){
-	if (leadKopter!=ADDRESS.COORDINATOR){
-		kopterSetpointsSetRequest(leadKopter,ADDRESS.UNKNOWN16,SETPOINTS.ELEVATOR_VELOCITY,POSITIONS.ABSOLUT,estimatedElevatorVel2,0x00);
-	}
-}
-
-void leadAileronVel(){
-	if (leadKopter!=ADDRESS.COORDINATOR){
-		kopterSetpointsSetRequest(leadKopter,ADDRESS.UNKNOWN16,SETPOINTS.AILERON_VELOCITY,POSITIONS.ABSOLUT,estimatedAileronVel2,0x00);
-	}
-}
-
 //send XBee packet
 void sendXBeePacket(unsigned char *packet){
 	int i;

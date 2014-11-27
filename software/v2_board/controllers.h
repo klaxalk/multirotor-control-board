@@ -60,6 +60,9 @@
 #define CONTROLLER_AILERON_SATURATION  100
 #define CONTROLLER_THROTTLE_SATURATION 300
 
+// leading data TTL (sec)
+#define LEADING_DATA_TTL 1.5
+
 // common global variables
 // controllers output variables
 extern volatile int16_t velocityControllerElevatorOutput;
@@ -162,5 +165,8 @@ void positionController();
 void altitudeEstimator();
 void altitudeController();
 void landingStateAutomat();
+
+//leading data age checker
+void leadingDataActualCheck();
 
 #endif // _CONTROLLERS_H

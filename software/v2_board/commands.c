@@ -7,7 +7,7 @@
 
 
 
-//UDP XBee packetOUT
+//XBee data payload
 unsigned char dataOUT[25];
 
 
@@ -80,7 +80,6 @@ float telemetryValue(unsigned char type){
 	}
 	return f;
 }
-
 void telemetrySend(unsigned char *address64,unsigned char *address16,unsigned char type,unsigned char frameID){
 	float f=0;
 	unsigned char *ch;
@@ -410,24 +409,7 @@ void kopterSetpointsSet(unsigned char *address64,unsigned char *address16,unsign
 			if(aileronDesiredVelocitySetpoint > +SPEED_MAX) aileronDesiredVelocitySetpoint = +SPEED_MAX;
 			if(aileronDesiredVelocitySetpoint < -SPEED_MAX) aileronDesiredVelocitySetpoint = -SPEED_MAX;	
 		
-		}else if(type==SETPOINTS.ELEVATOR_VELOCITY_LEADER){
-				if(positionType==POSITIONS.ABSOLUT){
-			elevatorDesiredSpeedPosControllerLeader=value;
-			}else if(positionType==POSITIONS.RELATIV){
-				elevatorDesiredSpeedPosControllerLeader+=value;
-			}
-		if(elevatorDesiredSpeedPosControllerLeader > +SPEED_MAX) elevatorDesiredSpeedPosControllerLeader = +SPEED_MAX;
-		if(elevatorDesiredSpeedPosControllerLeader < -SPEED_MAX) elevatorDesiredSpeedPosControllerLeader = -SPEED_MAX;
-		
-		}else if(type==SETPOINTS.AILERON_VELOCITY_LEADER){
-			if(positionType==POSITIONS.ABSOLUT){
-				aileronDesiredSpeedPosControllerLeader=value;
-			}else if(positionType==POSITIONS.RELATIV){
-				aileronDesiredSpeedPosControllerLeader+=value;
-			}
-		if(aileronDesiredSpeedPosControllerLeader > +SPEED_MAX) aileronDesiredSpeedPosControllerLeader = +SPEED_MAX;
-		if(aileronDesiredSpeedPosControllerLeader < -SPEED_MAX) aileronDesiredSpeedPosControllerLeader = -SPEED_MAX;
-	}				
+		}			
 }
 void kopterSetpointStatusRequest(unsigned char *address64,unsigned char *address16,unsigned char type,unsigned char frameID){
 	*(dataOUT)='c';
@@ -453,10 +435,6 @@ void kopterSetpointsReport(unsigned char *address64,unsigned char *address16,uns
 		f=elevatorDesiredVelocitySetpoint;
 	}else if(type==SETPOINTS.AILERON_VELOCITY){
 		f=aileronDesiredVelocitySetpoint;
-	}else if(type==SETPOINTS.ELEVATOR_VELOCITY_LEADER){
-		f=elevatorDesiredSpeedPosControllerLeader;
-	}else if(type==SETPOINTS.AILERON_VELOCITY_LEADER){
-		f=aileronDesiredSpeedPosControllerLeader;
 	}
 		
 	ch=(unsigned char *) &f;
@@ -580,4 +558,27 @@ void sendXBeeMessage(unsigned char *address64,unsigned char *address16,char *mes
 }
 void receiveXBeeMessage(unsigned char *address64,unsigned char *address16,unsigned char *message){
 	
+}
+
+//LEADING
+void kopterLeadDataSet(unsigned char *address64,unsigned char *address16,float altitude,float elevatorVel, float aileronVel,unsigned char frameID){
+	unsigned char *ch;
+	
+	*(dataOUT)='c';
+	*(dataOUT+1)=COMMANDS.LEADING;
+	
+	ch=(unsigned char *) &altitude;
+	*(dataOUT+2)=*ch; *(dataOUT+3)=*(ch+1); *(dataOUT+4)=*(ch+2); *(dataOUT+5)=*(ch+3);
+	
+	ch=(unsigned char *) &elevatorVel;
+	*(dataOUT+6)=*ch; *(dataOUT+7)=*(ch+1); *(dataOUT+8)=*(ch+2); *(dataOUT+9)=*(ch+3);
+	
+	ch=(unsigned char *) &aileronVel;
+	*(dataOUT+10)=*ch; *(dataOUT+11)=*(ch+1); *(dataOUT+12)=*(ch+2); *(dataOUT+13)=*(ch+3);	
+	makeTRPacket(address64,address16,0x00,frameID,dataOUT,11);
+}
+void kopterLeadDataReceived(unsigned char *address64,unsigned char *address16,float altitude,float elevatorVel, float aileronVel){
+	throttleDesiredSetpoint=altitude;
+	elevatorDesiredSpeedPosControllerLeader=elevatorVel;
+	aileronDesiredSpeedPosControllerLeader=aileronVel;
 }

@@ -26,8 +26,10 @@ void commTask(void *p) {
 		
 		if (counter50Hz++>800){
 			counter50Hz=0;
-			//VYSILA PORAD SPATNA PODMINKA
-			//leadAltitude();
+			if(positionControllerEnabled && leadKopter[7]!=0x00){
+				kopterLeadDataSet(leadKopter,ADDRESS.UNKNOWN16,estimatedThrottlePos,elevatorDesiredSpeedPosController,aileronDesiredSpeedPosController,0x00);
+				led_blue_toggle();
+			}
 		}
 		
 		if (counter40Hz++>1500){
@@ -95,7 +97,6 @@ void commTask(void *p) {
 		}
 
 		if (opticalFlowDataFlag == 1) {
-			led_blue_toggle();
 			// decode the message (there will be new values in opticalFlowData...)
 			mavlink_msg_optical_flow_decode(&mavlinkMessage, &opticalFlowData);
 			
