@@ -11,6 +11,7 @@
 #include <stdint.h>
 #include "usart_driver_RTOS.h"
 #include "ioport.h"
+#include <avr/pgmspace.h>
 
 /* -------------------------------------------------------------------- */
 /*	LED masks															*/
