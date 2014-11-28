@@ -107,6 +107,12 @@ extern UsartBuffer * usart_buffer_2;
 extern UsartBuffer * usart_buffer_3;
 extern UsartBuffer * usart_buffer_4;
 
+//output signals
+extern int16_t outputThrottle;
+extern int16_t outputElevator;
+extern int16_t outputAileron;
+extern int16_t outputRudder;
+
 /* Basic initialization of the MCU, peripherals and i/o */
 void boardInit();
 

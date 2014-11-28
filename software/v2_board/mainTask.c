@@ -23,7 +23,7 @@ void mainTask(void *p) {
 		// controllers on/off
 		if (       RCchannel[AUX3] < (PPM_IN_MIDDLE_LENGTH - 400)) {
 			if (previous_AUX3 != 1) {			
-				enableVelocityController();
+				disableVelocityController();
 				disablePositionController();						
 				previous_AUX3 = 1;
 			}
@@ -35,7 +35,7 @@ void mainTask(void *p) {
 			}			
 		} else {
 			if (previous_AUX3 != 0) {			
-				disableVelocityController();
+				enableVelocityController();
 				disablePositionController();
 				previous_AUX3 = 0;
 			}
@@ -65,15 +65,12 @@ void mainTask(void *p) {
 		//velocity null setpoints
 		if(RCchannel[AUX2]<(PPM_IN_MIDDLE_LENGTH)){
 			if(previous_AUX2!=0){			
-				aileronDesiredVelocitySetpoint = 0;
-				elevatorDesiredVelocitySetpoint = 0;
 			previous_AUX2=0;
 			}
 		}else{
 			if(previous_AUX2!=1){	
-				//aileronDesiredVelocitySetpoint = DEFAULT_AILERON_VELOCITY_SETPOINT;			
-				//elevatorDesiredVelocitySetpoint = DEFAULT_ELEVATOR_VELOCITY_SETPOINT;	
-				elevatorDesiredVelocitySetpoint = 0.3;					
+				aileronDesiredVelocitySetpoint = DEFAULT_AILERON_VELOCITY_SETPOINT;			
+				elevatorDesiredVelocitySetpoint = DEFAULT_ELEVATOR_VELOCITY_SETPOINT;					
 			previous_AUX2=1;
 			}
 		}

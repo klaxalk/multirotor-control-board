@@ -51,6 +51,15 @@ UsartBuffer * usart_buffer_4;
 #define USART_3_BAUDRATE		BAUD9600
 #define USART_4_BAUDRATE		BAUD57600
 
+//output signals
+int16_t outputThrottle = PULSE_OUT_MIN/2;
+int16_t outputElevator = PULSE_OUT_MIDDLE/2;
+int16_t outputAileron = PULSE_OUT_MIDDLE/2;
+int16_t outputRudder = PULSE_OUT_MIDDLE/2;
+
+int16_t outputThrottleInc = 0;
+int16_t outputThrottleInc2 = 0;
+
 
 /* -------------------------------------------------------------------- */
 /*	Basic initialization of the MCU, peripherals and i/o				*/
@@ -156,15 +165,12 @@ int16_t saturation(int16_t variable,int16_t maxValue){
 /* -------------------------------------------------------------------- */
 void mergeSignalsToOutput() {
 
-	int16_t outputThrottle = PULSE_OUT_MIN;
-	int16_t outputElevator = PULSE_OUT_MIDDLE;
-	int16_t outputAileron = PULSE_OUT_MIDDLE;
-	int16_t outputRudder = PULSE_OUT_MIDDLE;
-
+	 
 	outputThrottle = RCchannel[THROTTLE];
 	outputRudder = RCchannel[RUDDER];
 	outputElevator = RCchannel[ELEVATOR];
 	outputAileron = RCchannel[AILERON];
+	
 
 	if (velocityControllerEnabled == 1 || positionControllerEnabled == 1) {
 		if(landingState==LS_FLIGHT){		
@@ -180,7 +186,7 @@ void mergeSignalsToOutput() {
 		}else{		
 			outputElevator += saturation(velocityControllerElevatorOutput,CONTROLLER_ELEVATOR_SATURATION);
 			outputAileron += saturation(velocityControllerAileronOutput,CONTROLLER_AILERON_SATURATION);
-			outputThrottle += saturation(landingThrottleOutput,CONTROLLER_THROTTLE_SATURATION);				
+			outputThrottle += saturation(landingThrottleOutput,CONTROLLER_THROTTLE_SATURATION);								
 		}
 	}
 

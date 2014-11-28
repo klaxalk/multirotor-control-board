@@ -42,9 +42,13 @@ typedef struct
 	unsigned char AILERON_DESIRED_SPEED_POS_CONT;
 	unsigned char ELEVATOR_DESIRED_SPEED_POS_CONT_LEADER;
 	unsigned char AILERON_DESIRED_SPEED_POS_CONT_LEADER;
+	unsigned char OUTPUT_THROTTLE;
+	unsigned char OUTPUT_ELEVATOR;
+	unsigned char OUTPUT_AILERON;
+	unsigned char OUTPUT_RUDDER;
 } TELEMETRIEST;
 
-#define TELEMETRY_VARIABLES 28
+#define TELEMETRY_VARIABLES 32
 
 
 typedef struct

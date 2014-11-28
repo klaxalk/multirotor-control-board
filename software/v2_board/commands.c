@@ -77,7 +77,15 @@ float telemetryValue(unsigned char type){
 		f=elevatorDesiredSpeedPosControllerLeader;
 	}else if(type==TELEMETRIES.AILERON_DESIRED_SPEED_POS_CONT_LEADER){
 		f=aileronDesiredSpeedPosControllerLeader;
-	}
+    }else if(type==TELEMETRIES.OUTPUT_THROTTLE){
+		f=(float)outputThrottle;
+    }else if(type==TELEMETRIES.OUTPUT_ELEVATOR){
+		f=(float)outputElevator;
+    }else if(type==TELEMETRIES.OUTPUT_AILERON){
+		f=(float)outputAileron;
+    }else if(type==TELEMETRIES.OUTPUT_RUDDER){
+		f=(float)outputRudder;
+    }
 	return f;
 }
 void telemetrySend(unsigned char *address64,unsigned char *address16,unsigned char type,unsigned char frameID){
