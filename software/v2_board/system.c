@@ -149,15 +149,10 @@ void mergeSignalsToOutput() {
 
 	portENTER_CRITICAL();
 
-	int16_t outputThrottle = PULSE_OUT_MIN;
-	int16_t outputElevator = PULSE_OUT_MIDDLE;
-	int16_t outputAileron = PULSE_OUT_MIDDLE;
-	int16_t outputRudder = PULSE_OUT_MIDDLE;
-
-	outputThrottle = RCchannel[THROTTLE];
-	outputElevator = RCchannel[ELEVATOR];
-	outputAileron = RCchannel[AILERON];
-	outputRudder = RCchannel[RUDDER];
+	int16_t outputThrottle = RCchannel[THROTTLE];
+	int16_t outputElevator = RCchannel[ELEVATOR];
+	int16_t outputAileron = RCchannel[AILERON];
+	int16_t outputRudder = RCchannel[RUDDER];
 
 	// add altitude controller to output
 	if (altitudeControllerEnabled == true) {
