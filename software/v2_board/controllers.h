@@ -30,9 +30,10 @@
 #define POSITION_MAXIMUM   2000 //in mm, must be positive! crops Gumstix values
 #define SPEED_MAX 0.4 // in m/s, must be positive!
 
-#define VELOCITY_KV 200
-#define VELOCITY_KI 30
-#define VELOCITY_KA 10
+#define VELOCITY_KV 250
+#define VELOCITY_KI 10
+#define VELOCITY_KA 35
+
 
 #define POSITION_KP 85
 #define POSITION_KI 5
@@ -61,7 +62,7 @@
 #define CONTROLLER_THROTTLE_SATURATION 300
 
 // leading data TTL (sec)
-#define LEADING_DATA_TTL 1.5
+#define LEADING_DATA_TTL 0.5
 
 // common global variables
 // controllers output variables

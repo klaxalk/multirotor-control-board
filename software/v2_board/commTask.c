@@ -9,33 +9,31 @@
 
 
 
-
-
 void commTask(void *p) {	
 	//cca 40kHz	
 	unsigned char inChar;
 	unsigned char packet[60];	
 	int8_t i;
-	int16_t counter50Hz=0;
 	int16_t counter40Hz=0;
+	int16_t counter20Hz=0;
 	
 	//wait for XBee
 	vTaskDelay(1000);
 	
 	while (1) {		
 		
-		if (counter50Hz++>800){
-			counter50Hz=0;
-			if(positionControllerEnabled && leadKopter[7]!=0x00){
-				kopterLeadDataSet(leadKopter,ADDRESS.UNKNOWN16,estimatedThrottlePos,elevatorDesiredSpeedPosController,aileronDesiredSpeedPosController,0x00);
-				led_blue_toggle();
-			}
+		if (counter40Hz++>1000){
+			counter40Hz=0;
+
 		}
 		
-		if (counter40Hz++>1500){
-			counter40Hz=0;
-			led_yellow_toggle();
+		if (counter20Hz++>2000){
+			counter20Hz=0;
 			telemetryToCoordinatorSend();
+			if(positionControllerEnabled && leadKopter[7]!=0x00){
+				kopterLeadDataSet(leadKopter,ADDRESS.UNKNOWN16,estimatedThrottlePos,elevatorDesiredSpeedPosController,aileronDesiredSpeedPosController,0x00);			
+				led_blue_toggle();
+			}
 		}		
 		
 		
@@ -107,8 +105,9 @@ void commTask(void *p) {
 				elevatorSpeed = - opticalFlowData.flow_comp_m_x;
 				aileronSpeed  = + opticalFlowData.flow_comp_m_y;
 
+			
 			if (opticalFlowData.ground_distance < ALTITUDE_MAXIMUM 
-			&& opticalFlowData.ground_distance > 0.3 ) {
+			&& opticalFlowData.ground_distance >= 0.2 ) {
 				groundDistance = opticalFlowData.ground_distance;
 			}
 			px4Confidence = opticalFlowData.quality;

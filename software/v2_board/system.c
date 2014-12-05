@@ -165,7 +165,7 @@ int16_t saturation(int16_t variable,int16_t maxValue){
 /* -------------------------------------------------------------------- */
 void mergeSignalsToOutput() {
 
-	 
+portENTER_CRITICAL();
 	outputThrottle = RCchannel[THROTTLE];
 	outputRudder = RCchannel[RUDDER];
 	outputElevator = RCchannel[ELEVATOR];
@@ -195,6 +195,7 @@ void mergeSignalsToOutput() {
 	outputChannels[1] = outputRudder*2;
 	outputChannels[2] = outputElevator*2;
 	outputChannels[3] = outputAileron*2;
+portEXIT_CRITICAL();
 }
 
 /* -------------------------------------------------------------------- */

@@ -33,6 +33,12 @@ void parReceivePacket(unsigned char *inPacket,unsigned char *address64,unsigned 
 void adr64Setter(unsigned char * adr,unsigned char b1,unsigned char b2,unsigned char b3,unsigned char b4,unsigned char b5,unsigned char b6,unsigned char b7,unsigned char b8){
     *adr=b1; *(adr+1)=b2; *(adr+2)=b3; *(adr+3)=b4; *(adr+4)=b5; *(adr+5)=b6; *(adr+6)=b7; *(adr+7)=b8;
 }
+void adr64Setter2(unsigned char * adr,unsigned char * adr2){
+	int i;
+	for(i=0;i<8;i++){
+		*(adr+i)=*(adr2+i);
+	}
+}
 
 void constInit(){
     adr64Setter(ADDRESS.COORDINATOR,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00);
@@ -108,8 +114,8 @@ void constInit(){
 	
 	GET_STATUS=0x95;
 	
-//	telemetryToCoordinatorArr[TELEMETRIES.ELEVATOR_DESIRED_SPEED_POS_CONT]=1;
-
+	telemetryToCoordinatorArr[TELEMETRIES.ELEVATOR_VEL_SETPOINT]=1;
+	telemetryToCoordinatorArr[TELEMETRIES.ELEVATOR_SPEED_ESTIMATED]=1;	
 }
 
 
@@ -223,6 +229,7 @@ void packetHandler(unsigned char *inPacket){
 								kopterGumstix(address64,address16,*(dataIN+3));
 							}
 						}else
+						//LEADING
 						if(*(dataIN+2)==COMMANDS.LEADING){
 							leadingDataReceived++;
 							ch1[0]=*(dataIN+3); ch1[1]=*(dataIN+4); ch1[2]=*(dataIN+5); ch1[3]=*(dataIN+6); f1=(float *)ch1;

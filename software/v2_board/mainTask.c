@@ -30,7 +30,7 @@ void mainTask(void *p) {
 		} else if (RCchannel[AUX3] > (PPM_IN_MIDDLE_LENGTH + 400)) {
 			if (previous_AUX3 != 2) {			
 				enablePositionController();
-				disableVelocityController();
+				disableVelocityController();				
 				previous_AUX3 = 2;
 			}			
 		} else {
@@ -79,12 +79,16 @@ void mainTask(void *p) {
 		//gumstix enable
 		if(RCchannel[AUX1]<PPM_IN_MIDDLE_LENGTH){
 			if(previous_AUX1!=0){
-				disableGumstix();
+				//disableGumstix();		
+				elevatorDesiredVelocitySetpoint=0.0;
+				aileronDesiredVelocitySetpoint=0.0;
 				previous_AUX1=0;
 			}
 		}else{
 			if(previous_AUX1!=1){
-				enableGumstix();
+				//enableGumstix();
+				elevatorDesiredVelocitySetpoint=0.4;
+				aileronDesiredVelocitySetpoint=0.0;
 				previous_AUX1=1;
 			}
 		}
@@ -92,12 +96,12 @@ void mainTask(void *p) {
 		//leading enable
 		if(RCchannel[AUX5]<PPM_IN_MIDDLE_LENGTH){
 			if(previous_AUX5!=0){
-				//leadKopter=ADDRESS.COORDINATOR;
+				adr64Setter2(leadKopter,ADDRESS.COORDINATOR);
 				previous_AUX5=0;
 			}
 		}else{
 			if(previous_AUX5!=1){
-				//leadKopter=ADDRESS.K1;
+				adr64Setter2(leadKopter,ADDRESS.K1);
 				previous_AUX5=1;
 			}
 		}
