@@ -484,6 +484,8 @@ int matrix_float_inverse(const matrix_float * a, matrix_float * C) {
 				}
 			}
 			
+			matrix_float_copy(C, &temp_matrix2);
+			
 		// matrix does not have its inversion
 		} else {
 			
