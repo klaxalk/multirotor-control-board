@@ -9,6 +9,14 @@
 
 #include "matrixLib.h"
 
-void kalmanInit();
+typedef struct {
+	
+	matrix_float * covariance;
+	vector_float * states;
+} kalmanHandler;
+
+void kalmanIteration(kalmanHandler handler, const matrix_float * measurement, const vector_float * input, const matrix_float * A, const matrix_float * A_transpose, const matrix_float * B, const matrix_float * R, const matrix_float * Q, const matrix_float * C, const float dt);
+
+void kalmanInit(kalmanHandler handler);
 
 #endif /* KALMAN_H_ */

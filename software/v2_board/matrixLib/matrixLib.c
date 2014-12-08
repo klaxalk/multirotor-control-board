@@ -65,10 +65,47 @@ void vector_float_free(vector_float * v) {
 	vPortFree(v);
 }
 
+// add two vector a, b and write the answer to a
+void vector_float_add(vector_float * a, const vector_float * b) {
+	
+	// check dimension
+	if (a->length == b->length) {
+	
+		int16_t i;
+	
+		for (i = 1; i <= a->length; i++) {
+			
+			vector_float_set(a, i, vector_float_get(a, i) + vector_float_get(b, i));
+		}
+	}
+}
+
+// copy vector b to a vector a
+void vector_float_copy(vector_float * a, const vector_float * b) {
+	
+	// check dimension
+	if (a->length == b->length) {
+		
+		memcpy(a->data, b->data, a->length);
+		a->orientation = b->orientation;
+	}
+}
+
 // set particular cell of the matrix
 void matrix_float_set(matrix_float * m, const int16_t h, const int16_t w, const float value) {
 	
 	m->data[(w-1)*m->height + h - 1] = value;
+}
+
+// set the whole vector to zeros
+void vector_float_set_zero(vector_float * v) {
+	
+	int16_t i;
+	
+	for (i = 1; i <= v->length; i++) {
+		
+		vector_float_set(v, i, 0);
+	}
 }
 
 // get the particular cell of the matrix
@@ -133,7 +170,17 @@ void matrix_float_set_identity(matrix_float * m) {
 }
 
 // add two matrices
-void matrix_float_add(matrix_float * a, const matrix_float *b) {
+void matrix_float_copy(matrix_float * a, const matrix_float * b) {
+	
+	// matrices dimensions must agree
+	if ((a->width == b->width) && (a->height == b->height)) {
+		
+		memcpy(a->data, b->data, a->height*a->width);
+	}
+}
+
+// add two matrices
+void matrix_float_add(matrix_float * a, const matrix_float * b) {
 	
 	// matrices dimensions must agree
 	if ((a->width == b->width) && (a->height == b->height)) {
@@ -302,4 +349,147 @@ void matrix_float_mul_vec_left(const matrix_float * m, const vector_float * v, v
 	
 	// set orientation to horizontal
 	C->orientation = 1;
+}
+
+// compute the determinant of a matrix
+float matrix_float_determinant(const matrix_float * a) {
+	
+	// the matrix should be a square matrix
+	if (a->width == a->height) {
+		
+		// special case, 1x1 matrix
+		if (a->width == 1) {
+			
+			matrix_float_get(a, 1, 1);
+		}
+	
+		int16_t i, j, k;
+		float coeficient;
+		float determinant = 1;
+
+		// copy matrix a to a local temporary matrix
+		int16_t n = a->height;
+
+		float temp_matrix_data[n*n];
+		matrix_float temp_matrix;
+		temp_matrix.data = (float *) &temp_matrix_data;
+		temp_matrix.height = n;
+		temp_matrix.width = n;
+	
+		// copy the specified matrix into temp_matrix
+		matrix_float_copy(&temp_matrix, a);
+	
+		// start gauss elimination
+		// for all rows
+		for (i = 1; i <= a->height; i++) {
+			
+			// for all rows bellow it
+			for (j = a->height; j > i; j--) {
+				
+				coeficient = matrix_float_get(&temp_matrix, j, i)/matrix_float_get(&temp_matrix, i, i);
+				
+				for (k = 1; k <= a->width; k++) {
+				
+					matrix_float_set(&temp_matrix, j, k, matrix_float_get(&temp_matrix, j, k) - coeficient*matrix_float_get(&temp_matrix, i, k));	
+				}
+			}
+		}	
+		
+		for (i = 1; i <= a->width; i++) {
+			
+			determinant *= matrix_float_get(&temp_matrix, i, i);
+		}
+		
+		return determinant;
+	}
+	
+	return (float) 0;
+}
+
+// computer the inversion of matrix A, returns 0 if the inversion doesn't exist, 1 otherwise
+int matrix_float_inverse(const matrix_float * a, matrix_float * C) {
+	
+	// the matrix should be a square matrix
+	if (a->width == a->height) {
+	
+		// special case, 1x1 matrix
+		if (a->width == 1) {
+			
+			return 1/matrix_float_get(a, 1, 1);
+		}	
+		
+		float determinant = matrix_float_determinant(a);
+		
+		// check the matrix regularity
+		if (fabs(determinant) <= 0.000000001) {
+			
+			int16_t i, j, k;
+			float coeficient;
+	
+			// copy matrix a to a local temporary matrix
+			int16_t n = a->height;
+
+			float temp_matrix_data[n*n];
+			matrix_float temp_matrix;
+			temp_matrix.data = (float *) &temp_matrix_data;
+			temp_matrix.height = n;
+			temp_matrix.width = n;
+			
+			// temp matrix2 for computing the covariance matrix
+			float temp_matrix2_data[n*n];
+			matrix_float temp_matrix2;
+			temp_matrix2.data = (float *) &temp_matrix2_data;
+			temp_matrix2.height = n;
+			temp_matrix2.width = n;
+			
+			// set one matrix as the specified matrix
+			matrix_float_copy(&temp_matrix, a);
+			
+			// set the other as diagonal
+			matrix_float_set_identity(&temp_matrix2);
+			
+			// do complete gauss elimination
+			
+			// start elimination the bottom triangular matrix
+			// for all rows
+			for (i = 1; i <= n; i++) {
+						
+				// for all rows bellow it
+				for (j = n; j > i; j--) {
+							
+					coeficient = matrix_float_get(&temp_matrix, j, i)/matrix_float_get(&temp_matrix, i, i);
+							
+					for (k = 1; k <= a->width; k++) {
+								
+						matrix_float_set(&temp_matrix, j, k, matrix_float_get(&temp_matrix, j, k) - coeficient*matrix_float_get(&temp_matrix, i, k));
+						matrix_float_set(&temp_matrix2, j, k, matrix_float_get(&temp_matrix2, j, k) - coeficient*matrix_float_get(&temp_matrix2, i, k));
+					}
+				}
+			}
+			
+			// start elimination the top triangular matrix
+			// for all rows
+			for (i = n; i >= 1; i--) {
+				
+				// for all rows bellow it
+				for (j = 1; j <= i; j++) {
+					
+					coeficient = matrix_float_get(&temp_matrix, j, i)/matrix_float_get(&temp_matrix, i, i);
+					
+					for (k = 1; k <= a->width; k++) {
+						
+						matrix_float_set(&temp_matrix, j, k, matrix_float_get(&temp_matrix, j, k) - coeficient*matrix_float_get(&temp_matrix, i, k));
+						matrix_float_set(&temp_matrix2, j, k, matrix_float_get(&temp_matrix2, j, k) - coeficient*matrix_float_get(&temp_matrix2, i, k));
+					}
+				}
+			}
+			
+		// matrix does not have its inversion
+		} else {
+			
+			return 0;
+		}
+	}
+	
+	return 1;
 }
