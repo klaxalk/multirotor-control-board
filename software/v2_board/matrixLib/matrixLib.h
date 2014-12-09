@@ -40,6 +40,9 @@ void vector_float_free(vector_float * v);
 // add two vector a, b and write the answer to a
 void vector_float_add(vector_float * a, const vector_float * b);
 
+// multiplies a vector by a constant
+void vector_float_times(vector_float * a, const float C);
+
 // copy vector b to a vector a
 void vector_float_copy(vector_float * a, const vector_float * b);
 
@@ -88,6 +91,9 @@ void matrix_float_get_col(const matrix_float * m, vector_float * v, const int16_
 // multiply two matrices
 void matrix_float_mul(const matrix_float * a, const matrix_float * b, matrix_float * C);
 
+// multiply matrix by a constant
+void matrix_float_times(matrix_float * a, const float C);
+
 // multiply a matrix by a vector from the right
 void matrix_float_mul_vec_right(const matrix_float * m, const vector_float * v, vector_float * C);
 
@@ -98,6 +104,6 @@ void matrix_float_mul_vec_left(const matrix_float * m, const vector_float * v, v
 float matrix_float_determinant(const matrix_float * a);
 
 // compute the inversion of matrix A, returns 0 if the inversion doesn't exist, 1 otherwise
-int matrix_float_inverse(const matrix_float * a, matrix_float * C);
+int matrix_float_inverse(matrix_float * a);
 
 #endif /* MATRIXLIB_H_ */
