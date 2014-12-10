@@ -48,6 +48,12 @@ void vector_float_free(vector_float * v);
 // add two vector a, b and write the answer to a
 void vector_float_add(vector_float * a, const vector_float * b);
 
+// returns an inner product of two vectors a*b
+float vector_float_inner_product(const vector_float * a, const vector_float * b);
+
+// returns an outer product of two vectors a*b
+void vector_float_outer_product(const vector_float * a, const vector_float * b, vector_float * C);
+
 // multiplies a vector by a constant
 void vector_float_times(vector_float * a, const float C);
 
@@ -70,7 +76,10 @@ void matrix_float_set(matrix_float * m, const int16_t h, const int16_t w, const 
 float matrix_float_get(const matrix_float * m, const int16_t h, const int16_t w);
 
 // matrix transposition
-void matrix_float_transpose(matrix_float * m);
+void matrix_float_transpose(const matrix_float * a, matrix_float * C);
+
+// matrix transposition
+void matrix_float_transpose_square(matrix_float * m);
 
 // set all cells to value
 void matrix_float_set_all(matrix_float * m, const float value);
@@ -118,6 +127,9 @@ int matrix_float_inverse(matrix_float * a);
 
 // print the matrix to serial output
 void matrix_float_print(const matrix_float * a, UsartBuffer * usartBuffer);
+
+// print the matrix to serial output
+void vector_float_print(const vector_float * a, UsartBuffer * usartBuffer);
 
 #endif
 

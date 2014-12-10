@@ -18,6 +18,7 @@ void commTask(void *p) {
 	
 	while (1) {
 		
+		/*
 		if (usartBufferGetByte(usart_buffer_4, &inChar, 0)) {
 
 			usartBufferPutByte(usart_buffer_stm, inChar, 0);
@@ -27,6 +28,7 @@ void commTask(void *p) {
 
 			usartBufferPutByte(usart_buffer_4, inChar, 0);
 		}
+		*/
 
 		// xBee received
 		if (usartBufferGetByte(usart_buffer_xbee, &inChar, 0)) {

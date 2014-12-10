@@ -81,6 +81,41 @@ void vector_float_add(vector_float * a, const vector_float * b) {
 	}
 }
 
+// add two vector a, b and write the answer to a
+float vector_float_inner_product(const vector_float * a, const vector_float * b) {
+	
+	float output = 0;
+	
+	// check dimension
+	if (a->length == b->length) {
+		
+		int16_t i;
+		
+		for (i = 1; i <= a->length; i++) {
+			
+			output += vector_float_get(a, i)*vector_float_get(b, i);
+		}
+	}
+	
+	return output;
+}
+
+void vector_float_outer_product(const vector_float * a, const vector_float * b, vector_float * C) {
+	
+	// check dimension
+	if (a->length == b->length && a->length == C->length) {
+		
+		int16_t i;
+		
+		for (i = 1; i <= a->length; i++) {
+			
+			vector_float_set(C, i, vector_float_get(a, i)*vector_float_get(b, i));
+		}
+		
+		C->orientation = 1;
+	}
+}
+
 // multiplies a vector by a constant
 void vector_float_times(vector_float * a, const float C) {
 	
@@ -127,7 +162,25 @@ float matrix_float_get(const matrix_float * m, const int16_t h, const int16_t w)
 }
 
 // matrix transposition
-void matrix_float_transpose(matrix_float * m) {
+void matrix_float_transpose(const matrix_float * a, matrix_float * C) {
+	
+	int16_t i, j;
+	
+	// dimensions must agree
+	if (a->width == C->height && a->height == C->width) {
+		
+		for (i = 1; i <= a->height; i++) {
+			
+			for (j = i; j <= a->width; j++) {
+
+				matrix_float_set(C, i, j, matrix_float_get(a, j, i));
+			}
+		}
+	}
+}
+
+// matrix transposition
+void matrix_float_transpose_square(matrix_float * m) {
 	
 	int16_t i, j;
 	float temp;
@@ -346,10 +399,10 @@ void matrix_float_mul_vec_right(const matrix_float * m, const vector_float * v, 
 			}
 			vector_float_set(C, j, tempSum);
 		}
-	}	
 	
-	// set orientation to vertical
-	C->orientation = 0;
+		// set orientation to vertical
+		C->orientation = 0;
+	}	
 }
 
 // multiply a matrix by a vector from the left
@@ -449,7 +502,7 @@ void matrix_float_print(const matrix_float * a, UsartBuffer * usartBuffer) {
 		
 		for (j = 1; j <= a->width; j++) {
 			
-			sprintf(temp, "%6.4f", matrix_float_get(a, i, j));
+			sprintf(temp, "%12.8f", matrix_float_get(a, i, j));
 			usartBufferPutString(usartBuffer, temp, 10);
 			
 			if (j < a->width)
@@ -458,6 +511,35 @@ void matrix_float_print(const matrix_float * a, UsartBuffer * usartBuffer) {
 		}
 		
 		usartBufferPutString(usartBuffer, "\n\r", 10);
+	}
+	usartBufferPutString(usartBuffer, "\n\r", 10);
+}
+
+// print the matrix to serial output
+void vector_float_print(const vector_float * a, UsartBuffer * usartBuffer) {
+	
+	int8_t i;
+	char temp[20];
+	
+	usartBufferPutString(usartBuffer, "Vector: ", 10);
+	usartBufferPutString(usartBuffer, a->name, 10);
+	usartBufferPutString(usartBuffer, "\n\r", 10);
+	
+	for (i = 1; i <= a->length; i++) {
+			
+		sprintf(temp, "%12.8f", vector_float_get(a, i));
+		usartBufferPutString(usartBuffer, temp, 10);
+			
+		if (a->orientation == 1) {
+			if (i < a->length) {
+				usartBufferPutString(usartBuffer, ", ", 10);
+			} else {
+				usartBufferPutString(usartBuffer, "\n\r", 10);
+			}
+		} else {
+			usartBufferPutString(usartBuffer, "\n\r", 10);
+		}
+		
 	}
 	usartBufferPutString(usartBuffer, "\n\r", 10);
 }
@@ -477,10 +559,6 @@ int matrix_float_inverse(matrix_float * a) {
 		}	
 		
 		float determinant = matrix_float_determinant(a);
-		
-		char temp[20];
-		sprintf(temp, "%8.4f", determinant);
-		usartBufferPutString(usart_buffer_4, temp, 10);
 		
 		// check the matrix regularity
 		if (fabs(determinant) >= 0.000000000000000000001) {
@@ -531,18 +609,17 @@ int matrix_float_inverse(matrix_float * a) {
 				}
 			}
 			
-			// make 1 in bottom right corner
-			
-			coeficient = matrix_float_get(&temp_matrix, n, n);
-			for (k = 1; k <= a->width; k++) {
-									
-				matrix_float_set(&temp_matrix2, n, k, matrix_float_get(&temp_matrix2, n, k)/coeficient);
-			}
-			matrix_float_set(&temp_matrix, n, n, (float) 1);
-			
 			// start elimination the top triangular matrix
 			// for all rows
 			for (i = n; i >= 1; i--) {
+							
+				// make 1 in bottom right corner
+				coeficient = matrix_float_get(&temp_matrix, i, i);
+				for (k = 1; k <= a->width; k++) {
+								
+					matrix_float_set(&temp_matrix2, i, k, matrix_float_get(&temp_matrix2, i, k)/coeficient);
+				}
+				matrix_float_set(&temp_matrix, i, i, (float) 1);
 				
 				// for all rows bellow it
 				for (j = 1; j < i; j++) {
