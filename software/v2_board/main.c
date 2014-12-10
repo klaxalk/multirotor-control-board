@@ -20,11 +20,24 @@
 // the controllersTask
 #include "controllersTask.h"
 
+void blink(void *p) {
+	
+	while (1) {
+		
+		led_yellow_toggle();
+		
+		// makes the 70Hz loop
+		vTaskDelay(500);
+	}
+}
+
 int main(void)
 {
 		
 	// initialize the hardware
 	boardInit();
+
+	xTaskCreate(blink, (signed char*) "commTask", 128, NULL, 2, NULL);
 
 	/* -------------------------------------------------------------------- */
 	/*	Start the communication task routine								*/

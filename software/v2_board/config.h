@@ -43,4 +43,15 @@
 	BACKWARD
 */
 
+//~ --------------------------------------------------------------------
+//~ What MCU is this code compiled for?
+//~ ... Used for some platform specific code in matrixLib
+//~ --------------------------------------------------------------------
+
+#define USED_MCU XMEGA
+/*
+	XMEGA
+	ARM
+*/
+
 #endif // _CONFIG_H

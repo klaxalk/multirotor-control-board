@@ -6,6 +6,7 @@
 
 #include "matrixLib.h"
 #include "FreeRTOS.h"
+#include <stdio.h>
 
 // dynamically allocate the matrix using FreeRTOS pvPortMalloc
 matrix_float * matrix_float_alloc(const int16_t h, const int16_t w) {
@@ -97,7 +98,7 @@ void vector_float_copy(vector_float * a, const vector_float * b) {
 	// check dimension
 	if (a->length == b->length) {
 		
-		memcpy(a->data, b->data, a->length);
+		memcpy(a->data, b->data, a->length*sizeof(float));
 		a->orientation = b->orientation;
 	}
 }
@@ -105,7 +106,7 @@ void vector_float_copy(vector_float * a, const vector_float * b) {
 // set particular cell of the matrix
 void matrix_float_set(matrix_float * m, const int16_t h, const int16_t w, const float value) {
 	
-	m->data[(w-1)*m->height + h - 1] = value;
+	m->data[(h-1)*m->width + w - 1] = value;
 }
 
 // set the whole vector to zeros
@@ -122,7 +123,7 @@ void vector_float_set_zero(vector_float * v) {
 // get the particular cell of the matrix
 float matrix_float_get(const matrix_float * m, const int16_t h, const int16_t w) {
 	
-	return m->data[(w-1)*m->height + h - 1];
+	return m->data[(h-1)*m->width + w - 1];
 }
 
 // matrix transposition
@@ -133,7 +134,7 @@ void matrix_float_transpose(matrix_float * m) {
 	
 	for (i = 1; i <= m->height; i++) {
 		
-		for (j = 1; j <= m->width; j++) {
+		for (j = i; j <= m->width; j++) {
 			
 			temp = matrix_float_get(m, i, j);
 			matrix_float_set(m, i, j, matrix_float_get(m, j, i));
@@ -186,7 +187,7 @@ void matrix_float_copy(matrix_float * a, const matrix_float * b) {
 	// matrices dimensions must agree
 	if ((a->width == b->width) && (a->height == b->height)) {
 		
-		memcpy(a->data, b->data, a->height*a->width);
+		memcpy(a->data, b->data, a->height*a->width*sizeof(float));
 	}
 }
 
@@ -400,6 +401,7 @@ float matrix_float_determinant(const matrix_float * a) {
 		temp_matrix.data = (float *) &temp_matrix_data;
 		temp_matrix.height = n;
 		temp_matrix.width = n;
+		temp_matrix.name = "Vypocet determinantu";
 	
 		// copy the specified matrix into temp_matrix
 		matrix_float_copy(&temp_matrix, a);
@@ -418,8 +420,8 @@ float matrix_float_determinant(const matrix_float * a) {
 					matrix_float_set(&temp_matrix, j, k, matrix_float_get(&temp_matrix, j, k) - coeficient*matrix_float_get(&temp_matrix, i, k));	
 				}
 			}
-		}	
-		
+		}
+	
 		for (i = 1; i <= a->width; i++) {
 			
 			determinant *= matrix_float_get(&temp_matrix, i, i);
@@ -430,6 +432,37 @@ float matrix_float_determinant(const matrix_float * a) {
 	
 	return (float) 0;
 }
+
+#if USED_MCU == XMEGA
+
+// print the matrix to serial output
+void matrix_float_print(const matrix_float * a, UsartBuffer * usartBuffer) {
+	
+	int8_t i, j;
+	char temp[20];
+	
+	usartBufferPutString(usartBuffer, "Matrix: ", 10);
+	usartBufferPutString(usartBuffer, a->name, 10);
+	usartBufferPutString(usartBuffer, "\n\r", 10);
+	
+	for (i = 1; i <= a->height; i++) {
+		
+		for (j = 1; j <= a->width; j++) {
+			
+			sprintf(temp, "%6.4f", matrix_float_get(a, i, j));
+			usartBufferPutString(usartBuffer, temp, 10);
+			
+			if (j < a->width)
+			usartBufferPutString(usartBuffer, ", ", 10);
+			
+		}
+		
+		usartBufferPutString(usartBuffer, "\n\r", 10);
+	}
+	usartBufferPutString(usartBuffer, "\n\r", 10);
+}
+
+#endif
 
 // computer the inversion of matrix A, returns 0 if the inversion doesn't exist, 1 otherwise
 int matrix_float_inverse(matrix_float * a) {
@@ -445,8 +478,12 @@ int matrix_float_inverse(matrix_float * a) {
 		
 		float determinant = matrix_float_determinant(a);
 		
+		char temp[20];
+		sprintf(temp, "%8.4f", determinant);
+		usartBufferPutString(usart_buffer_4, temp, 10);
+		
 		// check the matrix regularity
-		if (fabs(determinant) <= 0.000000001) {
+		if (fabs(determinant) >= 0.000000000000000000001) {
 			
 			int16_t i, j, k;
 			float coeficient;
@@ -459,6 +496,7 @@ int matrix_float_inverse(matrix_float * a) {
 			temp_matrix.data = (float *) &temp_matrix_data;
 			temp_matrix.height = n;
 			temp_matrix.width = n;
+			temp_matrix.name = "Puvodni";
 			
 			// temp matrix2 for computing the covariance matrix
 			float temp_matrix2_data[n*n];
@@ -466,6 +504,7 @@ int matrix_float_inverse(matrix_float * a) {
 			temp_matrix2.data = (float *) &temp_matrix2_data;
 			temp_matrix2.height = n;
 			temp_matrix2.width = n;
+			temp_matrix2.name = "Nova";
 			
 			// set one matrix as the specified matrix
 			matrix_float_copy(&temp_matrix, a);
@@ -492,12 +531,21 @@ int matrix_float_inverse(matrix_float * a) {
 				}
 			}
 			
+			// make 1 in bottom right corner
+			
+			coeficient = matrix_float_get(&temp_matrix, n, n);
+			for (k = 1; k <= a->width; k++) {
+									
+				matrix_float_set(&temp_matrix2, n, k, matrix_float_get(&temp_matrix2, n, k)/coeficient);
+			}
+			matrix_float_set(&temp_matrix, n, n, (float) 1);
+			
 			// start elimination the top triangular matrix
 			// for all rows
 			for (i = n; i >= 1; i--) {
 				
 				// for all rows bellow it
-				for (j = 1; j <= i; j++) {
+				for (j = 1; j < i; j++) {
 					
 					coeficient = matrix_float_get(&temp_matrix, j, i)/matrix_float_get(&temp_matrix, i, i);
 					

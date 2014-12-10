@@ -11,11 +11,18 @@
 #include <stdint.h>
 #include <string.h>
 
+#if USED_MCU == XMEGA
+#include "system.h"
+#include "config.h"
+#include "usart_driver_RTOS.h"
+#endif
+
 typedef struct {
 	
 	int16_t width;
 	int16_t height;
 	float * data;
+	char * name;
 } matrix_float;
 
 typedef struct {
@@ -23,6 +30,7 @@ typedef struct {
 	int16_t length;
 	int8_t orientation;
 	float * data;
+	char * name;
 } vector_float;
 
 // matrix allocation
@@ -105,5 +113,12 @@ float matrix_float_determinant(const matrix_float * a);
 
 // compute the inversion of matrix A, returns 0 if the inversion doesn't exist, 1 otherwise
 int matrix_float_inverse(matrix_float * a);
+
+#if USED_MCU == XMEGA
+
+// print the matrix to serial output
+void matrix_float_print(const matrix_float * a, UsartBuffer * usartBuffer);
+
+#endif
 
 #endif /* MATRIXLIB_H_ */
