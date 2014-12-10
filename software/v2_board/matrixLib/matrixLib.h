@@ -52,7 +52,7 @@ void vector_float_add(vector_float * a, const vector_float * b);
 float vector_float_inner_product(const vector_float * a, const vector_float * b);
 
 // returns an outer product of two vectors a*b
-void vector_float_outer_product(const vector_float * a, const vector_float * b, vector_float * C);
+void vector_float_outer_product(const vector_float * a, const vector_float * b, matrix_float * C);
 
 // multiplies a vector by a constant
 void vector_float_times(vector_float * a, const float C);
@@ -125,11 +125,13 @@ int matrix_float_inverse(matrix_float * a);
 
 #if USED_MCU == XMEGA
 
-// print the matrix to serial output
-void matrix_float_print(const matrix_float * a, UsartBuffer * usartBuffer);
+#define USART_BUFFER usart_buffer_4
 
 // print the matrix to serial output
-void vector_float_print(const vector_float * a, UsartBuffer * usartBuffer);
+void matrix_float_print(const matrix_float * a);
+
+// print the matrix to serial output
+void vector_float_print(const vector_float * a);
 
 #endif
 

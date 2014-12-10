@@ -43,14 +43,14 @@ void controllersTask(void *p) {
 	matrix_float_transpose_square(&A_tran_matrix);
 	
 	/* --------------------------------------------------------------	------ */
-	/* System B vector														*/
+	/* System B matrix														*/
 	/* -------------------------------------------------------------------- */
-	vector_float B_vector;
-	B_vector.name = "System vector B";
-	B_vector.length = 3;
-	B_vector.orientation = 0;
+	matrix_float B_matrix;
+	B_matrix.name = "System matrix B";
+	B_matrix.height = 3;
+	B_matrix.width = 1;
 	float data_B[3] = {0, 0, 0.1219*dt};
-	B_vector.data = (float *) data_B;
+	B_matrix.data = (float *) data_B;
 	
 	/* -------------------------------------------------------------------- */
 	/* Kalman states vector													*/
@@ -111,7 +111,7 @@ void controllersTask(void *p) {
 	C_matrix.name = "C matrix";
 	C_matrix.height = 1;
 	C_matrix.width = 3;
-	float data_C[3*1] = {1, 0, 0};
+	float data_C[3*1] = {0, 1, 0};
 	C_matrix.data = (float *) data_C;
 	
 	/* -------------------------------------------------------------------- */
@@ -153,15 +153,22 @@ void controllersTask(void *p) {
 	matrix_float_print(&C_matrix, usart_buffer_4);
 	matrix_float_print(&C_tran_	matrix, usart_buffer_4);
 	*/
+			
+	vector_float_set(&input_vector, 1, 0);
+	vector_float_set(&measurement_vector, 1, 0);
 	
-	//int i;
-	//for (i = 0; i < 10; i++) {
-		
-		kalmanIteration(elevatorHandler, &measurement_vector, &input_vector, &A_matrix, &A_tran_matrix, &B_vector, &R_matrix, &Q_matrix, &C_matrix, &C_tran_matrix, dt);
-		
-		// vector_float_print(elevatorHandler.states, usart_buffer_4);
-	//}
+	vector_float_print(elevatorHandler.states);
 	
+	int i;
+	for (i = 0; i < 100; i++) {
+				
+		kalmanIteration(&elevatorHandler, &measurement_vector, &input_vector, &A_matrix, &A_tran_matrix, &B_matrix, &R_matrix, &Q_matrix, &C_matrix, &C_tran_matrix, dt);
+		
+		vector_float_print(elevatorHandler.states);
+	}
+	
+	matrix_float_print(elevatorHandler.covariance);
+
 	while (1) {
 		
 		altitudeEstimator();

@@ -100,19 +100,20 @@ float vector_float_inner_product(const vector_float * a, const vector_float * b)
 	return output;
 }
 
-void vector_float_outer_product(const vector_float * a, const vector_float * b, vector_float * C) {
+void vector_float_outer_product(const vector_float * a, const vector_float * b, matrix_float * C) {
 	
 	// check dimension
-	if (a->length == b->length && a->length == C->length) {
+	if ((a->length == C->height) && (b->length == C->width)) {
 		
-		int16_t i;
+		int16_t i, j;
 		
 		for (i = 1; i <= a->length; i++) {
 			
-			vector_float_set(C, i, vector_float_get(a, i)*vector_float_get(b, i));
+			for (j = 1; j <= b->length; j++) {
+				
+				matrix_float_set(C, i, j, vector_float_get(a, i)*vector_float_get(b, j));
+			}
 		}
-		
-		C->orientation = 1;
 	}
 }
 
@@ -387,17 +388,17 @@ void matrix_float_mul_vec_right(const matrix_float * m, const vector_float * v, 
 	float tempSum;
 	
 	// dimensions must agree
-	if (m->width == v->length) {
+	if ((m->width == v->length) & (m->height == C->length)) {
 		
 		for (i = 1; i <= m->height; i++) {
 			
 			tempSum = 0;
 			
-			for (j = 1; j <= v->length; j++) {
+			for (j = 1; j <= m->width; j++) {
 			
 				tempSum += matrix_float_get(m, i, j)*vector_float_get(v, j);	
 			}
-			vector_float_set(C, j, tempSum);
+			vector_float_set(C, i, tempSum);
 		}
 	
 		// set orientation to vertical
@@ -489,59 +490,59 @@ float matrix_float_determinant(const matrix_float * a) {
 #if USED_MCU == XMEGA
 
 // print the matrix to serial output
-void matrix_float_print(const matrix_float * a, UsartBuffer * usartBuffer) {
+void matrix_float_print(const matrix_float * a) {
 	
 	int8_t i, j;
-	char temp[20];
+	char temp[50];
 	
-	usartBufferPutString(usartBuffer, "Matrix: ", 10);
-	usartBufferPutString(usartBuffer, a->name, 10);
-	usartBufferPutString(usartBuffer, "\n\r", 10);
+	usartBufferPutString(USART_BUFFER, "Matrix: ", 10);
+	usartBufferPutString(USART_BUFFER, a->name, 10);
+	usartBufferPutString(USART_BUFFER, "\n\r", 10);
 	
 	for (i = 1; i <= a->height; i++) {
 		
 		for (j = 1; j <= a->width; j++) {
 			
 			sprintf(temp, "%12.8f", matrix_float_get(a, i, j));
-			usartBufferPutString(usartBuffer, temp, 10);
+			usartBufferPutString(USART_BUFFER, temp, 10);
 			
 			if (j < a->width)
-			usartBufferPutString(usartBuffer, ", ", 10);
+			usartBufferPutString(USART_BUFFER, ", ", 10);
 			
 		}
 		
-		usartBufferPutString(usartBuffer, "\n\r", 10);
+		usartBufferPutString(USART_BUFFER, "\n\r", 10);
 	}
-	usartBufferPutString(usartBuffer, "\n\r", 10);
+	usartBufferPutString(USART_BUFFER, "\n\r", 10);
 }
 
 // print the matrix to serial output
-void vector_float_print(const vector_float * a, UsartBuffer * usartBuffer) {
+void vector_float_print(const vector_float * a) {
 	
 	int8_t i;
-	char temp[20];
+	char temp[40];
 	
-	usartBufferPutString(usartBuffer, "Vector: ", 10);
-	usartBufferPutString(usartBuffer, a->name, 10);
-	usartBufferPutString(usartBuffer, "\n\r", 10);
+	usartBufferPutString(USART_BUFFER, "Vector: ", 10);
+	usartBufferPutString(USART_BUFFER, a->name, 10);
+	usartBufferPutString(USART_BUFFER, "\n\r", 10);
 	
 	for (i = 1; i <= a->length; i++) {
 			
-		sprintf(temp, "%12.8f", vector_float_get(a, i));
-		usartBufferPutString(usartBuffer, temp, 10);
+		sprintf(temp, "%8.4f", vector_float_get(a, i));
+		usartBufferPutString(USART_BUFFER, temp, 10);
 			
 		if (a->orientation == 1) {
 			if (i < a->length) {
-				usartBufferPutString(usartBuffer, ", ", 10);
+				usartBufferPutString(USART_BUFFER, ", ", 10);
 			} else {
-				usartBufferPutString(usartBuffer, "\n\r", 10);
+				usartBufferPutString(USART_BUFFER, "\n\r", 10);
 			}
 		} else {
-			usartBufferPutString(usartBuffer, "\n\r", 10);
+			usartBufferPutString(USART_BUFFER, "\n\r", 10);
 		}
 		
 	}
-	usartBufferPutString(usartBuffer, "\n\r", 10);
+	usartBufferPutString(USART_BUFFER, "\n\r", 10);
 }
 
 #endif
@@ -555,7 +556,8 @@ int matrix_float_inverse(matrix_float * a) {
 		// special case, 1x1 matrix
 		if (a->width == 1) {
 			
-			return 1/matrix_float_get(a, 1, 1);
+			matrix_float_set(a, 1, 1, ((float) 1)/matrix_float_get(a, 1, 1));
+			return 1;
 		}	
 		
 		float determinant = matrix_float_determinant(a);
