@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <windows.h>
 #include "XBeeComm.h"
 #include "packets.h"
 #include "commands.h"

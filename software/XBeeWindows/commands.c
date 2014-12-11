@@ -161,22 +161,21 @@ void kopterTrajectoryAddPointRequest(unsigned char *address64,unsigned char *add
 
 	*(dataOUT)='c';
 	*(dataOUT+1)=COMMANDS.TRAJECTORY_POINTS;
-	*(dataOUT+2)=COMMANDS.TRAJECTORY_POINTS;
-	*(dataOUT+3)=index;
+	*(dataOUT+2)=index;
 
 	ch=(unsigned char *) &time;
-	*(dataOUT+4)=*ch; *(dataOUT+5)=*(ch+1); *(dataOUT+6)=*(ch+2); *(dataOUT+7)=*(ch+3);
+	*(dataOUT+3)=*ch; *(dataOUT+4)=*(ch+1); *(dataOUT+5)=*(ch+2); *(dataOUT+6)=*(ch+3);
 
 	ch=(unsigned char *) &elevatorPos;
-	*(dataOUT+8)=*ch; *(dataOUT+9)=*(ch+1); *(dataOUT+10)=*(ch+2); *(dataOUT+11)=*(ch+3);
+	*(dataOUT+7)=*ch; *(dataOUT+8)=*(ch+1); *(dataOUT+9)=*(ch+2); *(dataOUT+10)=*(ch+3);
 
 	ch=(unsigned char *) &aileronPos;
-	*(dataOUT+12)=*ch; *(dataOUT+13)=*(ch+1); *(dataOUT+14)=*(ch+2); *(dataOUT+15)=*(ch+3);
+	*(dataOUT+11)=*ch; *(dataOUT+12)=*(ch+1); *(dataOUT+13)=*(ch+2); *(dataOUT+14)=*(ch+3);
 
 	ch=(unsigned char *) &throttlePos;
-	*(dataOUT+16)=*ch; *(dataOUT+17)=*(ch+1); *(dataOUT+18)=*(ch+2); *(dataOUT+19)=*(ch+3);
+	*(dataOUT+15)=*ch; *(dataOUT+16)=*(ch+1); *(dataOUT+17)=*(ch+2); *(dataOUT+18)=*(ch+3);
 
-	makeTRPacket(address64,address16,0x00,frameID,dataOUT,20);
+	makeTRPacket(address64,address16,0x00,frameID,dataOUT,19);
 }
 void kopterTrajectoryPointStatusRequest(unsigned char *address64,unsigned char *address16,unsigned char frameID){
 	*(dataOUT)='c';
@@ -208,8 +207,8 @@ void kopterSetpointsSetRequest(unsigned char *address64,unsigned char *address16
 void kopterSetpointStatusRequest(unsigned char *address64,unsigned char *address16,unsigned char type,unsigned char frameID){
     *(dataOUT)='c';
     *(dataOUT+1)=COMMANDS.SET_SETPOINTS;
-    *(dataOUT+2)=type;
-    *(dataOUT+3)=GET_STATUS;
+    *(dataOUT+2)=GET_STATUS;
+    *(dataOUT+3)=type;
     makeTRPacket(address64,address16,0x00,frameID,dataOUT,4);
 }
 void kopterSetpointsReportReceived(unsigned char *address64,unsigned char *address16,unsigned char type,float value){

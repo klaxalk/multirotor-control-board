@@ -21,10 +21,10 @@ void kopterLandStatusRequest(unsigned char *address64,unsigned char *address16,u
 void kopterLandReport(unsigned char *address64,unsigned char *address16,unsigned char frameID);
 void kopterLandReportRecieved(unsigned char *address64,unsigned char *address16,unsigned char status);
 
-void kopterTrajectoryRequest(unsigned char *address64,unsigned char *address16,unsigned char options,unsigned char frameID);
-void kopterTrajectory(unsigned char *address64,unsigned char *address16,unsigned char on);
-void kopterTrajectoryStatusRequest(unsigned char *address64,unsigned char *address16,unsigned char frameID);
-void kopterTrajectoryReport(unsigned char *address64,unsigned char *address16,unsigned char frameID);
+void kopterTrajectoryFollowRequest(unsigned char *address64,unsigned char *address16,unsigned char options,unsigned char frameID);
+void kopterTrajectoryFollow(unsigned char *address64,unsigned char *address16,unsigned char on);
+void kopterTrajectoryFollowStatusRequest(unsigned char *address64,unsigned char *address16,unsigned char frameID);
+void kopterTrajectoryFollowReport(unsigned char *address64,unsigned char *address16,unsigned char frameID);
 void kopterTrajectoryReportRecieved(unsigned char *address64,unsigned char *address16,unsigned char status);
 
 void kopterTrajectoryAddPointRequest(unsigned char *address64,unsigned char *address16,unsigned char index,float time,float elevatorPos,float aileronPos,float throttlePos,unsigned char frameID);
