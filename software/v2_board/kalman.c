@@ -20,8 +20,8 @@ void kalmanIteration(kalmanHandler * handler, const vector_float * measurement, 
 	// number of states
 	int n = handler->states->length;
 	
-	// number of inputs
-	int u = input->length;
+	// number measured variables
+	int u = measurement->length;
 	
 	// copy of the states vector
 	vector_float handler_local_states;
@@ -33,7 +33,6 @@ void kalmanIteration(kalmanHandler * handler, const vector_float * measurement, 
 	handler_local.states = &handler_local_states;
 	vector_float_copy(handler_local.states, handler->states);
 	
-
 	// copy of the covariance matrix
 	matrix_float handler_local_covariance;
 	handler_local_covariance.name = "Local covariance";
@@ -144,15 +143,16 @@ void kalmanIteration(kalmanHandler * handler, const vector_float * measurement, 
 	matrix_float_mul(handler_local.covariance, C_transpose, &temp_matrix3);
 	
 	// matrix for the kalman gain
-	float kalman_gain_data[n*u];
 	matrix_float K;
+	K.name = "Kalman Gain";
+	float kalman_gain_data[n*u];
 	K.data = (float *) &kalman_gain_data;
 	K.height = n;
 	K.width = u;
 	
 	// K = temp_matrix3*temp_matrix4
 	matrix_float_mul(&temp_matrix3, &temp_matrix4, &K);
-	
+		
 	/* -------------------------------------------------------------------- */
 	/*	Correction step - Recomputing states								*/
 	/* -------------------------------------------------------------------- */

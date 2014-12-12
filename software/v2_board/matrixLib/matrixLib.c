@@ -168,13 +168,13 @@ void matrix_float_transpose(const matrix_float * a, matrix_float * C) {
 	int16_t i, j;
 	
 	// dimensions must agree
-	if (a->width == C->height && a->height == C->width) {
+	if ((a->width == C->height) && (a->height == C->width)) {
 		
 		for (i = 1; i <= a->height; i++) {
 			
 			for (j = i; j <= a->width; j++) {
 
-				matrix_float_set(C, i, j, matrix_float_get(a, j, i));
+				matrix_float_set(C, j, i, matrix_float_get(a, i, j));
 			}
 		}
 	}
@@ -364,7 +364,7 @@ void matrix_float_mul(const matrix_float * a, const matrix_float * b, matrix_flo
 				matrix_float_set(C, i, j, tempSum);
 			}
 		}
-	} 
+	}
 }
 
 // multiply matrix by a constant

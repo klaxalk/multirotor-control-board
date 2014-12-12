@@ -79,7 +79,7 @@ void controllersTask(void *p) {
 	measurement_vector.name = "Measurements vector";
 	measurement_vector.length = 1;
 	measurement_vector.orientation = 0;
-	float data_measurement[1];
+	float data_measurement[measurement_vector.length];
 	measurement_vector.data = (float *) data_measurement;
 	
 	/* -------------------------------------------------------------------- */
@@ -101,7 +101,7 @@ void controllersTask(void *p) {
 	Q_matrix.name = "Q matrix";
 	Q_matrix.height = 1;
 	Q_matrix.width = 1;
-	float Q_data[1] = {0.058*0.058};
+	float Q_data[1] = {1000};
 	Q_matrix.data = (float *) Q_data;
 	
 	/* -------------------------------------------------------------------- */
@@ -111,17 +111,17 @@ void controllersTask(void *p) {
 	C_matrix.name = "C matrix";
 	C_matrix.height = 1;
 	C_matrix.width = 3;
-	float data_C[3*1] = {0, 1, 0};
+	float data_C[2*3] = {0, 1, 0};
 	C_matrix.data = (float *) data_C;
 	
 	/* -------------------------------------------------------------------- */
 	/* C transposed matrix													*/
 	/* -------------------------------------------------------------------- */
 	matrix_float C_tran_matrix;
-	C_tran_matrix.name = "C matrix";
+	C_tran_matrix.name = "C' matrix";
 	C_tran_matrix.height = C_matrix.width;
 	C_tran_matrix.width = C_matrix.height;
-	float data_C_tran[C_matrix.width*C_matrix.height];
+	float data_C_tran[3*2];
 	C_tran_matrix.data = (float *) data_C_tran;
 	matrix_float_transpose(&C_matrix, &C_tran_matrix);
 	
@@ -154,19 +154,23 @@ void controllersTask(void *p) {
 	matrix_float_print(&C_tran_	matrix, usart_buffer_4);
 	*/
 			
-	vector_float_set(&input_vector, 1, 0);
-	vector_float_set(&measurement_vector, 1, 0);
+	vector_float_set(&input_vector, 1, 3);
+	vector_float_set(&measurement_vector, 1, 0.15);
 	
-	vector_float_print(elevatorHandler.states);
+	char temp[20];
+	sprintf(temp, "Time: %dms %ds\r\n", milisecondsTimer, secondsTimer);
+	usartBufferPutString(usart_buffer_4, temp, 10);
 	
 	int i;
-	for (i = 0; i < 100; i++) {
+	for (i = 0; i < 140; i++) {
 				
 		kalmanIteration(&elevatorHandler, &measurement_vector, &input_vector, &A_matrix, &A_tran_matrix, &B_matrix, &R_matrix, &Q_matrix, &C_matrix, &C_tran_matrix, dt);
-		
-		vector_float_print(elevatorHandler.states);
 	}
+
+	sprintf(temp, "Time: %dms %ds\r\n", milisecondsTimer, secondsTimer);
+	usartBufferPutString(usart_buffer_4, temp, 10);
 	
+	vector_float_print(elevatorHandler.states);
 	matrix_float_print(elevatorHandler.covariance);
 
 	while (1) {

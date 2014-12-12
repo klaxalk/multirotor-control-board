@@ -50,6 +50,13 @@ UsartBuffer * usart_buffer_3;
 UsartBuffer * usart_buffer_4;
 
 /* -------------------------------------------------------------------- */
+/*	Realtime clock														*/
+/* -------------------------------------------------------------------- */
+volatile int16_t milisecondsTimer;
+volatile int16_t secondsTimer;
+volatile int16_t hoursTimer;
+
+/* -------------------------------------------------------------------- */
 /*	Basic initialization of the MCU, peripherals and i/o				*/
 /* -------------------------------------------------------------------- */
 void boardInit() {
@@ -112,6 +119,21 @@ void boardInit() {
 
 	// set the length of PPM pulse beginning
 	TC_SetCompareA(&TCD0, PPM_PULSE);
+	
+	/* -------------------------------------------------------------------- */
+	/*	Timer for RTC														*/
+	/* -------------------------------------------------------------------- */
+	
+	// select the clock source and pre-scaler by 8
+	TC1_ConfigClockSource(&TCC1, TC_CLKSEL_DIV64_gc);
+	
+	TC1_SetOverflowIntLevel(&TCC1, TC_OVFINTLVL_LO_gc);
+	
+	TC_SetPeriod(&TCC1, 499);
+	
+	milisecondsTimer = 0;
+	secondsTimer = 0;
+	hoursTimer = 0;
 	
 	/* -------------------------------------------------------------------- */
 	/*	setup PD4 as a PPM input with interrupt								*/
@@ -260,4 +282,23 @@ ISR(TCD0_CCA_vect) {
 	
 	// shut down the output PPM pulse
 	ppm_out_off();
+}
+
+/* -------------------------------------------------------------------- */
+/*	Interrupt for timing the RTC										*/
+/* -------------------------------------------------------------------- */
+ISR(TCC1_OVF_vect) {
+	
+	// shut down the output PPM pulse
+
+	if (milisecondsTimer++ == 1000) {
+		
+		milisecondsTimer = 0;
+		
+		if (secondsTimer++ == 3600) {
+			
+			secondsTimer = 0;
+			hoursTimer++;
+		}
+	}
 }

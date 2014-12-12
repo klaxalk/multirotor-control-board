@@ -125,6 +125,13 @@ extern volatile int16_t controllerAileronOutput;
 extern volatile int16_t controllerThrottleOutput;
 extern volatile int16_t controllerRudderOutput;
 
+/* -------------------------------------------------------------------- */
+/*	RTC																	*/
+/* -------------------------------------------------------------------- */
+extern volatile int16_t milisecondsTimer;
+extern volatile int16_t secondsTimer;
+extern volatile int16_t hoursTimer;
+
 /* Basic initialization of the MCU, peripherals and i/o */
 void boardInit();
 
