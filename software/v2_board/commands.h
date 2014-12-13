@@ -54,8 +54,8 @@ void kopterGumstixReportRecieved(unsigned char *address64,unsigned char *address
 void sendXBeeMessage(unsigned char *address64,unsigned char *address16,char *message,unsigned char frameID);
 void receiveXBeeMessage(unsigned char *address64,unsigned char *address16,unsigned char *message);
 
-void kopterLeadDataSet(unsigned char *address64,unsigned char *address16,volatile float altitude,volatile float elevatorVel,volatile float aileronVel,unsigned char frameID);
-void kopterLeadDataReceived(unsigned char *address64,unsigned char *address16,float altitude,float elevatorVel, float aileronVel);
+void kopterLeadDataSend(unsigned char *address64,unsigned char *address16,volatile float altitude,volatile float elevatorVel,volatile float aileronVel,volatile float elevatorError,volatile float aileronError,unsigned char frameID);
+void kopterLeadDataReceived(unsigned char *address64,unsigned char *address16,float altitude,float elevatorVel, float aileronVel, float elevatorError, float aileronError);
 
 
 #endif /*COMMANDS_H*/

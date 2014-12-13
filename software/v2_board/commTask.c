@@ -31,7 +31,7 @@ void commTask(void *p) {
 			counter20Hz=0;
 			telemetryToCoordinatorSend();
 			if(positionControllerEnabled && leadKopter[7]!=0x00){
-				kopterLeadDataSet(leadKopter,ADDRESS.UNKNOWN16,estimatedThrottlePos,elevatorDesiredSpeedPosController,aileronDesiredSpeedPosController,0x00);			
+				kopterLeadDataSend(leadKopter,ADDRESS.UNKNOWN16,estimatedThrottlePos,elevatorDesiredSpeedPosController,aileronDesiredSpeedPosController,elevatorPosContError,aileronPosContError,0x00);			
 				led_blue_toggle();
 			}
 		}		

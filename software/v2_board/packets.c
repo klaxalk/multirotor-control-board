@@ -129,11 +129,13 @@ void packetHandler(unsigned char *inPacket){
 	float *f2;
 	float *f3;
 	float *f4;
+	float *f5;	
 	uint8_t i;
 	char ch1[4];
 	char ch2[4];
 	char ch3[4];
 	char ch4[4];
+	char ch5[4];	
 	unsigned char usc;
 
     switch ((int)*(inPacket+3)) {
@@ -235,7 +237,9 @@ void packetHandler(unsigned char *inPacket){
 							ch1[0]=*(dataIN+3); ch1[1]=*(dataIN+4); ch1[2]=*(dataIN+5); ch1[3]=*(dataIN+6); f1=(float *)ch1;
 							ch2[0]=*(dataIN+7); ch2[1]=*(dataIN+8); ch2[2]=*(dataIN+9); ch2[3]=*(dataIN+10); f2=(float *)ch2;
 							ch3[0]=*(dataIN+11); ch3[1]=*(dataIN+12); ch3[2]=*(dataIN+13); ch3[3]=*(dataIN+14); f3=(float *)ch3;
-							kopterLeadDataReceived(address64,address16,*f1,*f2,*f3);
+							ch4[0]=*(dataIN+15); ch2[1]=*(dataIN+16); ch2[2]=*(dataIN+17); ch2[3]=*(dataIN+18); f4=(float *)ch4;
+							ch5[0]=*(dataIN+19); ch3[1]=*(dataIN+20); ch3[2]=*(dataIN+21); ch3[3]=*(dataIN+22); f5=(float *)ch5;							
+							kopterLeadDataReceived(address64,address16,*f1,*f2,*f3,*f4,*f5);
 						}						
                     break;
                 //telemetry

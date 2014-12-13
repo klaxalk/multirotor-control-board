@@ -89,7 +89,7 @@ extern volatile float estimatedThrottleVel;
 extern volatile float estimatedElevatorAcc;
 extern volatile float estimatedAileronAcc;
 
-//vars for controllers - Setpoints
+//vars for controllers
 extern volatile float elevatorPositionSetpoint;
 extern volatile float aileronPositionSetpoint;
 extern volatile float throttleSetpoint;
@@ -106,6 +106,9 @@ extern volatile float aileronDesiredPositionSetpoint;
 extern volatile float throttleDesiredSetpoint;
 extern volatile float elevatorDesiredVelocitySetpoint;
 extern volatile float aileronDesiredVelocitySetpoint;
+
+extern volatile float elevatorPosContError;
+extern volatile float aileronPosContError;
 
 //Gumstix on/off
 extern volatile unsigned char gumstixEnabled;

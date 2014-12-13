@@ -571,7 +571,7 @@ void receiveXBeeMessage(unsigned char *address64,unsigned char *address16,unsign
 }
 
 //LEADING
-void kopterLeadDataSet(unsigned char *address64,unsigned char *address16,volatile float altitude,volatile float elevatorVel,volatile float aileronVel,unsigned char frameID){
+void kopterLeadDataSend(unsigned char *address64,unsigned char *address16,volatile float altitude,volatile float elevatorVel,volatile float aileronVel,volatile float elevatorError,volatile float aileronError,unsigned char frameID){
 	unsigned char *ch;
 	
 	*(dataOUT)='c';
@@ -584,10 +584,17 @@ void kopterLeadDataSet(unsigned char *address64,unsigned char *address16,volatil
 	*(dataOUT+6)=*ch; *(dataOUT+7)=*(ch+1); *(dataOUT+8)=*(ch+2); *(dataOUT+9)=*(ch+3);
 	
 	ch=(unsigned char *) &aileronVel;
-	*(dataOUT+10)=*ch; *(dataOUT+11)=*(ch+1); *(dataOUT+12)=*(ch+2); *(dataOUT+13)=*(ch+3);	
-	makeTRPacket(address64,address16,0x00,frameID,dataOUT,14);
+	*(dataOUT+10)=*ch; *(dataOUT+11)=*(ch+1); *(dataOUT+12)=*(ch+2); *(dataOUT+13)=*(ch+3);
+	
+	ch=(unsigned char *) &elevatorError;
+	*(dataOUT+14)=*ch; *(dataOUT+15)=*(ch+1); *(dataOUT+16)=*(ch+2); *(dataOUT+17)=*(ch+3);
+	
+	ch=(unsigned char *) &aileronError;
+	*(dataOUT+18)=*ch; *(dataOUT+19)=*(ch+1); *(dataOUT+20)=*(ch+2); *(dataOUT+21)=*(ch+3);		
+	
+	makeTRPacket(address64,address16,0x00,frameID,dataOUT,22);
 }
-void kopterLeadDataReceived(unsigned char *address64,unsigned char *address16,float altitude,float elevatorVel, float aileronVel){
+void kopterLeadDataReceived(unsigned char *address64,unsigned char *address16,float altitude,float elevatorVel, float aileronVel, float elevatorError, float aileronError){
 	throttleDesiredSetpoint=altitude;
 	elevatorDesiredSpeedPosControllerLeader=elevatorVel;
 	aileronDesiredSpeedPosControllerLeader=aileronVel;
