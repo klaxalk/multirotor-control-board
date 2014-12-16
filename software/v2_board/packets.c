@@ -76,8 +76,8 @@ void constInit(){
 	TELEMETRIES.VALID_GUMSTIX=0x17;
 	TELEMETRIES.ELEVATOR_DESIRED_SPEED_POS_CONT=0x18;
 	TELEMETRIES.AILERON_DESIRED_SPEED_POS_CONT=0x19;
-	TELEMETRIES.ELEVATOR_DESIRED_SPEED_POS_CONT_LEADER=0x1A;
-	TELEMETRIES.AILERON_DESIRED_SPEED_POS_CONT_LEADER=0x1B;	
+	TELEMETRIES.ELE_DES_SPEED_POS_CONT_LEADER=0x1A;
+	TELEMETRIES.AIL_DES_SPEED_POS_CONT_LEADER=0x1B;	
 	TELEMETRIES.OUTPUT_THROTTLE=0x1C;
 	TELEMETRIES.OUTPUT_ELEVATOR=0x1D;
 	TELEMETRIES.OUTPUT_AILERON=0x1E;
@@ -109,7 +109,7 @@ void constInit(){
 	COMMANDS.TRAJECTORY_FOLLOW=0x15;
 	COMMANDS.TRAJECTORY_POINTS=0x16;
 	COMMANDS.GUMSTIX=0x17;
-	COMMANDS.LEADING=0x18;
+
 
 	
 	GET_STATUS=0x95;
@@ -230,17 +230,7 @@ void packetHandler(unsigned char *inPacket){
 							}else{
 								kopterGumstix(address64,address16,*(dataIN+3));
 							}
-						}else
-						//LEADING
-						if(*(dataIN+2)==COMMANDS.LEADING){
-							leadingDataReceived++;
-							ch1[0]=*(dataIN+3); ch1[1]=*(dataIN+4); ch1[2]=*(dataIN+5); ch1[3]=*(dataIN+6); f1=(float *)ch1;
-							ch2[0]=*(dataIN+7); ch2[1]=*(dataIN+8); ch2[2]=*(dataIN+9); ch2[3]=*(dataIN+10); f2=(float *)ch2;
-							ch3[0]=*(dataIN+11); ch3[1]=*(dataIN+12); ch3[2]=*(dataIN+13); ch3[3]=*(dataIN+14); f3=(float *)ch3;
-							ch4[0]=*(dataIN+15); ch2[1]=*(dataIN+16); ch2[2]=*(dataIN+17); ch2[3]=*(dataIN+18); f4=(float *)ch4;
-							ch5[0]=*(dataIN+19); ch3[1]=*(dataIN+20); ch3[2]=*(dataIN+21); ch3[3]=*(dataIN+22); f5=(float *)ch5;							
-							kopterLeadDataReceived(address64,address16,*f1,*f2,*f3,*f4,*f5);
-						}						
+						}					
                     break;
                 //telemetry
                 case 't':     
@@ -303,10 +293,20 @@ void packetHandler(unsigned char *inPacket){
 				//openlog	
                 case 'o':
 						openLogReceive(address64,address16,dataIN);
-					break;					
+					break;	
+				//leading	
+				case 'l':
+						leadingDataReceived++;
+						ch1[0]=*(dataIN+2); ch1[1]=*(dataIN+3); ch1[2]=*(dataIN+4); ch1[3]=*(dataIN+5); f1=(float *)ch1;
+						ch2[0]=*(dataIN+6); ch2[1]=*(dataIN+7); ch2[2]=*(dataIN+8); ch2[3]=*(dataIN+9); f2=(float *)ch2;
+						ch3[0]=*(dataIN+10); ch3[1]=*(dataIN+11); ch3[2]=*(dataIN+12); ch3[3]=*(dataIN+13); f3=(float *)ch3;
+						ch4[0]=*(dataIN+14); ch2[1]=*(dataIN+15); ch2[2]=*(dataIN+16); ch2[3]=*(dataIN+17); f4=(float *)ch4;
+						ch5[0]=*(dataIN+18); ch3[1]=*(dataIN+19); ch3[2]=*(dataIN+20); ch3[3]=*(dataIN+21); f5=(float *)ch5;
+						kopterLeadDataReceived(address64,address16,*f1,*f2,*f3,*f4,*f5);
+					break;								
                 default:
                         dataTypeError(address64,address16,dataIN);
-                    break;
+                    break;					
             }
         break;
     default:
