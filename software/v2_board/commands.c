@@ -519,8 +519,6 @@ void kopterTrajectoryPointReportReceived(unsigned char *address64,unsigned char 
 	
 }
 
-
-
 //GUMSTIX
 void kopterGumstixRequest(unsigned char *address64,unsigned char *address16,unsigned char options,unsigned char frameID){
 	*(dataOUT)='c';
@@ -557,6 +555,41 @@ void kopterGumstixReportRecieved(unsigned char *address64,unsigned char *address
 	}else if(status==ONOFF.OFF){
 		
 	}
+}
+
+//FOLLOWER SET
+void kopterFollowerSetRequest(unsigned char *address64,unsigned char *address16,unsigned char *followerAddr,unsigned char frameID){
+	char i;
+	*(dataOUT)='c';
+	*(dataOUT+1)=COMMANDS.FOLLOWER_SET;
+	for (i=0;i<8;i++){
+		*(dataOUT+2+i)=*(followerAddr+i);
+	}
+	makeTRPacket(address64,address16,0x00,frameID,dataOUT,10);
+}
+void kopterFollowerSet(unsigned char *address64,unsigned char *address16,unsigned char *followerAddr){
+	char i;
+	for(i=0;i<8;i++){
+	*(leadKopter+i)=*(followerAddr+i);
+	}
+}
+void kopterFollowerSetStatusRequest(unsigned char *address64,unsigned char *address16,unsigned char frameID){
+	*(dataOUT)='c';
+	*(dataOUT+1)=COMMANDS.FOLLOWER_SET;
+	*(dataOUT+2)=GET_STATUS;
+	makeTRPacket(address64,address16,0x00,frameID,dataOUT,3);
+}
+void kopterFollowerSetReport(unsigned char *address64,unsigned char *address16,unsigned char frameID){
+	char i;
+	*(dataOUT)='r';
+	*(dataOUT+1)=COMMANDS.FOLLOWER_SET;
+	for (i=0;i<8;i++){
+		*(dataOUT+2+i)=*(leadKopter+i);
+	}
+	makeTRPacket(address64,address16,0x00,frameID,dataOUT,10);
+}
+void kopterFollowerSetReportRecieved(unsigned char *address64,unsigned char *address16,unsigned char *followerAddr){
+	
 }
 
 //MESSAGES

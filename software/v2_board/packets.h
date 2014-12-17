@@ -90,7 +90,7 @@ typedef struct
 	unsigned char TRAJECTORY_FOLLOW;
 	unsigned char TRAJECTORY_POINTS;
 	unsigned char GUMSTIX;
-	unsigned char LEADING;
+	unsigned char FOLLOWER_SET;
 }COMMANDST;
 
 

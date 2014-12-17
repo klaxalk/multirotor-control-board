@@ -51,6 +51,12 @@ void kopterGumstixStatusRequest(unsigned char *address64,unsigned char *address1
 void kopterGumstixReport(unsigned char *address64,unsigned char *address16,unsigned char frameID);
 void kopterGumstixReportRecieved(unsigned char *address64,unsigned char *address16,unsigned char status);
 
+void kopterFollowerSetRequest(unsigned char *address64,unsigned char *address16,unsigned char *followerAddr,unsigned char frameID);
+void kopterFollowerSet(unsigned char *address64,unsigned char *address16,unsigned char *followerAddr);
+void kopterFollowerSetStatusRequest(unsigned char *address64,unsigned char *address16,unsigned char frameID);
+void kopterFollowerSetReport(unsigned char *address64,unsigned char *address16,unsigned char frameID);
+void kopterFollowerSetReportRecieved(unsigned char *address64,unsigned char *address16,unsigned char *followerAddr);
+
 void sendXBeeMessage(unsigned char *address64,unsigned char *address16,char *message,unsigned char frameID);
 void receiveXBeeMessage(unsigned char *address64,unsigned char *address16,unsigned char *message);
 
