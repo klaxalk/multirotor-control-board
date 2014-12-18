@@ -116,3 +116,31 @@ void gumstixParseChar(unsigned char incomingChar) {
 	}
 }
 
+void stateChecker(){
+	static unsigned char landingStateCH=landingState;
+	static unsigned char trajectoryFollowCH=trajectoryEnabled;
+	static unsigned char posControllerCH=positionControllerEnabled;
+	static unsigned char velocityControllerCH=velocityControllerEnabled;
+	static unsigned char gumstixCH=gumstixEnabled;
+	
+	if(landingStateCH!=landingState){
+		landingStateCH=landingState;
+		kopterLandReport(ADDRESS.COORDINATOR,ADDRESS.UNKNOWN16,0x00);
+	}
+	if(trajectoryFollowCH!=trajectoryEnabled){
+		trajectoryFollowCH=trajectoryEnabled;
+		kopterTrajectoryFollowReport(ADDRESS.COORDINATOR,ADDRESS.UNKNOWN16,0x00);
+	}
+	if(posControllerCH!=positionControllerEnabled){
+		posControllerCH=positionControllerEnabled;
+		kopterControllersReport(ADDRESS.COORDINATOR,ADDRESS.UNKNOWN16,0x00);
+	}	
+	if(velocityControllerCH!=velocityControllerEnabled){
+		velocityControllerCH=velocityControllerEnabled;
+		kopterControllersReport(ADDRESS.COORDINATOR,ADDRESS.UNKNOWN16,0x00);
+	}
+	if(gumstixCH!=gumstixEnabled){
+		gumstixCH=gumstixEnabled;
+		kopterGumstixReport(ADDRESS.COORDINATOR,ADDRESS.UNKNOWN16,0x00);
+	}	
+}

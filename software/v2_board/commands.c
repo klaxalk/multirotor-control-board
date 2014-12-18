@@ -340,13 +340,13 @@ void kopterSetpointsReport(unsigned char *address64,unsigned char *address16,uns
 	*(dataOUT+2)=type;
 	if(type==SETPOINTS.THROTTLE_SP){
 		f=throttleDesiredSetpoint;
-		}else if(type==SETPOINTS.ELEVATOR_POSITION){
+	}else if(type==SETPOINTS.ELEVATOR_POSITION){
 		f=elevatorDesiredPositionSetpoint;
-		}else if(type==SETPOINTS.AILERON_POSITION){
+	}else if(type==SETPOINTS.AILERON_POSITION){
 		f=aileronDesiredPositionSetpoint;
-		}else if(type==SETPOINTS.ELEVATOR_VELOCITY){
+	}else if(type==SETPOINTS.ELEVATOR_VELOCITY){
 		f=elevatorDesiredVelocitySetpoint;
-		}else if(type==SETPOINTS.AILERON_VELOCITY){
+	}else if(type==SETPOINTS.AILERON_VELOCITY){
 		f=aileronDesiredVelocitySetpoint;
 	}
 	
@@ -378,19 +378,21 @@ void kopterControllersRequest(unsigned char *address64,unsigned char *address16,
 	makeTRPacket(address64,address16,0x00,frameID,dataOUT,3);
 }
 void kopterControllers(unsigned char *address64,unsigned char *address16,unsigned char option){
+	portENTER_CRITICAL();
 	if(		 option==CONTROLLERS.OFF){
 		disablePositionController();
 		disableVelocityController();
-		}else if(option==CONTROLLERS.POSITION){
+	}else if(option==CONTROLLERS.POSITION){
 		enablePositionController();
 		disableVelocityController();
-		}else if(option==CONTROLLERS.VELOCITY){
+	}else if(option==CONTROLLERS.VELOCITY){
 		enableVelocityController();
 		disablePositionController();
-		}else if(option==CONTROLLERS.BOTH){
+	}else if(option==CONTROLLERS.BOTH){
 		enableVelocityController();
 		enablePositionController();
 	}
+	portEXIT_CRITICAL();
 }
 void kopterControllersStatusRequest(unsigned char *address64,unsigned char *address16,unsigned char frameID){
 	*(dataOUT)='c';
@@ -403,11 +405,11 @@ void kopterControllersReport(unsigned char *address64,unsigned char *address16,u
 	*(dataOUT+1)=COMMANDS.CONTROLLERS;
 	if(positionControllerEnabled==1 && velocityControllerEnabled==1){
 		*(dataOUT+2)=CONTROLLERS.BOTH;
-		}else if(positionControllerEnabled){
+	}else if(positionControllerEnabled){
 		*(dataOUT+2)=CONTROLLERS.POSITION;
-		}else if(velocityControllerEnabled){
+	}else if(velocityControllerEnabled){
 		*(dataOUT+2)=CONTROLLERS.VELOCITY;
-		}else{
+	}else{
 		*(dataOUT+2)=CONTROLLERS.OFF;
 	}
 	makeTRPacket(address64,address16,0x00,frameID,dataOUT,3);
@@ -415,11 +417,11 @@ void kopterControllersReport(unsigned char *address64,unsigned char *address16,u
 void kopterControllersReportReceived(unsigned char *address64,unsigned char *address16,unsigned char status){
 	if(		 status==CONTROLLERS.OFF){
 		
-		}else if(status==CONTROLLERS.POSITION){
-		
-		}else if(status==CONTROLLERS.VELOCITY){
+	}else if(status==CONTROLLERS.POSITION){
+	
+	}else if(status==CONTROLLERS.VELOCITY){
 
-		}else if(status==CONTROLLERS.BOTH){
+	}else if(status==CONTROLLERS.BOTH){
 		
 	}
 }
@@ -445,7 +447,7 @@ void kopterTrajectoryFollowReport(unsigned char *address64,unsigned char *addres
 	*(dataOUT+1)=COMMANDS.TRAJECTORY_FOLLOW;
 	if(trajectoryEnabled){
 		*(dataOUT+2)=ONOFF.ON;
-		}else{
+	}else{
 		*(dataOUT+2)=ONOFF.OFF;
 	}
 	makeTRPacket(address64,address16,0x00,frameID,dataOUT,3);
