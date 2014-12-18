@@ -26,12 +26,6 @@ unsigned char* readPacket(){
         while(!ReadFile(XBeeH,packet+1,2,&bytesReaded,NULL));
         ReadFile(XBeeH,packet+3,packet[2]+1,&bytesReaded,NULL);
     }
-    #ifdef DEBUG
-     printf("packet received: ");
-    for(i=0;i<*(packet+2)+4;i++){
-        printf("%X ",packet[i]);
-    }printf("\n");
-    #endif // DEBUG
     return packet;
 }
 
@@ -42,11 +36,4 @@ void sendPacket(unsigned char *packeto){
 
     WriteFile(XBeeH,packeto,*(packeto+2)+4,&bytesWrited,NULL);
     FlushFileBuffers(XBeeH);
-    #ifdef DEBUG
-     printf("packet send: ");
-    for(i=0;i<*(packeto+2)+4;i++){
-        printf("%X ",packeto[i]);
-    }printf("\n");
-    #endif // DEBUG
-
 }

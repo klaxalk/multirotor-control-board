@@ -1,10 +1,6 @@
 #ifndef defines_H
 #define defines_H
 
-#define PC ;
-//#define DEBUG;
-//#define MATLAB;
-
 typedef char int8_t;
 
 #define LS_STABILIZATION      2

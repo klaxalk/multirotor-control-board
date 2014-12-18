@@ -46,14 +46,14 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="main.h" />
-		<Unit filename="openLog.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="openLog.h" />
 		<Unit filename="packets.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="packets.h" />
+		<Unit filename="receive.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="receive.h" />
 		<Unit filename="serialLink.c">
 			<Option compilerVar="CC" />
 		</Unit>

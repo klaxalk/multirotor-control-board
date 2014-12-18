@@ -4,8 +4,44 @@
 #include "serialLink.h"
 #include "main.h"
 #include "defines.h"
+#include "receive.h"
 
 unsigned char dataOUT[25];
+
+float Telemetry[KOPTERS_COUNT][TELEMETRY_VARIABLES]={0};
+unsigned char Reports[KOPTERS_COUNT][REPORTS_COUNT]={0};
+
+
+int addrEqual(unsigned char *adr1,unsigned char *adr2){
+    int i;
+    for (i=0;i<8;i++){
+        if(*(adr1+i)!=*(adr2+i)) return 0;
+    }
+    return 1;
+}
+unsigned char getKopter(unsigned char *adr){
+    unsigned char kopter=KOPTERS.UNKNOWN;
+    if(addrEqual(adr,ADDRESS.K1)){kopter=KOPTERS.K1;}
+    if(addrEqual(adr,ADDRESS.K2)){kopter=KOPTERS.K2;}
+    if(addrEqual(adr,ADDRESS.K3)){kopter=KOPTERS.K3;}
+    if(addrEqual(adr,ADDRESS.KC1)){kopter=KOPTERS.KC1;}
+    return kopter;
+}
+unsigned char mapReports(unsigned char repIndicator){
+    if(repIndicator==COMMANDS.LANDING){return 0x01;}
+    else if(repIndicator==COMMANDS.CONTROLLERS){return 0x02;}
+    else if(repIndicator==COMMANDS.TRAJECTORY_FOLLOW){return 0x03;}
+    else if(repIndicator==COMMANDS.GUMSTIX){return 0x04;}
+    else return 0x00;
+}
+
+//GET ARRAYS
+float getTelemetry(unsigned char kopter, unsigned char type){
+    return Telemetry[kopter][type];
+}
+unsigned char getStatus(unsigned char kopter, unsigned char type){
+    return Reports[kopter][mapReports(type)];
+}
 
 //TELEMETRY
 void telemetryRequest(unsigned char *address64,unsigned char *address16,unsigned char type, unsigned char frameID){
@@ -13,68 +49,14 @@ void telemetryRequest(unsigned char *address64,unsigned char *address16,unsigned
 	*(dataOUT+1)=COMMANDS.TELEMETRY;
 	*(dataOUT+2)=type;
 	makeTRPacket(address64,address16,0x00,frameID,dataOUT,3);
-    #ifdef DEBUG
-     printf("TELEMETRY REQUEST\n");
-    #endif // DEBUG
 }
 void telemetryReceive(unsigned char *address64,unsigned char *address16,unsigned char type,float value){
-	if(type==TELEMETRIES.GROUND_DISTANCE_ESTIMATED){
-        printf("Ground Distance Est: %f\n",value);
-	}else if(type==TELEMETRIES.GROUND_DISTANCE){
-        printf("Ground Distance: %f\n",value);
-	}else if(type==TELEMETRIES.ELEVATOR_SPEED){
-        printf("Elevator Speed: %f\n",value);
-	}else if(type==TELEMETRIES.AILERON_SPEED){
-        printf("Aileron Speed: %f\n",value);
-	}else if(type==TELEMETRIES.ELEVATOR_SPEED_ESTIMATED){
-        printf("Elevator Speed Est: %f\n",value);
-	}else if(type==TELEMETRIES.AILERON_SPEED_ESTIMATED){
-        printf("Aileron Speed Est: %f\n",value);
-	}else if(type==TELEMETRIES.ELEVATOR_POS_ESTIMATED){
-        printf("Elevator Pos Est: %f\n",value);
-	}else if(type==TELEMETRIES.AILERON_POS_ESTIMATED){
-        printf("Aileron Pos Est: %f\n",value);
-	}else if(type==TELEMETRIES.THROTTLE_CONTROLLER_OUTPUT){
-        printf("Throttle Controller Out: %f\n",value);
-	}else if(type==TELEMETRIES.THROTTLE_SPEED){
-        printf("Throttle Speed Est: %f\n",value);
-	}else if(type==TELEMETRIES.AILERON_POS_CONTROLLER_OUTPUT){
-        printf("Pos Aileron Controller Out: %f\n",value);
-	}else if(type==TELEMETRIES.ELEVATOR_POS_CONTROLLER_OUTPUT){
-        printf("Pos Elevator Controller Out: %f\n",value);
-	}else if(type==TELEMETRIES.AILERON_VEL_CONTROLLER_OUTPUT){
-        printf("Vel Aileron Controller Out: %f\n",value);
-	}else if(type==TELEMETRIES.ELEVATOR_VEL_CONTROLLER_OUTPUT){
-        printf("Vel Elevator Controller Out: %f\n",value);
-	}else if(type==TELEMETRIES.THROTTLE_SETPOINT){
-		printf("Throttle Setpoint: %f\n",value);
-	}else if(type==TELEMETRIES.ELEVATOR_POS_SETPOINT){
-		printf("Elevator Pos Setpoint: %f\n",value);
-	}else if(type==TELEMETRIES.AILERON_POS_SETPOINT){
-		printf("Aileron Pos Setpoint: %f\n",value);
-	}else if(type==TELEMETRIES.ELEVATOR_VEL_SETPOINT){
-		printf("Elevator Vel Setpoint: %f\n",value);
-	}else if(type==TELEMETRIES.AILERON_VEL_SETPOINT){
-		printf("Aileron Vel Setpoint: %f\n",value);
-	}else if(type==TELEMETRIES.ELEVATOR_SPEED_ESTIMATED2){
-        printf("Elevator Speed Est2: %f\n",value);
-	}else if(type==TELEMETRIES.AILERON_SPEED_ESTIMATED2){
-        printf("Aileron Speed Est2: %f\n",value);
-	}else if(type==TELEMETRIES.ELEVATOR_ACC){
-        printf("Elevator Acc: %f\n",value);
-	}else if(type==TELEMETRIES.AILERON_ACC){
-        printf("Aileron Acc: %f\n",value);
-	}else if(type==TELEMETRIES.VALID_GUMSTIX){
-        printf("Valid Gumstix: %f\n",value);
-    }else if(type==TELEMETRIES.ELEVATOR_DESIRED_SPEED_POS_CONT){
-        printf("Elevator Des Speed Pos Cont: %f\n",value);
-	}else if(type==TELEMETRIES.AILERON_DESIRED_SPEED_POS_CONT){
-		printf("Aileron Des Speed Pos Cont: %f\n",value);
-	}else if(type==TELEMETRIES.ELEVATOR_DESIRED_SPEED_POS_CONT_LEADER){
-		printf("Elevator Des Speed Pos Cont Lead: %f\n",value);
-	}else if(type==TELEMETRIES.AILERON_DESIRED_SPEED_POS_CONT_LEADER){
-		printf("Aileron Des Speed Pos Cont Lead: %f\n",value);
-	}
+    unsigned char kopter=getKopter(address64);
+
+    if(kopter!=KOPTERS.UNKNOWN){
+        Telemetry[kopter][type]=value;
+        receivedTelemetry(kopter,type,value);
+    }
 }
 
 void telemetryToCoordinatorSet(unsigned char *address64,unsigned char *address16,unsigned char type,unsigned char on, unsigned char frameID){
@@ -92,18 +74,17 @@ void telemetryToCoordinatorStatusRequest(unsigned char *address64,unsigned char 
 	makeTRPacket(address64,address16,0x00,frameID,dataOUT,4);
 }
 void telemetryToCoordinatorReportRecieved(unsigned char *address64,unsigned char *address16,unsigned char type,unsigned char status){
-	printf("Type:%d = %d",type,status);
+    unsigned char kopter=getKopter(address64);
+
+    if(kopter!=KOPTERS.UNKNOWN){
+        receivedTelToCoordReport(kopter,type,status);
+    }
 }
 
 //GENERAL
 void dataTypeError(unsigned char *address64,unsigned char *address16,unsigned char *dataOUT){
 }
 void packetTypeError(unsigned char *inPacket){
-    int i;
-    printf("Unknown Packet: ");
-    for(i=0;i<*(inPacket+2)+4;i++){
-        printf("%X ",*(inPacket+i));
-    }printf("\n");
 }
 
 //LANDING
@@ -120,17 +101,11 @@ void kopterLandStatusRequest(unsigned char *address64,unsigned char *address16,u
 		makeTRPacket(address64,address16,0x00,frameID,dataOUT,3);
 }
 void kopterLandReportRecieved(unsigned char *address64,unsigned char *address16,unsigned char status){
-	if(status==LS_LANDING){
-        printf("LANDING\n");
-	}else if(status==LS_FLIGHT){
-        printf("FLIGHT\n");
-	}else if(status==LS_STABILIZATION){
-        printf("STABILIZATION\n");
-	}else if(status==LS_ON_GROUND){
-        printf("ON GROUND\n");
-	}else if(status==LS_TAKEOFF){
-        printf("TAKE OFF\n");
-	}
+    unsigned char kopter=getKopter(address64);
+    if(kopter!=KOPTERS.UNKNOWN){
+        Reports[kopter][mapReports(COMMANDS.LANDING)]=status;
+        receivedLandingReport(kopter,status);
+    }
 }
 
 //TRAJECTORY
@@ -147,15 +122,14 @@ void kopterTrajectoryStatusRequest(unsigned char *address64,unsigned char *addre
 	makeTRPacket(address64,address16,0x00,frameID,dataOUT,3);
 }
 void kopterTrajectoryReportRecieved(unsigned char *address64,unsigned char *address16,unsigned char status){
-	if(			status==ONOFF.ON){
-        printf("TRAJECTORY FOLLOWING\n");
-	}else if(status==ONOFF.OFF){
-        printf("TRAJECTORY NOT FOLLOWING\n");
-	}
+    unsigned char kopter=getKopter(address64);
+    if(kopter!=KOPTERS.UNKNOWN){
+        Reports[kopter][mapReports(COMMANDS.TRAJECTORY_FOLLOW)]=status;
+        receivedTrajectoryFollowReport(kopter,status);
+    }
 }
 
 //TRAJECTORY POINTS
-
 void kopterTrajectoryAddPointRequest(unsigned char *address64,unsigned char *address16,unsigned char index,float time,float elevatorPos,float aileronPos,float throttlePos,unsigned char frameID){
 	unsigned char *ch;
 
@@ -184,7 +158,10 @@ void kopterTrajectoryPointStatusRequest(unsigned char *address64,unsigned char *
 	makeTRPacket(address64,address16,0x00,frameID,dataOUT,4);
 }
 void kopterTrajectoryPointReportReceived(unsigned char *address64,unsigned char *address16,unsigned char index,float time,float elevatorPos,float aileronPos,float throttlePos){
-	printf("%i.) T:%.2f El:%.2f Ai:%.2f Th:%.2f\n",index,time,elevatorPos,aileronPos,throttlePos);
+    unsigned char kopter=getKopter(address64);
+    if(kopter!=KOPTERS.UNKNOWN){
+        receivedTrajectoryPointReport(kopter,index,time,elevatorPos,aileronPos,throttlePos);
+    }
 }
 
 //SETPOINTS
@@ -212,17 +189,10 @@ void kopterSetpointStatusRequest(unsigned char *address64,unsigned char *address
     makeTRPacket(address64,address16,0x00,frameID,dataOUT,4);
 }
 void kopterSetpointsReportReceived(unsigned char *address64,unsigned char *address16,unsigned char type,float value){
-	if(		 type==SETPOINTS.THROTTLE){
-        printf("Throttle setpoint: %f\n",value);
-	}else if(type==SETPOINTS.AILERON_POSITION){
-        printf("Aileron Pos setpoint: %f\n",value);
-	}else if(type==SETPOINTS.ELEVATOR_POSITION){
-        printf("Elevator Pos setpoint: %f\n",value);
-	}else if(type==SETPOINTS.AILERON_VELOCITY){
-        printf("Aileron Vel setpoint: %f\n",value);
-	}else if(type==SETPOINTS.ELEVATOR_VELOCITY){
-        printf("Elevator Vel setpoint: %f\n",value);
-	}
+    unsigned char kopter=getKopter(address64);
+    if(kopter!=KOPTERS.UNKNOWN){
+        receivedDesiredSetpointReport(kopter,type,value);
+    }
 }
 
 //CONTROLLERS
@@ -239,15 +209,11 @@ void kopterControllersStatusRequest(unsigned char *address64,unsigned char *addr
 	makeTRPacket(address64,address16,0x00,frameID,dataOUT,3);
 }
 void kopterControllersReportReceived(unsigned char *address64,unsigned char *address16,unsigned char status){
-	if(		 status==CONTROLLERS.OFF){
-		printf("Controllers: OFF\n");
-	}else if(status==CONTROLLERS.POSITION){
-		printf("Controllers: POSITION\n");
-	}else if(status==CONTROLLERS.VELOCITY){
-        printf("Controllers: VELOCITY\n");
-	}else if(status==CONTROLLERS.BOTH){
-		printf("Controllers: BOTH\n");
-	}
+    unsigned char kopter=getKopter(address64);
+    if(kopter!=KOPTERS.UNKNOWN){
+        Reports[kopter][mapReports(COMMANDS.CONTROLLERS)]=status;
+        receivedControllerReport(kopter,status);
+    }
 }
 
 //GUMSTIX
@@ -264,10 +230,11 @@ void kopterGumstixStatusRequest(unsigned char *address64,unsigned char *address1
 	makeTRPacket(address64,address16,0x00,frameID,dataOUT,3);
 }
 void kopterGumstixReportRecieved(unsigned char *address64,unsigned char *address16,unsigned char status){
-	if(status==ONOFF.ON){
-        printf("GUMSTIX ENABLED\n");
-	}else if(status==ONOFF.OFF){
-        printf("GUMSTIX DISABLED\n");
-	}
+    unsigned char kopter=getKopter(address64);
+    if(kopter!=KOPTERS.UNKNOWN){
+        Reports[kopter][mapReports(COMMANDS.GUMSTIX)]=status;
+        receivedGumstixReport(kopter,status);
+    }
 }
-//
+
+

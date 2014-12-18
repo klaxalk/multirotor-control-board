@@ -12,6 +12,7 @@
 //values for telemetry types
 
 unsigned char GET_STATUS;
+unsigned char packet[255]={0};
 ADDRESST ADDRESS;
 TELEMETRIEST TELEMETRIES;
 ONOFFT ONOFF;
@@ -19,12 +20,14 @@ SETPOINTST SETPOINTS;
 POSITIONST POSITIONS;
 CONTROLLERST CONTROLLERS;
 COMMANDST COMMANDS;
+KOPTERST KOPTERS;
 
 void adr64Setter(unsigned char * adr,unsigned char b1,unsigned char b2,unsigned char b3,unsigned char b4,unsigned char b5,unsigned char b6,unsigned char b7,unsigned char b8){
     *adr=b1; *(adr+1)=b2; *(adr+2)=b3; *(adr+3)=b4; *(adr+4)=b5; *(adr+5)=b6; *(adr+6)=b7; *(adr+7)=b8;
 }
 
 void constInit(){
+    int i=0;
     adr64Setter(ADDRESS.COORDINATOR,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00);
     adr64Setter(ADDRESS.KC1,0x00,0x13,0xA2,0x00,0x40,0xB5,0x99,0xB9);
     adr64Setter(ADDRESS.K1,0x00,0x13,0xA2,0x00,0x40,0xB5,0x99,0xBF);
@@ -33,6 +36,12 @@ void constInit(){
     adr64Setter(ADDRESS.BROADCAST,0x00,0x00,0x00,0x00,0x00,0x00,0xFF,0xFF);
     ADDRESS.UNKNOWN16[0] = 0xFF;
     ADDRESS.UNKNOWN16[1] = 0xFE;
+
+    KOPTERS.KC1=0x00;
+    KOPTERS.K1=0x01;
+    KOPTERS.K2=0x02;
+    KOPTERS.K3=0x03;
+    KOPTERS.UNKNOWN=0xFF;
 
 	TELEMETRIES.GROUND_DISTANCE_ESTIMATED = 0x00;
     TELEMETRIES.GROUND_DISTANCE = 0x01;
@@ -60,20 +69,21 @@ void constInit(){
 	TELEMETRIES.VALID_GUMSTIX=0x17;
 	TELEMETRIES.ELEVATOR_DESIRED_SPEED_POS_CONT=0x18;
 	TELEMETRIES.AILERON_DESIRED_SPEED_POS_CONT=0x19;
-	TELEMETRIES.ELEVATOR_DESIRED_SPEED_POS_CONT_LEADER=0x1A;
-	TELEMETRIES.AILERON_DESIRED_SPEED_POS_CONT_LEADER=0x1B;
+	TELEMETRIES.ELE_DES_SPEED_POS_CONT_LEADER=0x1A;
+	TELEMETRIES.AIL_DES_SPEED_POS_CONT_LEADER=0x1B;
+	TELEMETRIES.OUTPUT_THROTTLE=0x1C;
+	TELEMETRIES.OUTPUT_ELEVATOR=0x1D;
+	TELEMETRIES.OUTPUT_AILERON=0x1E;
+	TELEMETRIES.OUTPUT_RUDDER=0x1F;
 
-    ONOFF.OFF=0x00;
+	ONOFF.OFF=0x00;
 	ONOFF.ON=0x01;
 
-
-	SETPOINTS.THROTTLE=0x01;
+	SETPOINTS.THROTTLE_SP=0x01;
 	SETPOINTS.ELEVATOR_POSITION=0x02;
 	SETPOINTS.AILERON_POSITION=0x03;
 	SETPOINTS.ELEVATOR_VELOCITY=0x04;
 	SETPOINTS.AILERON_VELOCITY=0x05;
-	SETPOINTS.ELEVATOR_VELOCITY_LEADER=0x06;
-	SETPOINTS.AILERON_VELOCITY_LEADER=0x07;
 
 	POSITIONS.ABSOLUT=0x01;
 	POSITIONS.RELATIV=0x02;
@@ -83,16 +93,23 @@ void constInit(){
 	CONTROLLERS.POSITION=0x03;
 	CONTROLLERS.BOTH=0x04;
 
-    COMMANDS.TELEMETRY=0x01;
-    COMMANDS.TELEMETRY_COORDINATOR=0x02;
+	COMMANDS.TELEMETRY=0x01;
+	COMMANDS.TELEMETRY_COORDINATOR=0x02;
 	COMMANDS.LANDING=0x11;
 	COMMANDS.SET_SETPOINTS=0x12;
 	COMMANDS.CONTROLLERS=0x13;
 	COMMANDS.TRAJECTORY_FOLLOW=0x15;
 	COMMANDS.TRAJECTORY_POINTS=0x16;
-    COMMANDS.GUMSTIX=0x17;
+	COMMANDS.GUMSTIX=0x17;
+	COMMANDS.FOLLOWER_SET=0x18;
 
 	GET_STATUS=0x95;
+
+
+	//commands
+	for(i=0;i<REPORTS_COUNT;i++){
+        Reports[i][0x00]=0xFF;
+	}
 }
 
 
@@ -100,7 +117,7 @@ void packetHandler(unsigned char *inPacket){
     unsigned char address16[2];
     unsigned char address64[8];
     unsigned char recieveOptions[5];
-    unsigned char dataIN[25];
+    unsigned char dataIN[255];
     int i;
 
 	float *f1;
@@ -116,22 +133,13 @@ void packetHandler(unsigned char *inPacket){
     switch ((int)*(inPacket+3)) {
     //Modem Status
     case 0x8A:
-
         break;
     //Transmit Status
     case 0x8B:
         parTSPacket(inPacket,recieveOptions,address16,recieveOptions+1,recieveOptions+2,recieveOptions+3);
-        #ifdef DEBUG
-        printf("TRANSMIT STATUS %X\n",*(recieveOptions+2));
-        #endif // DEBUG
         break;
     //Route record indicator
     case 0xA1:
-        #ifdef DEBUG
-        printf("ROUTE RECORD INDICATOR\n");
-        #endif // DEBUG
-
-
         break;
     //Receive Packet
     case 0x90:
@@ -140,13 +148,9 @@ void packetHandler(unsigned char *inPacket){
             switch ((int)*(dataIN+1)){
                 //command
                 case 'c':
-
                     break;
                 //telemetry
                 case 't':
-                        #ifdef DEBUG
-                          printf("TELEMETRY RECEIVED\n");
-                        #endif // DEBUG
                     for (i=0;i<(*dataIN-1)/5;i++){
                            usc=*(dataIN+2+i*5);
 						ch1[0]=*(dataIN+3+i*5);
@@ -155,9 +159,6 @@ void packetHandler(unsigned char *inPacket){
 						ch1[3]=*(dataIN+6+i*5);
 						f1=(float *)ch1;
 						telemetryReceive(address64,address16,usc,*f1);
-						#ifdef MATLAB
-                        sendBytes(matlabH,ch1,4);
-                        #endif // MATLAB
                     }
                     break;
                 //report
@@ -206,17 +207,13 @@ void packetHandler(unsigned char *inPacket){
                 //error
                 case 'e':
                     break;
-                //OpenLog
-                case 'o':
-                        openLogReceive(address64,address16,dataIN);
-                    break;
                 default:
                         dataTypeError(address64,address16,dataIN);
                     break;
             }
         break;
     default:
-           //packetTypeError(inPacket);
+           packetTypeError(inPacket);
         break;
     }
 }

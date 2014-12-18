@@ -1,49 +1,27 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_layout_file>
 	<ActiveTarget name="Debug" />
-	<File name="commands.h" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="291" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="defines.h" open="0" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="280" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="commands.c" open="1" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="-1" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="7347" topLine="144" />
-		</Cursor>
-	</File>
-	<File name="packets.h" open="1" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="-1" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1918" topLine="28" />
-		</Cursor>
-	</File>
-	<File name="serialLink.c" open="1" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="76" topLine="0" />
-		</Cursor>
-	</File>
 	<File name="main.h" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="52" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="packets.c" open="1" top="1" tabpos="2" split="0" active="1" splitpos="0" zoom_1="-1" zoom_2="0">
+	<File name="packets.c" open="1" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="-1" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="2743" topLine="64" />
+			<Cursor1 position="3506" topLine="69" />
 		</Cursor>
+		<Folding>
+			<Collapse line="24" />
+		</Folding>
 	</File>
 	<File name="main.c" open="1" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="-1" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="118" topLine="0" />
+			<Cursor1 position="113" topLine="0" />
 		</Cursor>
 	</File>
 	<File name="XBeeComm.c" open="0" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="779" topLine="0" />
+			<Cursor1 position="255" topLine="0" />
 		</Cursor>
 	</File>
 	<File name="XBeeComm.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -51,9 +29,76 @@
 			<Cursor1 position="47" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="serialLink.h" open="1" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="receive.c" open="1" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="724" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="serialLink.h" open="0" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="247" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="commands.h" open="1" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="193" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="receive.h" open="1" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="673" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="defines.h" open="0" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="60" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="commands.c" open="1" top="1" tabpos="2" split="0" active="1" splitpos="0" zoom_1="-1" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="294" topLine="0" />
+		</Cursor>
+		<Folding>
+			<Collapse line="14" />
+			<Collapse line="21" />
+			<Collapse line="29" />
+			<Collapse line="38" />
+			<Collapse line="41" />
+			<Collapse line="46" />
+			<Collapse line="52" />
+			<Collapse line="61" />
+			<Collapse line="68" />
+			<Collapse line="75" />
+			<Collapse line="84" />
+			<Collapse line="86" />
+			<Collapse line="90" />
+			<Collapse line="96" />
+			<Collapse line="102" />
+			<Collapse line="111" />
+			<Collapse line="117" />
+			<Collapse line="123" />
+			<Collapse line="132" />
+			<Collapse line="153" />
+			<Collapse line="159" />
+			<Collapse line="167" />
+			<Collapse line="183" />
+			<Collapse line="190" />
+			<Collapse line="198" />
+			<Collapse line="204" />
+			<Collapse line="210" />
+			<Collapse line="219" />
+			<Collapse line="225" />
+			<Collapse line="231" />
+		</Folding>
+	</File>
+	<File name="packets.h" open="1" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="-1" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="2611" topLine="63" />
+		</Cursor>
+	</File>
+	<File name="serialLink.c" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="76" topLine="0" />
 		</Cursor>
 	</File>
 </CodeBlocks_layout_file>

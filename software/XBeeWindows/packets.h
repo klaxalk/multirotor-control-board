@@ -15,6 +15,17 @@ typedef struct
 
 typedef struct
 {
+    unsigned char KC1;
+    unsigned char K1;
+    unsigned char K2;
+    unsigned char K3;
+    unsigned char UNKNOWN;
+} KOPTERST;
+
+#define KOPTERS_COUNT 4
+
+typedef struct
+{
 	unsigned char GROUND_DISTANCE_ESTIMATED;
 	unsigned char GROUND_DISTANCE;
 	unsigned char ELEVATOR_SPEED;
@@ -24,7 +35,7 @@ typedef struct
 	unsigned char ELEVATOR_POS_ESTIMATED;
 	unsigned char AILERON_POS_ESTIMATED;
 	unsigned char THROTTLE_CONTROLLER_OUTPUT;
-    unsigned char THROTTLE_SPEED;
+	unsigned char THROTTLE_SPEED;
 	unsigned char AILERON_VEL_CONTROLLER_OUTPUT;
 	unsigned char ELEVATOR_VEL_CONTROLLER_OUTPUT;
 	unsigned char AILERON_POS_CONTROLLER_OUTPUT;
@@ -41,10 +52,15 @@ typedef struct
 	unsigned char VALID_GUMSTIX;
 	unsigned char ELEVATOR_DESIRED_SPEED_POS_CONT;
 	unsigned char AILERON_DESIRED_SPEED_POS_CONT;
-	unsigned char ELEVATOR_DESIRED_SPEED_POS_CONT_LEADER;
-	unsigned char AILERON_DESIRED_SPEED_POS_CONT_LEADER;
+	unsigned char ELE_DES_SPEED_POS_CONT_LEADER;
+	unsigned char AIL_DES_SPEED_POS_CONT_LEADER;
+	unsigned char OUTPUT_THROTTLE;
+	unsigned char OUTPUT_ELEVATOR;
+	unsigned char OUTPUT_AILERON;
+	unsigned char OUTPUT_RUDDER;
 } TELEMETRIEST;
 
+#define TELEMETRY_VARIABLES 32
 typedef struct
 {
 	unsigned char ON;
@@ -53,13 +69,11 @@ typedef struct
 
 typedef struct
 {
-	unsigned char THROTTLE;
+	unsigned char THROTTLE_SP;
 	unsigned char ELEVATOR_POSITION;
 	unsigned char AILERON_POSITION;
 	unsigned char ELEVATOR_VELOCITY;
 	unsigned char AILERON_VELOCITY;
-	unsigned char ELEVATOR_VELOCITY_LEADER;
-	unsigned char AILERON_VELOCITY_LEADER;
 } SETPOINTST;
 
 typedef struct
@@ -78,7 +92,7 @@ typedef struct
 
 typedef struct
 {
-    unsigned char TELEMETRY;
+	unsigned char TELEMETRY;
 	unsigned char TELEMETRY_COORDINATOR;
 	unsigned char LANDING;
 	unsigned char SET_SETPOINTS;
@@ -86,8 +100,11 @@ typedef struct
 	unsigned char TRAJECTORY_FOLLOW;
 	unsigned char TRAJECTORY_POINTS;
 	unsigned char GUMSTIX;
-	unsigned char LEADING;
+	unsigned char FOLLOWER_SET;
 }COMMANDST;
+
+#define REPORTS_COUNT 5
+
 
 
 extern unsigned char GET_STATUS;
@@ -99,6 +116,8 @@ extern SETPOINTST SETPOINTS;
 extern POSITIONST POSITIONS;
 extern CONTROLLERST CONTROLLERS;
 extern COMMANDST COMMANDS;
+extern KOPTERST KOPTERS;
+extern unsigned char packet[255];
 
 void constInit();
 

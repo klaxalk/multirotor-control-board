@@ -2,6 +2,8 @@
 #define COMMANDS_H
 
 #include "defines.h"
+float getTelemetry(unsigned char kopter, unsigned char type);
+unsigned char getStatus(unsigned char kopter, unsigned char type);
 
 void telemetryRequest(unsigned char *address64,unsigned char *address16,unsigned char type, unsigned char frameID);
 void telemetryReceive(unsigned char *address64,unsigned char *address16,unsigned char type,float value);
