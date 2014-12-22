@@ -108,6 +108,9 @@ void matrix_float_get_col(const matrix_float * m, vector_float * v, const int16_
 // multiply two matrices
 void matrix_float_mul(const matrix_float * a, const matrix_float * b, matrix_float * C);
 
+// multiply two matrices, one of which is transposed, a*b'
+void matrix_float_mul_trans(const matrix_float * a, const matrix_float * b, matrix_float * C);
+
 // multiply matrix by a constant
 void matrix_float_times(matrix_float * a, const float C);
 

@@ -7,28 +7,20 @@
 #include "kalman.h"
 #include "system.h"
 
-kalmanHandler elevatorKalmanHandler;
-
-void kalmanIteration(kalmanHandler * handler, const vector_float * measurement, const vector_float * input, const matrix_float * A, const matrix_float * A_transpose, const matrix_float * B, const matrix_float * R, const matrix_float * Q, const matrix_float * C, const matrix_float * C_transpose, const float dt) {
-
+void kalmanIteration(kalmanHandler * handler, const vector_float * measurement, const vector_float * input, const matrix_float * A, const matrix_float * B, const matrix_float * R, const matrix_float * Q, const matrix_float * C, const float dt) {
+	 	 
 	/* -------------------------------------------------------------------- */
 	/*	Copy the kalman variables locally									*/
 	/* -------------------------------------------------------------------- */
 
 	kalmanHandler handler_local;
 	
-	// number of states
-	int n = handler->states->length;
-	
-	// number measured variables
-	int u = measurement->length;
-	
 	// copy of the states vector
 	vector_float handler_local_states;
 	handler_local_states.name = "Local states";
-	float handler_local_states_data[n];
+	float handler_local_states_data[handler->number_of_states];
 	handler_local_states.data = (float *) &handler_local_states_data;
-	handler_local_states.length = n;
+	handler_local_states.length = handler->number_of_states;
 	
 	handler_local.states = &handler_local_states;
 	vector_float_copy(handler_local.states, handler->states);
@@ -38,7 +30,7 @@ void kalmanIteration(kalmanHandler * handler, const vector_float * measurement, 
 	handler_local_covariance.name = "Local covariance";
 	handler_local_covariance.height = handler->covariance->height;
 	handler_local_covariance.width = handler->covariance->width;
-	float handler_local_covariance_data[n*n];
+	float handler_local_covariance_data[handler->number_of_states*handler->number_of_states];
 	handler_local_covariance.data = (float *) &handler_local_covariance_data;
 	handler_local.covariance = &handler_local_covariance;
 	
@@ -46,59 +38,31 @@ void kalmanIteration(kalmanHandler * handler, const vector_float * measurement, 
 	matrix_float_copy(handler_local.covariance, handler->covariance);
 
 	/* -------------------------------------------------------------------- */
-	/*	Support variables													*/
-	/* -------------------------------------------------------------------- */	
-
-	// temp vector for computing the state vector
-	float temp_vector_data[n];							// local array for data
-	vector_float temp_vector;							// local temp vector of length n
-	temp_vector.name = "temp_vector";
-	temp_vector.data = (float *) &temp_vector_data;
-	temp_vector.length = n;
-	temp_vector.orientation = 0;
-	
-	// temp matrix for computing the covariance matrix
-	float temp_matrix_data[n*n];
-	matrix_float temp_matrix;
-	temp_matrix.name = "temp_matrix";
-	temp_matrix.data = (float *) &temp_matrix_data;
-	temp_matrix.height = n;
-	temp_matrix.width = n;
-	
-	// temp matrix2 for computing the covariance matrix
-	float temp_matrix2_data[n*n];
-	matrix_float temp_matrix2;
-	temp_matrix2.name = "temp_matrix2";
-	temp_matrix2.data = (float *) &temp_matrix2_data;
-	temp_matrix2.height = n;
-	temp_matrix2.width = n;
-
-	/* -------------------------------------------------------------------- */
 	/*	prediction step														*/
 	/* -------------------------------------------------------------------- */
 	
 	// recompute new states
+		
+	// temp_states = a*handler->states;
+	matrix_float_mul_vec_right(A, handler_local.states, handler->temp_vector_n);
 	
-	// temp_states = a*handler.states;
-	matrix_float_mul_vec_right(A, handler_local.states, &temp_vector);
-	
-	vector_float_copy(handler_local.states, &temp_vector);
+	vector_float_copy(handler_local.states, handler->temp_vector_n);
 	
 	// temp_states = temp_states + b*input
-	matrix_float_mul_vec_right(B, input, &temp_vector);
+	matrix_float_mul_vec_right(B, input, handler->temp_vector_n);
 	
-	vector_float_add(handler_local.states, &temp_vector);
+	vector_float_add(handler_local.states, handler->temp_vector_n);
 	
 	// recompute covariance
 	
 	// temp_matrix = A*covariance
-	matrix_float_mul(A, handler_local.covariance, &temp_matrix);
+	matrix_float_mul(A, handler_local.covariance, handler->temp_matrix_n_n);
 	
 	// temp_matrix2 = temp_matrix*A'
-	matrix_float_mul(&temp_matrix, A_transpose, &temp_matrix2);
+	matrix_float_mul_trans(handler->temp_matrix_n_n, A, handler->temp_matrix2_n_n);
 	
 	// covariance = temp_matrix2 + R
-	matrix_float_copy(handler_local.covariance, &temp_matrix2);
+	matrix_float_copy(handler_local.covariance, handler->temp_matrix2_n_n);
 	matrix_float_add(handler_local.covariance, R);
 	
 	/* -------------------------------------------------------------------- */
@@ -108,50 +72,39 @@ void kalmanIteration(kalmanHandler * handler, const vector_float * measurement, 
 	// compute kalman gain
 	// K = covariance*C'*((C*covariance*C' + Q)^-1)
 	
-	// temp matrix for computing the kalman gain
-	float temp_matrix3_data[u*n];
-	matrix_float temp_matrix3;
-	temp_matrix3.name = "temp_matrix3";
-	temp_matrix3.data = (float *) &temp_matrix3_data;
-	temp_matrix3.height = u;
-	temp_matrix3.width = n;
-	
-	float temp_matrix4_data[u*u];
-	matrix_float temp_matrix4;
-	temp_matrix4.name = "temp_matrix4";
-	temp_matrix4.data = (float *) &temp_matrix4_data;
-	temp_matrix4.height = u;
-	temp_matrix4.width = u;
-	
 	// temp_matrix3 = C*covariance
-	matrix_float_mul(C, handler_local.covariance, &temp_matrix3);
+	matrix_float_mul(C, handler_local.covariance, handler->temp_matrix3_u_n);
 	
 	// temp_matrix4 = temp_matrix3*C'
-	matrix_float_mul(&temp_matrix3, C_transpose, &temp_matrix4);
+	matrix_float_mul_trans(handler->temp_matrix3_u_n, C, handler->temp_matrix4_u_u);
 	
 	// temp_matrix4 += Q
-	matrix_float_add(&temp_matrix4, Q);
+	matrix_float_add(handler->temp_matrix4_u_u, Q);
 	
 	// temp_matrix4^-1
-	matrix_float_inverse(&temp_matrix4);
+	matrix_float_inverse(handler->temp_matrix4_u_u);
 	
 	// convert temp_matrix3 to n*u
-	temp_matrix3.height = n;
-	temp_matrix3.width = u;
+	handler->temp_matrix3_u_n->height = handler->number_of_states;
+	handler->temp_matrix3_u_n->width = handler->number_of_inputs;
 	
 	// temp_matrix3 = covariance*C'
-	matrix_float_mul(handler_local.covariance, C_transpose, &temp_matrix3);
+	matrix_float_mul_trans(handler_local.covariance, C, handler->temp_matrix3_u_n);
 	
 	// matrix for the kalman gain
 	matrix_float K;
 	K.name = "Kalman Gain";
-	float kalman_gain_data[n*u];
+	float kalman_gain_data[handler->number_of_inputs*handler->number_of_states];
 	K.data = (float *) &kalman_gain_data;
-	K.height = n;
-	K.width = u;
+	K.height = handler->number_of_states;
+	K.width = handler->number_of_inputs;
 	
 	// K = temp_matrix3*temp_matrix4
-	matrix_float_mul(&temp_matrix3, &temp_matrix4, &K);
+	matrix_float_mul(handler->temp_matrix3_u_n, handler->temp_matrix4_u_u, &K);
+	
+	// convert temp_matrix3 to original dimensions
+	handler->temp_matrix3_u_n->height = handler->number_of_inputs;
+	handler->temp_matrix3_u_n->width = handler->number_of_states;
 		
 	/* -------------------------------------------------------------------- */
 	/*	Correction step - Recomputing states								*/
@@ -159,45 +112,38 @@ void kalmanIteration(kalmanHandler * handler, const vector_float * measurement, 
 	
 	// K = covariance*C'*((C*covariance*C' + Q)^-1);
 	
-	// temp matrix for C*states
-	float temp_vector2_data[u];
-	vector_float temp_vector2;
-	temp_vector2.data = (float *) &temp_vector2_data;
-	temp_vector2.length = u;
-	temp_vector2.orientation = 0;
-	
 	// temp_matrix2 = C*states
-	matrix_float_mul_vec_right(C, handler_local.states, &temp_vector2);
+	matrix_float_mul_vec_right(C, handler_local.states, handler->temp_vector_u);
 	
 	// temp_vector2 = measurement - temp_vector2
-	vector_float_times(&temp_vector2, (float) -1);
+	vector_float_times(handler->temp_vector_u, (float) -1);
 	
-	vector_float_add(&temp_vector2, measurement);
+	vector_float_add(handler->temp_vector_u, measurement);
 	
 	// temp_vector = K*temp_vector2
-	matrix_float_mul_vec_right(&K, &temp_vector2, &temp_vector);	
+	matrix_float_mul_vec_right(&K, handler->temp_vector_u, handler->temp_vector_n);	
 	
 	// states = states + temp_vector2
-	vector_float_add(handler_local.states, &temp_vector);
+	vector_float_add(handler_local.states, handler->temp_vector_n);
 	
-	///* -------------------------------------------------------------------- */
-	///*	Correction step - Recomputing covariance							*/
-	///* -------------------------------------------------------------------- */
+	/* -------------------------------------------------------------------- */
+	/*	Correction step - Recomputing covariance						    */
+	/* -------------------------------------------------------------------- */
 	
 	// covariance = (eye(n) - K*C)*covariance;
 	
 	// temp_matrix = K*C
-	matrix_float_mul(&K, C, &temp_matrix);
+	matrix_float_mul(&K, C, handler->temp_matrix_n_n);
 	
 	// eye(n) - temp_matrix
-	matrix_float_times(&temp_matrix, (float) -1);
+	matrix_float_times(handler->temp_matrix_n_n, (float) -1);
 	int i;
-	for (i = 1; i <= temp_matrix.height; i++) {
-		matrix_float_set(&temp_matrix, i, i, matrix_float_get(&temp_matrix, i, i) + (float) 1);
+	for (i = 1; i <= handler->temp_matrix_n_n->height; i++) {
+		matrix_float_set(handler->temp_matrix_n_n, i, i, matrix_float_get(handler->temp_matrix_n_n, i, i) + (float) 1);
 	}
 	
 	// temp_matrix2 = temp_matrix*covariance
-	matrix_float_mul(&temp_matrix, handler_local.covariance, &temp_matrix2);
+	matrix_float_mul(handler->temp_matrix_n_n, handler_local.covariance, handler->temp_matrix2_n_n);
 	
 	/* -------------------------------------------------------------------- */
 	/*	Copy output to the handler											*/
@@ -206,17 +152,17 @@ void kalmanIteration(kalmanHandler * handler, const vector_float * measurement, 
 	portENTER_CRITICAL();
 	
 	vector_float_copy(handler->states, handler_local.states);
-	matrix_float_copy(handler->covariance, &temp_matrix2);
+	matrix_float_copy(handler->covariance, handler->temp_matrix2_n_n);
 	
 	portEXIT_CRITICAL();
 }
 
-void kalmanInit(kalmanHandler handler) {
+void kalmanInit(kalmanHandler * handler) {
 	
-	matrix_float_set_identity(handler.covariance);
+	matrix_float_set_identity(handler->covariance);
 	
 	// p.p.
-	vector_float_set(handler.states, 1, 1);
-	vector_float_set(handler.states, 2, -0.1);
-	vector_float_set(handler.states, 3, 0);
+	vector_float_set(handler->states, 1, 1);
+	vector_float_set(handler->states, 2, -0.1);
+	vector_float_set(handler->states, 3, 0);
 }	

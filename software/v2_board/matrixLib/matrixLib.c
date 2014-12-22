@@ -343,7 +343,6 @@ void matrix_float_get_col(const matrix_float * m, vector_float * v, const int16_
 }
 
 // multiply two matrices
-// the naive way
 void matrix_float_mul(const matrix_float * a, const matrix_float * b, matrix_float * C) {
 	
 	int16_t i, j, k;
@@ -359,6 +358,30 @@ void matrix_float_mul(const matrix_float * a, const matrix_float * b, matrix_flo
 				tempSum = 0;
 				for (k = 1; k <= a->width; k++) {
 					tempSum += matrix_float_get(a, i, k)*matrix_float_get(b, k, j);
+				}
+				
+				matrix_float_set(C, i, j, tempSum);
+			}
+		}
+	}
+}
+
+// multiply two matrices, one of which is transposed, a*b'
+void matrix_float_mul_trans(const matrix_float * a, const matrix_float * b, matrix_float * C) {
+	
+	int16_t i, j, k;
+	float tempSum;
+	
+	// dimensions must agree
+	if (a->width == b->width && a->height == C->height && b->height == C->width) {
+		
+		for (i = 1; i <= C->height; i++) {
+			
+			for (j = 1; j <= C->width; j++) {
+				
+				tempSum = 0;
+				for (k = 1; k <= a->width; k++) {
+					tempSum += matrix_float_get(a, i, k)*matrix_float_get(b, j, k);
 				}
 				
 				matrix_float_set(C, i, j, tempSum);
