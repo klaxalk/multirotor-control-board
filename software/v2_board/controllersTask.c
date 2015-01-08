@@ -6,35 +6,34 @@
  */ 
 
 #include "controllersTask.h"
-#include "system.h"
-#include "FreeRTOS.h"
-#include "task.h"
 #include "controllers.h"
-#include "ioport.h"
+#include "system.h"
+#include "config.h"
+
 
 void controllersTask(void *p) {
 	
+	initTrajectory();
 	while (1) {
-		
-		#if PX4FLOW_DATA_RECEIVE == ENABLED
-
-		//If controllerEnabled == 0 the controller output signals
-		//are "unplugged" (in mergeSignalsToOutput) but the
-		//controllers keep running.
-		//When the controllers are turned on, it's integral actions
-		//are reset (in enableController).
-
+		leadingDataActualCheck();
 		positionEstimator();
 		altitudeEstimator();
-
-		setpoints();
-
+		
+		if(landingState!=LS_FLIGHT){
+			setpointsFilter(landingThrottleSetpoint,estimatedAileronPos,estimatedElevatorPos,0,0);
+		}else if(trajectoryEnabled==1 && positionControllerEnabled==1 && gumstixEnabled==0){
+			trajectorySetpoints();
+		}else{
+			setpointsFilter(throttleDesiredSetpoint,aileronDesiredPositionSetpoint,elevatorDesiredPositionSetpoint,aileronDesiredVelocitySetpoint,elevatorDesiredVelocitySetpoint);
+		}
+			
 		landingStateAutomat();
-
+		
+		velocityController();
 		positionController();
-		altitudeController();
-
-		#endif // PX4FLOW_DATA_RECEIVE == ENABLED
+		altitudeController();		
+					
+		// makes the 70Hz loop
 		vTaskDelay(14);
 	}
 	

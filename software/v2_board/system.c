@@ -13,6 +13,7 @@
 #include "sysclk.h"
 #include "usart_driver_RTOS.h"
 #include "communication.h"
+#include "controllers.h"
 
 /* -------------------------------------------------------------------- */
 /*	Variables for PPM input capture										*/
@@ -27,18 +28,6 @@ volatile uint16_t RCchannel[9] = {PPM_IN_MIN_LENGTH, PPM_IN_MIDDLE_LENGTH, PPM_I
 volatile uint16_t outputChannels[6] = {PULSE_OUT_MIN, PULSE_OUT_MIDDLE, PULSE_OUT_MIDDLE, PULSE_OUT_MIDDLE, PULSE_OUT_MIN, PULSE_OUT_MIN};
 volatile uint8_t currentChannelOut = 0;
 
-// controllers output variables
-volatile int16_t controllerElevatorOutput;
-volatile int16_t controllerAileronOutput;
-volatile int16_t controllerThrottleOutput;
-volatile int16_t controllerRudderOutput;
-
-//XBee gestures output
-volatile int16_t gestureElevatorOutput=PULSE_OUT_MIDDLE;
-volatile int16_t gestureAileronOutput=PULSE_OUT_MIDDLE;
-volatile int16_t gestureRudderOutput=PULSE_OUT_MIDDLE;
-volatile int16_t gestureThrottleOutput=PULSE_OUT_MIN;
-volatile unsigned char gestured=1;
 
 /* -------------------------------------------------------------------- */
 /*	Buffers for USARTs													*/
@@ -56,29 +45,21 @@ UsartBuffer * usart_buffer_4;
 /* -------------------------------------------------------------------- */
 #define USART_STM_BAUDRATE		BAUD9600
 #define USART_XBEE_BAUDRATE		BAUD19200
-#define USART_LOG_BAUDRATE		BAUD115200
+#define USART_LOG_BAUDRATE		BAUD9600
 #define USART_1_BAUDRATE		BAUDPX4FLOW
 #define USART_2_BAUDRATE		BAUD19200
-#define USART_3_BAUDRATE		BAUD19200
-#define USART_4_BAUDRATE		BAUD9600
+#define USART_3_BAUDRATE		BAUD9600
+#define USART_4_BAUDRATE		BAUD57600
 
-extern volatile float elevatorIntegration;
-extern volatile float aileronIntegration;
-extern volatile float throttleIntegration;
-extern volatile float elevatorSetpoint;
-extern volatile float aileronSetpoint;
-extern volatile float throttleSetpoint;
-extern volatile float elevatorDesiredSetpoint;
-extern volatile float aileronDesiredSetpoint;
-extern volatile float throttleDesiredSetpoint;
+//output signals
+int16_t outputThrottle = PULSE_OUT_MIN/2;
+int16_t outputElevator = PULSE_OUT_MIDDLE/2;
+int16_t outputAileron = PULSE_OUT_MIDDLE/2;
+int16_t outputRudder = PULSE_OUT_MIDDLE/2;
 
-//vars for estimators
-extern volatile float estimatedElevatorPos;
-extern volatile float estimatedAileronPos;
-extern volatile float estimatedThrottlePos;
-extern volatile float estimatedElevatorVel;
-extern volatile float estimatedAileronVel;
-extern volatile float estimatedThrottleVel;
+int16_t outputThrottleInc = 0;
+int16_t outputThrottleInc2 = 0;
+
 
 /* -------------------------------------------------------------------- */
 /*	Basic initialization of the MCU, peripherals and i/o				*/
@@ -88,7 +69,6 @@ void boardInit() {
 	/* -------------------------------------------------------------------- */
 	/*	Setup GPIO for LEDs and PPM i/o										*/
 	/* -------------------------------------------------------------------- */
-	
 	ioport_init();
 	
 	ioport_set_pin_dir(RED, IOPORT_DIR_OUTPUT);
@@ -97,6 +77,7 @@ void boardInit() {
 	ioport_set_pin_dir(GREEN, IOPORT_DIR_OUTPUT);
 	ioport_set_pin_dir(YELLOW, IOPORT_DIR_OUTPUT);
 	ioport_set_pin_dir(OUT1, IOPORT_DIR_OUTPUT);
+	
 	
 	ioport_set_pin_level(RED, true);
 	ioport_set_pin_level(BLUE, true);
@@ -173,46 +154,48 @@ void boardInit() {
 	PMIC_EnableLowLevel();
 }
 
+int16_t saturation(int16_t variable,int16_t maxValue){
+	if(variable>maxValue){return maxValue;}
+	else if(variable<-maxValue){return -maxValue;}
+	else {return variable;} 			
+}
+
 /* -------------------------------------------------------------------- */
 /*	Merge signals from RC Receiver with the controller outputs			*/
 /* -------------------------------------------------------------------- */
 void mergeSignalsToOutput() {
 
-	int16_t outputThrottle = PULSE_OUT_MIN;
-	int16_t outputElevator = PULSE_OUT_MIDDLE;
-	int16_t outputAileron = PULSE_OUT_MIDDLE;
-	int16_t outputRudder = PULSE_OUT_MIDDLE;
+portENTER_CRITICAL();
+	outputThrottle = RCchannel[THROTTLE];
+	outputRudder = RCchannel[RUDDER];
+	outputElevator = RCchannel[ELEVATOR];
+	outputAileron = RCchannel[AILERON];
+	
 
-	outputThrottle = RCchannel[RC_THROTTLE];
-	outputRudder = RCchannel[RC_RUDDER];
-	outputElevator = RCchannel[RC_ELEVATOR];
-	outputAileron = RCchannel[RC_AILERON];
+	if (velocityControllerEnabled == 1 || positionControllerEnabled == 1) {
+		if(landingState==LS_FLIGHT){		
+			outputThrottle += saturation(controllerThrottleOutput,CONTROLLER_THROTTLE_SATURATION);				
+			if (velocityControllerEnabled == 1 ) {
+				outputElevator += saturation(velocityControllerElevatorOutput,CONTROLLER_ELEVATOR_SATURATION);
+				outputAileron += saturation(velocityControllerAileronOutput,CONTROLLER_AILERON_SATURATION);
+			}	
+			if (positionControllerEnabled == 1) {
+				outputElevator += saturation(positionControllerElevatorOutput,CONTROLLER_ELEVATOR_SATURATION);
+				outputAileron += saturation(positionControllerAileronOutput,CONTROLLER_AILERON_SATURATION);
+			}		
+		}else{		
+			outputElevator += saturation(velocityControllerElevatorOutput,CONTROLLER_ELEVATOR_SATURATION);
+			outputAileron += saturation(velocityControllerAileronOutput,CONTROLLER_AILERON_SATURATION);
+			outputThrottle += saturation(landingThrottleOutput,CONTROLLER_THROTTLE_SATURATION);								
+		}
+	}
 
-	if (controllerEnabled == 1) {
-		outputThrottle += controllerThrottleOutput;
-		outputElevator += controllerElevatorOutput;
-		outputAileron += controllerAileronOutput;
-		//~ outputRudder += controllerRudderOutput;
-	}
-	
-	if(gestured==0){
-		outputThrottle = gestureThrottleOutput;
-		outputRudder   = gestureRudderOutput;
-		outputElevator = gestureElevatorOutput;
-		outputAileron  = gestureAileronOutput;
-		
-		gestureElevatorOutput=PULSE_OUT_MIDDLE;
-		gestureAileronOutput=PULSE_OUT_MIDDLE;
-		gestureRudderOutput=PULSE_OUT_MIDDLE;
-		gestureThrottleOutput=PULSE_OUT_MIN;
-		gestured=1;
-	}
-	
-	
+	// Everything is *2 because the PPM incoming to this board is twice slower then the PPM goeing out
 	outputChannels[0] = outputThrottle*2;
 	outputChannels[1] = outputRudder*2;
 	outputChannels[2] = outputElevator*2;
 	outputChannels[3] = outputAileron*2;
+portEXIT_CRITICAL();
 }
 
 /* -------------------------------------------------------------------- */
@@ -286,47 +269,6 @@ ISR(TCD0_OVF_vect) {
 		uint32_t finalOutLen = PPM_FRAME_LENGTH - outputSum;
 		TC_SetPeriod(&TCD0, (uint16_t) finalOutLen);
 	}
-}
-
-// disable controllers
-void disableController() {
-	controllerEnabled = 0;
-}
-
-// enable controllers
-void enableController() {
-	if (controllerEnabled == 0) {
-		#if PX4FLOW_DATA_RECEIVE == ENABLED
-		elevatorIntegration = 0;
-		aileronIntegration = 0;
-		throttleIntegration = 0;
-
-		if(validGumstix != 1) {
-			elevatorSetpoint = (ELEVATOR_SP_LOW + ELEVATOR_SP_HIGH)/2;
-			aileronSetpoint  = (AILERON_SP_LOW  + AILERON_SP_HIGH )/2;
-			throttleSetpoint = 1;
-			
-			estimatedElevatorPos = elevatorSetpoint;
-			estimatedAileronPos  = aileronSetpoint;
-			
-			elevatorDesiredSetpoint=elevatorSetpoint;
-			aileronDesiredSetpoint=aileronSetpoint;
-			throttleDesiredSetpoint=throttleSetpoint;
-		}
-		#endif
-	}
-	controllerEnabled = 1;
-}
-
-void disablePositionController() {
-	positionControllerEnabled = 0;
-}
-
-void enablePositionController() {
-	if (positionControllerEnabled == 0) {
-		// set integrated variables to default
-	}
-	positionControllerEnabled = 1;
 }
 
 /* -------------------------------------------------------------------- */

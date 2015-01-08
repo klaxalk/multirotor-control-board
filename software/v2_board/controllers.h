@@ -8,9 +8,7 @@
 #ifndef _CONTROLLERS_H
 #define _CONTROLLERS_H
 
-#include "mavlink/v1.0/common/mavlink.h"
-#include "defines.h"
-#include "config.h"
+#include "system.h"
 #include <stdlib.h>
 
 // controllers period (do not change!)
@@ -21,20 +19,21 @@
 #define PX4FLOW_FILTER_CONST    0.05
 #define SETPOINT_FILTER_CONST   0.10
 
+//constants for setpoints
+#define DEFAULT_AILERON_POSITION_SETPOINT 0
+#define DEFAULT_ELEVATOR_POSITION_SETPOINT -1.5
+#define DEFAULT_THROTTLE_SETPOINT 1
+#define DEFAULT_AILERON_VELOCITY_SETPOINT 0
+#define DEFAULT_ELEVATOR_VELOCITY_SETPOINT 0
+
 // constants for position and velocity controllers
 #define POSITION_MAXIMUM   2000 //in mm, must be positive! crops Gumstix values
-#define ELEVATOR_SP_HIGH  -1.0
-#define ELEVATOR_SP_LOW   -2.0
-
-#define AILERON_SP_HIGH   +0.5
-#define AILERON_SP_LOW    -0.5
-
-// changed 0.33 -> 0.4, Tom·ö B·Ëa, 24.6.2014
-#define POSITION_SPEED_MAX 0.4 // in m/s, must be positive!
+#define SPEED_MAX 0.4 // in m/s, must be positive!
 
 #define VELOCITY_KV 250
 #define VELOCITY_KI 10
-#define VELOCITY_KA 30
+#define VELOCITY_KA 35
+
 
 #define POSITION_KP 85
 #define POSITION_KI 5
@@ -47,8 +46,8 @@
 #define ALTITUDE_SPEED_MAX 0.8 //in m/s, must be positive!
 #define LANDING_SPEED     -0.4 //in m/s, must be negative!
 
-#define THROTTLE_SP_HIGH  1.5
-#define THROTTLE_SP_LOW   0.5
+#define THROTTLE_SP_HIGH  2.0
+#define THROTTLE_SP_LOW   ALTITUDE_MINIMUM
 
 #define ALTITUDE_KP 180
 #define ALTITUDE_KI 120
@@ -57,68 +56,68 @@
 #define LANDING_KV 180
 #define LANDING_KI 120
 
-// common global variables
-// controllers output variables
-extern volatile int16_t controllerElevatorOutput;
-extern volatile int16_t controllerAileronOutput;
-extern volatile int16_t controllerThrottleOutput;
-
-// controller on/off
-extern volatile unsigned char controllerEnabled;
-extern volatile unsigned char positionControllerEnabled;
-extern volatile unsigned char landingMode;
-
-// constants from RC transmitter
-extern volatile float constant1;
-extern volatile float constant2;
-extern volatile float constant5;
-
 // controllers saturations
 #define CONTROLLER_ELEVATOR_SATURATION 100
 #define CONTROLLER_AILERON_SATURATION  100
 #define CONTROLLER_THROTTLE_SATURATION 300
 
-#if PX4FLOW_DATA_RECEIVE == ENABLED
+// leading data TTL (sec)
+#define LEADING_DATA_TTL 0.5
 
-//px4flow values
-extern volatile float groundDistance;
-extern volatile float elevatorSpeed;
-extern volatile float aileronSpeed;
+// common global variables
+// controllers output variables
+extern volatile int16_t velocityControllerElevatorOutput;
+extern volatile int16_t velocityControllerAileronOutput;
+extern volatile int16_t positionControllerElevatorOutput;
+extern volatile int16_t positionControllerAileronOutput;
+extern volatile int16_t controllerThrottleOutput;
 
-#if GUMSTIX_DATA_RECEIVE == ENABLED
-
-//gumstix values
-extern volatile float elevatorGumstix;
-extern volatile float aileronGumstix;
-extern volatile float throttleGumstix;
-extern volatile int8_t validGumstix;
-
-#endif
+// controller on/off
+extern volatile unsigned char velocityControllerEnabled;
+extern volatile unsigned char positionControllerEnabled;
 
 //vars for estimators
+extern volatile float estimatedElevatorVel2;
+extern volatile float estimatedAileronVel2;
+
 extern volatile float estimatedElevatorPos;
 extern volatile float estimatedAileronPos;
 extern volatile float estimatedThrottlePos;
 extern volatile float estimatedElevatorVel;
 extern volatile float estimatedAileronVel;
 extern volatile float estimatedThrottleVel;
+extern volatile float estimatedElevatorAcc;
+extern volatile float estimatedAileronAcc;
 
 //vars for controllers
-extern volatile float elevatorIntegration;
-extern volatile float aileronIntegration;
-extern volatile float throttleIntegration;
-extern volatile float elevatorSetpoint;
-extern volatile float aileronSetpoint;
+extern volatile float elevatorPositionSetpoint;
+extern volatile float aileronPositionSetpoint;
 extern volatile float throttleSetpoint;
+extern volatile float elevatorVelocitySetpoint;
+extern volatile float aileronVelocitySetpoint;
 
-extern volatile float elevatorDesiredSetpoint;
-extern volatile float aileronDesiredSetpoint;
+extern volatile float elevatorDesiredSpeedPosController;
+extern volatile float aileronDesiredSpeedPosController;
+extern volatile float elevatorDesiredSpeedPosControllerLeader;
+extern volatile float aileronDesiredSpeedPosControllerLeader;
+
+extern volatile float elevatorDesiredPositionSetpoint;
+extern volatile float aileronDesiredPositionSetpoint;
 extern volatile float throttleDesiredSetpoint;
+extern volatile float elevatorDesiredVelocitySetpoint;
+extern volatile float aileronDesiredVelocitySetpoint;
+
+extern volatile float elevatorPosContError;
+extern volatile float aileronPosContError;
+
+//Gumstix on/off
+extern volatile unsigned char gumstixEnabled;
 
 //auto-landing variables and state defines
+extern volatile float landingThrottleSetpoint;
+extern volatile int16_t landingThrottleOutput;
 extern volatile unsigned char landingRequest;
 extern volatile unsigned char landingState;
-extern volatile uint8_t landingCounter;
 #define LS_STABILIZATION      2
 #define LS_LANDING            1
 #define LS_ON_GROUND          0
@@ -127,9 +126,7 @@ extern volatile uint8_t landingCounter;
 
 //auto-trajectory variables and types
 extern volatile unsigned char trajectoryEnabled;
-extern volatile float trajTimer;
-extern volatile unsigned char trajIndex;
-extern volatile unsigned char trajMaxIndex;
+extern volatile int8_t trajMaxIndex;
 typedef struct {
 	float time;
 	float elevatorPos; //position in m
@@ -144,11 +141,28 @@ extern volatile trajectoryPoint_t trajectory[];
 	trajectory[i].aileronPos = a; \
 	trajectory[i].throttlePos = th
 
+//trajectory Follow
+void initTrajectory();
+void trajectorySetpoints();
+
+//enables - disables
+void disableVelocityController();
+void enableVelocityController();
+void disablePositionController();
+void enablePositionController();
+void enableGumstix();
+void disableGumstix();
+void enableLanding();
+void disableLanding();
+void enableTrajectoryFollow();
+void disableTrajectoryFollow();
+
 //setpoint and trajectory handling
-void setpoints();
+void setpointsFilter(float throttleDSP,float aileronPosDSP,float elevatorPosDSP,float aileronVelDSP,float elevatorVelDSP);
 
 //position estimator and controllers
 void positionEstimator();
+void velocityController();
 void positionController();
 
 //altitude estimator and controllers
@@ -156,6 +170,7 @@ void altitudeEstimator();
 void altitudeController();
 void landingStateAutomat();
 
-#endif // PX4FLOW_DATA_RECEIVE == ENABLED
+//leading data age checker
+void leadingDataActualCheck();
 
 #endif // _CONTROLLERS_H

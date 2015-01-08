@@ -9,6 +9,8 @@
 #define SYSTEM_H_
 
 #include <stdint.h>
+#include "usart_driver_RTOS.h"
+#include "ioport.h"
 
 /* -------------------------------------------------------------------- */
 /*	LED masks															*/
@@ -19,6 +21,7 @@
 #define	GREEN	IOPORT_CREATE_PIN(PORTB, 6)
 #define	YELLOW	IOPORT_CREATE_PIN(PORTB, 7)
 #define	OUT1	IOPORT_CREATE_PIN(PORTD, 5)
+
 
 /* -------------------------------------------------------------------- */
 /*	LED macros															*/
@@ -38,6 +41,7 @@
 #define led_yellow_on()		ioport_set_pin_level(YELLOW, false)
 #define led_yellow_off()	ioport_set_pin_level(YELLOW, true)
 #define led_yellow_toggle()	ioport_toggle_pin_level(YELLOW)
+
 
 /* -------------------------------------------------------------------- */
 /*	PPM output macro													*/
@@ -77,43 +81,41 @@
 /* -------------------------------------------------------------------- */
 /*	Constants to asociate the RC channels								*/
 /* -------------------------------------------------------------------- */
-#define RC_THROTTLE		0
-#define RC_RUDDER		1
-#define RC_AILERON		2
-#define RC_ELEVATOR		3
+#define THROTTLE		0
+#define RUDDER			1
+#define AILERON			2
+#define ELEVATOR		3
 #define AUX1			4
 #define AUX2			5
 #define AUX3			6
 #define AUX4			7
 #define AUX5			8
 
-// declaration of global variables
-extern volatile uint8_t portMask;
-extern volatile uint8_t portMask2;
+/* -------------------------------------------------------------------- */
+/*	Contains signals from RC receiver									*/
+/* -------------------------------------------------------------------- */
+extern volatile uint16_t RCchannel[9];
 
-extern volatile float throttleIntegration;
-extern volatile unsigned char controllerEnabled;
-extern volatile unsigned char positionControllerEnabled;
+/* -------------------------------------------------------------------- */
+/*	Buffers for USARTs													*/
+/* -------------------------------------------------------------------- */
+extern UsartBuffer * usart_buffer_stm;
+extern UsartBuffer * usart_buffer_xbee;
+extern UsartBuffer * usart_buffer_log;
+extern UsartBuffer * usart_buffer_1;
+extern UsartBuffer * usart_buffer_2;
+extern UsartBuffer * usart_buffer_3;
+extern UsartBuffer * usart_buffer_4;
 
-#if PX4FLOW_DATA_RECEIVE == ENABLED
-
-extern volatile float elevatorSpeedIntegration;
-extern volatile float aileronSpeedIntegration;
-
-#endif
+//output signals
+extern int16_t outputThrottle;
+extern int16_t outputElevator;
+extern int16_t outputAileron;
+extern int16_t outputRudder;
 
 /* Basic initialization of the MCU, peripherals and i/o */
 void boardInit();
 
 /* Merge signals from RC Receiver with the controller outputs */
 void mergeSignalsToOutput();
-
-void disableController();
-
-void enableController();
-
-void disablePositionController();
-
-void enablePositionController();
-
 #endif /* SYSTEM_H_ */
