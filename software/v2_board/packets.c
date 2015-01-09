@@ -115,7 +115,7 @@ void constInit(){
 	
 	GET_STATUS=0x95;
 	
-	telemetryToCoordinatorArr[TELEMETRIES.ELEVATOR_SPEED_ESTIMATED]=1;	
+	telemetryToCoordinatorArr[TELEMETRIES.GROUND_DISTANCE_ESTIMATED]=1;	
 }
 
 
