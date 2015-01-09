@@ -5,11 +5,50 @@
 #include <QScreen>
 #include <QMessageBox>
 #include <QMetaEnum>
+#include "receive.h"
+#include "send.h"
 
 
-double key1=0,lastPointKey1=0,key2=0,lastPointKey2=0,key3=0,lastPointKey3=0,key4=0,lastPointKey4=0;
-int numberOfQuadro=0;
-boolean statusEnabled=false;
+double key1=0,key2=0,key3=0,key4=0;
+float values1[32]={ };
+float values2[32]={ };
+float values3[32]={ };
+float values4[32]={ };
+
+unsigned char kopter=KOPTERS.K1;
+unsigned char signal1=TELEMETRIES.GROUND_DISTANCE_ESTIMATED;
+unsigned char signal2=TELEMETRIES.GROUND_DISTANCE;
+unsigned char signal3=TELEMETRIES.ELEVATOR_SPEED;
+unsigned char signal4=TELEMETRIES.AILERON_SPEED;
+unsigned char signal5=TELEMETRIES.ELEVATOR_SPEED_ESTIMATED;
+unsigned char signal6=TELEMETRIES.AILERON_SPEED_ESTIMATED;
+unsigned char signal7=TELEMETRIES.ELEVATOR_POS_ESTIMATED;
+unsigned char signal8=TELEMETRIES.AILERON_POS_ESTIMATED;
+unsigned char signal9=TELEMETRIES.THROTTLE_CONTROLLER_OUTPUT;
+unsigned char signal10=TELEMETRIES.THROTTLE_SPEED;
+unsigned char signal11=TELEMETRIES.AILERON_VEL_CONTROLLER_OUTPUT;
+unsigned char signal12=TELEMETRIES.ELEVATOR_VEL_CONTROLLER_OUTPUT;
+unsigned char signal13=TELEMETRIES.AILERON_POS_CONTROLLER_OUTPUT;
+unsigned char signal14=TELEMETRIES.ELEVATOR_POS_CONTROLLER_OUTPUT;
+unsigned char signal15=TELEMETRIES.THROTTLE_SETPOINT;
+unsigned char signal16=TELEMETRIES.ELEVATOR_POS_SETPOINT;
+unsigned char signal17=TELEMETRIES.AILERON_POS_SETPOINT;
+unsigned char signal18=TELEMETRIES.ELEVATOR_VEL_SETPOINT;
+unsigned char signal19=TELEMETRIES.AILERON_VEL_SETPOINT;
+unsigned char signal20=TELEMETRIES.ELEVATOR_SPEED_ESTIMATED2;
+unsigned char signal21=TELEMETRIES.AILERON_SPEED_ESTIMATED2;
+unsigned char signal22=TELEMETRIES.ELEVATOR_ACC;
+unsigned char signal23=TELEMETRIES.AILERON_ACC;
+unsigned char signal24=TELEMETRIES.VALID_GUMSTIX;
+unsigned char signal25=TELEMETRIES.ELEVATOR_DESIRED_SPEED_POS_CONT;
+unsigned char signal26=TELEMETRIES.AILERON_DESIRED_SPEED_POS_CONT;
+unsigned char signal27=TELEMETRIES.ELE_DES_SPEED_POS_CONT_LEADER;
+unsigned char signal28=TELEMETRIES.AIL_DES_SPEED_POS_CONT_LEADER;
+unsigned char signal29=TELEMETRIES.OUTPUT_THROTTLE;
+unsigned char signal30=TELEMETRIES.OUTPUT_ELEVATOR;
+unsigned char signal31=TELEMETRIES.OUTPUT_AILERON;
+unsigned char signal32=TELEMETRIES.OUTPUT_RUDDER;
+unsigned char status1,status2,status3,status4;
 
 quadro::quadro(QWidget *parent) :
     QMainWindow(parent),
@@ -48,8 +87,8 @@ void quadro::graph_1(QCustomPlot *graph1)
 #endif
 
     // set title of plot:
-    graph1->plotLayout()->insertRow(0);
-    graph1->plotLayout()->addElement(0, 0, new QCPPlotTitle(graph1, "Plot 1"));
+    //graph1->plotLayout()->insertRow(0);
+    //graph1->plotLayout()->addElement(0, 0, new QCPPlotTitle(graph1, "Plot 1"));
 
 
     graph1->addGraph(); // blue line
@@ -233,133 +272,135 @@ void quadro::realtimeDataSlotGraph1()
             ui->graph1->graph(15)->clearData();
             ui->graph1->graph(15)->addData(key1, value7);
         }*/
+
+        values1[0] = getTelemetry(kopter,signal1);
+        values1[1] = getTelemetry(kopter,signal2);
+        values1[2] = getTelemetry(kopter,signal3);
+        values1[3] = getTelemetry(kopter,signal4);
+        values1[4] = getTelemetry(kopter,signal5);
+        values1[5] = getTelemetry(kopter,signal6);
+        values1[6] = getTelemetry(kopter,signal7);
+        values1[7] = getTelemetry(kopter,signal8);
+        values1[8] = getTelemetry(kopter,signal9);
+        values1[9] = getTelemetry(kopter,signal10);
+        values1[10] = getTelemetry(kopter,signal11);
+        values1[11] = getTelemetry(kopter,signal12);
+        values1[12] = getTelemetry(kopter,signal13);
+        values1[13] = getTelemetry(kopter,signal14);
+        values1[14] = getTelemetry(kopter,signal15);
+        values1[15] = getTelemetry(kopter,signal16);
+        values1[16] = getTelemetry(kopter,signal17);
+        values1[17] = getTelemetry(kopter,signal18);
+        values1[18] = getTelemetry(kopter,signal19);
+        values1[19] = getTelemetry(kopter,signal20);
+        values1[20] = getTelemetry(kopter,signal21);
+        values1[21] = getTelemetry(kopter,signal22);
+        values1[22] = getTelemetry(kopter,signal23);
+        values1[23] = getTelemetry(kopter,signal24);
+        values1[24] = getTelemetry(kopter,signal25);
+        values1[25] = getTelemetry(kopter,signal26);
+        values1[26] = getTelemetry(kopter,signal27);
+        values1[27] = getTelemetry(kopter,signal28);
+        values1[28] = getTelemetry(kopter,signal29);
+        values1[29] = getTelemetry(kopter,signal30);
+        values1[30] = getTelemetry(kopter,signal31);
+        values1[31] = getTelemetry(kopter,signal32);
+
     if(Plot1Signal1->isChecked()){
-        double value0 = sin(key1*1.6+cos(key1*1.7)*2)*10 + sin(key1*1.2+0.56)*20 + 26;
-        ui->graph1->graph(0)->addData(key1, value0);
+        ui->graph1->graph(0)->addData(key1, values1[0]);
     }
     if(Plot1Signal2->isChecked()){
-        double value1 = cos(key1*1.6+cos(key1*1.7)*2)*10 + sin(key1*1.2+0.56)*20 + 26;
-        ui->graph1->graph(1)->addData(key1, value1);
+        ui->graph1->graph(1)->addData(key1, values1[1]);
     }
     if(Plot1Signal3->isChecked()){
-        double value2 = sin(key1*1.6+cos(key1*1.7)*2)*10 + sin(key1*1.2+0.56)*20 ;
-        ui->graph1->graph(2)->addData(key1, value2);
+        ui->graph1->graph(2)->addData(key1, values1[2]);
     }
     if(Plot1Signal4->isChecked()){
-        double value3 = sin(key1*1.6+cos(key1*1.7)*2)*10 + sin(key1*1.2+0.56)*20 +16;
-        ui->graph1->graph(3)->addData(key1, value3);
+        ui->graph1->graph(3)->addData(key1, values1[3]);
     }
     if(Plot1Signal5->isChecked()){
-        double value4 = sin(key1*1.6+cos(key1*1.7)*2)*10 + sin(key1*1.2+0.56)*20 + 56;
-        ui->graph1->graph(4)->addData(key1, value4);
+        ui->graph1->graph(4)->addData(key1, values1[4]);
     }
     if(Plot1Signal6->isChecked()){
-        double value5 = sin(key1*1.6+cos(key1*1.7)*2)*10 + sin(key1*1.2+0.56)*20 + 6;
-        ui->graph1->graph(5)->addData(key1, value5);
+        ui->graph1->graph(5)->addData(key1, values1[5]);
     }
     if(Plot1Signal7->isChecked()){
-        double value6 = sin(key1*1.6+cos(key1*1.7)*2)*10 + sin(key1*1.2+0.56)*20 + 36;
-        ui->graph1->graph(6)->addData(key1, value6);
+        ui->graph1->graph(6)->addData(key1, values1[6]);
     }
     if(Plot1Signal8->isChecked()){
-        double value7 = 5;
-        ui->graph1->graph(7)->addData(key1, value7);
+        ui->graph1->graph(7)->addData(key1, values1[7]);
     }
     if(Plot1Signal9->isChecked()){
-        double value8 = sin(cos(key1*1.7)*2)*10 + sin(key1*1.2+0.56)*20 + 26;
-        ui->graph1->graph(8)->addData(key1, value8);
+        ui->graph1->graph(8)->addData(key1, values1[8]);
     }
     if(Plot1Signal10->isChecked()){
-        double value9 = sin(key1*1.6+cos(key1*1.7))*10 + sin(key1*1.2+0.56)*20 + 26;
-        ui->graph1->graph(9)->addData(key1, value9);
+        ui->graph1->graph(9)->addData(key1, values1[9]);
     }
     if(Plot1Signal11->isChecked()){
-        double value10 = sin(key1*1.6+cos(key1*1.7)*2)*10 + 26;
-        ui->graph1->graph(10)->addData(key1, value10);
+        ui->graph1->graph(10)->addData(key1, values1[10]);
     }
     if(Plot1Signal12->isChecked()){
-        double value11 = sin(key1*1.6) + sin(key1*1.2+0.56)*20 + 26;
-        ui->graph1->graph(11)->addData(key1, value11);
+        ui->graph1->graph(11)->addData(key1, values1[11]);
     }
     if(Plot1Signal13->isChecked()){
-        double value12 = 10;
-        ui->graph1->graph(12)->addData(key1, value12);
+        ui->graph1->graph(12)->addData(key1, values1[12]);
     }
     if(Plot1Signal14->isChecked()){
-        double value13 = 2;
-        ui->graph1->graph(13)->addData(key1, value13);
+        ui->graph1->graph(13)->addData(key1, values1[13]);
     }
     if(Plot1Signal15->isChecked()){
-        double value14 = 20;
-        ui->graph1->graph(14)->addData(key1, value14);
+        ui->graph1->graph(14)->addData(key1, values1[14]);
     }
     if(Plot1Signal16->isChecked()){
-        double value15 = 15;
-        ui->graph1->graph(15)->addData(key1, value15);
+        ui->graph1->graph(15)->addData(key1, values1[15]);
     }
     if(Plot1Signal17->isChecked()){
-        double value16 = 16;
-        ui->graph1->graph(16)->addData(key1, value16);
+        ui->graph1->graph(16)->addData(key1, values1[16]);
     }
     if(Plot1Signal18->isChecked()){
-        double value17 = 17;
-        ui->graph1->graph(17)->addData(key1, value17);
+        ui->graph1->graph(17)->addData(key1, values1[17]);
     }
     if(Plot1Signal19->isChecked()){
-        double value18 = 18;
-        ui->graph1->graph(18)->addData(key1, value18);
+        ui->graph1->graph(18)->addData(key1, values1[18]);
     }
     if(Plot1Signal20->isChecked()){
-        double value19 = 19;
-        ui->graph1->graph(19)->addData(key1, value19);
+        ui->graph1->graph(19)->addData(key1, values1[19]);
     }
     if(Plot1Signal21->isChecked()){
-        double value20 = 20;
-        ui->graph1->graph(20)->addData(key1, value20);
+        ui->graph1->graph(20)->addData(key1, values1[20]);
     }
     if(Plot1Signal22->isChecked()){
-        double value21 = 21;
-        ui->graph1->graph(21)->addData(key1, value21);
+        ui->graph1->graph(21)->addData(key1, values1[21]);
     }
     if(Plot1Signal23->isChecked()){
-        double value22 = 22;
-        ui->graph1->graph(22)->addData(key1, value22);
+        ui->graph1->graph(22)->addData(key1, values1[22]);
     }
     if(Plot1Signal24->isChecked()){
-        double value23 = 23;
-        ui->graph1->graph(23)->addData(key1, value23);
+        ui->graph1->graph(23)->addData(key1, values1[23]);
     }
     if(Plot1Signal25->isChecked()){
-        double value24 = 24;
-        ui->graph1->graph(24)->addData(key1, value24);
+        ui->graph1->graph(24)->addData(key1, values1[24]);
     }
     if(Plot1Signal26->isChecked()){
-        double value25 = 25;
-        ui->graph1->graph(25)->addData(key1, value25);
+        ui->graph1->graph(25)->addData(key1, values1[25]);
     }
     if(Plot1Signal27->isChecked()){
-        double value26 = 26;
-        ui->graph1->graph(26)->addData(key1, value26);
+        ui->graph1->graph(26)->addData(key1, values1[26]);
     }
     if(Plot1Signal28->isChecked()){
-        double value27 = 27;
-        ui->graph1->graph(27)->addData(key1, value27);
+        ui->graph1->graph(27)->addData(key1, values1[27]);
     }
     if(Plot1Signal29->isChecked()){
-        double value28 = 28;
-        ui->graph1->graph(28)->addData(key1, value28);
+        ui->graph1->graph(28)->addData(key1, values1[28]);
     }
     if(Plot1Signal30->isChecked()){
-        double value29 = 29;
-        ui->graph1->graph(29)->addData(key1, value29);
+        ui->graph1->graph(29)->addData(key1, values1[29]);
     }
     if(Plot1Signal31->isChecked()){
-        double value30 = 30;
-        ui->graph1->graph(30)->addData(key1, value30);
+        ui->graph1->graph(30)->addData(key1, values1[30]);
     }
     if(Plot1Signal32->isChecked()){
-        double value31 = 31;
-        ui->graph1->graph(31)->addData(key1, value31);
+        ui->graph1->graph(31)->addData(key1, values1[31]);
     }
         // remove data of lines that's outside visible range:
         ui->graph1->graph(0)->removeDataBefore(key1-100);
@@ -428,7 +469,7 @@ void quadro::realtimeDataSlotGraph1()
         ui->graph1->graph(29)->rescaleValueAxis(true);
         ui->graph1->graph(30)->rescaleValueAxis(true);
         ui->graph1->graph(31)->rescaleValueAxis(true);
-        lastPointKey1 = key1;
+       // lastPointKey1 = key1;
    // }
     // make key1 axis range scroll with the data (at a constant range size of 8):
     ui->graph1->xAxis->setRange(key1+0.25, 10, Qt::AlignRight);
@@ -461,9 +502,6 @@ void quadro::graph_2(QCustomPlot *graph2)
 QMessageBox::critical(this, "", "You're using Qt < 4.7, the realtime data needs functions that are available with Qt 4.7 to work properly");
 #endif
 
-// set title of plot:
-graph2->plotLayout()->insertRow(0);
-graph2->plotLayout()->addElement(0, 0, new QCPPlotTitle(graph2, "Plot 2"));
 
 
 graph2->addGraph(); // blue line
@@ -584,135 +622,134 @@ dataTimer2.start(0); // Interval 0 means to refresh as fast as possible
 
 void quadro::realtimeDataSlotGraph2()
 {
-    if (key2-lastPointKey2 > 0.01)                      // at most add point every 10 ms
-    {
+
         if(Plot2Signal1->isChecked()){
-            double value0 = sin(key2*1.6+cos(key2*1.7)*2)*10 + sin(key2*1.2+0.56)*20 + 26;
-            ui->graph2->graph(0)->addData(key2, value0);
+            values2[0] = getTelemetry(kopter,signal1);
+            ui->graph2->graph(0)->addData(key2, values2[0]);
         }
         if(Plot2Signal2->isChecked()){
-            double value1 = cos(key2*1.6+cos(key2*1.7)*2)*10 + sin(key2*1.2+0.56)*20 + 26;
-            ui->graph2->graph(1)->addData(key2, value1);
+            values2[1] = getTelemetry(kopter,signal2);
+            ui->graph2->graph(1)->addData(key2, values2[1]);
         }
         if(Plot2Signal3->isChecked()){
-            double value2 = sin(key2*1.6+cos(key2*1.7)*2)*10 + sin(key2*1.2+0.56)*20 ;
-            ui->graph2->graph(2)->addData(key2, value2);
+            values2[2] = getTelemetry(kopter,signal3);
+            ui->graph2->graph(2)->addData(key2, values2[2]);
         }
         if(Plot2Signal4->isChecked()){
-            double value3 = sin(key2*1.6+cos(key2*1.7)*2)*10 + sin(key2*1.2+0.56)*20 +16;
-            ui->graph2->graph(3)->addData(key2, value3);
+            values2[3] = getTelemetry(kopter,signal4);
+            ui->graph2->graph(3)->addData(key2, values2[3]);
         }
         if(Plot2Signal5->isChecked()){
-            double value4 = sin(key2*1.6+cos(key2*1.7)*2)*10 + sin(key2*1.2+0.56)*20 + 56;
-            ui->graph2->graph(4)->addData(key2, value4);
+            values2[4] = getTelemetry(kopter,signal5);
+            ui->graph2->graph(4)->addData(key2, values2[4]);
         }
         if(Plot2Signal6->isChecked()){
-            double value5 = sin(key2*1.6+cos(key2*1.7)*2)*10 + sin(key2*1.2+0.56)*20 + 6;
-            ui->graph2->graph(5)->addData(key2, value5);
+            values2[5] = getTelemetry(kopter,signal6);
+            ui->graph2->graph(5)->addData(key2, values2[5]);
         }
         if(Plot2Signal7->isChecked()){
-            double value6 = sin(key2*1.6+cos(key2*1.7)*2)*10 + sin(key2*1.2+0.56)*20 + 36;
-            ui->graph2->graph(6)->addData(key2, value6);
+            values2[6] = getTelemetry(kopter,signal7);
+            ui->graph2->graph(6)->addData(key2, values2[6]);
         }
         if(Plot2Signal8->isChecked()){
-            double value7 = 5;
-            ui->graph2->graph(7)->addData(key2, value7);
+            values2[7] = getTelemetry(kopter,signal8);
+            ui->graph2->graph(7)->addData(key2, values2[7]);
         }
         if(Plot2Signal9->isChecked()){
-            double value8 = sin(cos(key2*1.7)*2)*10 + sin(key2*1.2+0.56)*20 + 26;
-            ui->graph2->graph(8)->addData(key2, value8);
+            values2[8] = getTelemetry(kopter,signal9);
+            ui->graph2->graph(8)->addData(key2, values2[8]);
         }
         if(Plot2Signal10->isChecked()){
-            double value9 = sin(key2*1.6+cos(key2*1.7))*10 + sin(key2*1.2+0.56)*20 + 26;
-            ui->graph2->graph(9)->addData(key2, value9);
+            values2[9] = getTelemetry(kopter,signal10);
+            ui->graph2->graph(9)->addData(key2, values2[9]);
         }
         if(Plot2Signal11->isChecked()){
-            double value10 = sin(key2*1.6+cos(key2*1.7)*2)*10 + 26;
-            ui->graph2->graph(10)->addData(key2, value10);
+            values2[10] = getTelemetry(kopter,signal11);
+            ui->graph2->graph(10)->addData(key2, values2[10]);
         }
         if(Plot2Signal12->isChecked()){
-            double value11 = sin(key2*1.6) + sin(key2*1.2+0.56)*20 + 26;
-            ui->graph2->graph(11)->addData(key2, value11);
+            values2[11] = getTelemetry(kopter,signal12);
+            ui->graph2->graph(11)->addData(key2, values2[11]);
         }
         if(Plot2Signal13->isChecked()){
-            double value12 = 10;
-            ui->graph2->graph(12)->addData(key2, value12);
+            values2[12] = getTelemetry(kopter,signal13);
+            ui->graph2->graph(12)->addData(key2, values2[12]);
         }
         if(Plot2Signal14->isChecked()){
-            double value13 = 2;
-            ui->graph2->graph(13)->addData(key2, value13);
+            values2[13] = getTelemetry(kopter,signal14);
+            ui->graph2->graph(13)->addData(key2, values2[13]);
         }
         if(Plot2Signal15->isChecked()){
-            double value14 = 20;
-            ui->graph2->graph(14)->addData(key2, value14);
+            values2[14] = getTelemetry(kopter,signal15);
+            ui->graph2->graph(14)->addData(key2, values2[14]);
         }
         if(Plot2Signal16->isChecked()){
-            double value15 = 15;
-            ui->graph2->graph(15)->addData(key2, value15);
+            values2[15] = getTelemetry(kopter,signal16);
+            ui->graph2->graph(15)->addData(key2, values2[15]);
         }
         if(Plot2Signal17->isChecked()){
-            double value16 = 16;
-            ui->graph2->graph(16)->addData(key2, value16);
+            values2[16] = getTelemetry(kopter,signal17);
+            ui->graph2->graph(16)->addData(key2, values2[16]);
         }
         if(Plot2Signal18->isChecked()){
-            double value17 = 17;
-            ui->graph2->graph(17)->addData(key2, value17);
+            values2[17] = getTelemetry(kopter,signal18);
+            ui->graph2->graph(17)->addData(key2, values2[17]);
         }
         if(Plot2Signal19->isChecked()){
-            double value18 = 18;
-            ui->graph2->graph(18)->addData(key2, value18);
+            values2[18] = getTelemetry(kopter,signal19);
+            ui->graph2->graph(18)->addData(key2, values2[18]);
         }
         if(Plot2Signal20->isChecked()){
-            double value19 = 19;
-            ui->graph2->graph(19)->addData(key2, value19);
+            values2[19] = getTelemetry(kopter,signal20);
+            ui->graph2->graph(19)->addData(key2, values2[19]);
         }
         if(Plot2Signal21->isChecked()){
-            double value20 = 20;
-            ui->graph2->graph(20)->addData(key2, value20);
+            values2[20] = getTelemetry(kopter,signal21);
+            ui->graph2->graph(20)->addData(key2, values2[20]);
         }
         if(Plot2Signal22->isChecked()){
-            double value21 = 21;
-            ui->graph2->graph(21)->addData(key2, value21);
+            values2[21] = getTelemetry(kopter,signal22);
+            ui->graph2->graph(21)->addData(key2, values2[21]);
         }
         if(Plot2Signal23->isChecked()){
-            double value22 = 22;
-            ui->graph2->graph(22)->addData(key2, value22);
+            values2[22] = getTelemetry(kopter,signal23);
+            ui->graph2->graph(22)->addData(key2, values2[22]);
         }
         if(Plot2Signal24->isChecked()){
-            double value23 = 23;
-            ui->graph2->graph(23)->addData(key2, value23);
+            values2[23] = getTelemetry(kopter,signal24);
+            ui->graph2->graph(23)->addData(key2, values2[23]);
         }
         if(Plot2Signal25->isChecked()){
-            double value24 = 24;
-            ui->graph2->graph(24)->addData(key2, value24);
+            values2[24] = getTelemetry(kopter,signal25);
+            ui->graph2->graph(24)->addData(key2, values2[24]);
         }
         if(Plot2Signal26->isChecked()){
-            double value25 = 25;
-            ui->graph2->graph(25)->addData(key2, value25);
+            values2[25] = getTelemetry(kopter,signal26);
+            ui->graph2->graph(25)->addData(key2, values2[25]);
         }
         if(Plot2Signal27->isChecked()){
-            double value26 = 26;
-            ui->graph2->graph(26)->addData(key2, value26);
+            values2[26] = getTelemetry(kopter,signal27);
+            ui->graph2->graph(26)->addData(key2, values2[26]);
         }
         if(Plot2Signal28->isChecked()){
-            double value27 = 27;
-            ui->graph2->graph(27)->addData(key2, value27);
+            values2[27] = getTelemetry(kopter,signal28);
+            ui->graph2->graph(27)->addData(key2, values2[27]);
         }
         if(Plot2Signal29->isChecked()){
-            double value28 = 28;
-            ui->graph2->graph(28)->addData(key2, value28);
+            values2[28] = getTelemetry(kopter,signal29);
+            ui->graph2->graph(28)->addData(key2, values2[28]);
         }
         if(Plot2Signal30->isChecked()){
-            double value29 = 29;
-            ui->graph2->graph(29)->addData(key2, value29);
+            values2[29] = getTelemetry(kopter,signal30);
+            ui->graph2->graph(29)->addData(key2, values2[29]);
         }
         if(Plot2Signal31->isChecked()){
-            double value30 = 30;
-            ui->graph2->graph(30)->addData(key2, value30);
+            values2[30] = getTelemetry(kopter,signal31);
+            ui->graph2->graph(30)->addData(key2, values2[30]);
         }
         if(Plot2Signal32->isChecked()){
-            double value31 = 31;
-            ui->graph2->graph(31)->addData(key2, value31);
+            values2[31] = getTelemetry(kopter,signal32);
+            ui->graph2->graph(31)->addData(key2, values2[31]);
         }
     // remove data of lines that's outside visible range:
     ui->graph2->graph(0)->removeDataBefore(key2-10);
@@ -781,8 +818,8 @@ void quadro::realtimeDataSlotGraph2()
     ui->graph2->graph(29)->rescaleValueAxis(true);
     ui->graph2->graph(30)->rescaleValueAxis(true);
     ui->graph2->graph(31)->rescaleValueAxis(true);
-    lastPointKey2 = key2;
-}
+
+
 // make key2 axis range scroll with the data (at a constant range size of 8):
 ui->graph2->xAxis->setRange(key2+0.25, 10, Qt::AlignRight);
 ui->graph2->replot();
@@ -797,9 +834,6 @@ void quadro::graph_3(QCustomPlot *graph3)
 QMessageBox::critical(this, "", "You're using Qt < 4.7, the realtime data needs functions that are available with Qt 4.7 to work properly");
 #endif
 
-// set title of plot:
-graph3->plotLayout()->insertRow(0);
-graph3->plotLayout()->addElement(0, 0, new QCPPlotTitle(graph3, "Plot 3"));
 
 
 graph3->addGraph(); // blue line
@@ -921,135 +955,133 @@ dataTimer3.start(0); // Interval 0 means to refresh as fast as possible
 
 void quadro::realtimeDataSlotGraph3()
 {
-    if (key3-lastPointKey3 > 0.01)                      // at most add point every 10 ms
-    {
         if(Plot3Signal1->isChecked()){
-            double value0 = sin(key3*1.6+cos(key3*1.7)*2)*10 + sin(key3*1.2+0.56)*20 + 26;
-            ui->graph3->graph(0)->addData(key3, value0);
+            values3[0] = getTelemetry(kopter,signal1);
+            ui->graph3->graph(0)->addData(key3, values3[0]);
         }
         if(Plot3Signal2->isChecked()){
-            double value1 = cos(key3*1.6+cos(key3*1.7)*2)*10 + sin(key3*1.2+0.56)*20 + 26;
-            ui->graph3->graph(1)->addData(key3, value1);
+            values3[1] = getTelemetry(kopter,signal2);
+            ui->graph3->graph(1)->addData(key3, values3[1]);
         }
         if(Plot3Signal3->isChecked()){
-            double value2 = sin(key3*1.6+cos(key3*1.7)*2)*10 + sin(key3*1.2+0.56)*20 ;
-            ui->graph3->graph(2)->addData(key3, value2);
+            values3[2] = getTelemetry(kopter,signal3);
+            ui->graph3->graph(2)->addData(key3, values3[2]);
         }
         if(Plot3Signal4->isChecked()){
-            double value3 = sin(key3*1.6+cos(key3*1.7)*2)*10 + sin(key3*1.2+0.56)*20 +16;
-            ui->graph3->graph(3)->addData(key3, value3);
+            values3[3] = getTelemetry(kopter,signal4);
+            ui->graph3->graph(3)->addData(key3, values3[3]);
         }
         if(Plot3Signal5->isChecked()){
-            double value4 = sin(key3*1.6+cos(key3*1.7)*2)*10 + sin(key3*1.2+0.56)*20 + 56;
-            ui->graph3->graph(4)->addData(key3, value4);
+            values3[4] = getTelemetry(kopter,signal5);
+            ui->graph3->graph(4)->addData(key3, values3[4]);
         }
         if(Plot3Signal6->isChecked()){
-            double value5 = sin(key3*1.6+cos(key3*1.7)*2)*10 + sin(key3*1.2+0.56)*20 + 6;
-            ui->graph3->graph(5)->addData(key3, value5);
+            values3[5] = getTelemetry(kopter,signal6);
+            ui->graph3->graph(5)->addData(key3, values3[5]);
         }
         if(Plot3Signal7->isChecked()){
-            double value6 = sin(key3*1.6+cos(key3*1.7)*2)*10 + sin(key3*1.2+0.56)*20 + 36;
-            ui->graph3->graph(6)->addData(key3, value6);
+            values3[6] = getTelemetry(kopter,signal7);
+            ui->graph3->graph(6)->addData(key3, values3[6]);
         }
         if(Plot3Signal8->isChecked()){
-            double value7 = 5;
-            ui->graph3->graph(7)->addData(key3, value7);
+            values3[7] = getTelemetry(kopter,signal8);
+            ui->graph3->graph(7)->addData(key3, values3[7]);
         }
         if(Plot3Signal9->isChecked()){
-            double value8 = sin(cos(key3*1.7)*2)*10 + sin(key3*1.2+0.56)*20 + 26;
-            ui->graph3->graph(8)->addData(key3, value8);
+            values3[8] = getTelemetry(kopter,signal9);
+            ui->graph3->graph(8)->addData(key3, values3[8]);
         }
         if(Plot3Signal10->isChecked()){
-            double value9 = sin(key3*1.6+cos(key3*1.7))*10 + sin(key3*1.2+0.56)*20 + 26;
-            ui->graph3->graph(9)->addData(key3, value9);
+            values3[9] = getTelemetry(kopter,signal10);
+            ui->graph3->graph(9)->addData(key3, values3[9]);
         }
         if(Plot3Signal11->isChecked()){
-            double value10 = sin(key3*1.6+cos(key3*1.7)*2)*10 + 26;
-            ui->graph3->graph(10)->addData(key3, value10);
+            values3[10] = getTelemetry(kopter,signal11);
+            ui->graph3->graph(10)->addData(key3, values3[10]);
         }
         if(Plot3Signal12->isChecked()){
-            double value11 = sin(key3*1.6) + sin(key3*1.2+0.56)*20 + 26;
-            ui->graph3->graph(11)->addData(key3, value11);
+            values3[11] = getTelemetry(kopter,signal12);
+            ui->graph3->graph(11)->addData(key3, values3[11]);
         }
         if(Plot3Signal13->isChecked()){
-            double value12 = 10;
-            ui->graph3->graph(12)->addData(key3, value12);
+            values3[12] = getTelemetry(kopter,signal13);
+            ui->graph3->graph(12)->addData(key3, values3[12]);
         }
         if(Plot3Signal14->isChecked()){
-            double value13 = 2;
-            ui->graph3->graph(13)->addData(key3, value13);
+            values3[13] = getTelemetry(kopter,signal14);
+            ui->graph3->graph(13)->addData(key3, values3[13]);
         }
         if(Plot3Signal15->isChecked()){
-            double value14 = 20;
-            ui->graph3->graph(14)->addData(key3, value14);
+            values3[14] = getTelemetry(kopter,signal15);
+            ui->graph3->graph(14)->addData(key3, values3[14]);
         }
         if(Plot3Signal16->isChecked()){
-            double value15 = 15;
-            ui->graph3->graph(15)->addData(key3, value15);
+            values3[15] = getTelemetry(kopter,signal16);
+            ui->graph3->graph(15)->addData(key3, values3[15]);
         }
         if(Plot3Signal17->isChecked()){
-            double value16 = 16;
-            ui->graph3->graph(16)->addData(key3, value16);
+            values3[16] = getTelemetry(kopter,signal17);
+            ui->graph3->graph(16)->addData(key3, values3[16]);
         }
         if(Plot3Signal18->isChecked()){
-            double value17 = 17;
-            ui->graph3->graph(17)->addData(key3, value17);
+            values3[17] = getTelemetry(kopter,signal18);
+            ui->graph3->graph(17)->addData(key3, values3[17]);
         }
         if(Plot3Signal19->isChecked()){
-            double value18 = 18;
-            ui->graph3->graph(18)->addData(key3, value18);
+            values3[18] = getTelemetry(kopter,signal19);
+            ui->graph3->graph(18)->addData(key3, values3[18]);
         }
         if(Plot3Signal20->isChecked()){
-            double value19 = 19;
-            ui->graph3->graph(19)->addData(key3, value19);
+            values3[19] = getTelemetry(kopter,signal20);
+            ui->graph3->graph(19)->addData(key3, values3[19]);
         }
         if(Plot3Signal21->isChecked()){
-            double value20 = 20;
-            ui->graph3->graph(20)->addData(key3, value20);
+            values3[20] = getTelemetry(kopter,signal21);
+            ui->graph3->graph(20)->addData(key3, values3[20]);
         }
         if(Plot3Signal22->isChecked()){
-            double value21 = 21;
-            ui->graph3->graph(21)->addData(key3, value21);
+            values3[21] = getTelemetry(kopter,signal22);
+            ui->graph3->graph(21)->addData(key3, values3[21]);
         }
         if(Plot3Signal23->isChecked()){
-            double value22 = 22;
-            ui->graph3->graph(22)->addData(key3, value22);
+            values3[22] = getTelemetry(kopter,signal23);
+            ui->graph3->graph(22)->addData(key3, values3[22]);
         }
         if(Plot3Signal24->isChecked()){
-            double value23 = 23;
-            ui->graph3->graph(23)->addData(key3, value23);
+            values3[23] = getTelemetry(kopter,signal24);
+            ui->graph3->graph(23)->addData(key3, values3[23]);
         }
         if(Plot3Signal25->isChecked()){
-            double value24 = 24;
-            ui->graph3->graph(24)->addData(key3, value24);
+            values3[24] = getTelemetry(kopter,signal25);
+            ui->graph3->graph(24)->addData(key3, values3[24]);
         }
         if(Plot3Signal26->isChecked()){
-            double value25 = 25;
-            ui->graph3->graph(25)->addData(key3, value25);
+            values3[25] = getTelemetry(kopter,signal26);
+            ui->graph3->graph(25)->addData(key3, values3[25]);
         }
         if(Plot3Signal27->isChecked()){
-            double value26 = 26;
-            ui->graph3->graph(26)->addData(key3, value26);
+            values3[26] = getTelemetry(kopter,signal27);
+            ui->graph3->graph(26)->addData(key3, values3[26]);
         }
         if(Plot3Signal28->isChecked()){
-            double value27 = 27;
-            ui->graph3->graph(27)->addData(key3, value27);
+            values3[27] = getTelemetry(kopter,signal28);
+            ui->graph3->graph(27)->addData(key3, values3[27]);
         }
         if(Plot3Signal29->isChecked()){
-            double value28 = 28;
-            ui->graph3->graph(28)->addData(key3, value28);
+            values3[28] = getTelemetry(kopter,signal29);
+            ui->graph3->graph(28)->addData(key3, values3[28]);
         }
         if(Plot3Signal30->isChecked()){
-            double value29 = 29;
-            ui->graph3->graph(29)->addData(key3, value29);
+            values3[29] = getTelemetry(kopter,signal30);
+            ui->graph3->graph(29)->addData(key3, values3[29]);
         }
         if(Plot3Signal31->isChecked()){
-            double value30 = 30;
-            ui->graph3->graph(30)->addData(key3, value30);
+            values3[30] = getTelemetry(kopter,signal31);
+            ui->graph3->graph(30)->addData(key3, values3[30]);
         }
         if(Plot3Signal32->isChecked()){
-            double value31 = 31;
-            ui->graph3->graph(31)->addData(key3, value31);
+            values3[31] = getTelemetry(kopter,signal32);
+            ui->graph3->graph(31)->addData(key3, values3[31]);
         }
     // remove data of lines that's outside visible range:
     ui->graph3->graph(0)->removeDataBefore(key3-10);
@@ -1118,8 +1150,7 @@ void quadro::realtimeDataSlotGraph3()
     ui->graph3->graph(29)->rescaleValueAxis(true);
     ui->graph3->graph(30)->rescaleValueAxis(true);
     ui->graph3->graph(31)->rescaleValueAxis(true);
-    lastPointKey3 = key3;
-}
+
 // make key3 axis range scroll with the data (at a constant range size of 8):
 ui->graph3->xAxis->setRange(key3+0.25, 10, Qt::AlignRight);
 ui->graph3->replot();
@@ -1133,10 +1164,6 @@ void quadro::graph_4(QCustomPlot *graph4)
 #if QT_VERSION < QT_VERSION_CHECK(4, 7, 0)
 QMessageBox::critical(this, "", "You're using Qt < 4.7, the realtime data needs functions that are available with Qt 4.7 to work properly");
 #endif
-
-// set title of plot:
-graph4->plotLayout()->insertRow(0);
-graph4->plotLayout()->addElement(0, 0, new QCPPlotTitle(graph4, "Plot 4"));
 
 
 graph4->addGraph(); // blue line
@@ -1258,135 +1285,133 @@ dataTimer4.start(0); // Interval 0 means to refresh as fast as possible
 
 void quadro::realtimeDataSlotGraph4()
 {
-    if (key4-lastPointKey4 > 0.01)                      // at most add point every 10 ms
-    {
         if(Plot4Signal1->isChecked()){
-            double value0 = sin(key4*1.6+cos(key4*1.7)*2)*10 + sin(key4*1.2+0.56)*20 + 26;
-            ui->graph4->graph(0)->addData(key4, value0);
+            values4[0] = getTelemetry(kopter,signal1);
+            ui->graph4->graph(0)->addData(key4, values4[0]);
         }
         if(Plot4Signal2->isChecked()){
-            double value1 = cos(key4*1.6+cos(key4*1.7)*2)*10 + sin(key4*1.2+0.56)*20 + 26;
-            ui->graph4->graph(1)->addData(key4, value1);
+            values4[1] = getTelemetry(kopter,signal2);
+            ui->graph4->graph(1)->addData(key4, values4[1]);
         }
         if(Plot4Signal3->isChecked()){
-            double value2 = sin(key4*1.6+cos(key4*1.7)*2)*10 + sin(key4*1.2+0.56)*20 ;
-            ui->graph4->graph(2)->addData(key4, value2);
+            values4[2] = getTelemetry(kopter,signal3);
+            ui->graph4->graph(2)->addData(key4, values4[2]);
         }
         if(Plot4Signal4->isChecked()){
-            double value3 = sin(key4*1.6+cos(key4*1.7)*2)*10 + sin(key4*1.2+0.56)*20 +16;
-            ui->graph4->graph(3)->addData(key4, value3);
+            values4[3] = getTelemetry(kopter,signal4);
+            ui->graph4->graph(3)->addData(key4, values4[3]);
         }
         if(Plot4Signal5->isChecked()){
-            double value4 = sin(key4*1.6+cos(key4*1.7)*2)*10 + sin(key4*1.2+0.56)*20 + 56;
-            ui->graph4->graph(4)->addData(key4, value4);
+            values4[4] = getTelemetry(kopter,signal5);
+            ui->graph4->graph(4)->addData(key4, values4[4]);
         }
         if(Plot4Signal6->isChecked()){
-            double value5 = sin(key4*1.6+cos(key4*1.7)*2)*10 + sin(key4*1.2+0.56)*20 + 6;
-            ui->graph4->graph(5)->addData(key4, value5);
+            values4[5] = getTelemetry(kopter,signal6);
+            ui->graph4->graph(5)->addData(key4, values4[5]);
         }
         if(Plot4Signal7->isChecked()){
-            double value6 = sin(key4*1.6+cos(key4*1.7)*2)*10 + sin(key4*1.2+0.56)*20 + 36;
-            ui->graph4->graph(6)->addData(key4, value6);
+            values4[6] = getTelemetry(kopter,signal7);
+            ui->graph4->graph(6)->addData(key4, values4[6]);
         }
         if(Plot4Signal8->isChecked()){
-            double value7 = 5;
-            ui->graph4->graph(7)->addData(key4, value7);
+            values4[7] = getTelemetry(kopter,signal8);
+            ui->graph4->graph(7)->addData(key4, values4[7]);
         }
         if(Plot4Signal9->isChecked()){
-            double value8 = sin(cos(key4*1.7)*2)*10 + sin(key4*1.2+0.56)*20 + 26;
-            ui->graph4->graph(8)->addData(key4, value8);
+            values4[8] = getTelemetry(kopter,signal9);
+            ui->graph4->graph(8)->addData(key4, values4[8]);
         }
         if(Plot4Signal10->isChecked()){
-            double value9 = sin(key4*1.6+cos(key4*1.7))*10 + sin(key4*1.2+0.56)*20 + 26;
-            ui->graph4->graph(9)->addData(key4, value9);
+            values4[9] = getTelemetry(kopter,signal10);
+            ui->graph4->graph(9)->addData(key4, values4[9]);
         }
         if(Plot4Signal11->isChecked()){
-            double value10 = sin(key4*1.6+cos(key4*1.7)*2)*10 + 26;
-            ui->graph4->graph(10)->addData(key4, value10);
+            values4[10] = getTelemetry(kopter,signal11);
+            ui->graph4->graph(10)->addData(key4, values4[10]);
         }
         if(Plot4Signal12->isChecked()){
-            double value11 = sin(key4*1.6) + sin(key4*1.2+0.56)*20 + 26;
-            ui->graph4->graph(11)->addData(key4, value11);
+            values4[11] = getTelemetry(kopter,signal12);
+            ui->graph4->graph(11)->addData(key4, values4[11]);
         }
         if(Plot4Signal13->isChecked()){
-            double value12 = 10;
-            ui->graph4->graph(12)->addData(key4, value12);
+            values4[12] = getTelemetry(kopter,signal13);
+            ui->graph4->graph(12)->addData(key4, values4[12]);
         }
         if(Plot4Signal14->isChecked()){
-            double value13 = 2;
-            ui->graph4->graph(13)->addData(key4, value13);
+            values4[13] = getTelemetry(kopter,signal14);
+            ui->graph4->graph(13)->addData(key4, values4[13]);
         }
         if(Plot4Signal15->isChecked()){
-            double value14 = 20;
-            ui->graph4->graph(14)->addData(key4, value14);
+            values4[14] = getTelemetry(kopter,signal15);
+            ui->graph4->graph(14)->addData(key4, values4[14]);
         }
         if(Plot4Signal16->isChecked()){
-            double value15 = 15;
-            ui->graph4->graph(15)->addData(key4, value15);
+            values4[15] = getTelemetry(kopter,signal16);
+            ui->graph4->graph(15)->addData(key4, values4[15]);
         }
         if(Plot4Signal17->isChecked()){
-            double value16 = 16;
-            ui->graph4->graph(16)->addData(key4, value16);
+            values4[16] = getTelemetry(kopter,signal17);
+            ui->graph4->graph(16)->addData(key4, values4[16]);
         }
         if(Plot4Signal18->isChecked()){
-            double value17 = 17;
-            ui->graph4->graph(17)->addData(key4, value17);
+            values4[17] = getTelemetry(kopter,signal18);
+            ui->graph4->graph(17)->addData(key4, values4[17]);
         }
         if(Plot4Signal19->isChecked()){
-            double value18 = 18;
-            ui->graph4->graph(18)->addData(key4, value18);
+            values4[18] = getTelemetry(kopter,signal19);
+            ui->graph4->graph(18)->addData(key4, values4[18]);
         }
         if(Plot4Signal20->isChecked()){
-            double value19 = 19;
-            ui->graph4->graph(19)->addData(key4, value19);
+            values4[19] = getTelemetry(kopter,signal20);
+            ui->graph4->graph(19)->addData(key4, values4[19]);
         }
         if(Plot4Signal21->isChecked()){
-            double value20 = 20;
-            ui->graph4->graph(20)->addData(key4, value20);
+            values4[20] = getTelemetry(kopter,signal21);
+            ui->graph4->graph(20)->addData(key4, values4[20]);
         }
         if(Plot4Signal22->isChecked()){
-            double value21 = 21;
-            ui->graph4->graph(21)->addData(key4, value21);
+            values4[21] = getTelemetry(kopter,signal22);
+            ui->graph4->graph(21)->addData(key4, values4[21]);
         }
         if(Plot4Signal23->isChecked()){
-            double value22 = 22;
-            ui->graph4->graph(22)->addData(key4, value22);
+            values4[22] = getTelemetry(kopter,signal23);
+            ui->graph4->graph(22)->addData(key4, values4[22]);
         }
         if(Plot4Signal24->isChecked()){
-            double value23 = 23;
-            ui->graph4->graph(23)->addData(key4, value23);
+            values4[23] = getTelemetry(kopter,signal24);
+            ui->graph4->graph(23)->addData(key4, values4[23]);
         }
         if(Plot4Signal25->isChecked()){
-            double value24 = 24;
-            ui->graph4->graph(24)->addData(key4, value24);
+            values4[24] = getTelemetry(kopter,signal25);
+            ui->graph4->graph(24)->addData(key4, values4[24]);
         }
         if(Plot4Signal26->isChecked()){
-            double value25 = 25;
-            ui->graph4->graph(25)->addData(key4, value25);
+            values4[25] = getTelemetry(kopter,signal26);
+            ui->graph4->graph(25)->addData(key4, values4[25]);
         }
         if(Plot4Signal27->isChecked()){
-            double value26 = 26;
-            ui->graph4->graph(26)->addData(key4, value26);
+            values4[26] = getTelemetry(kopter,signal27);
+            ui->graph4->graph(26)->addData(key4, values4[26]);
         }
         if(Plot4Signal28->isChecked()){
-            double value27 = 27;
-            ui->graph4->graph(27)->addData(key4, value27);
+            values4[27] = getTelemetry(kopter,signal28);
+            ui->graph4->graph(27)->addData(key4, values4[27]);
         }
         if(Plot4Signal29->isChecked()){
-            double value28 = 28;
-            ui->graph4->graph(28)->addData(key4, value28);
+            values4[28] = getTelemetry(kopter,signal29);
+            ui->graph4->graph(28)->addData(key4, values4[28]);
         }
         if(Plot4Signal30->isChecked()){
-            double value29 = 29;
-            ui->graph4->graph(29)->addData(key4, value29);
+            values4[29] = getTelemetry(kopter,signal30);
+            ui->graph4->graph(29)->addData(key4, values4[29]);
         }
         if(Plot4Signal31->isChecked()){
-            double value30 = 30;
-            ui->graph4->graph(30)->addData(key4, value30);
+            values4[30] = getTelemetry(kopter,signal31);
+            ui->graph4->graph(30)->addData(key4, values4[30]);
         }
         if(Plot4Signal32->isChecked()){
-            double value31 = 31;
-            ui->graph4->graph(31)->addData(key4, value31);
+            values4[31] = getTelemetry(kopter,signal32);
+            ui->graph4->graph(31)->addData(key4, values4[31]);
         }
     // remove data of lines that's outside visible range:
     ui->graph4->graph(0)->removeDataBefore(key4-10);
@@ -1455,8 +1480,6 @@ void quadro::realtimeDataSlotGraph4()
     ui->graph4->graph(29)->rescaleValueAxis(true);
     ui->graph4->graph(30)->rescaleValueAxis(true);
     ui->graph4->graph(31)->rescaleValueAxis(true);
-    lastPointKey4 = key4;
-}
 
 // make key4 axis range scroll with the data (at a constant range size of 8):
 ui->graph4->xAxis->setRange(key4+0.25, 10, Qt::AlignRight);
@@ -1464,16 +1487,6 @@ ui->graph4->replot();
 
     key4=key4+0.03;
 
-}
-
-
-void quadro::on_actionConnect_quadrocopter_triggered()
-{
-    bool ok;
-          numberOfQuadro = QInputDialog::getInt(this, tr("QInputDialog::getInteger()"),
-                                       tr("Quadrocopter:"), 1, 0, 4, 1, &ok);
-          if(ok) QMessageBox::information(this,"Connect","connection was successful on a quadrocopter: "+QString::number(numberOfQuadro));
-          else QMessageBox::warning(this,"Error","connection wasn unsuccessful");
 }
 
 void quadro::createScrollCheckBox()
@@ -3245,10 +3258,38 @@ void quadro::Plot4Signal32_clicked()
 
   void quadro::realtimeDataStatus()
   {
-        ui->controllersStatus->setText("On");
-        ui->landingStatus->setText(QString::number(numberOfQuadro));
+        status1=getStatus(kopter, COMMANDS.CONTROLLERS);
+        if (status1==CONTROLLERS.OFF){
+            ui->controllersStatus->setText("Off");
+        }else if (status1==CONTROLLERS.VELOCITY){
+            ui->controllersStatus->setText("Velocity");
+        }else if (status1==CONTROLLERS.POSITION){
+            ui->controllersStatus->setText("Position");
+        }else if (status1==CONTROLLERS.BOTH){
+            ui->controllersStatus->setText("Both");
+        }
 
-  }// nasledne doplnit o funkce na volani statusu todo
+        status2=getStatus(kopter, COMMANDS.LANDING);
+        if (status2==ONOFF.ON){
+            ui->landingStatus->setText("On");
+        }else if (status2==ONOFF.OFF){
+            ui->landingStatus->setText("Off");
+        }
+
+        status3=getStatus(kopter, COMMANDS.GUMSTIX);
+        if (status3==ONOFF.ON){
+            ui->gumstixStatus->setText("On");
+        }else if (status3==ONOFF.OFF){
+            ui->gumstixStatus->setText("Off");
+        }
+        status4=getStatus(kopter, COMMANDS.TRAJECTORY_FOLLOW);
+        if (status3==ONOFF.ON){
+            ui->trajectoryStatus->setText("On");
+        }else if (status3==ONOFF.OFF){
+            ui->trajectoryStatus->setText("Off");
+        }
+
+  }
 
   void quadro::createLegend()
   {
@@ -3613,7 +3654,157 @@ void quadro::Plot4Signal32_clicked()
 
   }
 
-void quadro::on_actionDebug_triggered()
-{
 
+void quadro::on_actionK1_triggered()
+{
+    kopter=KOPTERS.K1;
 }
+
+void quadro::on_actionK2_triggered()
+{
+    kopter=KOPTERS.K2;
+}
+
+void quadro::on_actionK3_triggered()
+{
+    kopter=KOPTERS.K3;
+}
+
+void quadro::on_actionKC1_triggered()
+{
+    kopter=KOPTERS.KC1;
+}
+
+// Landing
+void quadro::on_actionOn_triggered()
+{
+    land(kopter,ONOFF.ON);
+}
+
+void quadro::on_actionOff_triggered()
+{
+    land(kopter,ONOFF.OFF);
+}
+// controllers
+void quadro::on_actionVelocity_triggered()
+{
+    setController(kopter,CONTROLLERS.VELOCITY);
+}
+
+void quadro::on_actionPosition_triggered()
+{
+    setController(kopter,CONTROLLERS.POSITION);
+}
+void quadro::on_actionBoth_triggered()
+{
+    setController(kopter,CONTROLLERS.BOTH);
+}
+
+void quadro::on_actionOff_3_triggered()
+{
+    setController(kopter,CONTROLLERS.OFF);
+}
+
+// setpoints
+void quadro::on_actionRelative_triggered()
+{    bool ok;
+    double d = QInputDialog::getDouble(this, tr("Enter value"),
+                                       tr("Amount:"), 0, -100, 100, 2, &ok);
+
+    setSetpoint(kopter,SETPOINTS.THROTTLE_SP,POSITIONS.RELATIV, (float)d);
+}
+
+void quadro::on_actionAbsolute_triggered()
+{    bool ok;
+     double d = QInputDialog::getDouble(this, tr("Enter value"),
+                                        tr("Amount:"), 0, -100, 100, 2, &ok);
+    setSetpoint(kopter,SETPOINTS.THROTTLE_SP,POSITIONS.ABSOLUT, (float)d);
+}
+
+void quadro::on_actionRelative_2_triggered()
+{    bool ok;
+     double d = QInputDialog::getDouble(this, tr("Enter value"),
+                                        tr("Amount:"), 0, -100, 100, 2, &ok);
+    setSetpoint(kopter,SETPOINTS.ELEVATOR_POSITION,POSITIONS.RELATIV, (float)d);
+}
+
+void quadro::on_actionAbsolute_2_triggered()
+{    bool ok;
+     double d = QInputDialog::getDouble(this, tr("Enter value"),
+                                        tr("Amount:"), 0, -100, 100, 2, &ok);
+    setSetpoint(kopter,SETPOINTS.ELEVATOR_POSITION,POSITIONS.ABSOLUT, (float)d);
+}
+
+void quadro::on_actionRelative_3_triggered()
+{    bool ok;
+     double d = QInputDialog::getDouble(this, tr("Enter value"),
+                                        tr("Amount:"), 0, -100, 100, 2, &ok);
+    setSetpoint(kopter,SETPOINTS.AILERON_POSITION,POSITIONS.RELATIV, (float)d);
+}
+
+void quadro::on_actionAbsolute_3_triggered()
+{    bool ok;
+     double d = QInputDialog::getDouble(this, tr("Enter value"),
+                                        tr("Amount:"), 0, -100, 100, 2, &ok);
+    setSetpoint(kopter,SETPOINTS.AILERON_POSITION,POSITIONS.ABSOLUT, (float)d);
+}
+
+void quadro::on_actionRelative_4_triggered()
+{    bool ok;
+     double d = QInputDialog::getDouble(this, tr("Enter value"),
+                                        tr("Amount:"), 0, -100, 100, 2, &ok);
+    setSetpoint(kopter,SETPOINTS.ELEVATOR_VELOCITY,POSITIONS.RELATIV, (float)d);
+}
+
+void quadro::on_actionAbsolute_4_triggered()
+{    bool ok;
+     double d = QInputDialog::getDouble(this, tr("Enter value"),
+                                        tr("Amount:"), 0, -100, 100, 2, &ok);
+    setSetpoint(kopter,SETPOINTS.ELEVATOR_VELOCITY,POSITIONS.ABSOLUT, (float)d);
+}
+
+void quadro::on_actionRelative_5_triggered()
+{    bool ok;
+     double d = QInputDialog::getDouble(this, tr("Enter value"),
+                                        tr("Amount:"), 0, -100, 100, 2, &ok);
+    setSetpoint(kopter,SETPOINTS.AILERON_VELOCITY,POSITIONS.RELATIV, (float)d);
+}
+
+void quadro::on_actionAbsolute_5_triggered()
+{    bool ok;
+     double d = QInputDialog::getDouble(this, tr("Enter value"),
+                                        tr("Amount:"), 0, -100, 100, 2, &ok);
+    setSetpoint(kopter,SETPOINTS.AILERON_VELOCITY,POSITIONS.ABSOLUT, (float)d);
+}
+
+// Trajectory
+void quadro::on_actionFollow_trajectory_triggered()
+{
+    trajectoryFollow(kopter,ONOFF.ON);
+}
+void quadro::on_actionFollow_trajectory_off_triggered()
+{
+    trajectoryFollow(kopter,ONOFF.OFF);
+}
+
+void quadro::on_actionLoad_trajectory_triggered()
+{
+    newTrajectory = new sendTrajectory(this);
+    newTrajectory->show();
+    newTrajectory->setKopter(kopter);
+}
+
+// Gumstix
+void quadro::on_actionOn_2_triggered()
+{
+    setGumstix(kopter,ONOFF.ON);
+}
+
+void quadro::on_actionOff_2_triggered()
+{
+    setGumstix(kopter,ONOFF.OFF);
+}
+
+
+
+

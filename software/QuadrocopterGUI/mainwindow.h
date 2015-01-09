@@ -19,6 +19,7 @@ public:
     ~MainWindow();
 
 private slots:
+    void realtimeCheck();
     void on_pushButton_clicked();
 
     void on_pushButton_2_clicked();
@@ -26,6 +27,7 @@ private slots:
 private:
     Ui::MainWindow *ui;
     quadro *newQuadro;
+    QTimer mainDataTimer;
 };
 
 #endif // MAINWINDOW_H

@@ -115,12 +115,12 @@
                  </font>
                 </property>
                 <property name="text">
-                 <string>Setpoints status</string>
+                 <string>Gumstix status</string>
                 </property>
                </widget>
               </item>
               <item row="2" column="1">
-               <widget class="QLabel" name="SetpointsStatus">
+               <widget class="QLabel" name="gumstixStatus">
                 <property name="font">
                  <font>
                   <family>Times New Roman</family>
@@ -357,7 +357,16 @@
     <property name="title">
      <string>Connect</string>
     </property>
-    <addaction name="actionConnect_quadrocopter"/>
+    <widget class="QMenu" name="menuConnect_quadrocopter">
+     <property name="title">
+      <string>Connect quadrocopter</string>
+     </property>
+     <addaction name="actionK1"/>
+     <addaction name="actionK2"/>
+     <addaction name="actionK3"/>
+     <addaction name="actionKC1"/>
+    </widget>
+    <addaction name="menuConnect_quadrocopter"/>
     <addaction name="separator"/>
    </widget>
    <widget class="QMenu" name="menuDebug">
@@ -375,42 +384,137 @@
      <property name="title">
       <string>Controllers</string>
      </property>
-     <addaction name="actionOn_2"/>
-     <addaction name="actionOff_2"/>
+     <addaction name="actionVelocity"/>
+     <addaction name="actionPosition"/>
+     <addaction name="actionBoth"/>
+     <addaction name="actionOff_3"/>
     </widget>
     <widget class="QMenu" name="menuSet_Points">
      <property name="title">
       <string>Set Points</string>
      </property>
-     <addaction name="actionSet_set_points"/>
+     <widget class="QMenu" name="menuThrottle">
+      <property name="title">
+       <string>Throttle</string>
+      </property>
+      <addaction name="actionRelative"/>
+      <addaction name="actionAbsolute"/>
+     </widget>
+     <widget class="QMenu" name="menuElevator_position">
+      <property name="title">
+       <string>Elevator position</string>
+      </property>
+      <addaction name="actionRelative_2"/>
+      <addaction name="actionAbsolute_2"/>
+     </widget>
+     <widget class="QMenu" name="menuAileron_posistion">
+      <property name="title">
+       <string>Aileron posistion</string>
+      </property>
+      <addaction name="actionRelative_3"/>
+      <addaction name="actionAbsolute_3"/>
+     </widget>
+     <widget class="QMenu" name="menuElevator_velocity">
+      <property name="title">
+       <string>Elevator velocity</string>
+      </property>
+      <addaction name="actionRelative_4"/>
+      <addaction name="actionAbsolute_4"/>
+     </widget>
+     <widget class="QMenu" name="menuAileron_velocity">
+      <property name="title">
+       <string>Aileron velocity</string>
+      </property>
+      <addaction name="actionRelative_5"/>
+      <addaction name="actionAbsolute_5"/>
+     </widget>
+     <addaction name="menuThrottle"/>
+     <addaction name="menuElevator_position"/>
+     <addaction name="menuAileron_posistion"/>
+     <addaction name="menuElevator_velocity"/>
+     <addaction name="menuAileron_velocity"/>
     </widget>
     <widget class="QMenu" name="menuTrajectory">
      <property name="title">
       <string>Trajectory</string>
      </property>
      <addaction name="actionFollow_trajectory"/>
+     <addaction name="actionFollow_trajectory_off"/>
      <addaction name="actionLoad_trajectory"/>
+    </widget>
+    <widget class="QMenu" name="menuGumstix">
+     <property name="title">
+      <string>Gumstix</string>
+     </property>
+     <addaction name="actionOn_2"/>
+     <addaction name="actionOff_2"/>
     </widget>
     <addaction name="menuLanding"/>
     <addaction name="menuControllers"/>
     <addaction name="menuSet_Points"/>
     <addaction name="menuTrajectory"/>
+    <addaction name="menuGumstix"/>
    </widget>
    <addaction name="menuConnect"/>
    <addaction name="menuDebug"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <action name="actionConnect_quadrocopter">
-   <property name="text">
-    <string>Connect quadrocopter</string>
-   </property>
-  </action>
   <action name="actionOn">
    <property name="text">
     <string>On</string>
    </property>
   </action>
   <action name="actionOff">
+   <property name="text">
+    <string>Off</string>
+   </property>
+  </action>
+  <action name="actionVelocity">
+   <property name="text">
+    <string>Velocity</string>
+   </property>
+  </action>
+  <action name="actionPosition">
+   <property name="text">
+    <string>Position</string>
+   </property>
+  </action>
+  <action name="actionFollow_trajectory">
+   <property name="text">
+    <string>Follow trajectory on</string>
+   </property>
+  </action>
+  <action name="actionLoad_trajectory">
+   <property name="text">
+    <string>Load trajectory</string>
+   </property>
+  </action>
+  <action name="actionK1">
+   <property name="text">
+    <string>K1</string>
+   </property>
+  </action>
+  <action name="actionK2">
+   <property name="text">
+    <string>K2</string>
+   </property>
+  </action>
+  <action name="actionK3">
+   <property name="text">
+    <string>K3</string>
+   </property>
+  </action>
+  <action name="actionKC1">
+   <property name="text">
+    <string>KC1</string>
+   </property>
+  </action>
+  <action name="actionBoth">
+   <property name="text">
+    <string>Both</string>
+   </property>
+  </action>
+  <action name="actionOff_3">
    <property name="text">
     <string>Off</string>
    </property>
@@ -425,19 +529,59 @@
     <string>Off</string>
    </property>
   </action>
-  <action name="actionSet_set_points">
+  <action name="actionFollow_trajectory_off">
    <property name="text">
-    <string>Set set points</string>
+    <string>Follow trajectory off</string>
    </property>
   </action>
-  <action name="actionFollow_trajectory">
+  <action name="actionRelative">
    <property name="text">
-    <string>Follow trajectory</string>
+    <string>Relative</string>
    </property>
   </action>
-  <action name="actionLoad_trajectory">
+  <action name="actionAbsolute">
    <property name="text">
-    <string>Load trajectory</string>
+    <string>Absolute</string>
+   </property>
+  </action>
+  <action name="actionRelative_2">
+   <property name="text">
+    <string>Relative</string>
+   </property>
+  </action>
+  <action name="actionAbsolute_2">
+   <property name="text">
+    <string>Absolute</string>
+   </property>
+  </action>
+  <action name="actionRelative_3">
+   <property name="text">
+    <string>Relative</string>
+   </property>
+  </action>
+  <action name="actionAbsolute_3">
+   <property name="text">
+    <string>Absolute</string>
+   </property>
+  </action>
+  <action name="actionRelative_4">
+   <property name="text">
+    <string>Relative</string>
+   </property>
+  </action>
+  <action name="actionAbsolute_4">
+   <property name="text">
+    <string>Absolute</string>
+   </property>
+  </action>
+  <action name="actionRelative_5">
+   <property name="text">
+    <string>Relative</string>
+   </property>
+  </action>
+  <action name="actionAbsolute_5">
+   <property name="text">
+    <string>Absolute</string>
    </property>
   </action>
  </widget>

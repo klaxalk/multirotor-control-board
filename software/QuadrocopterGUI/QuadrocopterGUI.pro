@@ -15,11 +15,33 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     quadro.cpp \
-    qcustomplot.cpp
+    qcustomplot.cpp \
+    commands.cpp \
+    const.cpp \
+    openLog.cpp \
+    packets.cpp \
+    receive.cpp \
+    send.cpp \
+    serial.cpp \
+    serialLink.cpp \
+    XBeeComm.cpp \
+    sendtrajectory.cpp
 
 HEADERS  += mainwindow.h \
     quadro.h \
-    qcustomplot.h
+    qcustomplot.h \
+    commands.h \
+    const.h \
+    defines.h \
+    openLog.h \
+    packets.h \
+    receive.h \
+    send.h \
+    serialLink.h \
+    XBeeComm.h \
+    serial.h \
+    sendtrajectory.h
 
 FORMS    += mainwindow.ui \
-    quadro.ui
+    quadro.ui \
+    sendtrajectory.ui

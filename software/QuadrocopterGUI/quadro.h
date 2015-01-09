@@ -5,6 +5,7 @@
 #include <QCheckBox>
 #include "qcustomplot.h"
 #include "connectquadro.h"
+#include "sendtrajectory.h"
 
 namespace Ui {
 class quadro;
@@ -36,7 +37,6 @@ public:
       void realtimeDataSlotGraph4();
       void realtimeDataStatus();
 
-      void on_actionConnect_quadrocopter_triggered();
       void on_comboBox_activated(int index);
       void Plot1SignalAll_clicked();
       void Plot2SignalAll_clicked();
@@ -175,7 +175,42 @@ public:
       void Plot4Signal31_clicked();
       void Plot4Signal32_clicked();
 
-      void on_actionDebug_triggered();
+      void on_actionK1_triggered();
+      void on_actionK2_triggered();
+      void on_actionK3_triggered();
+      void on_actionKC1_triggered();
+
+      void on_actionOn_triggered();
+      void on_actionOff_triggered();
+      void on_actionVelocity_triggered();
+      void on_actionPosition_triggered();
+      void on_actionFollow_trajectory_triggered();
+      void on_actionLoad_trajectory_triggered();
+      void on_actionBoth_triggered();
+      void on_actionOff_3_triggered();
+      void on_actionOn_2_triggered();
+      void on_actionOff_2_triggered();
+      void on_actionFollow_trajectory_off_triggered();
+
+      void on_actionRelative_triggered();
+
+      void on_actionAbsolute_triggered();
+
+      void on_actionRelative_2_triggered();
+
+      void on_actionAbsolute_2_triggered();
+
+      void on_actionRelative_3_triggered();
+
+      void on_actionAbsolute_3_triggered();
+
+      void on_actionRelative_4_triggered();
+
+      void on_actionAbsolute_4_triggered();
+
+      void on_actionRelative_5_triggered();
+
+      void on_actionAbsolute_5_triggered();
 
 private:
     Ui::quadro *ui;
@@ -321,6 +356,8 @@ private:
     QCheckBox *Plot4Signal31;
     QCheckBox *Plot4Signal32;
     QCheckBox *Plot4SignalAll;
+    unsigned char kopter;
+    sendTrajectory *newTrajectory;
 };
 
 #endif // QUADRO_H
