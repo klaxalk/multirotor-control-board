@@ -21,6 +21,9 @@
 // the controllersTask
 #include "controllersTask.h"
 
+// the logTask
+#include "logTask.h"
+
 int main(void)
 {
 		
@@ -44,6 +47,11 @@ int main(void)
 	/*	Start the main task routine																					*/
 	/* -------------------------------------------------------------------- */
 	xTaskCreate(controllersTask, (signed char*) "contTasks", 1024, NULL, 2, NULL);
+	
+	/* -------------------------------------------------------------------- */
+	/*	Start the openLog task routine																				*/
+	/* -------------------------------------------------------------------- */
+	xTaskCreate(logTask, (signed char*) "logTasks", 512, NULL, 2, NULL);
 	
 	/* -------------------------------------------------------------------- */
 	/*	Start the FreeRTOS scheduler																				*/

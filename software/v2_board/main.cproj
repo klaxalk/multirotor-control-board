@@ -320,6 +320,12 @@
     <Compile Include="FreeRTOS\Source\timers.c">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="logTask.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="logTask.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="main.c">
       <SubType>compile</SubType>
     </Compile>
