@@ -4,8 +4,8 @@
 #include <QMainWindow>
 #include <QCheckBox>
 #include "qcustomplot.h"
-#include "connectquadro.h"
 #include "sendtrajectory.h"
+
 
 namespace Ui {
 class quadro;
@@ -23,6 +23,7 @@ public:
     void setAllCheckFalse();
     void detectStatus();
     void createLegend();
+    void currentDateTime();
     void setQuadro(int number);
     void graph_1(QCustomPlot *graph1);
     void graph_2(QCustomPlot *graph2);
@@ -193,28 +194,18 @@ public:
       void on_actionFollow_trajectory_off_triggered();
 
       void on_actionRelative_triggered();
-
       void on_actionAbsolute_triggered();
-
       void on_actionRelative_2_triggered();
-
       void on_actionAbsolute_2_triggered();
-
       void on_actionRelative_3_triggered();
-
       void on_actionAbsolute_3_triggered();
-
       void on_actionRelative_4_triggered();
-
       void on_actionAbsolute_4_triggered();
-
       void on_actionRelative_5_triggered();
-
       void on_actionAbsolute_5_triggered();
 
 private:
     Ui::quadro *ui;
-    connectquadro *connectQuad;
     QTimer dataTimer;
     QTimer dataTimer1;
     QTimer dataTimer2;

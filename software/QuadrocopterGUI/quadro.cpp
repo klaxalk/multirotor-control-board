@@ -1,19 +1,26 @@
-#include "quadro.h"
-#include "ui_quadro.h"
 #include <QDebug>
 #include <QDesktopWidget>
 #include <QScreen>
 #include <QMessageBox>
 #include <QMetaEnum>
+#include <iostream>
+#include <fstream>
+#include <string>
+#include "quadro.h"
+#include "ui_quadro.h"
 #include "receive.h"
 #include "send.h"
+#include "time.h"
 
 
+using namespace std;
+int sample=0;
 double key1=0,key2=0,key3=0,key4=0;
 float values1[32]={ };
 float values2[32]={ };
 float values3[32]={ };
 float values4[32]={ };
+char myTime[80];
 
 unsigned char kopter=KOPTERS.K1;
 unsigned char signal1=TELEMETRIES.GROUND_DISTANCE_ESTIMATED;
@@ -55,6 +62,7 @@ quadro::quadro(QWidget *parent) :
     ui(new Ui::quadro)
 {
     ui->setupUi(this);
+    currentDateTime();
     createScrollCheckBox();
     createLegend();
     setAllCheckFalse();
@@ -305,6 +313,18 @@ void quadro::realtimeDataSlotGraph1()
         values1[29] = getTelemetry(kopter,signal30);
         values1[30] = getTelemetry(kopter,signal31);
         values1[31] = getTelemetry(kopter,signal32);
+
+        ofstream outputFile(myTime,ios::out | ios::app);
+        outputFile << sample;
+        outputFile << ",";
+        for(int i=0;i<31;i++){
+        outputFile << values1[i];
+        outputFile << ",";
+        }
+        outputFile << values1[31];
+        outputFile << "\n";
+        outputFile.close();
+        sample++;
 
     if(Plot1Signal1->isChecked()){
         ui->graph1->graph(0)->addData(key1, values1[0]);
@@ -622,7 +642,6 @@ dataTimer2.start(0); // Interval 0 means to refresh as fast as possible
 
 void quadro::realtimeDataSlotGraph2()
 {
-
         if(Plot2Signal1->isChecked()){
             values2[0] = getTelemetry(kopter,signal1);
             ui->graph2->graph(0)->addData(key2, values2[0]);
@@ -823,9 +842,7 @@ void quadro::realtimeDataSlotGraph2()
 // make key2 axis range scroll with the data (at a constant range size of 8):
 ui->graph2->xAxis->setRange(key2+0.25, 10, Qt::AlignRight);
 ui->graph2->replot();
-
     key2=key2+0.03;
-
 }
 
 void quadro::graph_3(QCustomPlot *graph3)
@@ -833,8 +850,6 @@ void quadro::graph_3(QCustomPlot *graph3)
 #if QT_VERSION < QT_VERSION_CHECK(4, 7, 0)
 QMessageBox::critical(this, "", "You're using Qt < 4.7, the realtime data needs functions that are available with Qt 4.7 to work properly");
 #endif
-
-
 
 graph3->addGraph(); // blue line
 graph3->graph(0)->setPen(QPen(Qt::blue));
@@ -951,7 +966,6 @@ connect(graph3->yAxis, SIGNAL(rangeChanged(QCPRange)), graph3->yAxis2, SLOT(setR
 connect(&dataTimer3, SIGNAL(timeout()), this, SLOT(realtimeDataSlotGraph3()));
 dataTimer3.start(0); // Interval 0 means to refresh as fast as possible
 }
-
 
 void quadro::realtimeDataSlotGraph3()
 {
@@ -1281,7 +1295,6 @@ connect(graph4->yAxis, SIGNAL(rangeChanged(QCPRange)), graph4->yAxis2, SLOT(setR
 connect(&dataTimer4, SIGNAL(timeout()), this, SLOT(realtimeDataSlotGraph4()));
 dataTimer4.start(0); // Interval 0 means to refresh as fast as possible
 }
-
 
 void quadro::realtimeDataSlotGraph4()
 {
@@ -2787,7 +2800,6 @@ void quadro::Plot3SignalAll_clicked()
         Plot3Signal30->setChecked(false);
         Plot3Signal31->setChecked(false);
         Plot3Signal32->setChecked(false);
-
     }
 }
 
@@ -3615,9 +3627,6 @@ void quadro::Plot4Signal32_clicked()
     palette32.setColor(QPalette::WindowText, QColor(180,180,180));
     line32->setPalette(palette32);
 
-
-
-
     legendLay->addRow(line1,legend1);
     legendLay->addRow(line2,legend2);
     legendLay->addRow(line3,legend3);
@@ -3651,9 +3660,7 @@ void quadro::Plot4Signal32_clicked()
     legendLay->addRow(line31,legend31);
     legendLay->addRow(line32,legend32);
     ui->scrollLegend->setLayout(legendLay);
-
   }
-
 
 void quadro::on_actionK1_triggered()
 {
@@ -3805,6 +3812,18 @@ void quadro::on_actionOff_2_triggered()
     setGumstix(kopter,ONOFF.OFF);
 }
 
-
+void quadro::currentDateTime(){
+    time_t     now = time(0);
+    struct tm  tstruct;
+    char TMP[80];
+    tstruct = *localtime(&now);
+    // Visit http://en.cppreference.com/w/cpp/chrono/c/strftime
+    // for more information about date/time format
+    strftime(TMP, sizeof(TMP), "%Y-%m-%d.%X", &tstruct);
+    for (int i=0; TMP[i]!= '\0'; i++){
+        if (TMP[i] == ':')TMP[i] = ';';
+    }
+    sprintf(myTime,"dataLog_%s.txt",TMP);
+}
 
 
