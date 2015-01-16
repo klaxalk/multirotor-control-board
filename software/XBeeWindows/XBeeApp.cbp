@@ -41,6 +41,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="commands.h" />
+		<Unit filename="const.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="const.h" />
 		<Unit filename="defines.h" />
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
@@ -54,6 +58,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="receive.h" />
+		<Unit filename="send.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="send.h" />
 		<Unit filename="serialLink.c">
 			<Option compilerVar="CC" />
 		</Unit>

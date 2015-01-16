@@ -117,11 +117,11 @@ void gumstixParseChar(unsigned char incomingChar) {
 }
 
 void stateChecker(){
-	static unsigned char landingStateCH=landingState;
-	static unsigned char trajectoryFollowCH=trajectoryEnabled;
-	static unsigned char posControllerCH=positionControllerEnabled;
-	static unsigned char velocityControllerCH=velocityControllerEnabled;
-	static unsigned char gumstixCH=gumstixEnabled;
+	static unsigned char landingStateCH=0xFF;
+	static unsigned char trajectoryFollowCH=0xFF;
+	static unsigned char posControllerCH=0xFF;
+	static unsigned char velocityControllerCH=0xFF;
+	static unsigned char gumstixCH=0xFF;
 	
 	if(landingStateCH!=landingState){
 		landingStateCH=landingState;
@@ -142,5 +142,11 @@ void stateChecker(){
 	if(gumstixCH!=gumstixEnabled){
 		gumstixCH=gumstixEnabled;
 		kopterGumstixReport(ADDRESS.COORDINATOR,ADDRESS.UNKNOWN16,0x00);
-	}	
+	}
+	
+	landingStateCH=landingState;
+	trajectoryFollowCH=trajectoryEnabled;
+	posControllerCH=positionControllerEnabled;
+	velocityControllerCH=velocityControllerEnabled;
+	gumstixCH=gumstixEnabled;	
 }

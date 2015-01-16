@@ -25,7 +25,7 @@ void kopterTrajectoryFollowRequest(unsigned char *address64,unsigned char *addre
 void kopterTrajectoryFollow(unsigned char *address64,unsigned char *address16,unsigned char on);
 void kopterTrajectoryFollowStatusRequest(unsigned char *address64,unsigned char *address16,unsigned char frameID);
 void kopterTrajectoryFollowReport(unsigned char *address64,unsigned char *address16,unsigned char frameID);
-void kopterTrajectoryReportRecieved(unsigned char *address64,unsigned char *address16,unsigned char status);
+void kopterTrajectoryFollowReportRecieved(unsigned char *address64,unsigned char *address16,unsigned char status);
 
 void kopterTrajectoryAddPointRequest(unsigned char *address64,unsigned char *address16,unsigned char index,float time,float elevatorPos,float aileronPos,float throttlePos,unsigned char frameID);
 void kopterTrajectoryAddPoint(unsigned char *address64,unsigned char *address16,unsigned char index,float time,float elevatorPos,float aileronPos,float throttlePos);
@@ -58,7 +58,7 @@ void kopterFollowerSetReport(unsigned char *address64,unsigned char *address16,u
 void kopterFollowerSetReportRecieved(unsigned char *address64,unsigned char *address16,unsigned char *followerAddr);
 
 void sendXBeeMessage(unsigned char *address64,unsigned char *address16,char *message,unsigned char frameID);
-void receiveXBeeMessage(unsigned char *address64,unsigned char *address16,unsigned char *message);
+void receiveXBeeMessage(unsigned char *address64,unsigned char *address16,char *message);
 
 void kopterLeadDataSend(unsigned char *address64,unsigned char *address16,volatile float altitude,volatile float elevatorVel,volatile float aileronVel,volatile float elevatorError,volatile float aileronError,unsigned char frameID);
 void kopterLeadDataReceived(unsigned char *address64,unsigned char *address16,float altitude,float elevatorVel, float aileronVel, float elevatorError, float aileronError);

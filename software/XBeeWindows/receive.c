@@ -17,3 +17,5 @@ void receivedControllerReport(unsigned char kopter,unsigned char status){
 }
 void receivedGumstixReport(unsigned char kopter,unsigned char status){
 }
+void receivedXBeeMessage(unsigned char kopter,char * message){
+}

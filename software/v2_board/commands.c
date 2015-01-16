@@ -452,7 +452,7 @@ void kopterTrajectoryFollowReport(unsigned char *address64,unsigned char *addres
 	}
 	makeTRPacket(address64,address16,0x00,frameID,dataOUT,3);
 }
-void kopterTrajectoryReportRecieved(unsigned char *address64,unsigned char *address16,unsigned char status){
+void kopterTrajectoryFollowReportRecieved(unsigned char *address64,unsigned char *address16,unsigned char status){
 	if(			status==ONOFF.ON){
 		
 	}else if(status==ONOFF.OFF){
@@ -484,9 +484,7 @@ void kopterTrajectoryAddPointRequest(unsigned char *address64,unsigned char *add
 }
 void kopterTrajectoryAddPoint(unsigned char *address64,unsigned char *address16,unsigned char index,float time,float elevatorPos,float aileronPos,float throttlePos){
 	if(index<TRAJECTORY_LENGTH){
-		if(index>trajMaxIndex){
-			trajMaxIndex=index;
-		}
+		trajMaxIndex=index;
 		TRAJ_POINT(index,time,elevatorPos,aileronPos,throttlePos);
 	}		
 }
@@ -601,7 +599,7 @@ void sendXBeeMessage(unsigned char *address64,unsigned char *address16,char *mes
 	*(out)='m';
 	makeTRPacket(address64,address16,0x00,frameID,(unsigned char*)out,(unsigned char)(strlen(message)+1));
 }
-void receiveXBeeMessage(unsigned char *address64,unsigned char *address16,unsigned char *message){
+void receiveXBeeMessage(unsigned char *address64,unsigned char *address16,char *message){
 	
 }
 

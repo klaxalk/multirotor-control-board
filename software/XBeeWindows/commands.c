@@ -5,11 +5,12 @@
 #include "main.h"
 #include "defines.h"
 #include "receive.h"
+#include "const.h"
 
 unsigned char dataOUT[25];
 
 float Telemetry[KOPTERS_COUNT][TELEMETRY_VARIABLES]={0};
-unsigned char Reports[KOPTERS_COUNT][REPORTS_COUNT]={0};
+unsigned char Reports[KOPTERS_COUNT][REPORTS_COUNT+1]={0xFF};
 
 
 int addrEqual(unsigned char *adr1,unsigned char *adr2){
@@ -109,19 +110,19 @@ void kopterLandReportRecieved(unsigned char *address64,unsigned char *address16,
 }
 
 //TRAJECTORY
-void kopterTrajectoryRequest(unsigned char *address64,unsigned char *address16,unsigned char options,unsigned char frameID){
+void kopterTrajectoryFollowRequest(unsigned char *address64,unsigned char *address16,unsigned char options,unsigned char frameID){
 	*(dataOUT)='c';
 	*(dataOUT+1)=COMMANDS.TRAJECTORY_FOLLOW;
 	*(dataOUT+2)=options;
 	makeTRPacket(address64,address16,0x00,frameID,dataOUT,3);
 }
-void kopterTrajectoryStatusRequest(unsigned char *address64,unsigned char *address16,unsigned char frameID){
+void kopterTrajectoryFollowStatusRequest(unsigned char *address64,unsigned char *address16,unsigned char frameID){
 	*dataOUT='c';
 	*(dataOUT+1)=COMMANDS.TRAJECTORY_FOLLOW;
 	*(dataOUT+2)=GET_STATUS;
 	makeTRPacket(address64,address16,0x00,frameID,dataOUT,3);
 }
-void kopterTrajectoryReportRecieved(unsigned char *address64,unsigned char *address16,unsigned char status){
+void kopterTrajectoryFollowReportRecieved(unsigned char *address64,unsigned char *address16,unsigned char status){
     unsigned char kopter=getKopter(address64);
     if(kopter!=KOPTERS.UNKNOWN){
         Reports[kopter][mapReports(COMMANDS.TRAJECTORY_FOLLOW)]=status;
@@ -234,6 +235,20 @@ void kopterGumstixReportRecieved(unsigned char *address64,unsigned char *address
     if(kopter!=KOPTERS.UNKNOWN){
         Reports[kopter][mapReports(COMMANDS.GUMSTIX)]=status;
         receivedGumstixReport(kopter,status);
+    }
+}
+
+//MESSAGES
+void sendXBeeMessage(unsigned char *address64,unsigned char *address16,char *message,unsigned char frameID){
+	char out[100];
+	sprintf(out,"%s%s","0",message);
+	*(out)='m';
+	makeTRPacket(address64,address16,0x00,frameID,(unsigned char*)out,(unsigned char)(strlen(message)+1));
+}
+void receiveXBeeMessage(unsigned char *address64,unsigned char *address16,char *message){
+    unsigned char kopter=getKopter(address64);
+    if(kopter!=KOPTERS.UNKNOWN){
+        receivedXBeeMessage(kopter,message);
     }
 }
 

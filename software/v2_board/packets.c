@@ -264,7 +264,7 @@ void packetHandler(unsigned char *inPacket){
 				         } else
 						 //TRAJECTORY FOLLOW STATUS
 						 if(*(dataIN+2)==COMMANDS.TRAJECTORY_FOLLOW){
-							 kopterTrajectoryReportRecieved(address64,address16,*(dataIN+3));
+							 kopterTrajectoryFollowReportRecieved(address64,address16,*(dataIN+3));
 						 } else
 						 //TRAJECTORY POINTS
 				         if(*(dataIN+2)==COMMANDS.TRAJECTORY_POINTS){							 

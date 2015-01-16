@@ -19,9 +19,9 @@ void kopterLandRequest(unsigned char *address64,unsigned char *address16,unsigne
 void kopterLandStatusRequest(unsigned char *address64,unsigned char *address16,unsigned char frameID);
 void kopterLandReportRecieved(unsigned char *address64,unsigned char *address16,unsigned char status);
 
-void kopterTrajectoryRequest(unsigned char *address64,unsigned char *address16,unsigned char options,unsigned char frameID);
-void kopterTrajectoryStatusRequest(unsigned char *address64,unsigned char *address16,unsigned char frameID);
-void kopterTrajectoryReportRecieved(unsigned char *address64,unsigned char *address16,unsigned char status);
+void kopterTrajectoryFollowRequest(unsigned char *address64,unsigned char *address16,unsigned char options,unsigned char frameID);
+void kopterTrajectoryFollowStatusRequest(unsigned char *address64,unsigned char *address16,unsigned char frameID);
+void kopterTrajectoryFollowReportRecieved(unsigned char *address64,unsigned char *address16,unsigned char status);
 
 void kopterTrajectoryAddPointRequest(unsigned char *address64,unsigned char *address16,unsigned char index,float time,float elevatorPos,float aileronPos,float throttlePos,unsigned char frameID);
 void kopterTrajectoryPointStatusRequest(unsigned char *address64,unsigned char *address16,unsigned char frameID);
@@ -38,4 +38,7 @@ void kopterControllersReportReceived(unsigned char *address64,unsigned char *add
 void kopterGumstixRequest(unsigned char *address64,unsigned char *address16,unsigned char options,unsigned char frameID);
 void kopterGumstixStatusRequest(unsigned char *address64,unsigned char *address16,unsigned char frameID);
 void kopterGumstixReportRecieved(unsigned char *address64,unsigned char *address16,unsigned char status);
+
+void sendXBeeMessage(unsigned char *address64,unsigned char *address16,char *message,unsigned char frameID);
+void receiveXBeeMessage(unsigned char *address64,unsigned char *address16,char *message);
 #endif /*COMMANDS_H*/

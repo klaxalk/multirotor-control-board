@@ -354,7 +354,7 @@ void positionController() {
 
 	//elevator controller
 	elevatorPosContError = elevatorPositionSetpoint - estimatedElevatorPos;
-	elevatorDesiredSpeedPosController = KX * elevatorPosContError + elevatorDesiredSpeedPosControllerLeader;
+	elevatorDesiredSpeedPosController = KX * elevatorPosContError/* + elevatorDesiredSpeedPosControllerLeader*/;
 	if(elevatorDesiredSpeedPosController > +SPEED_MAX) elevatorDesiredSpeedPosController = +SPEED_MAX;
 	if(elevatorDesiredSpeedPosController < -SPEED_MAX) elevatorDesiredSpeedPosController = -SPEED_MAX;
 
@@ -369,7 +369,7 @@ void positionController() {
 
 	//aileron controller
 	aileronPosContError = aileronPositionSetpoint - estimatedAileronPos;
-	aileronDesiredSpeedPosController = KX * aileronPosContError + aileronDesiredSpeedPosControllerLeader;
+	aileronDesiredSpeedPosController = KX * aileronPosContError/* + aileronDesiredSpeedPosControllerLeader*/;
 	if(aileronDesiredSpeedPosController > +SPEED_MAX) aileronDesiredSpeedPosController = +SPEED_MAX;
 	if(aileronDesiredSpeedPosController < -SPEED_MAX) aileronDesiredSpeedPosController = -SPEED_MAX;
 
