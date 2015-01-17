@@ -11,6 +11,7 @@
 #include "FreeRTOS.h"
 #include "queue.h"
 #include "task.h"
+#include "CMatrixLib.h"
 
 // Must be included if using STM32F4 Discovery board or processor
 #include "stm32f4xx.h"

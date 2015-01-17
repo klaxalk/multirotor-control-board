@@ -72,7 +72,7 @@
         <documentation help="" />
         <offline-documentation help="" />
         <dependencies>
-          <content-extension eid="atmel.asf" uuidref="Atmel.ASF" version="3.6.0" />
+          <content-extension eid="atmel.asf" uuidref="Atmel.ASF" version="3.10.1" />
         </dependencies>
       </framework-data>
     </AsfFrameworkConfig>
@@ -88,6 +88,7 @@
       <ToolNumber>000200191656</ToolNumber>
       <ToolName>AVRISP mkII</ToolName>
     </com_atmel_avrdbg_tool_ispmk2>
+    <preserveEEPROM>true</preserveEEPROM>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <ToolchainSettings>
@@ -128,6 +129,11 @@
             <Value>libm</Value>
           </ListValues>
         </avrgcc.linker.libraries.Libraries>
+        <avrgcc.linker.libraries.LibrarySearchPaths>
+          <ListValues>
+            <Value>C:\Users\klaxalk\Desktop\multirotor-control-board\software\CMatrixLib\CMatrixLib</Value>
+          </ListValues>
+        </avrgcc.linker.libraries.LibrarySearchPaths>
         <avrgcc.assembler.general.IncludePaths>
           <ListValues>
             <Value>../src/ASF/xmega/drivers/cpu</Value>
@@ -185,6 +191,7 @@
       <Value>../gsl/err</Value>
       <Value>../gsl/vector</Value>
       <Value>../matrixLib</Value>
+      <Value>../../CMatrixLib/CMatrixLib</Value>
     </ListValues>
   </avrgcc.compiler.directories.IncludePaths>
   <avrgcc.compiler.optimization.level>Optimize (-O1)</avrgcc.compiler.optimization.level>
@@ -217,6 +224,14 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="..\CMatrixLib\CMatrixLib\CMatrixLib.c">
+      <SubType>compile</SubType>
+      <Link>CMatrixLib.c</Link>
+    </Compile>
+    <Compile Include="..\CMatrixLib\CMatrixLib\CMatrixLib.h">
+      <SubType>compile</SubType>
+      <Link>CMatrixLib.h</Link>
+    </Compile>
     <Compile Include="commTask.c">
       <SubType>compile</SubType>
     </Compile>
@@ -307,12 +322,6 @@
     <Compile Include="FreeRTOS\Source\timers.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="kalman.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="kalman.h">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="main.c">
       <SubType>compile</SubType>
     </Compile>
@@ -320,12 +329,6 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="mainTask.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="matrixLib\matrixLib.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="matrixLib\matrixLib.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="mavlink\ardupilotmega\ardupilotmega.h">
@@ -881,7 +884,6 @@
     <Folder Include="mavlink\ardupilotmega\" />
     <Folder Include="mavlink\common\" />
     <Folder Include="MyDrivers" />
-    <Folder Include="matrixLib" />
     <Folder Include="src\" />
     <Folder Include="src\ASF\" />
     <Folder Include="src\ASF\common\" />

@@ -2,15 +2,15 @@
  * kalman.h
  *
  *  Author: Tomas Baca
- */ 
+ */
 
 #ifndef KALMAN_H_
 #define KALMAN_H_
 
-#include "matrixLib.h"
+#include "CMatrixLib.h"
 
 typedef struct {
-	
+
 	matrix_float * covariance;
 	vector_float * states;
 	int8_t number_of_states;

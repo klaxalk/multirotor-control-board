@@ -1,24 +1,13 @@
+/*
+ * main.c
+ *
+ *  Author: Tomas Baca
+ */
+
 // GPIO initialization and other minor stuff
 #include "system.h"
 #include "commTask.h"
-
-void pocitej(void *p) {
-
-    float baf;
-    long lek;
-    long max = 7000000;
-
-    while(1) {
-
-        USART_puts(UART4, "done\n\r"); // just send a message to indicate that it works
-
-    	for (lek = 0; lek < max; ++lek) {
-
-    		baf = baf * ((float) 1.02);
-		}
-    }
-}
-
+#include "kalmanTask.h"
 
 int main(void)
 {
@@ -31,7 +20,10 @@ int main(void)
 	/* -------------------------------------------------------------------- */
 	xTaskCreate(commTask, (char*) "commTask", 1024, NULL, 2, NULL);
 
-	xTaskCreate(pocitej, (char*) "pocitej", 1024, NULL, 2, NULL);
+	/* -------------------------------------------------------------------- */
+	/*	Start the kalman filter task										*/
+	/* -------------------------------------------------------------------- */
+	xTaskCreate(kalmanTask, (char*) "kalman", 1024, NULL, 2, NULL);
 
 	/* -------------------------------------------------------------------- */
 	/*	Start the FreeRTOS scheduler										*/

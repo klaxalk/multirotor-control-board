@@ -1,0 +1,3 @@
+[submodule "software/CMatrixLib"]
+	path = software/CMatrixLib
+	url = https://github.com/klaxalk/CMatrixLib

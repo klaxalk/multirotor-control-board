@@ -11,7 +11,6 @@
 #include "communication.h"
 #include <stdio.h> // sprintf
 #include <stdlib.h> // abs
-#include "kalman.h"
 
 // timestamp for debug and logging
 volatile double timeStamp = 0;

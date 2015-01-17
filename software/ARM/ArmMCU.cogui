@@ -14,25 +14,60 @@
 <part id="1"/>
 <part id="2"/>
 <part id="3"/>
+<part id="4"/>
+<part id="5"/>
+<part id="6"/>
+<part id="7"/>
+<part id="8"/>
+<part id="9"/>
+<part id="10"/>
 </presentation>
 </folder>
 </info>
 </editorArea>
-<editor activePart="true" focus="true" id="org.eclipse.cdt.ui.editor.CEditor" name="main.c" partName="main.c" path="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/main.c" title="main.c" tooltip="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/main.c" workbook="DefaultEditorWorkbook">
+<editor id="org.eclipse.cdt.ui.editor.CEditor" name="main.c" partName="main.c" path="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/main.c" title="main.c" tooltip="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/main.c" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/ArmMCU/main.c"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="430" selectionTopPixel="0"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="413" selectionTopPixel="0"/>
 </editor>
 <editor id="org.eclipse.cdt.ui.editor.CEditor" name="commTask.c" partName="commTask.c" path="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/commTask.c" title="commTask.c" tooltip="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/commTask.c" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/ArmMCU/commTask.c"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="175" selectionTopPixel="0"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="254" selectionTopPixel="0"/>
 </editor>
 <editor id="org.eclipse.cdt.ui.editor.CEditor" name="system.c" partName="system.c" path="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/system.c" title="system.c" tooltip="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/system.c" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/ArmMCU/system.c"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="661" selectionTopPixel="0"/>
+<editorState selectionHorizontalPixel="0" selectionLength="10" selectionOffset="262" selectionTopPixel="0"/>
 </editor>
 <editor id="org.eclipse.cdt.ui.editor.CEditor" name="queue.h" partName="queue.h" path="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/FreeRTOS/Source/include/queue.h" title="queue.h" tooltip="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/FreeRTOS/Source/include/queue.h" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/ArmMCU/FreeRTOS/Source/include/queue.h"/>
 <editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="29927" selectionTopPixel="12585"/>
+</editor>
+<editor id="org.eclipse.cdt.ui.editor.CEditor" name="kalmanTask.c" partName="kalmanTask.c" path="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/kalmanTask.c" title="kalmanTask.c" tooltip="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/kalmanTask.c" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/ArmMCU/kalmanTask.c"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="6996" selectionTopPixel="2040"/>
+</editor>
+<editor id="org.eclipse.cdt.ui.editor.CEditor" name="system.h" partName="system.h" path="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/system.h" title="system.h" tooltip="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/system.h" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/ArmMCU/system.h"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="837" selectionTopPixel="0"/>
+</editor>
+<editor id="org.eclipse.cdt.ui.editor.CEditor" name="kalman.c" partName="kalman.c" path="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/kalman.c" title="kalman.c" tooltip="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/kalman.c" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/ArmMCU/kalman.c"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="6295" selectionTopPixel="1669"/>
+</editor>
+<editor id="org.eclipse.cdt.ui.editor.CEditor" name="kalman.h" partName="kalman.h" path="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/kalman.h" title="kalman.h" tooltip="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/kalman.h" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/ArmMCU/kalman.h"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="69" selectionTopPixel="0"/>
+</editor>
+<editor id="org.eclipse.cdt.ui.editor.CEditor" name="CMatrixLib.h" partName="CMatrixLib.h" title="CMatrixLib.h" tooltip="C:\Users\klaxalk\Desktop\multirotor-control-board\software\CMatrixLib\CMatrixLib\CMatrixLib.h" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.cdt.ui.ExternalEditorInputFactory" path="C:\Users\klaxalk\Desktop\multirotor-control-board\software\CMatrixLib\CMatrixLib\CMatrixLib.h" project="ArmMCU"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="2694" selectionTopPixel="1380"/>
+</editor>
+<editor id="org.eclipse.cdt.ui.editor.CEditor" name="miscellaneous.h" partName="miscellaneous.h" path="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/miscellaneous.h" title="miscellaneous.h" tooltip="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/miscellaneous.h" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/ArmMCU/miscellaneous.h"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="218" selectionTopPixel="0"/>
+</editor>
+<editor activePart="true" focus="true" id="org.eclipse.cdt.ui.editor.CEditor" name="miscellaneous.c" partName="miscellaneous.c" path="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/miscellaneous.c" title="miscellaneous.c" tooltip="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/miscellaneous.c" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/ArmMCU/miscellaneous.c"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="293" selectionTopPixel="0"/>
 </editor>
 </editors>
 <views>
@@ -42,12 +77,9 @@
 <element path="/ArmMCU"/>
 </expanded>
 <selection>
-<element path="/ArmMCU/uart_driver.c"/>
+<element path="/ArmMCU/miscellaneous.h"/>
 </selection>
 </viewState>
-</view>
-<view id="org.coocox.component.ui.ComponentView" partName="Components">
-<viewState/>
 </view>
 <view id="org.coocox.codebugger.trace.ui.traceview" partName="Semihosting">
 <viewState/>
@@ -94,37 +126,40 @@
 <hide_toolbar_item_id id="org.eclipse.cdt.debug.internal.ui.actions.ToggleInstructionStepModeAction"/>
 <hide_toolbar_item_id id="org.eclipse.ui.edit.text.toggleShowSelectedElementOnly"/>
 <hide_toolbar_item_id id="org.eclipse.debug.ui.commands.TerminateAndRelaunch"/>
-<view id="org.coocox.component.ui.ComponentView"/>
 <view id="org.coocox.builder.ui.views.ProjectView"/>
 <view id="org.coocox.component.ui.Help"/>
 <view id="org.eclipse.ui.views.ContentOutline"/>
-<view id="org.eclipse.ui.console.ConsoleView"/>
-<fastViewBars/>
+<fastViewBars>
+<fastViewBar fastViewLocation="1024" id="org.eclipse.ui.internal.ViewStack@586ac6" orientation="256" selectedTabId="org.eclipse.ui.console.ConsoleView" style="0">
+<fastViews>
+<view id="org.eclipse.ui.console.ConsoleView" ratio="0.29936305"/>
+</fastViews>
+</fastViewBar>
+</fastViewBars>
 <layout>
 <mainWindow>
-<info folder="true" part="org.eclipse.ui.internal.ViewStack@493b65">
-<folder activePageID="org.coocox.component.ui.ComponentView" appearance="2" expanded="2">
-<page content="org.coocox.component.ui.ComponentView" label="Components"/>
+<info folder="true" part="org.eclipse.ui.internal.ViewStack@ced6e2">
+<folder activePageID="org.coocox.builder.ui.views.ProjectView" appearance="2" expanded="2">
+<page content="org.coocox.builder.ui.views.ProjectView" label="Project"/>
+<page content="org.coocox.component.ui.ComponentView" label="LabelNotFound"/>
 <presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
 <part id="0"/>
 </presentation>
 </folder>
 </info>
-<info folder="true" part="stickyFolderRight" ratio="0.75" ratioLeft="1434" ratioRight="478" relationship="2" relative="org.eclipse.ui.internal.ViewStack@493b65">
+<info folder="true" part="stickyFolderRight" ratio="0.75" ratioLeft="1434" ratioRight="478" relationship="2" relative="org.eclipse.ui.internal.ViewStack@ced6e2">
 <folder appearance="2" expanded="2">
 <page content="org.eclipse.help.ui.HelpView" label="LabelNotFound"/>
 <page content="org.eclipse.ui.internal.introview" label="LabelNotFound"/>
 </folder>
 </info>
-<info folder="true" part="org.eclipse.ui.internal.ViewStack@586ac6" ratio="0.771033" ratioLeft="724" ratioRight="215" relationship="4" relative="org.eclipse.ui.internal.ViewStack@493b65">
-<folder activePageID="org.eclipse.ui.console.ConsoleView" appearance="2" expanded="2">
-<page content="org.eclipse.ui.console.ConsoleView" label="Console"/>
-<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
-<part id="0"/>
-</presentation>
+<info folder="true" part="org.eclipse.ui.internal.ViewStack@586ac6" ratio="0.771033" ratioLeft="724" ratioRight="215" relationship="4" relative="org.eclipse.ui.internal.ViewStack@ced6e2">
+<folder appearance="2" expanded="2">
+<page content="org.eclipse.ui.console.ConsoleView" label="LabelNotFound"/>
+<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory"/>
 </folder>
 </info>
-<info folder="true" part="org.eclipse.ui.internal.ViewStack@1a3a66c" ratio="0.2926045" ratioLeft="273" ratioRight="660" relationship="2" relative="org.eclipse.ui.internal.ViewStack@493b65">
+<info folder="true" part="org.eclipse.ui.internal.ViewStack@1a3a66c" ratio="0.2926045" ratioLeft="273" ratioRight="660" relationship="2" relative="org.eclipse.ui.internal.ViewStack@ced6e2">
 <folder appearance="2" expanded="2">
 <page content="org.coocox.builder.ui.exampleView" label="LabelNotFound"/>
 <presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory"/>
@@ -144,14 +179,6 @@
 </folder>
 </info>
 <info part="org.eclipse.ui.editorss" ratio="0.4490446" ratioLeft="423" ratioRight="519" relationship="4" relative="org.eclipse.ui.internal.ViewStack@1a3a66c"/>
-<info folder="true" part="org.eclipse.ui.internal.ViewStack@ced6e2" ratio="0.36942676" ratioLeft="348" ratioRight="594" relationship="4" relative="org.eclipse.ui.internal.ViewStack@493b65">
-<folder activePageID="org.coocox.builder.ui.views.ProjectView" appearance="2" expanded="2">
-<page content="org.coocox.builder.ui.views.ProjectView" label="Project"/>
-<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
-<part id="0"/>
-</presentation>
-</folder>
-</info>
 </mainWindow>
 </layout>
 </perspective>
@@ -248,135 +275,171 @@
 <workingSets/>
 <navigationHistory>
 <editors>
-<editor factoryID="org.coocox.builder.ui.persistent.PersistentElementFactory" id="org.coocox.welcome.ui.WelcomePage">
-<org.coocox.welcome.ui.WelcomePage/>
-</editor>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/main.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/init_board.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/init_board.h"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/FreeRTOS/Source/include/task.h"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/init_board.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/init_board.h"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/FreeRTOS/Source/include/task.h"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/commTask.c"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/kalmanTask.c"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/system.h"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/system.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/uart_driver.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/FreeRTOS/Source/include/queue.h"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/kalman.c"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/kalman.h"/>
+<editor factoryID="org.eclipse.cdt.ui.ExternalEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="C:\Users\klaxalk\Desktop\multirotor-control-board\software\CMatrixLib\CMatrixLib\CMatrixLib.h" project="ArmMCU"/>
+<editor factoryID="org.coocox.builder.ui.persistent.PersistentElementFactory" id="org.coocox.builder.ui.editors.ConfigEditor">
+<org.coocox.builder.ui.editors.ConfigEditor/>
+</editor>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/CMatrixLib.c"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/commTask.c"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/misc.c"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/misc.h"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/miscellaneous.c"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/miscellaneous.h"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/miscellaneous.c"/>
 </editors>
-<item historyLabel="welcome" index="0"/>
-<item historyLabel="main.c" index="1">
-<position info="not_deleted" x="0" y="0"/>
+<item historyLabel="Configuration" index="7"/>
+<item historyLabel="CMatrixLib.h" index="6">
+<position info="not_deleted" x="2694" y="0"/>
 </item>
-<item historyLabel="main.c" index="1">
-<position info="not_deleted" x="647" y="0"/>
+<item historyLabel="kalman.c" index="4">
+<position info="not_deleted" x="117" y="0"/>
 </item>
-<item historyLabel="main.c" index="1">
-<position info="not_deleted" x="1283" y="3"/>
+<item historyLabel="system.c" index="3">
+<position info="not_deleted" x="4140" y="0"/>
 </item>
-<item historyLabel="main.c" index="1">
-<position info="not_deleted" x="1281" y="0"/>
+<item historyLabel="system.h" index="2">
+<position info="not_deleted" x="837" y="0"/>
 </item>
-<item historyLabel="main.c" index="1">
-<position info="not_deleted" x="1178" y="64"/>
+<item historyLabel="kalman.c" index="4">
+<position info="not_deleted" x="1825" y="0"/>
 </item>
-<item historyLabel="main.c" index="1">
-<position info="not_deleted" x="1105" y="0"/>
+<item historyLabel="kalmanTask.c" index="1">
+<position info="not_deleted" x="6996" y="0"/>
 </item>
-<item historyLabel="init_board.c" index="2">
-<position info="not_deleted" x="117" y="9"/>
-</item>
-<item historyLabel="init_board.h" index="3">
-<position info="not_deleted" x="0" y="0"/>
-</item>
-<item historyLabel="init_board.h" index="3">
-<position info="not_deleted" x="958" y="0"/>
-</item>
-<item historyLabel="init_board.c" index="2">
-<position info="not_deleted" x="558" y="0"/>
-</item>
-<item historyLabel="main.c" index="1">
-<position info="not_deleted" x="1123" y="0"/>
-</item>
-<item historyLabel="task.h" index="4">
-<position info="not_deleted" x="5694" y="6"/>
-</item>
-<item historyLabel="init_board.h" index="3">
-<position info="not_deleted" x="958" y="0"/>
-</item>
-<item historyLabel="init_board.c" index="2">
-<position info="not_deleted" x="558" y="0"/>
-</item>
-<item historyLabel="main.c" index="1">
-<position info="not_deleted" x="1123" y="0"/>
-</item>
-<item historyLabel="init_board.c" index="5">
-<position info="not_deleted" x="0" y="0"/>
-</item>
-<item historyLabel="main.c" index="1">
-<position info="not_deleted" x="430" y="0"/>
-</item>
-<item historyLabel="init_board.h" index="6">
-<position info="not_deleted" x="0" y="0"/>
-</item>
-<item historyLabel="main.c" index="1">
-<position info="not_deleted" x="430" y="0"/>
-</item>
-<item historyLabel="task.h" index="7">
-<position info="not_deleted" x="5694" y="6"/>
-</item>
-<item historyLabel="main.c" index="1">
-<position info="not_deleted" x="430" y="0"/>
-</item>
-<item historyLabel="commTask.c" index="8">
-<position info="not_deleted" x="181" y="0"/>
-</item>
-<item historyLabel="main.c" index="1">
-<position info="not_deleted" x="780" y="0"/>
-</item>
-<item historyLabel="commTask.c" index="8">
-<position info="not_deleted" x="157" y="0"/>
-</item>
-<item historyLabel="main.c" index="1">
-<position info="not_deleted" x="780" y="0"/>
-</item>
-<item historyLabel="system.c" index="9">
-<position info="not_deleted" x="661" y="0"/>
-</item>
-<item historyLabel="commTask.c" index="8">
-<position info="not_deleted" x="157" y="0"/>
-</item>
-<item historyLabel="main.c" index="1">
-<position info="not_deleted" x="780" y="0"/>
-</item>
-<item historyLabel="uart_driver.c" index="10">
-<position info="not_deleted" x="5419" y="0"/>
-</item>
-<item historyLabel="commTask.c" index="8">
-<position info="not_deleted" x="157" y="0"/>
-</item>
-<item historyLabel="queue.h" index="11">
-<position info="not_deleted" x="29927" y="0"/>
-</item>
-<item historyLabel="main.c" index="1">
-<position info="not_deleted" x="780" y="0"/>
-</item>
-<item historyLabel="commTask.c" index="8">
-<position info="not_deleted" x="157" y="0"/>
-</item>
-<item historyLabel="commTask.c" index="8">
+<item historyLabel="kalman.c" index="4">
 <position/>
 </item>
-<item historyLabel="commTask.c" index="8">
-<position info="not_deleted" x="224" y="0"/>
+<item historyLabel="CMatrixLib.c" index="8">
+<position info="not_deleted" x="0" y="0"/>
 </item>
-<item historyLabel="uart_driver.c" index="10">
-<position info="not_deleted" x="5076" y="14"/>
+<item historyLabel="kalman.c" index="4">
+<position/>
 </item>
-<item historyLabel="commTask.c" index="8">
-<position info="not_deleted" x="175" y="0"/>
+<item historyLabel="commTask.c" index="9">
+<position info="not_deleted" x="254" y="0"/>
 </item>
-<item active="true" historyLabel="main.c" index="1">
-<position info="not_deleted" x="780" y="0"/>
+<item historyLabel="system.c" index="3">
+<position info="not_deleted" x="262" y="10"/>
+</item>
+<item historyLabel="kalman.h" index="5">
+<position info="not_deleted" x="218" y="0"/>
+</item>
+<item historyLabel="kalman.c" index="4">
+<position/>
+</item>
+<item historyLabel="misc.c" index="10">
+<position info="not_deleted" x="1120" y="0"/>
+</item>
+<item historyLabel="kalman.c" index="4">
+<position info="not_deleted" x="6295" y="0"/>
+</item>
+<item historyLabel="misc.c" index="10">
+<position info="not_deleted" x="485" y="0"/>
+</item>
+<item historyLabel="kalman.c" index="4">
+<position info="not_deleted" x="6295" y="0"/>
+</item>
+<item historyLabel="system.h" index="2">
+<position info="not_deleted" x="837" y="0"/>
+</item>
+<item historyLabel="kalman.c" index="4">
+<position info="not_deleted" x="6295" y="0"/>
+</item>
+<item historyLabel="kalman.h" index="5">
+<position info="not_deleted" x="759" y="0"/>
+</item>
+<item historyLabel="misc.c" index="10">
+<position info="not_deleted" x="343" y="0"/>
+</item>
+<item historyLabel="misc.h" index="11">
+<position info="not_deleted" x="285" y="0"/>
+</item>
+<item historyLabel="misc.c" index="10">
+<position info="not_deleted" x="343" y="0"/>
+</item>
+<item historyLabel="kalman.h" index="5">
+<position info="not_deleted" x="0" y="88"/>
+</item>
+<item historyLabel="misc.h" index="11">
+<position info="not_deleted" x="84" y="0"/>
+</item>
+<item historyLabel="misc.c" index="10">
+<position info="not_deleted" x="343" y="0"/>
+</item>
+<item historyLabel="misc.h" index="11">
+<position info="not_deleted" x="0" y="46"/>
+</item>
+<item historyLabel="misc.c" index="10">
+<position info="not_deleted" x="343" y="0"/>
+</item>
+<item historyLabel="miscellaneous.c" index="12">
+<position info="not_deleted" x="274" y="0"/>
+</item>
+<item historyLabel="miscellaneous.h" index="13">
+<position info="not_deleted" x="201" y="0"/>
+</item>
+<item historyLabel="miscellaneous.c" index="12">
+<position info="not_deleted" x="274" y="386"/>
+</item>
+<item historyLabel="miscellaneous.h" index="13">
+<position info="not_deleted" x="201" y="0"/>
+</item>
+<item historyLabel="kalman.h" index="5">
+<position info="not_deleted" x="69" y="0"/>
+</item>
+<item historyLabel="main.c" index="0">
+<position info="not_deleted" x="250" y="0"/>
+</item>
+<item historyLabel="miscellaneous.c" index="14">
+<position/>
+</item>
+<item historyLabel="main.c" index="0">
+<position info="not_deleted" x="204" y="0"/>
+</item>
+<item historyLabel="miscellaneous.c" index="14">
+<position info="not_deleted" x="0" y="0"/>
+</item>
+<item historyLabel="main.c" index="0">
+<position info="not_deleted" x="413" y="0"/>
+</item>
+<item historyLabel="miscellaneous.h" index="13">
+<position info="not_deleted" x="178" y="0"/>
+</item>
+<item historyLabel="miscellaneous.c" index="14">
+<position info="not_deleted" x="1008" y="0"/>
+</item>
+<item historyLabel="miscellaneous.h" index="13">
+<position info="not_deleted" x="83" y="0"/>
+</item>
+<item historyLabel="miscellaneous.c" index="14">
+<position info="not_deleted" x="708" y="0"/>
+</item>
+<item historyLabel="system.c" index="3">
+<position info="not_deleted" x="262" y="10"/>
+</item>
+<item historyLabel="miscellaneous.c" index="14">
+<position info="not_deleted" x="708" y="0"/>
+</item>
+<item historyLabel="miscellaneous.h" index="13">
+<position info="not_deleted" x="218" y="0"/>
+</item>
+<item historyLabel="miscellaneous.c" index="14">
+<position info="not_deleted" x="985" y="25"/>
+</item>
+<item historyLabel="miscellaneous.c" index="14">
+<position info="not_deleted" x="103" y="0"/>
+</item>
+<item historyLabel="miscellaneous.c" index="14">
+<position info="not_deleted" x="143" y="0"/>
+</item>
+<item active="true" historyLabel="miscellaneous.c" index="14">
+<position info="not_deleted" x="741" y="33"/>
 </item>
 </navigationHistory>
 <input factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/" type="8"/>
@@ -385,6 +448,44 @@
 <actionBarAdvisor/>
 </window>
 <mruList>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="miscellaneous.c" tooltip="ArmMCU/miscellaneous.c">
+<persistable path="/ArmMCU/miscellaneous.c"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="miscellaneous.h" tooltip="ArmMCU/miscellaneous.h">
+<persistable path="/ArmMCU/miscellaneous.h"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="misc.h" tooltip="ArmMCU/misc.h">
+<persistable path="/ArmMCU/misc.h"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="misc.c" tooltip="ArmMCU/misc.c">
+<persistable path="/ArmMCU/misc.c"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="CMatrixLib.c" tooltip="ArmMCU/CMatrixLib.c">
+<persistable path="/ArmMCU/CMatrixLib.c"/>
+</file>
+<file factoryID="org.coocox.builder.ui.persistent.PersistentElementFactory" id="org.coocox.builder.ui.editors.ConfigEditor" name="" tooltip="">
+<persistable>
+<org.coocox.builder.ui.editors.ConfigEditor/>
+</persistable>
+</file>
+<file factoryID="org.eclipse.cdt.ui.ExternalEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="CMatrixLib.h" tooltip="C:\Users\klaxalk\Desktop\multirotor-control-board\software\CMatrixLib\CMatrixLib\CMatrixLib.h">
+<persistable path="C:\Users\klaxalk\Desktop\multirotor-control-board\software\CMatrixLib\CMatrixLib\CMatrixLib.h" project="ArmMCU"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="kalman.h" tooltip="ArmMCU/kalman.h">
+<persistable path="/ArmMCU/kalman.h"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="kalman.c" tooltip="ArmMCU/kalman.c">
+<persistable path="/ArmMCU/kalman.c"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="commTask.h" tooltip="ArmMCU/commTask.h">
+<persistable path="/ArmMCU/commTask.h"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="system.h" tooltip="ArmMCU/system.h">
+<persistable path="/ArmMCU/system.h"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="kalmanTask.c" tooltip="ArmMCU/kalmanTask.c">
+<persistable path="/ArmMCU/kalmanTask.c"/>
+</file>
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="queue.h" tooltip="ArmMCU/FreeRTOS/Source/include/queue.h">
 <persistable path="/ArmMCU/FreeRTOS/Source/include/queue.h"/>
 </file>
@@ -393,42 +494,6 @@
 </file>
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="system.c" tooltip="ArmMCU/system.c">
 <persistable path="/ArmMCU/system.c"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="commTask.c" tooltip="ArmMCU/commTask.c">
-<persistable path="/ArmMCU/commTask.c"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="main.c" tooltip="ArmMCU/main.c">
-<persistable path="/ArmMCU/main.c"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="FreeRTOSConfig.h" tooltip="ArmMCU/FreeRTOS/FreeRTOSConfig.h">
-<persistable path="/ArmMCU/FreeRTOS/FreeRTOSConfig.h"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="init_board.c" tooltip="ArmMCU/init_board.c">
-<persistable path="/ArmMCU/init_board.c"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="init_board.h" tooltip="ArmMCU/init_board.h">
-<persistable path="/ArmMCU/init_board.h"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="heap_2.c" tooltip="ArmMCU/FreeRTOS/Port/heap_2.c">
-<persistable path="/ArmMCU/FreeRTOS/Port/heap_2.c"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="tasks.c" tooltip="ArmMCU/FreeRTOS/Source/tasks.c">
-<persistable path="/ArmMCU/FreeRTOS/Source/tasks.c"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="port.c" tooltip="ArmMCU/FreeRTOS/Port/port.c">
-<persistable path="/ArmMCU/FreeRTOS/Port/port.c"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="system_stm32f4xx.c" tooltip="ArmMCU/cmsis_boot/system_stm32f4xx.c">
-<persistable path="/ArmMCU/cmsis_boot/system_stm32f4xx.c"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="portmacro.h" tooltip="ArmMCU/FRT_Library/FreeRTOS/Source/portable/GCC/Cortex-M4F/portmacro.h">
-<persistable path="/ArmMCU/FRT_Library/FreeRTOS/Source/portable/GCC/Cortex-M4F/portmacro.h"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="port.c" tooltip="ArmMCU/FRT_Library/FreeRTOS/Source/portable/GCC/Cortex-M4F/port.c">
-<persistable path="/ArmMCU/FRT_Library/FreeRTOS/Source/portable/GCC/Cortex-M4F/port.c"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="task.h" tooltip="ArmMCU/FRT_Library/FreeRTOS/Source/include/task.h">
-<persistable path="/ArmMCU/FRT_Library/FreeRTOS/Source/include/task.h"/>
 </file>
 </mruList>
 </workbench>
