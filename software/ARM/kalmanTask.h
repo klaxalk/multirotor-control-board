@@ -10,6 +10,7 @@
 #include "system.h"
 #include "CMatrixLib.h"
 #include "kalman.h"
+#include "miscellaneous.h"
 
 // the communication task
 void kalmanTask(void *p);
