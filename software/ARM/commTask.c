@@ -52,7 +52,7 @@ void commTask(void *p) {
 
 	while (1) {
 
-		if (xQueueReceive(uartQueue, &inChar, 100)) {
+		if (xQueueReceive(usartRxQueue, &inChar, 100)) {
 
 			if (receivingMessage) {
 
@@ -127,9 +127,9 @@ void commTask(void *p) {
 
 				char tempString[60];
 
-				sprintf(tempString, "%8.4f %d\n\r", vector_float_get(elevatorHandler.states, 1), uxQueueSpacesAvailable(comm2kalmanQueue));
+				sprintf(tempString, "%8.4f\n\r", vector_float_get(elevatorHandler.states, 1));
 
-				USART_puts(UART4, tempString);
+				Usart4PutString(tempString);
 
 				xQueueSend(comm2kalmanQueue, &mes, 100);
 

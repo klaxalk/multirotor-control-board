@@ -8,14 +8,16 @@
 #include "system.h"
 #include "kalmanTask.h"
 
-QueueHandle_t * uartQueue;
+QueueHandle_t * usartRxQueue;
+QueueHandle_t * usartTxQueue;
 
 QueueHandle_t * comm2kalmanQueue;
 
 void boardInit() {
 
-    // create usart input buffer
-    uartQueue = xQueueCreate(64, sizeof(char));
+    // create queues for usart
+    usartRxQueue = xQueueCreate(16, sizeof(char));
+    usartTxQueue = xQueueCreate(16, sizeof(char));
 
     // create a queue from commTask to kalmanTask
     comm2kalmanQueue = xQueueCreate(10, sizeof(px4flowMessage));

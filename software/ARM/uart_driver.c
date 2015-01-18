@@ -74,6 +74,7 @@ void init_USART4(uint32_t baudrate) {
 	 */
 
 	USART_ITConfig(UART4, USART_IT_RXNE, ENABLE); // enable the USART1 receive interrupt
+	USART_ITConfig(UART4, USART_IT_TXE, ENABLE); // enable the USART1 receive interrupt
 
 	NVIC_InitStructure.NVIC_IRQChannel = UART4_IRQn;		 // we want to configure the USART1 interrupts
 	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 10;// this sets the priority group of the USART1 interrupts
@@ -99,12 +100,25 @@ void init_USART4(uint32_t baudrate) {
  * Note 2: At the moment it takes a volatile char because the received_string variable
  * 		   declared as volatile char --> otherwise the compiler will spit out warnings
  * */
-void USART_puts(USART_TypeDef* USARTx, volatile char *s) {
 
-	while(*s){
-		// wait until data register is empty
-		while( !(USARTx->SR & 0x00000040) );
-		USART_SendData(USARTx, *s);
+uint32_t usart4PutChar(char ch) {
+
+	if(xQueueSend(usartTxQueue, &ch, 10) == pdPASS) {
+
+		USART_ITConfig(UART4, USART_IT_TXE, ENABLE);
+		return pdTRUE;
+    } else {
+    	return pdFAIL;
+    }
+}
+
+void Usart4PutString(volatile char *s) {
+
+	while (*s) {
+
+		usart4PutChar(*s);
+		//while( !(UART4->SR & 0x00000040) );
+		//		USART_SendData(UART4, *s);
 		*s++;
 	}
 }
@@ -120,8 +134,20 @@ void UART4_IRQHandler(void) {
 
 		ch = (uint8_t) USART_ReceiveData(UART4);
 
-		xQueueSendToBackFromISR(uartQueue, &ch, &xHigherPriorityTaskWoken);
-		//xQueueSend(uartQueue, &ch, 0);
+		xQueueSendToBackFromISR(usartRxQueue, &ch, &xHigherPriorityTaskWoken);
+	}
+
+	if (USART_GetITStatus(UART4, USART_IT_TXE) != RESET) {
+
+		if(xQueueReceiveFromISR(usartTxQueue, &ch, &xHigherPriorityTaskWoken)) {
+
+			USART_SendData(UART4, ch);
+
+		} else {
+
+			//disable Transmit Data Register empty interrupt
+			USART_ITConfig(UART4, USART_IT_TXE, DISABLE);
+		}
 	}
 
 	portEND_SWITCHING_ISR(xHigherPriorityTaskWoken);

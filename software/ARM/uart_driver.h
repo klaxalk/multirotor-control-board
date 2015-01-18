@@ -24,6 +24,8 @@
 volatile char received_string[MAX_STRLEN+1]; // this will hold the recieved string
 
 void init_USART4(uint32_t baudrate);
-void USART_puts(USART_TypeDef* USARTx, volatile char *s);
+
+uint32_t Usart4PutChar(char ch);
+void Usart4PutString(volatile char *s);
 
 #endif /* INIT_BOARD_H_ */

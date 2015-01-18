@@ -38,11 +38,12 @@
 
 GPIO_InitTypeDef	GPIO_InitStruct;
 
-// uart input queue
-extern QueueHandle_t * uartQueue;
+// queues for usart
+QueueHandle_t * usartRxQueue;
+QueueHandle_t * usartTxQueue;
 
 // queue from commTask to kalmanTask
-extern QueueHandle_t * comm2kalmanQueue;
+QueueHandle_t * comm2kalmanQueue;
 
 #define led_toggle() GPIO_ToggleBits(GPIOC, GPIO_Pin_2)
 #define led_on() GPIO_WriteBit(GPIOC, GPIO_Pin_2, 1)
