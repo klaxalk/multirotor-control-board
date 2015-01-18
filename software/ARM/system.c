@@ -6,20 +6,25 @@
  */
 
 #include "system.h"
+#include "kalmanTask.h"
 
 QueueHandle_t * uartQueue;
 
+QueueHandle_t * comm2kalmanQueue;
+
 void boardInit() {
+
+    // create usart input buffer
+    uartQueue = xQueueCreate(64, sizeof(char));
+
+    // create a queue from commTask to kalmanTask
+    comm2kalmanQueue = xQueueCreate(10, sizeof(px4flowMessage));
 
 	// set th clock and initialize the GPIO
 	gpioInit();
 
 	// set the UART
     init_USART4(115200);
-    USART_puts(UART4, "Init complete! Hello World\n\r");
-
-    // create usart input buffer
-    uartQueue = xQueueCreate(24, sizeof(char));
 }
 
 void gpioInit() {

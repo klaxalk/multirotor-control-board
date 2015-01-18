@@ -13,8 +13,6 @@
 float dt = 0.015;
 
 void controllersTask(void *p) {
-	
-	usartBufferPutString(usart_buffer_4, "---------------------------------\n\r", 10);
 
 	while (1) {
 		

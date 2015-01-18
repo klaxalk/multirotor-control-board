@@ -93,7 +93,8 @@
 /* -------------------------------------------------------------------- */
 /*	Contains signals from RC receiver									*/
 /* -------------------------------------------------------------------- */
-extern volatile uint16_t RCchannel[9];
+volatile uint16_t RCchannel[9];
+volatile uint16_t outputChannels[6];
 
 /* -------------------------------------------------------------------- */
 /*	Buffers for USARTs													*/

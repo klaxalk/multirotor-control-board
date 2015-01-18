@@ -14,9 +14,9 @@ float dt = 0.015;
 #define NUMBER_OF_INPUTS 1
 #define NUMBER_OF_MEASURED_STATES 1
 
-void kalmanTask(void *p) {
+kalmanHandler elevatorHandler;
 
-	kalmanHandler elevatorHandler;
+void kalmanTask(void *p) {
 
 	/* -------------------------------------------------------------------- */
 	/* System A matrix														*/
@@ -164,7 +164,7 @@ void kalmanTask(void *p) {
 	elevatorHandler.number_of_inputs = NUMBER_OF_INPUTS;
 
 	/* -------------------------------------------------------------------- */
-	/* Input vector													*/
+	/*	Input vector														*/
 	/* -------------------------------------------------------------------- */
 	vector_float input_vector;
 	input_vector.name = "Inputs vector";
@@ -175,20 +175,28 @@ void kalmanTask(void *p) {
 
 	kalmanInit(&elevatorHandler);
 
-	vector_float_set(&input_vector, 1, 3);
-	vector_float_set(&measurement_vector, 1, 0.15);
-
-	int16_t i;
-	for (i = 0; i < 140; i++) { //140
-
-		kalmanIteration(&elevatorHandler, &measurement_vector, &input_vector, &A_matrix, &B_matrix, &R_matrix, &Q_matrix, &C_matrix, dt);
-	}
-
-	vector_float_print(elevatorHandler.states);
-	matrix_float_print(elevatorHandler.covariance);
+	px4flowMessage message;
 
 	while (1) {
 
+		if (xQueueReceive(comm2kalmanQueue, &message, 10)) {
 
+			dt = message.dt;
+
+			// update the A_matrix
+			matrix_float_set(&A_matrix, 1, 2, dt);
+			matrix_float_set(&A_matrix, 2, 3, 2.4239*dt);
+
+			// update the B_matrix
+			matrix_float_set(&B_matrix, 3, 1, 0.1219*dt);
+
+			// set the input vector
+			vector_float_set(&input_vector, 1, message.elevatorInput);
+
+			// set the measurement vector
+			vector_float_set(&measurement_vector, 1, message.elevatorSpeed);
+
+			kalmanIteration(&elevatorHandler, &measurement_vector, &input_vector, &A_matrix, &B_matrix, &R_matrix, &Q_matrix, &C_matrix, message.dt);
+		}
 	}
 }

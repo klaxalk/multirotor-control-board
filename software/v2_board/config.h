@@ -33,17 +33,6 @@
 */
 
 //~ --------------------------------------------------------------------
-//~ Choose the PX4Flow camera orientation
-//~ --------------------------------------------------------------------
-
-// Choose where the XP4Flow's X axis is pointing
-#define PX4_CAMERA_ORIENTATION BACKWARD
-/*
-	FORWARD
-	BACKWARD
-*/
-
-//~ --------------------------------------------------------------------
 //~ What MCU is this code compiled for?
 //~ ... Used for some platform specific code in matrixLib
 //~ --------------------------------------------------------------------

@@ -76,7 +76,7 @@ void init_USART4(uint32_t baudrate) {
 	USART_ITConfig(UART4, USART_IT_RXNE, ENABLE); // enable the USART1 receive interrupt
 
 	NVIC_InitStructure.NVIC_IRQChannel = UART4_IRQn;		 // we want to configure the USART1 interrupts
-	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;// this sets the priority group of the USART1 interrupts
+	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 10;// this sets the priority group of the USART1 interrupts
 	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;		 // this sets the subpriority inside the group
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;			 // the USART1 interrupts are globally enabled
 	NVIC_Init(&NVIC_InitStructure);							 // the properties are passed to the NVIC_Init function which takes care of the low level stuff
@@ -112,12 +112,18 @@ void USART_puts(USART_TypeDef* USARTx, volatile char *s) {
 // this is the interrupt request handler (IRQ) for ALL USART4 interrupts
 void UART4_IRQHandler(void) {
 
+	long xHigherPriorityTaskWoken = pdFALSE;
+	uint8_t ch;
+
 	// check if the USART4 receive interrupt flag was set
-	if (USART_GetITStatus(UART4, USART_IT_RXNE)) {
+	if (USART_GetITStatus(UART4, USART_IT_RXNE) != RESET) {
 
-		static uint8_t cnt = 0; // this counter is used to determine the string length
+		ch = (uint8_t) USART_ReceiveData(UART4);
 
-		xQueueSend(uartQueue, &UART4->DR, 1);
+		xQueueSendToBackFromISR(uartQueue, &ch, &xHigherPriorityTaskWoken);
+		//xQueueSend(uartQueue, &ch, 0);
 	}
+
+	portEND_SWITCHING_ISR(xHigherPriorityTaskWoken);
 }
 
