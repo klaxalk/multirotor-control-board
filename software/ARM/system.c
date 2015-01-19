@@ -13,6 +13,8 @@ QueueHandle_t * usartTxQueue;
 
 QueueHandle_t * comm2kalmanQueue;
 
+QueueHandle_t * kalman2mpcQueue;
+
 void boardInit() {
 
     // create queues for usart

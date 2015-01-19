@@ -8,6 +8,7 @@
 #include "system.h"
 #include "kalman.h"
 #include "CMatrixLib.h"
+#include "uart_driver.h"
 
 float dt = 0.015;
 #define NUMBER_OF_STATES 3

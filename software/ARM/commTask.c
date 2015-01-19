@@ -125,11 +125,12 @@ void commTask(void *p) {
 				mes.elevatorInput = readFloat(messageBuffer, &idx);
 				mes.aileronInput = readFloat(messageBuffer, &idx);
 
+				// send human readable values of¨
+				/*
 				char tempString[60];
-
 				sprintf(tempString, "%8.6f %8.6f\n\r", vector_float_get(elevatorHandler.states, 1), vector_float_get(aileronHandler.states, 1));
-
 				Usart4PutString(tempString);
+				*/
 
 				xQueueSend(comm2kalmanQueue, &mes, 100);
 

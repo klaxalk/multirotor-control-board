@@ -163,8 +163,8 @@ void kalmanInit(kalmanHandler * handler) {
 	matrix_float_set_identity(handler->covariance);
 
 	// p.p.
-	vector_float_set(handler->states, 1, 1);
-	vector_float_set(handler->states, 2, -0.1);
+	vector_float_set(handler->states, 1, 0);
+	vector_float_set(handler->states, 2, 0);
 	vector_float_set(handler->states, 3, 0);
 }
 

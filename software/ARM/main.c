@@ -8,6 +8,7 @@
 #include "system.h"
 #include "commTask.h"
 #include "kalmanTask.h"
+#include "mpcTask.h"
 
 void blikej() {
 
@@ -38,6 +39,11 @@ int main(void)
 	/*	Start the kalman filter task										*/
 	/* -------------------------------------------------------------------- */
 	xTaskCreate(kalmanTask, (char*) "kalman", 4092, NULL, 2, NULL);
+
+	/* -------------------------------------------------------------------- */
+	/*	Start the mpc task filter task										*/
+	/* -------------------------------------------------------------------- */
+	xTaskCreate(mpcTask, (char*) "mpcTask", 4092, NULL, 2, NULL);
 
 	/* -------------------------------------------------------------------- */
 	/*	Start the FreeRTOS scheduler										*/

@@ -45,6 +45,9 @@ QueueHandle_t * usartTxQueue;
 // queue from commTask to kalmanTask
 QueueHandle_t * comm2kalmanQueue;
 
+// queue from kalmanTask to mpcTask
+QueueHandle_t * kalman2mpcQueue;
+
 #define led_toggle() GPIO_ToggleBits(GPIOC, GPIO_Pin_2)
 #define led_on() GPIO_WriteBit(GPIOC, GPIO_Pin_2, 1)
 #define led_off() GPIO_WriteBit(GPIOC, GPIO_Pin_2, 0)
