@@ -13,6 +13,7 @@
 #include "miscellaneous.h"
 
 kalmanHandler elevatorHandler;
+kalmanHandler aileronHandler;
 
 typedef struct {
 

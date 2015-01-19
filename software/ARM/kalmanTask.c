@@ -15,6 +15,7 @@ float dt = 0.015;
 #define NUMBER_OF_MEASURED_STATES 1
 
 kalmanHandler elevatorHandler;
+kalmanHandler aileronHandler;
 
 void kalmanTask(void *p) {
 
@@ -41,26 +42,48 @@ void kalmanTask(void *p) {
 	B_matrix.data = (float *) data_B;
 
 	/* -------------------------------------------------------------------- */
-	/* Kalman states vector													*/
+	/* Elevator kalman states vector										*/
 	/* -------------------------------------------------------------------- */
-	vector_float states_vector;
-	elevatorHandler.states = &states_vector;
-	states_vector.name = "Kalman states vector";
-	states_vector.length = NUMBER_OF_STATES;
-	states_vector.orientation = 0;
-	float data_states[NUMBER_OF_STATES];
-	states_vector.data = (float *) data_states;
+	vector_float elevator_states_vector;
+	elevatorHandler.states = &elevator_states_vector;
+	elevator_states_vector.name = "Elevator kalman states vector";
+	elevator_states_vector.length = NUMBER_OF_STATES;
+	elevator_states_vector.orientation = 0;
+	float data_elevator_states[NUMBER_OF_STATES];
+	elevator_states_vector.data = (float *) data_elevator_states;
 
 	/* -------------------------------------------------------------------- */
-	/* Kalman covariance matrix												*/
+	/* Aileron kalman states vector											*/
 	/* -------------------------------------------------------------------- */
-	matrix_float covariance_matrix;
-	elevatorHandler.covariance = &covariance_matrix;
-	covariance_matrix.name = "Kalman covariance matrix";
-	covariance_matrix.height = NUMBER_OF_STATES;
-	covariance_matrix.width = NUMBER_OF_STATES;
-	float data_covariance[NUMBER_OF_STATES*NUMBER_OF_STATES];
-	covariance_matrix.data = (float *) data_covariance;
+	vector_float aileron_states_vector;
+	aileronHandler.states = &aileron_states_vector;
+	aileron_states_vector.name = "Aileron kalman states vector";
+	aileron_states_vector.length = NUMBER_OF_STATES;
+	aileron_states_vector.orientation = 0;
+	float data_aileron_states[NUMBER_OF_STATES];
+	aileron_states_vector.data = (float *) data_aileron_states;
+
+	/* -------------------------------------------------------------------- */
+	/* Elevator kalman covariance matrix												*/
+	/* -------------------------------------------------------------------- */
+	matrix_float elevator_covariance_matrix;
+	elevatorHandler.covariance = &elevator_covariance_matrix;
+	elevator_covariance_matrix.name = "Elevator kalman covariance matrix";
+	elevator_covariance_matrix.height = NUMBER_OF_STATES;
+	elevator_covariance_matrix.width = NUMBER_OF_STATES;
+	float data_elevator_covariance[NUMBER_OF_STATES*NUMBER_OF_STATES];
+	elevator_covariance_matrix.data = (float *) data_elevator_covariance;
+
+	/* -------------------------------------------------------------------- */
+	/* Aileron kalman covariance matrix												*/
+	/* -------------------------------------------------------------------- */
+	matrix_float aileron_covariance_matrix;
+	aileronHandler.covariance = &aileron_covariance_matrix;
+	aileron_covariance_matrix.name = "Aileron kalman covariance matrix";
+	aileron_covariance_matrix.height = NUMBER_OF_STATES;
+	aileron_covariance_matrix.width = NUMBER_OF_STATES;
+	float data_aileron_covariance[NUMBER_OF_STATES*NUMBER_OF_STATES];
+	aileron_covariance_matrix.data = (float *) data_aileron_covariance;
 
 	/* -------------------------------------------------------------------- */
 	/* Measurement vector													*/
@@ -110,58 +133,55 @@ void kalmanTask(void *p) {
 
 	// temp vector
 	vector_float temp_vector_n;
-	elevatorHandler.temp_vector_n = &temp_vector_n;
 	float temp_vector_data[NUMBER_OF_STATES];
-	elevatorHandler.temp_vector_n->name = "temp_vector";
-	elevatorHandler.temp_vector_n->data = (float *) &temp_vector_data;
-	elevatorHandler.temp_vector_n->length = NUMBER_OF_STATES;
-	elevatorHandler.temp_vector_n->orientation = 0;
+	temp_vector_n.name = "temp_vector";
+	temp_vector_n.data = (float *) &temp_vector_data;
+	temp_vector_n.length = NUMBER_OF_STATES;
+	temp_vector_n.orientation = 0;
+
+	// temp vector2
+	vector_float temp_vector2_u;
+	float temp_vector2_data[NUMBER_OF_INPUTS];
+	temp_vector2_u.data = (float *) &temp_vector2_data;
+	temp_vector2_u.length = NUMBER_OF_INPUTS;
+	temp_vector2_u.orientation = 0;
 
 	// temp matrix
 	matrix_float temp_matrix_n_n;
-	elevatorHandler.temp_matrix_n_n = &temp_matrix_n_n;
 	float temp_matrix_data[NUMBER_OF_STATES*NUMBER_OF_STATES];
-	elevatorHandler.temp_matrix_n_n->name = "temp_matrix";
-	elevatorHandler.temp_matrix_n_n->data = (float *) &temp_matrix_data;
-	elevatorHandler.temp_matrix_n_n->height = NUMBER_OF_STATES;
-	elevatorHandler.temp_matrix_n_n->width = NUMBER_OF_STATES;
+	temp_matrix_n_n.name = "temp_matrix";
+	temp_matrix_n_n.data = (float *) &temp_matrix_data;
+	temp_matrix_n_n.height = NUMBER_OF_STATES;
+	temp_matrix_n_n.width = NUMBER_OF_STATES;
 
 	// temp matrix2
 	matrix_float temp_matrix2_n_n;
-	elevatorHandler.temp_matrix2_n_n = &temp_matrix2_n_n;
 	float temp_matrix2_data[NUMBER_OF_STATES*NUMBER_OF_STATES];
-	elevatorHandler.temp_matrix2_n_n->name = "temp_matrix2";
-	elevatorHandler.temp_matrix2_n_n->data = (float *) &temp_matrix2_data;
-	elevatorHandler.temp_matrix2_n_n->height = NUMBER_OF_STATES;
-	elevatorHandler.temp_matrix2_n_n->width = NUMBER_OF_STATES;
+	temp_matrix2_n_n.name = "temp_matrix2";
+	temp_matrix2_n_n.data = (float *) &temp_matrix2_data;
+	temp_matrix2_n_n.height = NUMBER_OF_STATES;
+	temp_matrix2_n_n.width = NUMBER_OF_STATES;
 
 	// temp matrix for computing the kalman gain
 	matrix_float temp_matrix3_u_n;
-	elevatorHandler.temp_matrix3_u_n = &temp_matrix3_u_n;
 	float temp_matrix3_data[NUMBER_OF_INPUTS*NUMBER_OF_STATES];
-	elevatorHandler.temp_matrix3_u_n->name = "temp_matrix3";
-	elevatorHandler.temp_matrix3_u_n->data = (float *) &temp_matrix3_data;
-	elevatorHandler.temp_matrix3_u_n->height = NUMBER_OF_INPUTS;
-	elevatorHandler.temp_matrix3_u_n->width = NUMBER_OF_STATES;
+	temp_matrix3_u_n.name = "temp_matrix3";
+	temp_matrix3_u_n.data = (float *) &temp_matrix3_data;
+	temp_matrix3_u_n.height = NUMBER_OF_INPUTS;
+	temp_matrix3_u_n.width = NUMBER_OF_STATES;
 
 	matrix_float temp_matrix4_u_u;
 	float temp_matrix4_data[NUMBER_OF_INPUTS*NUMBER_OF_INPUTS];
-	elevatorHandler.temp_matrix4_u_u = &temp_matrix4_u_u;
-	elevatorHandler.temp_matrix4_u_u->name = "temp_matrix4";
-	elevatorHandler.temp_matrix4_u_u->data = (float *) &temp_matrix4_data;
-	elevatorHandler.temp_matrix4_u_u->height = NUMBER_OF_INPUTS;
-	elevatorHandler.temp_matrix4_u_u->width = NUMBER_OF_INPUTS;
-
-	// temp vector2
-	vector_float temp_vector2;
-	elevatorHandler.temp_vector_u = &temp_vector2;
-	float temp_vector2_data[NUMBER_OF_INPUTS];
-	elevatorHandler.temp_vector_u->data = (float *) &temp_vector2_data;
-	elevatorHandler.temp_vector_u->length = NUMBER_OF_INPUTS;
-	elevatorHandler.temp_vector_u->orientation = 0;
+	temp_matrix4_u_u.name = "temp_matrix4";
+	temp_matrix4_u_u.data = (float *) &temp_matrix4_data;
+	temp_matrix4_u_u.height = NUMBER_OF_INPUTS;
+	temp_matrix4_u_u.width = NUMBER_OF_INPUTS;
 
 	elevatorHandler.number_of_states = NUMBER_OF_STATES;
 	elevatorHandler.number_of_inputs = NUMBER_OF_INPUTS;
+
+	aileronHandler.number_of_states = NUMBER_OF_STATES;
+	aileronHandler.number_of_inputs = NUMBER_OF_INPUTS;
 
 	/* -------------------------------------------------------------------- */
 	/*	Input vector														*/
@@ -173,15 +193,38 @@ void kalmanTask(void *p) {
 	float data_input[1];
 	input_vector.data = (float *) data_input;
 
+	/* -------------------------------------------------------------------- */
+	/*	Copy temp matrices													*/
+	/* -------------------------------------------------------------------- */
+
+	elevatorHandler.temp_matrix_n_n = &temp_matrix_n_n;
+	elevatorHandler.temp_matrix2_n_n = &temp_matrix2_n_n;
+	elevatorHandler.temp_matrix3_u_n = &temp_matrix3_u_n;
+	elevatorHandler.temp_matrix4_u_u = &temp_matrix4_u_u;
+	elevatorHandler.temp_vector_n = &temp_vector_n;
+	elevatorHandler.temp_vector_u = &temp_vector2_u;
+
+	aileronHandler.temp_matrix_n_n = &temp_matrix_n_n;
+	aileronHandler.temp_matrix2_n_n = &temp_matrix2_n_n;
+	aileronHandler.temp_matrix3_u_n = &temp_matrix3_u_n;
+	aileronHandler.temp_matrix4_u_u = &temp_matrix4_u_u;
+	aileronHandler.temp_vector_n = &temp_vector_n;
+	aileronHandler.temp_vector_u = &temp_vector2_u;
+
 	kalmanInit(&elevatorHandler);
+	kalmanInit(&aileronHandler);
 
 	px4flowMessage message;
 
 	while (1) {
 
-		if (xQueueReceive(comm2kalmanQueue, &message, 10)) {
+		if (xQueueReceive(comm2kalmanQueue, &message, 100)) {
 
 			dt = message.dt;
+
+			/* -------------------------------------------------------------------- */
+			/*	Prepare matrices													*/
+			/* -------------------------------------------------------------------- */
 
 			// update the A_matrix
 			matrix_float_set(&A_matrix, 1, 2, dt);
@@ -190,13 +233,29 @@ void kalmanTask(void *p) {
 			// update the B_matrix
 			matrix_float_set(&B_matrix, 3, 1, 0.1219*dt);
 
+			/* -------------------------------------------------------------------- */
+			/*	Compute elevator kalman												*/
+			/* -------------------------------------------------------------------- */
+
 			// set the input vector
 			vector_float_set(&input_vector, 1, message.elevatorInput);
 
 			// set the measurement vector
 			vector_float_set(&measurement_vector, 1, message.elevatorSpeed);
 
-			kalmanIteration(&elevatorHandler, &measurement_vector, &input_vector, &A_matrix, &B_matrix, &R_matrix, &Q_matrix, &C_matrix, message.dt);
+			kalmanIteration(&elevatorHandler, &measurement_vector, &input_vector, &A_matrix, &B_matrix, &R_matrix, &Q_matrix, &C_matrix, dt);
+
+			/* -------------------------------------------------------------------- */
+			/*	Compute aileron kalman												*/
+			/* -------------------------------------------------------------------- */
+
+			// set the input vector
+			vector_float_set(&input_vector, 1, message.aileronInput);
+
+			// set the measurement vector
+			vector_float_set(&measurement_vector, 1, message.aileronSpeed);
+
+			kalmanIteration(&aileronHandler, &measurement_vector, &input_vector, &A_matrix, &B_matrix, &R_matrix, &Q_matrix, &C_matrix, dt);
 		}
 	}
 }
