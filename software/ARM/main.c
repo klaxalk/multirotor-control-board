@@ -10,19 +10,8 @@
 #include "kalmanTask.h"
 #include "mpcTask.h"
 
-void blikej() {
-
-	while (1) {
-
-		led_toggle();
-
-		vTaskDelay(500);
-	}
-}
-
 int main(void)
 {
-
 
 	// this line is one ******* SUNDAY
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_4);

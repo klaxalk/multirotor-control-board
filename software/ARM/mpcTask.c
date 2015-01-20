@@ -7,13 +7,53 @@
 #include "mpcMatrices.h"
 #include "uart_driver.h"
 #include "system.h"
+#include "miscellaneous.h"
 
+// precomputed matrices
 matrix_float A_roof;
 vector_float Q_roof_diag;
 matrix_float B_roof;
 matrix_float H_inv;
 
-void initMpcMatrices() {
+// aux matrices
+vector_float temp_vector1;
+vector_float temp_vector2;
+vector_float temp_vector3;
+
+vector_float states;
+
+void calculateMPC() {
+
+	int i;
+
+	// tenp_vector1 <- A_roof*states
+	matrix_float_mul_vec_right(&A_roof, &states, &temp_vector1);
+
+	//
+	// now subtract the state_reference vector
+	//
+
+	// X_0'*Q_roof
+	for (i = 1; i <= NUMBER_OF_STATES*HORIZON_LEN; i++) {
+
+		vector_float_set(&temp_vector1, i, vector_float_get(&temp_vector1, i) * vector_float_get(&Q_roof_diag, i));
+	}
+
+	vector_float_transpose(&temp_vector1);
+
+	// c = (X_0'*Q_roof)*B_roof
+	matrix_float_mul_vec_left(&B_roof, &temp_vector1, &temp_vector2);
+
+	vector_float_transpose(&temp_vector2);
+
+	// c./(-2)
+	vector_float_times(&temp_vector2, (float) -0.5);
+
+	// H_inv*(c./(-2))
+	matrix_float_mul_vec_right(&H_inv, &temp_vector2, &temp_vector3);
+}
+
+void mpcTask(void *p) {
 
 	// setup the A_roof matrix
 	A_roof.data = (float*) &A_roof_data;
@@ -25,6 +65,7 @@ void initMpcMatrices() {
 	Q_roof_diag.data = (float*) &Q_roof_diag_data;
 	Q_roof_diag.length = Q_ROOF_DIAG_SIZE;
 	Q_roof_diag.name = "Q_roof_diag vector";
+	Q_roof_diag.orientation = 0;
 
 	// setup the B_roof matrix
 	B_roof.data = (float*) &B_roof_data;
@@ -38,9 +79,46 @@ void initMpcMatrices() {
 	H_inv.width = H_INV_WIDTH;
 	H_inv.name = "H_inv matrix";
 
-}
+	// temp_vector1
+	float temp_vector1_data[NUMBER_OF_STATES*HORIZON_LEN];
+	temp_vector1.data = (float*) &temp_vector1_data;
+	temp_vector1.length = NUMBER_OF_STATES*HORIZON_LEN;
+	temp_vector1.orientation = 0;
+	temp_vector1.name = "temp_vector1";
 
-void mpcTask(void *p) {
+	// temp_vector2
+	float temp_vector2_data[REDUCED_HORIZON];
+	temp_vector2.data = (float*) &temp_vector2_data;
+	temp_vector2.length = REDUCED_HORIZON;
+	temp_vector2.orientation = 1;
+	temp_vector2.name = "temp_vector2";
 
+	// temp_vector3
+	float temp_vector3_data[REDUCED_HORIZON];
+	temp_vector3.data = (float*) &temp_vector3_data;
+	temp_vector3.length = REDUCED_HORIZON;
+	temp_vector3.orientation = 0;
+	temp_vector3.name = "temp_vector3";
 
+	// current state vector
+	float states_data[NUMBER_OF_STATES] = {1, 0, 0};
+	states.data = (float*) &states_data;
+	states.length = NUMBER_OF_STATES;
+	states.name = "Current states";
+	states.orientation = 0;
+
+	vTaskDelay(500);
+
+	char tempString[60];
+	sprintf(tempString, "pred %i\n\r", (int) xTaskGetTickCount());
+	Usart4PutString(tempString);
+
+	calculateMPC();
+
+	sprintf(tempString, "pred %i\n\r", (int) xTaskGetTickCount());
+	Usart4PutString(tempString);
+
+	// vector_float_print(&temp_vector3);
+
+	vTaskDelay(500);
 }

@@ -9,4 +9,6 @@
 
 void mpcTask(void *p);
 
+vector_float temp_vector1;
+
 #endif /* MPCTASK_H_ */

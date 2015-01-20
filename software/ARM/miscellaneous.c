@@ -10,7 +10,7 @@
 // print the matrix to serial output
 void matrix_float_print(const matrix_float * a) {
 
-	int8_t i, j;
+	int_least16_t i, j;
 	char temp[50];
 
 	Usart4PutString("Matrix: ");
@@ -21,13 +21,15 @@ void matrix_float_print(const matrix_float * a) {
 
 		for (j = 1; j <= a->width; j++) {
 
-			sprintf(temp, "%12.8f", matrix_float_get(a, i, j));
+			sprintf(temp, "%6.2f", matrix_float_get(a, i, j));
 			Usart4PutString(temp);
 
 			if (j < a->width)
 			Usart4PutString(", ");
 
 		}
+
+		vTaskDelay(5);
 
 		Usart4PutString("\n\r");
 	}
@@ -37,8 +39,8 @@ void matrix_float_print(const matrix_float * a) {
 // print the matrix to serial output
 void vector_float_print(const vector_float * a) {
 
-	int8_t i;
-	char temp[40];
+	int_least16_t i;
+	char temp[60];
 
 	Usart4PutString("Vector: ");
 	Usart4PutString(a->name);
@@ -46,7 +48,7 @@ void vector_float_print(const vector_float * a) {
 
 	for (i = 1; i <= a->length; i++) {
 
-		sprintf(temp, "%8.4f", vector_float_get(a, i));
+		sprintf(temp, "%12.6f", vector_float_get(a, i));
 		Usart4PutString(temp);
 
 		if (a->orientation == 1) {
@@ -59,6 +61,7 @@ void vector_float_print(const vector_float * a) {
 			Usart4PutString("\n\r");
 		}
 
+		vTaskDelay(10);
 	}
 	Usart4PutString("\n\r");
 }
