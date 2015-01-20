@@ -226,11 +226,11 @@ void commTask(void *p) {
 			// clear the crc
 			crcOut = 0;
 			sendChar('a', &crcOut);		// this character initiates the transmition
-			sendChar(1+4, &crcOut);		// this will be the size of the message
+			sendChar(1+8, &crcOut);		// this will be the size of the message
 
 			sendChar('1', &crcOut);		// id of the message
-			sendInt16(mpcMessage.elevatorOutput, &crcOut);
-			sendInt16(mpcMessage.aileronOutput, &crcOut);
+			sendFloat(mpcMessage.elevatorOutput, &crcOut);
+			sendFloat(mpcMessage.aileronOutput, &crcOut);
 
 			sendChar(crcOut, &crcOut);
 		}

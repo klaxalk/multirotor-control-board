@@ -121,7 +121,7 @@ void kalmanIteration(kalmanHandler * handler, const vector_float * measurement, 
 
 	vector_float_add(handler->temp_vector_u, measurement);
 
-	// temp_vector = K*temp_vector2
+	// temp_vector = K*tem p_vector2
 	matrix_float_mul_vec_right(&K, handler->temp_vector_u, handler->temp_vector_n);
 
 	// states = states + temp_vector2

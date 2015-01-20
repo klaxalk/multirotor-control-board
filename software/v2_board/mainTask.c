@@ -27,7 +27,7 @@ void mainTask(void *p) {
 		main_cycle++;
 		
 		// controller on/off
-		if (abs(RCchannel[AUX1] - PPM_IN_MIDDLE_LENGTH) < 200) {
+		if (abs(RCchannel[AUX1] - PPM_IN_MIDDLE_LENGTH) < 500) {
 		
 			if (previous_AUX3 == 0) {
 				enableAltitudeController();
@@ -36,7 +36,7 @@ void mainTask(void *p) {
 			disableMpcController();
 			previous_AUX3 = 1;
 			
-		} else if (RCchannel[AUX1] > (PPM_IN_MIDDLE_LENGTH + 200)) {
+		} else if (RCchannel[AUX1] > (PPM_IN_MIDDLE_LENGTH + 500)) {
 			
 			if (previous_AUX3 == 1) {
 				

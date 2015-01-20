@@ -113,7 +113,7 @@ void commTask(void *p) {
 			
 			if (messageId == '1') {
 				
-				int16_t tempInt;
+				float tempFloat;
 				
 				/* -------------------------------------------------------------------- */
 				/*	Saturate and save the incoming values								*/
@@ -121,29 +121,33 @@ void commTask(void *p) {
 				
 				portENTER_CRITICAL();
 				
-				tempInt = readInt16(stmRxBuffer, &idx);
-				if (tempInt > MPC_SATURATION) {
+				tempFloat = readFloat(stmRxBuffer, &idx);
+				if (tempFloat > MPC_SATURATION) {
 					mpcElevatorOutput = MPC_SATURATION;
-				} else if (tempInt < -MPC_SATURATION) {
+				} else if (tempFloat < -MPC_SATURATION) {
 					mpcElevatorOutput = -MPC_SATURATION;
 				} else {
-					mpcElevatorOutput = tempInt;
+					mpcElevatorOutput = tempFloat;
 				}
 				
-				tempInt = readInt16(stmRxBuffer, &idx);
-				if (tempInt > MPC_SATURATION) {
+				tempFloat = readFloat(stmRxBuffer, &idx);
+				if (tempFloat > MPC_SATURATION) {
 					mpcAileronOutput = MPC_SATURATION;
-					} else if (tempInt < -MPC_SATURATION) {
+					} else if (tempFloat < -MPC_SATURATION) {
 					mpcAileronOutput = -MPC_SATURATION;
 					} else {
-					mpcAileronOutput = tempInt;
+					mpcAileronOutput = tempFloat;
 				}
+				
+				// convert degrees to the time units of PPM
+				controllerElevatorOutput = (int16_t) 10*mpcElevatorOutput;
+				controllerAileronOutput = (int16_t) 10*mpcAileronOutput;
 				
 				portEXIT_CRITICAL();
 				
 				char temp[60];
 				sprintf(temp, "%d %d\n\r", mpcElevatorOutput, mpcAileronOutput);
-				usartBufferPutString(usart_buffer_4, temp, 10);
+				usartBufferPutString(usart_buffer_xbee, temp, 10);
 			}
 			
 			stmMessageReceived = 0;

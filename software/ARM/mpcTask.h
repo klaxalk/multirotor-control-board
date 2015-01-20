@@ -13,8 +13,8 @@ void mpcTask(void *p);
 
 typedef struct {
 
-	int_least16_t elevatorOutput;
-	int_least16_t aileronOutput;
+	float elevatorOutput;
+	float aileronOutput;
 } mpcOutputMessage;
 
 #endif /* MPCTASK_H_ */
