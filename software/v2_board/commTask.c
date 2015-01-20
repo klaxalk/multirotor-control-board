@@ -11,71 +11,6 @@
 #include <stdio.h>
 #include "controllers.h"
 
-float readFloat(char * message, int * indexFrom) {
-
-	float tempFloat;
-
-	char * ukazatel = (char*) &tempFloat;
-	*(ukazatel++) = message[(*indexFrom)++];
-	*(ukazatel++) = message[(*indexFrom)++];
-	*(ukazatel++) = message[(*indexFrom)++];
-	*(ukazatel++) = message[(*indexFrom)++];
-
-	return tempFloat;
-}
-
-int16_t readInt16(char * message, int * indexFrom) {
-
-	int16_t tempInt;
-
-	char * ukazatel = (char*) &tempInt;
-	*(ukazatel++) = message[(*indexFrom)++];
-	*(ukazatel++) = message[(*indexFrom)++];
-
-	return tempInt;
-}
-
-char readChar(char * message, int * indexFrom) {
-
-	char tempChar = message[(*indexFrom)++];
-
-	return tempChar;
-}
-
-void sendFloat(UsartBuffer * usartBuffer, const float var, char * crc) {
-	
-	char * ukazatel = (char*) &var;
-	
-	usartBufferPutByte(usartBuffer, *(ukazatel), 10);
-	*crc += *(ukazatel);
-	
-	usartBufferPutByte(usartBuffer, *(ukazatel+1), 10);
-	*crc += *(ukazatel+1);
-	
-	usartBufferPutByte(usartBuffer, *(ukazatel+2), 10);
-	*crc += *(ukazatel+2);
-	
-	usartBufferPutByte(usartBuffer, *(ukazatel+3), 10);
-	*crc += *(ukazatel+3);
-}
-
-void sendInt16(UsartBuffer * usartBuffer, const int16_t var, char * crc) {
-	
-	char * ukazatel = (char*) &var;
-	
-	usartBufferPutByte(usartBuffer, *(ukazatel), 10);
-	*crc += *(ukazatel);
-	
-	usartBufferPutByte(usartBuffer, *(ukazatel+1), 10);
-	*crc += *(ukazatel+1);
-}
-
-void sendChar(UsartBuffer * usartBuffer, const char var, char * crc) {
-	
-	usartBufferPutByte(usartBuffer, var, 10);
-	*crc += var;
-}
-
 void commTask(void *p) {
 	
 	unsigned char inChar;
@@ -206,7 +141,7 @@ void commTask(void *p) {
 				
 				portEXIT_CRITICAL();
 				
-				int temp[60];
+				char temp[60];
 				sprintf(temp, "%d %d\n\r", mpcElevatorOutput, mpcAileronOutput);
 				usartBufferPutString(usart_buffer_4, temp, 10);
 			}

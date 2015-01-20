@@ -35,4 +35,14 @@ extern int8_t opticalFlowDataFlag;
 
 int8_t px4flowParseChar(uint8_t incomingChar);
 
+// functions for parsing a variable from a buffer
+float readFloat(char * message, int * indexFrom);
+int16_t readInt16(char * message, int * indexFrom);
+char readChar(char * message, int * indexFrom);
+
+// methods for sending variables in a binary form
+void sendFloat(UsartBuffer * usartBuffer, const float var, char * crc);
+void sendInt16(UsartBuffer * usartBuffer, const int16_t var, char * crc);
+void sendChar(UsartBuffer * usartBuffer, const char var, char * crc);
+
 #endif // COMMUNICATION_H

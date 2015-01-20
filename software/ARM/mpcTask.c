@@ -76,7 +76,7 @@ void mpcTask(void *p) {
 	B_roof.name = "B_roof matrix";
 
 	// setup the H_inv matrix
-	H_inv.data = (float*) &H_inv_data;
+	H_inv.data = (float*) &H_inv_data2;
 	H_inv.height =	H_INV_HEIGHT;
 	H_inv.width = H_INV_WIDTH;
 	H_inv.name = "H_inv matrix";
