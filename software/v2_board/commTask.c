@@ -11,6 +11,37 @@
 #include <stdio.h>
 #include "controllers.h"
 
+float readFloat(char * message, int * indexFrom) {
+
+	float tempFloat;
+
+	char * ukazatel = (char*) &tempFloat;
+	*(ukazatel++) = message[(*indexFrom)++];
+	*(ukazatel++) = message[(*indexFrom)++];
+	*(ukazatel++) = message[(*indexFrom)++];
+	*(ukazatel++) = message[(*indexFrom)++];
+
+	return tempFloat;
+}
+
+int16_t readInt16(char * message, int * indexFrom) {
+
+	int16_t tempInt;
+
+	char * ukazatel = (char*) &tempInt;
+	*(ukazatel++) = message[(*indexFrom)++];
+	*(ukazatel++) = message[(*indexFrom)++];
+
+	return tempInt;
+}
+
+char readChar(char * message, int * indexFrom) {
+
+	char tempChar = message[(*indexFrom)++];
+
+	return tempChar;
+}
+
 void sendFloat(UsartBuffer * usartBuffer, const float var, char * crc) {
 	
 	char * ukazatel = (char*) &var;
@@ -53,16 +84,134 @@ void commTask(void *p) {
 	int16_t lastMiliseconds = 0;
 	float dt;
 	
+	main2commMessage_t main2commMessage;
+	
+	/* -------------------------------------------------------------------- */
+	/*	Needed for receiving from xMega										*/
+	/* -------------------------------------------------------------------- */
+	char payloadSize = 0;
+	char stmRxBuffer[64];
+	int bytesReceived;
+	char stmMessageReceived = 0;
+	char receivingMessage = 0;
+	int receiverState = 0;
+	char crcIn = 0;
+	
 	while (1) {
 		
+		/* -------------------------------------------------------------------- */
+		/*	A character received from PC										*/
+		/* -------------------------------------------------------------------- */
 		if (usartBufferGetByte(usart_buffer_4, &inChar, 0)) {
 
-			usartBufferPutByte(usart_buffer_stm, inChar, 0);
+			//
 		}
 		
+		/* -------------------------------------------------------------------- */
+		/*	A character received from STM										*/
+		/* -------------------------------------------------------------------- */
 		if (usartBufferGetByte(usart_buffer_stm, &inChar, 0)) {
 
-			usartBufferPutByte(usart_buffer_4, inChar, 0);
+			if (receivingMessage) {
+
+				// expecting to receive the payload size
+				if (receiverState == 0) {
+
+					if (inChar >= 0 && inChar <= 63) {
+
+						payloadSize = inChar;
+						receiverState = 1;
+						crcIn += inChar;
+						} else {
+
+						receivingMessage = 0;
+						receiverState = 0;
+					}
+
+					// expecting to receive the payload
+					} else if (receiverState == 1) {
+
+					stmRxBuffer[bytesReceived++] = inChar;
+					crcIn += inChar;
+
+					if (bytesReceived >= payloadSize) {
+
+						receiverState = 2;
+					}
+
+					// expecting to receive the crc
+					} else if (receiverState == 2) {
+
+					if (crcIn == inChar) {
+
+						stmMessageReceived = 1;
+						receivingMessage = 0;
+						} else {
+
+						receivingMessage = 0;
+						receiverState = 0;
+					}
+				}
+
+				} else {
+
+				if (inChar == 'a') {
+
+					crcIn = inChar;
+
+					receivingMessage = 1;
+					receiverState = 0;
+					bytesReceived = 0;
+				}
+			}
+		}
+		
+		/* -------------------------------------------------------------------- */
+		/*	A message received from STM											*/
+		/* -------------------------------------------------------------------- */
+		if (stmMessageReceived) {
+			
+			int idx = 0;
+
+			//  read the message ID
+			char messageId = readChar(stmRxBuffer, &idx);
+			
+			if (messageId == '1') {
+				
+				int16_t tempInt;
+				
+				/* -------------------------------------------------------------------- */
+				/*	Saturate and save the incoming values								*/
+				/* -------------------------------------------------------------------- */
+				
+				portENTER_CRITICAL();
+				
+				tempInt = readInt16(stmRxBuffer, &idx);
+				if (tempInt > MPC_SATURATION) {
+					mpcElevatorOutput = MPC_SATURATION;
+				} else if (tempInt < -MPC_SATURATION) {
+					mpcElevatorOutput = -MPC_SATURATION;
+				} else {
+					mpcElevatorOutput = tempInt;
+				}
+				
+				tempInt = readInt16(stmRxBuffer, &idx);
+				if (tempInt > MPC_SATURATION) {
+					mpcAileronOutput = MPC_SATURATION;
+					} else if (tempInt < -MPC_SATURATION) {
+					mpcAileronOutput = -MPC_SATURATION;
+					} else {
+					mpcAileronOutput = tempInt;
+				}
+				
+				portEXIT_CRITICAL();
+				
+				int temp[60];
+				sprintf(temp, "%d %d\n\r", mpcElevatorOutput, mpcAileronOutput);
+				usartBufferPutString(usart_buffer_4, temp, 10);
+			}
+			
+			stmMessageReceived = 0;
 		}
 		
 		// xBee received
@@ -81,11 +230,17 @@ void commTask(void *p) {
 			}
 		}
 	
+		/* -------------------------------------------------------------------- */
+		/*	A character received from px4flow									*/
+		/* -------------------------------------------------------------------- */
 		if (usartBufferGetByte(usart_buffer_1, &inChar, 0)) {
 
 			px4flowParseChar((uint8_t) inChar);
 		}
-
+		
+		/* -------------------------------------------------------------------- */
+		/*	A message received from px4flow										*/
+		/* -------------------------------------------------------------------- */
 		if (opticalFlowDataFlag == 1) {
 
 			// decode the message (there will be new values in opticalFlowData...
@@ -141,6 +296,24 @@ void commTask(void *p) {
 			sendFloat(usart_buffer_stm, (float) ((float) outputChannels[AILERON]/2 - PPM_IN_MIDDLE_LENGTH)/10, &crc);
 			
 			sendChar(usart_buffer_stm, crc, &crc);
+		}
+		
+		/* -------------------------------------------------------------------- */
+		/*	A message received from the main Task								*/
+		/* -------------------------------------------------------------------- */
+		if (xQueueReceive(main2commsQueue, &main2commMessage, 0)) {
+						
+			// send message to STM to reset its Kalman filter			
+			if (main2commMessage.messageType == CLEAR_STATES) {
+	
+				char crc = 0;
+				sendChar(usart_buffer_stm, 'a', &crc);		// this character initiates the transmition
+				sendChar(usart_buffer_stm, 1, &crc);		// this will be the size of the message
+			
+				sendChar(usart_buffer_stm, '2', &crc);		// id of the message
+			
+				sendChar(usart_buffer_stm, crc, &crc);		// isend crc
+			}
 		}
 	}
 }

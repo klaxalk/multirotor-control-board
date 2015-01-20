@@ -4,10 +4,12 @@
  *  Author: Tomas Baca
  */
 
+#include "mpcTask.h"
 #include "mpcMatrices.h"
 #include "uart_driver.h"
 #include "system.h"
 #include "miscellaneous.h"
+#include "kalmanTask.h"
 
 // precomputed matrices
 matrix_float A_roof;
@@ -101,24 +103,39 @@ void mpcTask(void *p) {
 	temp_vector3.name = "temp_vector3";
 
 	// current state vector
-	float states_data[NUMBER_OF_STATES] = {1, 0, 0};
+	float states_data[NUMBER_OF_STATES];
 	states.data = (float*) &states_data;
 	states.length = NUMBER_OF_STATES;
 	states.name = "Current states";
 	states.orientation = 0;
 
-	vTaskDelay(500);
+	// message with outputs to send to comms
+	mpcOutputMessage newMessage;
 
-	char tempString[60];
-	sprintf(tempString, "pred %i\n\r", (int) xTaskGetTickCount());
-	Usart4PutString(tempString);
+	vTaskDelay(100);
 
-	calculateMPC();
+	kalman2mpcMessage kalmanMessage;
 
-	sprintf(tempString, "pred %i\n\r", (int) xTaskGetTickCount());
-	Usart4PutString(tempString);
+	while (1) {
 
-	// vector_float_print(&temp_vector3);
+		if (xQueueReceive(kalman2mpcQueue, &kalmanMessage, 100)) {
 
-	vTaskDelay(500);
+			// copy the elevatorStates to states
+			memccpy(states.data, &kalmanMessage.elevatorData, NUMBER_OF_STATES, sizeof(float));
+
+			calculateMPC();
+
+			newMessage.elevatorOutput = (int) vector_float_get(&temp_vector3, 1);
+
+			// copy the elevatorStates to states
+			memccpy(states.data, &kalmanMessage.aileronData, NUMBER_OF_STATES, sizeof(float));
+
+			calculateMPC();
+
+			newMessage.aileronOutput = (int) vector_float_get(&temp_vector3, 1);
+
+			// send outputs to comms
+			xQueueSend(mpc2commQueue, &newMessage, 10);
+		}
+	}
 }

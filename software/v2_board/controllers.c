@@ -22,6 +22,9 @@ volatile float estimatedThrottleVel = 0;
 volatile float throttleIntegration = 0;
 volatile float throttleSetpoint = 0.75;
 
+volatile int16_t mpcElevatorOutput = 0;
+volatile int16_t mpcAileronOutput = 0;
+
 //~ ------------------------------------------------------------------------ ~//
 //~ Altitude Estimator - interpolates the data from PX4Flow sonar sensor     ~//
 //~ ------------------------------------------------------------------------ ~//

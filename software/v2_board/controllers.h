@@ -26,6 +26,8 @@
 #define ALTITUDE_KI 120
 #define ALTITUDE_KV 200
 
+#define MPC_SATURATION	10
+
 // controller on/off
 extern volatile bool altitudeControllerEnabled;
 extern volatile bool mpcControllerEnabled;
@@ -41,6 +43,9 @@ extern volatile float estimatedThrottleVel;
 // vars for controllers
 extern volatile float throttleIntegration;
 extern volatile float throttleSetpoint;
+
+volatile int16_t mpcElevatorOutput;
+volatile int16_t mpcAileronOutput;
 
 void enableAltitudeController();
 void disableAltitudeController();

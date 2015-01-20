@@ -11,4 +11,11 @@
 // the communication task
 void commTask(void *p);
 
+enum main2commMessageType {CLEAR_STATES};
+
+typedef struct {
+	
+	enum main2commMessageType messageType;
+} main2commMessage_t;
+
 #endif /* COMMTASK_H_ */

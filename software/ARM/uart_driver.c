@@ -101,7 +101,7 @@ void init_USART4(uint32_t baudrate) {
  * 		   declared as volatile char --> otherwise the compiler will spit out warnings
  * */
 
-uint32_t usart4PutChar(char ch) {
+portBASE_TYPE usart4PutChar(char ch) {
 
 	if(xQueueSend(usartTxQueue, &ch, 10) == pdPASS) {
 
@@ -112,7 +112,7 @@ uint32_t usart4PutChar(char ch) {
     }
 }
 
-void Usart4PutString(volatile char *s) {
+void usart4PutString(volatile char *s) {
 
 	while (*s) {
 

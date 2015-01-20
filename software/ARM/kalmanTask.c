@@ -217,6 +217,8 @@ void kalmanTask(void *p) {
 
 	px4flowMessage message;
 
+	kalman2mpcMessage mpcMessage;
+
 	while (1) {
 
 		if (xQueueReceive(comm2kalmanQueue, &message, 100)) {
@@ -244,7 +246,9 @@ void kalmanTask(void *p) {
 			// set the measurement vector
 			vector_float_set(&measurement_vector, 1, message.elevatorSpeed);
 
+			//portENTER_CRITICAL();
 			kalmanIteration(&elevatorHandler, &measurement_vector, &input_vector, &A_matrix, &B_matrix, &R_matrix, &Q_matrix, &C_matrix, dt);
+			//portEXIT_CRITICAL();
 
 			/* -------------------------------------------------------------------- */
 			/*	Compute aileron kalman												*/
@@ -256,7 +260,20 @@ void kalmanTask(void *p) {
 			// set the measurement vector
 			vector_float_set(&measurement_vector, 1, message.aileronSpeed);
 
+			//portENTER_CRITICAL();
 			kalmanIteration(&aileronHandler, &measurement_vector, &input_vector, &A_matrix, &B_matrix, &R_matrix, &Q_matrix, &C_matrix, dt);
+			//portEXIT_CRITICAL();
+
+			/* -------------------------------------------------------------------- */
+			/*	Create a message for mpc task										*/
+			/* -------------------------------------------------------------------- */
+
+			//portENTER_CRITICAL();
+			memccpy(&mpcMessage.elevatorData, elevatorHandler.states->data, NUMBER_OF_STATES, sizeof(float));
+			memccpy(&mpcMessage.aileronData, aileronHandler.states->data, NUMBER_OF_STATES, sizeof(float));
+			//portEXIT_CRITICAL();
+
+			xQueueOverwrite(kalman2mpcQueue, &mpcMessage);
 		}
 	}
 }

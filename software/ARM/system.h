@@ -45,7 +45,10 @@ QueueHandle_t * usartTxQueue;
 // queue from commTask to kalmanTask
 QueueHandle_t * comm2kalmanQueue;
 
-// queue from kalmanTask to mpcTask
+// queue from mpcTask to commTask
+QueueHandle_t * mpc2commQueue;
+
+// queue from kalman to mpc
 QueueHandle_t * kalman2mpcQueue;
 
 #define led_toggle() GPIO_ToggleBits(GPIOC, GPIO_Pin_2)

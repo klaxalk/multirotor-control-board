@@ -8,6 +8,8 @@
 #ifndef UART_DRIVER_H_
 #define UART_DRIVER_H_
 
+#include "system.h"
+
 #include <stm32f4xx_usart.h> // under Libraries/STM32F4xx_StdPeriph_Driver/inc and src
 
 // Must be included if using GPIO (General purpose I/O) peripheral
@@ -25,7 +27,7 @@ volatile char received_string[MAX_STRLEN+1]; // this will hold the recieved stri
 
 void init_USART4(uint32_t baudrate);
 
-uint32_t Usart4PutChar(char ch);
-void Usart4PutString(volatile char *s);
+portBASE_TYPE usart4PutChar(char ch);
+void usart4PutString(volatile char *s);
 
 #endif /* INIT_BOARD_H_ */

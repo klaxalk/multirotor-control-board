@@ -24,6 +24,12 @@ typedef struct {
 	float aileronInput;
 } px4flowMessage;
 
+typedef struct {
+
+	float elevatorData[3];
+	float aileronData[3];
+} kalman2mpcMessage;
+
 // the communication task
 void kalmanTask(void *p);
 

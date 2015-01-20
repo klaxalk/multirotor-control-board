@@ -133,6 +133,11 @@ extern volatile int16_t milisecondsTimer;
 extern volatile int16_t secondsTimer;
 extern volatile int16_t hoursTimer;
 
+/* -------------------------------------------------------------------- */
+/*	Queue from main to comms											*/
+/* -------------------------------------------------------------------- */
+xQueueHandle main2commsQueue;
+
 /* Basic initialization of the MCU, peripherals and i/o */
 void boardInit();
 

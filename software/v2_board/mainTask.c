@@ -9,6 +9,7 @@
 #include "system.h"
 #include "controllers.h"
 #include "communication.h"
+#include "commTask.h"
 #include <stdio.h> // sprintf
 #include <stdlib.h> // abs
 
@@ -38,6 +39,13 @@ void mainTask(void *p) {
 		} else if (RCchannel[AUX1] > (PPM_IN_MIDDLE_LENGTH + 200)) {
 			
 			if (previous_AUX3 == 1) {
+				
+				main2commMessage_t newMessage;
+				newMessage.messageType = CLEAR_STATES;
+				xQueueSend(main2commsQueue, &newMessage, 0);
+				
+				vTaskDelay(50);
+				
 				enableMpcController();
 			}
 		
@@ -49,7 +57,5 @@ void mainTask(void *p) {
 			disableMpcController();
 			previous_AUX3 = 0;
 		}
-		
-		mergeSignalsToOutput();
 	}
 }

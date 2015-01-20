@@ -4,7 +4,7 @@
     <Device manufacturerId="9" manufacturerName="ST" chipId="346" chipName="STM32F415RG" boardId="" boardName=""/>
     <BuildOption>
       <Compile>
-        <Option name="OptimizationLevel" value="0"/>
+        <Option name="OptimizationLevel" value="2"/>
         <Option name="UseFPU" value="0"/>
         <Option name="UserEditCompiler" value=""/>
         <Option name="SupportCPlusplus" value="0"/>
@@ -145,8 +145,8 @@
     <File name="cmsis" path="" type="2"/>
     <File name="FreeRTOS/Port/arm_comm.h" path="FreeRTOS/Port/arm_comm.h" type="1"/>
     <File name="FreeRTOS/Port/misc.c" path="FreeRTOS/Port/misc.c" type="1"/>
-    <File name="cmsis_lib" path="" type="2"/>
     <File name="FreeRTOS/Port/portmacro.h" path="FreeRTOS/Port/portmacro.h" type="1"/>
+    <File name="cmsis_lib" path="" type="2"/>
     <File name="CMatrixLib.c" path="../CMatrixLib/CMatrixLib/CMatrixLib.c" type="1"/>
     <File name="cmsis_lib/source/stm32f4xx_tim.c" path="cmsis_lib/source/stm32f4xx_tim.c" type="1"/>
     <File name="mpcMatrices.h" path="mpcMatrices.h" type="1"/>

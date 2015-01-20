@@ -7,11 +7,14 @@
 
 #include "system.h"
 #include "kalmanTask.h"
+#include "mpcTask.h"
 
 QueueHandle_t * usartRxQueue;
 QueueHandle_t * usartTxQueue;
 
 QueueHandle_t * comm2kalmanQueue;
+
+QueueHandle_t * mpc2commQueue;
 
 QueueHandle_t * kalman2mpcQueue;
 
@@ -23,6 +26,12 @@ void boardInit() {
 
     // create a queue from commTask to kalmanTask
     comm2kalmanQueue = xQueueCreate(10, sizeof(px4flowMessage));
+
+    // create a queue from commTask to kalmanTask
+    mpc2commQueue = xQueueCreate(10, sizeof(mpcOutputMessage));
+
+    // create a queue from commTask to kalmanTask
+    kalman2mpcQueue = xQueueCreate(1, sizeof(kalman2mpcMessage));
 
 	// set th clock and initialize the GPIO
 	gpioInit();

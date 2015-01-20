@@ -13,6 +13,8 @@
 #include "sysclk.h"
 #include "usart_driver_RTOS.h"
 #include "communication.h"
+#include "commTask.h"
+#include "controllers.h"
 
 /* -------------------------------------------------------------------- */
 /*	Variables for PPM input capture										*/
@@ -55,6 +57,11 @@ UsartBuffer * usart_buffer_4;
 volatile int16_t milisecondsTimer;
 volatile int16_t secondsTimer;
 volatile int16_t hoursTimer;
+
+/* -------------------------------------------------------------------- */
+/*	Queue from main to comms											*/
+/* -------------------------------------------------------------------- */
+xQueueHandle main2commsQueue;
 
 /* -------------------------------------------------------------------- */
 /*	Basic initialization of the MCU, peripherals and i/o				*/
@@ -162,6 +169,12 @@ void boardInit() {
 	/* -------------------------------------------------------------------- */
 	
 	PMIC_EnableLowLevel();
+	
+	/* -------------------------------------------------------------------- */
+	/*	Initialize queues													*/
+	/* -------------------------------------------------------------------- */
+	
+	main2commsQueue = xQueueCreate(1, sizeof(main2commMessage_t));
 }
 
 /* -------------------------------------------------------------------- */
@@ -285,11 +298,9 @@ ISR(TCD0_CCA_vect) {
 }
 
 /* -------------------------------------------------------------------- */
-/*	Interrupt for timing the RTC										*/
+/*	Interrupt for timing the RTC & mergeSignalsToOutput					*/
 /* -------------------------------------------------------------------- */
 ISR(TCC1_OVF_vect) {
-	
-	// shut down the output PPM pulse
 
 	if (milisecondsTimer++ == 1000) {
 		
@@ -301,4 +312,6 @@ ISR(TCC1_OVF_vect) {
 			hoursTimer++;
 		}
 	}
+
+	mergeSignalsToOutput();
 }

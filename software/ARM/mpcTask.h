@@ -9,6 +9,12 @@
 
 void mpcTask(void *p);
 
-vector_float temp_vector1;
+#include "system.h"
+
+typedef struct {
+
+	int_least16_t elevatorOutput;
+	int_least16_t aileronOutput;
+} mpcOutputMessage;
 
 #endif /* MPCTASK_H_ */
