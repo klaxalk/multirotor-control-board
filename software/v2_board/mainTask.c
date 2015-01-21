@@ -21,6 +21,12 @@ volatile uint16_t main_cycle = 0;
 int8_t previous_AUX3 = 0;
 
 void mainTask(void *p) {
+
+	main2commMessage_t main2commMessage;
+	main2commMessage.messageType = CLEAR_STATES;
+	xQueueSend(main2commsQueue, &main2commMessage, 0);
+
+	vTaskDelay(50);
 		
 	while (1) {
 		
@@ -40,9 +46,8 @@ void mainTask(void *p) {
 			
 			if (previous_AUX3 == 1) {
 				
-				main2commMessage_t newMessage;
-				newMessage.messageType = CLEAR_STATES;
-				xQueueSend(main2commsQueue, &newMessage, 0);
+				main2commMessage.messageType = CLEAR_STATES;
+				xQueueSend(main2commsQueue, &main2commMessage, 0);
 				
 				vTaskDelay(50);
 				
