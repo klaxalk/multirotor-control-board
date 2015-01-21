@@ -146,7 +146,7 @@ void commTask(void *p) {
 				portEXIT_CRITICAL();
 				
 				char temp[60];
-				sprintf(temp, "%d %d\n\r", mpcElevatorOutput, mpcAileronOutput);
+				sprintf(temp, "%d %d %4.2f %d\n\r", mpcElevatorOutput, mpcAileronOutput, estimatedThrottlePos, controllerThrottleOutput);
 				usartBufferPutString(usart_buffer_xbee, temp, 10);
 			}
 			

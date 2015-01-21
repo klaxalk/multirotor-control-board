@@ -26,7 +26,7 @@
 #define ALTITUDE_KI 120
 #define ALTITUDE_KV 200
 
-#define MPC_SATURATION	10
+#define MPC_SATURATION	30
 
 // controller on/off
 extern volatile bool altitudeControllerEnabled;

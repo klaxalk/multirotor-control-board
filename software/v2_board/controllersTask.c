@@ -10,8 +10,6 @@
 #include "system.h"
 #include "config.h"
 
-float dt = 0.015;
-
 void controllersTask(void *p) {
 
 	while (1) {
@@ -22,6 +20,6 @@ void controllersTask(void *p) {
 			altitudeController();
 		
 		// makes the 70Hz loop
-		vTaskDelay((int16_t) dt*((float) 1000));
+		vTaskDelay(14);
 	}
 }
