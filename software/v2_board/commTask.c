@@ -16,11 +16,7 @@ void commTask(void *p) {
 	unsigned char inChar;
 	char* ukazatel;
 	
-	int16_t lastMiliseconds = 0;
-	float dt;
-	
 	main2commMessage_t main2commMessage;
-	
 	/* -------------------------------------------------------------------- */
 	/*	Needed for receiving from xMega										*/
 	/* -------------------------------------------------------------------- */
@@ -32,15 +28,19 @@ void commTask(void *p) {
 	int receiverState = 0;
 	char crcIn = 0;
 	
+	/* -------------------------------------------------------------------- */
+	/*	For computing dt for xbee											*/
+	/* -------------------------------------------------------------------- */
+	int16_t lastMiliseconds2 = 0;
+	float dt2;
+	
+	/* -------------------------------------------------------------------- */
+	/*	For computing dt for STM											*/
+	/* -------------------------------------------------------------------- */
+	int16_t lastMiliseconds = 0;
+	float dt;
+	
 	while (1) {
-		
-		/* -------------------------------------------------------------------- */
-		/*	A character received from PC										*/
-		/* -------------------------------------------------------------------- */
-		if (usartBufferGetByte(usart_buffer_4, &inChar, 0)) {
-
-			//
-		}
 		
 		/* -------------------------------------------------------------------- */
 		/*	A character received from STM										*/
@@ -145,9 +145,11 @@ void commTask(void *p) {
 				
 				portEXIT_CRITICAL();
 				
+				/*
 				char temp[60];
 				sprintf(temp, "%d %d %4.2f %d\n\r", mpcElevatorOutput, mpcAileronOutput, estimatedThrottlePos, controllerThrottleOutput);
 				usartBufferPutString(usart_buffer_xbee, temp, 10);
+				*/
 			}
 			
 			stmMessageReceived = 0;
@@ -159,11 +161,25 @@ void commTask(void *p) {
 			// prototype of answering with log to xBee
 			if (inChar == 'b') {
 
-				ukazatel = (char*) &groundDistance;
-				usartBufferPutByte(usart_buffer_xbee, *(ukazatel), 10);
-				usartBufferPutByte(usart_buffer_xbee, *(ukazatel+1), 10);
-				usartBufferPutByte(usart_buffer_xbee, *(ukazatel+2), 10);
-				usartBufferPutByte(usart_buffer_xbee, *(ukazatel+3), 10);
+				char crc = 0;
+				
+				if ((milisecondsTimer - lastMiliseconds2) > 0) {
+					
+					dt2 = (float) ((float) (milisecondsTimer - lastMiliseconds2) * 0.001);
+					} else {
+					
+					dt2 = (float) ((float) (milisecondsTimer - lastMiliseconds2 + 1000) * 0.001);
+				}
+				
+				lastMiliseconds2 = milisecondsTimer;
+				
+				sendFloat(usart_buffer_xbee, dt2, &crc);
+
+				sendFloat(usart_buffer_xbee, elevatorSpeed, &crc);
+				sendFloat(usart_buffer_xbee, aileronSpeed, &crc);
+				
+				sendInt16(usart_buffer_xbee, RCchannel[ELEVATOR] - PPM_IN_MIDDLE_LENGTH, &crc);
+				sendInt16(usart_buffer_xbee, RCchannel[AILERON] - PPM_IN_MIDDLE_LENGTH, &crc);
 
 				usartBufferPutString(usart_buffer_xbee, "\r\n", 10);
 			}
