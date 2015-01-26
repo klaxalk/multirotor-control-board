@@ -82,6 +82,8 @@ void constInit(){
 	TELEMETRIES.OUTPUT_ELEVATOR=0x1D;
 	TELEMETRIES.OUTPUT_AILERON=0x1E;
 	TELEMETRIES.OUTPUT_RUDDER=0x1F;
+	TELEMETRIES.BLOB_DISTANCE=0x20;
+	TELEMETRIES.BLOB_HORIZONTAL=0x21;	
 		
 	ONOFF.OFF=0x00;	
 	ONOFF.ON=0x01;
@@ -115,7 +117,7 @@ void constInit(){
 	
 	GET_STATUS=0x95;
 	
-	telemetryToCoordinatorArr[TELEMETRIES.ELEVATOR_SPEED_ESTIMATED]=1;	
+	telemetryToCoordinatorArr[TELEMETRIES.GROUND_DISTANCE_ESTIMATED]=1;	
 }
 
 
@@ -161,6 +163,7 @@ void packetHandler(unsigned char *inPacket){
                         if(*(dataIN+2)==COMMANDS.TELEMETRY){                            					            
                             telemetrySend(address64,address16,*(dataIN+3),0x00);                            
                         }else
+						//TELEMETRY TO COORDINATOR
 						 if(*(dataIN+2)==COMMANDS.TELEMETRY_COORDINATOR){  
 							if(*(dataIN+3)==GET_STATUS){
 								telemetryToCoordinatorReport(address64,address16,*(dataIN+4),0x00);

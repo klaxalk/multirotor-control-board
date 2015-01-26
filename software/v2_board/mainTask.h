@@ -11,8 +11,5 @@
 
 // the main task routine
 void mainTask(void *p);
-extern volatile float constant1;
-extern volatile float constant5;
-
 
 #endif /* MAINTASK_H_ */

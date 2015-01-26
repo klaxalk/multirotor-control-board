@@ -7,9 +7,6 @@
 #include <stdio.h> // sprintf
 #include <stdlib.h> // abs
 
-// constants from RC transmitter
-volatile float constant1 = 0;
-volatile float constant5 = 0;
 
 //AUX channels switchers reacts just for changeS
 unsigned char previous_AUX1 = 5;
@@ -66,7 +63,8 @@ void mainTask(void *p) {
 
 		//velocity null setpoints
 		if(RCchannel[AUX2]<(PPM_IN_MIDDLE_LENGTH)){
-			if(previous_AUX2!=0){			
+			if(previous_AUX2!=0){	
+						
 			previous_AUX2=0;
 			}
 		}else{
@@ -81,16 +79,12 @@ void mainTask(void *p) {
 		//gumstix enable
 		if(RCchannel[AUX1]<PPM_IN_MIDDLE_LENGTH){
 			if(previous_AUX1!=0){
-				//disableGumstix();		
-				elevatorDesiredVelocitySetpoint=0.0;
-				aileronDesiredVelocitySetpoint=0.0;
+				disableGumstix();		
 				previous_AUX1=0;
 			}
 		}else{
 			if(previous_AUX1!=1){
-				//enableGumstix();
-				elevatorDesiredVelocitySetpoint=0.4;
-				aileronDesiredVelocitySetpoint=0.0;
+				enableGumstix();
 				previous_AUX1=1;
 			}
 		}

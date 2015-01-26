@@ -1,10 +1,3 @@
-/*
- * controllers.c
- *
- * Created: 11.9.2014 13:24:16
- *  Author: Tomas Baca
- */ 
-
 #include "controllers.h"
 #include "communication.h"
 
@@ -35,6 +28,9 @@ volatile float estimatedAileronVel_Prev  = 0;
 
 volatile float estimatedElevatorAcc = 0;
 volatile float estimatedAileronAcc = 0;
+
+volatile float estimatedBlobDistance = 0;
+volatile float estimatedBlobHorizontal = 0;
 
 //vars for controllers
 volatile float elevatorPositionIntegration = 0;
@@ -270,8 +266,14 @@ void positionEstimator() {
 		if(gumstix_counter < gumstix_delay) gumstix_counter++;
 	} else {
 		gumstix_counter = 0;
+		estimatedBlobDistanceSpeed = 0;
+		estimatedBlobErrorSpeed = 0;
 	}
-
+	
+	//Blob detector 
+	estimatedBlobDistance += (elevatorGumstix-estimatedBlobDistance) * (DT/GUMSTIX_FILTER_CONST);
+	estimatedBlobHorizontal += (aileronGumstix-estimatedBlobHorizontal) * (DT/GUMSTIX_FILTER_CONST);	
+	
 	//elevator velocity
 	estimatedElevatorVel += (elevatorSpeed-estimatedElevatorVel) * (DT/PX4FLOW_FILTER_CONST);
 	estimatedElevatorVel2 += (estimatedElevatorVel-estimatedElevatorVel2)* (DT/(PX4FLOW_FILTER_CONST+0.02));
@@ -283,11 +285,7 @@ void positionEstimator() {
 
 	//elevator position
 	if(estimatedThrottlePos>ALTITUDE_MINIMUM){
-		if(gumstix_counter == gumstix_delay) {
-			estimatedElevatorPos += (elevatorGumstix-estimatedElevatorPos) * (DT/GUMSTIX_FILTER_CONST);
-		}else{
-			estimatedElevatorPos += estimatedElevatorVel * DT;
-		}
+		estimatedElevatorPos += estimatedElevatorVel * DT;	
 	}
 
 	//aileron velocity
@@ -301,11 +299,7 @@ void positionEstimator() {
 
 	//aileron position
 	if(estimatedThrottlePos>ALTITUDE_MINIMUM){
-		if(gumstix_counter == gumstix_delay) {
-			estimatedAileronPos += (aileronGumstix-estimatedAileronPos) * (DT/GUMSTIX_FILTER_CONST);
-		}else{
-			estimatedAileronPos += estimatedAileronVel * DT;
-		}
+		estimatedAileronPos += estimatedAileronVel * DT;		
 	}
 }
 

@@ -32,7 +32,7 @@
 	extern volatile int8_t validGumstix;
 	extern volatile int8_t gumstixDataFlag;			
 
-void leadAltitude();
+void stateChecker();
 void sendXBeePacket(unsigned char *packet);
 int8_t px4flowParseChar(uint8_t incomingChar);
 void gumstixParseChar(unsigned char incomingChar);

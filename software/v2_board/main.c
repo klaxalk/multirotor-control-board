@@ -22,8 +22,7 @@
 #include "controllersTask.h"
 
 int main(void)
-{
-		
+{		
 	// initialize the hardware
 	boardInit();
 	

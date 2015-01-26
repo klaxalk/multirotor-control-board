@@ -20,11 +20,11 @@ void commTask(void *p) {
 	//wait for XBee
 	vTaskDelay(1000);
 	
-	while (1) {		
+	while (1) {				
+		stateChecker();
 		
 		if (counter40Hz++>1000){
 			counter40Hz=0;
-
 		}
 		
 		if (counter20Hz++>2000){

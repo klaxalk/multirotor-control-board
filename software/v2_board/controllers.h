@@ -1,10 +1,3 @@
-/*
- * controllers.h
- *
- * Created: 11.9.2014 13:24:27
- *  Author: Tomas Baca
- */ 
-
 #ifndef _CONTROLLERS_H
 #define _CONTROLLERS_H
 
