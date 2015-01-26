@@ -519,44 +519,6 @@ void kopterTrajectoryPointReportReceived(unsigned char *address64,unsigned char 
 	
 }
 
-//GUMSTIX
-void kopterGumstixRequest(unsigned char *address64,unsigned char *address16,unsigned char options,unsigned char frameID){
-	*(dataOUT)='c';
-	*(dataOUT+1)=COMMANDS.GUMSTIX;
-	*(dataOUT+2)=options;
-	makeTRPacket(address64,address16,0x00,frameID,dataOUT,3);
-}
-void kopterGumstix(unsigned char *address64,unsigned char *address16,unsigned char on){
-	if(on){
-		enableGumstix();	
-	}else{
-		disableGumstix();
-	}
-}
-void kopterGumstixStatusRequest(unsigned char *address64,unsigned char *address16,unsigned char frameID){
-	*(dataOUT)='c';
-	*(dataOUT+1)=COMMANDS.GUMSTIX;
-	*(dataOUT+2)=GET_STATUS;
-	makeTRPacket(address64,address16,0x00,frameID,dataOUT,3);
-}
-void kopterGumstixReport(unsigned char *address64,unsigned char *address16,unsigned char frameID){
-	*dataOUT='r';
-	*(dataOUT+1)=COMMANDS.GUMSTIX;
-	if(gumstixEnabled){
-		*(dataOUT+2)=ONOFF.ON;
-	}else{
-		*(dataOUT+2)=ONOFF.OFF;
-	}
-	makeTRPacket(address64,address16,0x00,frameID,dataOUT,3);	
-}
-void kopterGumstixReportRecieved(unsigned char *address64,unsigned char *address16,unsigned char status){
-	if(			status==ONOFF.ON){
-		
-	}else if(status==ONOFF.OFF){
-		
-	}
-}
-
 //FOLLOWER SET
 void kopterFollowerSetRequest(unsigned char *address64,unsigned char *address16,unsigned char *followerAddr,unsigned char frameID){
 	char i;

@@ -139,14 +139,9 @@ void stateChecker(){
 		velocityControllerCH=velocityControllerEnabled;
 		kopterControllersReport(ADDRESS.COORDINATOR,ADDRESS.UNKNOWN16,0x00);
 	}
-	if(gumstixCH!=gumstixEnabled){
-		gumstixCH=gumstixEnabled;
-		kopterGumstixReport(ADDRESS.COORDINATOR,ADDRESS.UNKNOWN16,0x00);
-	}
 	
 	landingStateCH=landingState;
 	trajectoryFollowCH=trajectoryEnabled;
 	posControllerCH=positionControllerEnabled;
 	velocityControllerCH=velocityControllerEnabled;
-	gumstixCH=gumstixEnabled;	
 }

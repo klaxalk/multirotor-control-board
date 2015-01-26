@@ -71,9 +71,6 @@ volatile int16_t landingThrottleOutput;
 volatile unsigned char velocityControllerEnabled = 0;
 volatile unsigned char positionControllerEnabled = 0;
 
-//Gumstix on/off
-volatile unsigned char gumstixEnabled = 0;
-
 //auto-trajectory variables
 volatile unsigned char trajectoryEnabled = 0;
 volatile float trajTimer=0;
@@ -129,25 +126,6 @@ void disableLanding(){
 	landingRequest=0;
 }
 
-void enableGumstix(){
-	if (gumstixEnabled ==0 ){	
-		//default position (safety)	
-		elevatorPositionSetpoint = DEFAULT_ELEVATOR_POSITION_SETPOINT;
-		aileronPositionSetpoint = DEFAULT_AILERON_POSITION_SETPOINT;	
-		elevatorDesiredPositionSetpoint = DEFAULT_ELEVATOR_POSITION_SETPOINT;
-		aileronDesiredPositionSetpoint = DEFAULT_AILERON_POSITION_SETPOINT;	
-		
-		estimatedElevatorPos = elevatorDesiredPositionSetpoint;
-		estimatedAileronPos  = aileronDesiredPositionSetpoint;	
-		led_yellow_on();	
-	}
-	gumstixEnabled = 1;
-}
-
-void disableGumstix(){	
-	led_yellow_off();
-	gumstixEnabled = 0;
-}
 
 void enableVelocityController() {
 	//if both controllers was off then set altitude controller to default
@@ -262,12 +240,10 @@ void positionEstimator() {
 	static uint8_t gumstix_counter = 0;
 	uint8_t gumstix_delay = 7;
 
-	if(validGumstix == 1 && gumstixEnabled==1) {
+	if(validGumstix == 1) {
 		if(gumstix_counter < gumstix_delay) gumstix_counter++;
 	} else {
 		gumstix_counter = 0;
-		estimatedBlobDistanceSpeed = 0;
-		estimatedBlobErrorSpeed = 0;
 	}
 	
 	//Blob detector 

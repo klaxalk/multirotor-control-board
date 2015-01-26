@@ -226,14 +226,6 @@ void packetHandler(unsigned char *inPacket){
 								kopterControllers(address64,address16,*(dataIN+3));
 							}															
 						}else
-						//GUMSTIX ON/OFF
-						if(*(dataIN+2)==COMMANDS.GUMSTIX){
-							if(*(dataIN+3)==GET_STATUS){
-								kopterGumstixReport(address64,address16,0x00);
-							}else{
-								kopterGumstix(address64,address16,*(dataIN+3));
-							}
-						}else
 						//FOLLOWER SET
 						if(*(dataIN+2)==COMMANDS.FOLLOWER_SET){
 							if(*(dataIN+3)==GET_STATUS){
@@ -289,11 +281,7 @@ void packetHandler(unsigned char *inPacket){
 						 //CONTROLLERS STATUS
 						 if(*(dataIN+2)==COMMANDS.CONTROLLERS){
 							kopterControllersReportReceived(address64,address16,*(dataIN+3));
-						 }else
-						 //GUMSTIX STATUS
-						 if(*(dataIN+2)==COMMANDS.GUMSTIX){
-							 kopterGumstixReportRecieved(address64,address16,*(dataIN+3));
-						 }						 
+						 }					 
                     break;
                 //warning
                 case 'w':

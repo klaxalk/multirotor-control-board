@@ -11,8 +11,7 @@
 #include "config.h"
 
 
-void controllersTask(void *p) {
-	
+void controllersTask(void *p) {	
 	initTrajectory();
 	while (1) {
 		leadingDataActualCheck();
@@ -21,7 +20,7 @@ void controllersTask(void *p) {
 		
 		if(landingState!=LS_FLIGHT){
 			setpointsFilter(landingThrottleSetpoint,estimatedAileronPos,estimatedElevatorPos,0,0);
-		}else if(trajectoryEnabled==1 && positionControllerEnabled==1 && gumstixEnabled==0){
+		}else if(trajectoryEnabled==1 && positionControllerEnabled==1){
 			trajectorySetpoints();
 		}else{
 			setpointsFilter(throttleDesiredSetpoint,aileronDesiredPositionSetpoint,elevatorDesiredPositionSetpoint,aileronDesiredVelocitySetpoint,elevatorDesiredVelocitySetpoint);
