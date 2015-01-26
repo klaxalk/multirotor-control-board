@@ -31,6 +31,7 @@ volatile float estimatedAileronAcc = 0;
 
 volatile float estimatedBlobDistance = 0;
 volatile float estimatedBlobHorizontal = 0;
+volatile float estimatedBlobVertical = 0;
 
 //vars for controllers
 volatile float elevatorPositionIntegration = 0;
@@ -248,7 +249,8 @@ void positionEstimator() {
 	
 	//Blob detector 
 	estimatedBlobDistance += (elevatorGumstix-estimatedBlobDistance) * (DT/GUMSTIX_FILTER_CONST);
-	estimatedBlobHorizontal += (aileronGumstix-estimatedBlobHorizontal) * (DT/GUMSTIX_FILTER_CONST);	
+	estimatedBlobHorizontal += (aileronGumstix-estimatedBlobHorizontal) * (DT/GUMSTIX_FILTER_CONST);
+	estimatedBlobVertical += (throttleGumstix-estimatedBlobHorizontal) * (DT/GUMSTIX_FILTER_CONST);
 	
 	//elevator velocity
 	estimatedElevatorVel += (elevatorSpeed-estimatedElevatorVel) * (DT/PX4FLOW_FILTER_CONST);

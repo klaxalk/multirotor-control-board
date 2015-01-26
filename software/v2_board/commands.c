@@ -85,6 +85,12 @@ float telemetryValue(unsigned char type){
 		f=(float)outputAileron;
     }else if(type==TELEMETRIES.OUTPUT_RUDDER){
 		f=(float)outputRudder;
+    }else if(type==TELEMETRIES.BLOB_DISTANCE){
+		f=estimatedBlobDistance;
+    }else if(type==TELEMETRIES.BLOB_HORIZONTAL){
+		f=estimatedBlobHorizontal;
+    }else if(type==TELEMETRIES.BLOB_VERTICAL){
+		f=estimatedBlobVertical;
     }
 	return f;
 }

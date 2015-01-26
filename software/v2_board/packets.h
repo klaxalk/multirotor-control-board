@@ -48,9 +48,10 @@ typedef struct
 	unsigned char OUTPUT_RUDDER;
 	unsigned char BLOB_DISTANCE;
 	unsigned char BLOB_HORIZONTAL;	
+	unsigned char BLOB_VERTICAL;
 } TELEMETRIEST;
 
-#define TELEMETRY_VARIABLES 34
+#define TELEMETRY_VARIABLES 35
 
 
 typedef struct

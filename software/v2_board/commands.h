@@ -1,6 +1,8 @@
 #ifndef COMMANDS_H
 #define COMMANDS_H
 
+float telemetryValue(unsigned char type);
+
 void telemetrySend(unsigned char *address64,unsigned char *address16,unsigned char type,unsigned char frameID);
 void telemetryRequest(unsigned char *address64,unsigned char *address16,unsigned char type, unsigned char frameID);
 void telemetryReceive(unsigned char *address64,unsigned char *address16,unsigned char type,float value);

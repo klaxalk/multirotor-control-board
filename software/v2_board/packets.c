@@ -4,7 +4,6 @@
 #include "commands.h"
 #include "communication.h"
 #include "usart_driver_RTOS.h"
-#include "openLog.h"
 
 extern volatile int8_t trajMaxIndex;
 
@@ -84,6 +83,7 @@ void constInit(){
 	TELEMETRIES.OUTPUT_RUDDER=0x1F;
 	TELEMETRIES.BLOB_DISTANCE=0x20;
 	TELEMETRIES.BLOB_HORIZONTAL=0x21;	
+	TELEMETRIES.BLOB_VERTICAL=0x22;
 		
 	ONOFF.OFF=0x00;	
 	ONOFF.ON=0x01;
@@ -288,11 +288,7 @@ void packetHandler(unsigned char *inPacket){
                     break;
                 //message
                 case 'm':                   
-                    break;
-				//openlog	
-                case 'o':
-						openLogReceive(address64,address16,dataIN);
-					break;	
+                    break;	
 				//leading	
 				case 'l':
 						leadingDataReceived++;

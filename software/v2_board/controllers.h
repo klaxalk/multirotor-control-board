@@ -82,6 +82,10 @@ extern volatile float estimatedThrottleVel;
 extern volatile float estimatedElevatorAcc;
 extern volatile float estimatedAileronAcc;
 
+extern volatile float estimatedBlobDistance;
+extern volatile float estimatedBlobHorizontal;
+extern volatile float estimatedBlobVertical;
+
 //vars for controllers
 extern volatile float elevatorPositionSetpoint;
 extern volatile float aileronPositionSetpoint;

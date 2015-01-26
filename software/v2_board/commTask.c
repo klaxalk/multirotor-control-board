@@ -6,6 +6,7 @@
 #include "system.h"
 #include "packets.h"
 #include "commands.h"
+#include "openLog.h"
 
 
 
@@ -14,16 +15,19 @@ void commTask(void *p) {
 	unsigned char inChar;
 	unsigned char packet[60];	
 	int8_t i;
-	int16_t counter40Hz=0;
+	int16_t counter40Hz=500;
 	int16_t counter20Hz=0;
 	
 	//wait for XBee
 	vTaskDelay(1000);
 	
+	startLogging();	
+		
 	while (1) {				
 		stateChecker();
 		
 		if (counter40Hz++>1000){
+			loggingData();
 			counter40Hz=0;
 		}
 		
