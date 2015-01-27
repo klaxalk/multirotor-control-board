@@ -140,8 +140,8 @@ void commTask(void *p) {
 				}
 				
 				// convert degrees to the time units of PPM
-				controllerElevatorOutput = (int16_t) 10*mpcElevatorOutput;
-				controllerAileronOutput = (int16_t) 10*mpcAileronOutput;
+				controllerElevatorOutput = (int16_t) mpcElevatorOutput;
+				controllerAileronOutput = (int16_t) mpcAileronOutput;
 				
 				portEXIT_CRITICAL();
 				
@@ -178,8 +178,8 @@ void commTask(void *p) {
 				sendFloat(usart_buffer_xbee, elevatorSpeed, &crc);
 				sendFloat(usart_buffer_xbee, aileronSpeed, &crc);
 				
-				sendInt16(usart_buffer_xbee, RCchannel[ELEVATOR] - PPM_IN_MIDDLE_LENGTH, &crc);
-				sendInt16(usart_buffer_xbee, RCchannel[AILERON] - PPM_IN_MIDDLE_LENGTH, &crc);
+				sendInt16(usart_buffer_xbee, controllerElevatorOutput, &crc);
+				sendInt16(usart_buffer_xbee, controllerAileronOutput, &crc);
 
 				usartBufferPutString(usart_buffer_xbee, "\r\n", 10);
 			}
