@@ -8,26 +8,43 @@
 #include "controllers.h"
 #include "communication.h"
 
-// controller on/off
+/* -------------------------------------------------------------------- */
+/*	variables that supports controllers in general						*/
+/* -------------------------------------------------------------------- */
+
 volatile bool altitudeControllerEnabled;
 volatile bool mpcControllerEnabled;
 
-volatile uint8_t estimator_cycle = 0;
-volatile float   estimatedThrottlePos_prev = 0;
-
-// vars for altitude estimators
-volatile float estimatedThrottlePos = 0;
-volatile float estimatedThrottleVel = 0;
-
-volatile float throttleIntegration = 0;
-volatile float throttleSetpoint = 0.75;
+/* -------------------------------------------------------------------- */
+/*	variables that supports MPC											*/
+/* -------------------------------------------------------------------- */
 
 volatile int16_t mpcElevatorOutput = 0;
 volatile int16_t mpcAileronOutput = 0;
 
-//~ ------------------------------------------------------------------------ ~//
-//~ Altitude Estimator - interpolates the data from PX4Flow sonar sensor     ~//
-//~ ------------------------------------------------------------------------ ~//
+/* -------------------------------------------------------------------- */
+/*	variables that support kalman filter (running on STM)				*/
+/* -------------------------------------------------------------------- */
+
+volatile kalmanStates_t kalmanStates;
+
+/* -------------------------------------------------------------------- */
+/*	variables that support altitude controller and estimator			*/
+/* -------------------------------------------------------------------- */
+
+// for altitude estimator
+volatile float estimatedThrottlePos = 0;
+volatile float estimatedThrottleVel = 0;
+volatile uint8_t estimator_cycle = 0;
+volatile float   estimatedThrottlePos_prev = 0;
+
+// for altitude controller
+volatile float throttleIntegration = 0;
+volatile float throttleSetpoint = 0.75;
+
+/* -------------------------------------------------------------------- */
+/*	Altitude Estimator - interpolates the data from PX4Flow				*/
+/* -------------------------------------------------------------------- */
 void altitudeEstimator() {
 	//new cycle
 	estimator_cycle++;
@@ -53,10 +70,11 @@ void altitudeEstimator() {
 	}
 }
 
-//~ ------------------------------------------------------------------------ ~//
-//~ Altitude Controller - stabilizes throttle                                ~//
-//~ ------------------------------------------------------------------------ ~//
+/* -------------------------------------------------------------------- */
+/*	Altitude Controller - stabilizes throttle							*/
+/* -------------------------------------------------------------------- */
 void altitudeController() {
+	
 	float error;
 	float vd; //desired velocity
 	float KX, KI, KV;

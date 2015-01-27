@@ -15,6 +15,6 @@ typedef struct {
 
 	float elevatorOutput;
 	float aileronOutput;
-} mpcOutputMessage;
+} mpc2commMessage_t;
 
 #endif /* MPCTASK_H_ */

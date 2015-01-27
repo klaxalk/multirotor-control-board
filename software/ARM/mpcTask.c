@@ -110,11 +110,11 @@ void mpcTask(void *p) {
 	states.orientation = 0;
 
 	// message with outputs to send to comms
-	mpcOutputMessage newMessage;
+	mpc2commMessage_t newMessage;
 
 	vTaskDelay(100);
 
-	kalman2mpcMessage kalmanMessage;
+	kalman2mpcMessage_t kalmanMessage;
 
 	while (1) {
 

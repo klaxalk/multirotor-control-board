@@ -110,3 +110,4 @@ int8_t px4flowParseChar(uint8_t incomingChar) {
 	}
 	return 0;
 }
+

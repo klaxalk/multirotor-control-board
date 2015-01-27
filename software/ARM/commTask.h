@@ -9,6 +9,8 @@
 
 #include "system.h"
 
+#define XMEGA_BUFFER_SIZE 64
+
 // the communication task
 void commTask(void *p);
 

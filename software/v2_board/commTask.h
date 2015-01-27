@@ -8,14 +8,28 @@
 #ifndef COMMTASK_H_
 #define COMMTASK_H_
 
-// the communication task
-void commTask(void *p);
+/* -------------------------------------------------------------------- */
+/*	receiver from STM													*/
+/* -------------------------------------------------------------------- */
 
-enum main2commMessageType {CLEAR_STATES};
+#define STM_BUFFER_SIZE	64
+
+/* -------------------------------------------------------------------- */
+/*	message from mainTask to commTask									*/
+/* -------------------------------------------------------------------- */
+
+enum main2commMessageType_t {CLEAR_STATES};
 
 typedef struct {
 	
-	enum main2commMessageType messageType;
+	enum main2commMessageType_t messageType;
 } main2commMessage_t;
+
+/* -------------------------------------------------------------------- */
+/*	methods in commTask													*/
+/* -------------------------------------------------------------------- */
+
+// the communication task
+void commTask(void *p);
 
 #endif /* COMMTASK_H_ */

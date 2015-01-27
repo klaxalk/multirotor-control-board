@@ -14,14 +14,14 @@
 void commTask(void *p) {
 	
 	unsigned char inChar;
-	char* ukazatel;
 	
 	main2commMessage_t main2commMessage;
+	
 	/* -------------------------------------------------------------------- */
-	/*	Needed for receiving from xMega										*/
+	/*	Needed for receiving from STM										*/
 	/* -------------------------------------------------------------------- */
 	char payloadSize = 0;
-	char stmRxBuffer[64];
+	char stmRxBuffer[STM_BUFFER_SIZE];
 	int bytesReceived;
 	char stmMessageReceived = 0;
 	char receivingMessage = 0;
@@ -29,16 +29,21 @@ void commTask(void *p) {
 	char crcIn = 0;
 	
 	/* -------------------------------------------------------------------- */
-	/*	For computing dt for xbee											*/
-	/* -------------------------------------------------------------------- */
-	int16_t lastMiliseconds2 = 0;
-	float dt2;
-	
-	/* -------------------------------------------------------------------- */
 	/*	For computing dt for STM											*/
 	/* -------------------------------------------------------------------- */
 	int16_t lastMiliseconds = 0;
 	float dt;
+	
+	/* -------------------------------------------------------------------- */
+	/*	initialize kalmanStates 											*/
+	/* -------------------------------------------------------------------- */
+	kalmanStates.elevator.position = 0;
+	kalmanStates.elevator.velocity = 0;
+	kalmanStates.elevator.acceleration = 0;
+	
+	kalmanStates.aileron.position = 0;
+	kalmanStates.aileron.velocity = 0;
+	kalmanStates.aileron.acceleration = 0;
 	
 	while (1) {
 		
@@ -52,30 +57,34 @@ void commTask(void *p) {
 				// expecting to receive the payload size
 				if (receiverState == 0) {
 
-					if (inChar >= 0 && inChar <= 63) {
+					// check the message length
+					if (inChar >= 0 && inChar < STM_BUFFER_SIZE) {
 
 						payloadSize = inChar;
 						receiverState = 1;
 						crcIn += inChar;
-						} else {
+					
+					// the receiving message is over the buffer size	
+					} else {
 
 						receivingMessage = 0;
 						receiverState = 0;
 					}
 
-					// expecting to receive the payload
-					} else if (receiverState == 1) {
+				// expecting to receive the payload
+				} else if (receiverState == 1) {
 
+					// put the char in the buffer
 					stmRxBuffer[bytesReceived++] = inChar;
+					// add crc
 					crcIn += inChar;
 
-					if (bytesReceived >= payloadSize) {
-
+					// if the message should end, change state
+					if (bytesReceived >= payloadSize)
 						receiverState = 2;
-					}
 
-					// expecting to receive the crc
-					} else if (receiverState == 2) {
+				// expecting to receive the crc
+				} else if (receiverState == 2) {
 
 					if (crcIn == inChar) {
 
@@ -88,8 +97,9 @@ void commTask(void *p) {
 					}
 				}
 
-				} else {
+			} else {
 
+				// this character precedes every message
 				if (inChar == 'a') {
 
 					crcIn = inChar;
@@ -111,45 +121,53 @@ void commTask(void *p) {
 			//  read the message ID
 			char messageId = readChar(stmRxBuffer, &idx);
 			
+			/* -------------------------------------------------------------------- */
+			/*	If the message contains output of MPC								*/
+			/* -------------------------------------------------------------------- */
 			if (messageId == '1') {
 				
-				float tempFloat;
+				int16_t tempInt;
 				
-				/* -------------------------------------------------------------------- */
-				/*	Saturate and save the incoming values								*/
-				/* -------------------------------------------------------------------- */
+				// saturate and save incoming data
 				
 				portENTER_CRITICAL();
 				
-				tempFloat = readFloat(stmRxBuffer, &idx);
-				if (tempFloat > MPC_SATURATION) {
+				tempInt = readInt16(stmRxBuffer, &idx);
+				if (tempInt > MPC_SATURATION) {
 					mpcElevatorOutput = MPC_SATURATION;
-				} else if (tempFloat < -MPC_SATURATION) {
+				} else if (tempInt < -MPC_SATURATION) {
 					mpcElevatorOutput = -MPC_SATURATION;
 				} else {
-					mpcElevatorOutput = tempFloat;
+					mpcElevatorOutput = tempInt;
 				}
 				
-				tempFloat = readFloat(stmRxBuffer, &idx);
-				if (tempFloat > MPC_SATURATION) {
+				tempInt = readInt16(stmRxBuffer, &idx);
+				if (tempInt > MPC_SATURATION) {
 					mpcAileronOutput = MPC_SATURATION;
-					} else if (tempFloat < -MPC_SATURATION) {
+				} else if (tempInt < -MPC_SATURATION) {
 					mpcAileronOutput = -MPC_SATURATION;
-					} else {
-					mpcAileronOutput = tempFloat;
+				} else {
+					mpcAileronOutput = tempInt;
 				}
 				
 				// convert degrees to the time units of PPM
-				controllerElevatorOutput = (int16_t) mpcElevatorOutput;
-				controllerAileronOutput = (int16_t) mpcAileronOutput;
+				controllerElevatorOutput = mpcElevatorOutput;
+				controllerAileronOutput = mpcAileronOutput;
 				
 				portEXIT_CRITICAL();
 				
-				/*
-				char temp[60];
-				sprintf(temp, "%d %d %4.2f %d\n\r", mpcElevatorOutput, mpcAileronOutput, estimatedThrottlePos, controllerThrottleOutput);
-				usartBufferPutString(usart_buffer_xbee, temp, 10);
-				*/
+			/* -------------------------------------------------------------------- */
+			/*	If the message contains output of kalman filter						*/
+			/* -------------------------------------------------------------------- */
+			} else if (messageId == '2') {
+				
+				kalmanStates.elevator.position = readFloat(stmRxBuffer, &idx);
+				kalmanStates.elevator.velocity = readFloat(stmRxBuffer, &idx);
+				kalmanStates.elevator.acceleration = readFloat(stmRxBuffer, &idx);
+				
+				kalmanStates.aileron.position = readFloat(stmRxBuffer, &idx);
+				kalmanStates.aileron.velocity = readFloat(stmRxBuffer, &idx);
+				kalmanStates.aileron.acceleration = readFloat(stmRxBuffer, &idx);
 			}
 			
 			stmMessageReceived = 0;
@@ -162,22 +180,10 @@ void commTask(void *p) {
 			if (inChar == 'b') {
 
 				char crc = 0;
-				
-				if ((milisecondsTimer - lastMiliseconds2) > 0) {
-					
-					dt2 = (float) ((float) (milisecondsTimer - lastMiliseconds2) * 0.001);
-					} else {
-					
-					dt2 = (float) ((float) (milisecondsTimer - lastMiliseconds2 + 1000) * 0.001);
-				}
-				
-				lastMiliseconds2 = milisecondsTimer;
-				
-				sendFloat(usart_buffer_xbee, dt2, &crc);
 
-				sendFloat(usart_buffer_xbee, elevatorSpeed, &crc);
-				sendFloat(usart_buffer_xbee, aileronSpeed, &crc);
-				
+				sendFloat(usart_buffer_xbee, kalmanStates.elevator.position, &crc);
+				sendFloat(usart_buffer_xbee, kalmanStates.aileron.position, &crc);
+			
 				sendInt16(usart_buffer_xbee, controllerElevatorOutput, &crc);
 				sendInt16(usart_buffer_xbee, controllerAileronOutput, &crc);
 

@@ -79,7 +79,10 @@ void commTask(void *p) {
 	char crcOut = 0;
 
 	// message from mpcTask
-	mpcOutputMessage mpcMessage;
+	mpc2commMessage_t mpcMessage;
+
+	// message from kalmanTask
+	kalman2commMessage_t kalmanMessage;
 
 	float tempFloat;
 
@@ -87,7 +90,7 @@ void commTask(void *p) {
 	/*	Needed for receiving from xMega										*/
 	/* -------------------------------------------------------------------- */
 	char payloadSize = 0;
-	char messageBuffer[64];
+	char messageBuffer[XMEGA_BUFFER_SIZE];
 	char inChar;
 	int bytesReceived;
 	char messageReceived = 0;
@@ -107,11 +110,14 @@ void commTask(void *p) {
 				// expecting to receive the payload size
 				if (receiverState == 0) {
 
-					if (inChar >= 0 && inChar <= 63) {
+					// check the message length
+					if (inChar >= 0 && inChar < XMEGA_BUFFER_SIZE) {
 
 						payloadSize = inChar;
 						receiverState = 1;
 						crcIn += inChar;
+
+					// the receiving message is over the buffer size
 					} else {
 
 						receivingMessage = 0;
@@ -121,13 +127,14 @@ void commTask(void *p) {
 				// expecting to receive the payload
 				} else if (receiverState == 1) {
 
+					// put the char in the buffer
 					messageBuffer[bytesReceived++] = inChar;
+					// add crc
 					crcIn += inChar;
 
-					if (bytesReceived >= payloadSize) {
-
+					// if the message should end, change state
+					if (bytesReceived >= payloadSize)
 						receiverState = 2;
-					}
 
 				// expecting to receive the crc
 				} else if (receiverState == 2) {
@@ -136,7 +143,7 @@ void commTask(void *p) {
 
 						messageReceived = 1;
 						receivingMessage = 0;
-					} else {
+						} else {
 
 						receivingMessage = 0;
 						receiverState = 0;
@@ -145,6 +152,7 @@ void commTask(void *p) {
 
 			} else {
 
+				// this character precedes every message
 				if (inChar == 'a') {
 
 					crcIn = inChar;
@@ -168,7 +176,7 @@ void commTask(void *p) {
 
 			if (messageId == '1') {
 
-				px4flowMessage mes;
+				comm2kalmanMessage_t mes;
 
 				tempFloat = readFloat(messageBuffer, &idx);
 				if (fabs(tempFloat) < 1)
@@ -183,19 +191,12 @@ void commTask(void *p) {
 					mes.aileronSpeed = tempFloat;
 
 				tempFloat = readFloat(messageBuffer, &idx);
-				if (fabs(tempFloat) < 100)
+				if (fabs(tempFloat) < 300)
 					mes.elevatorInput = tempFloat;
 
 				tempFloat = readFloat(messageBuffer, &idx);
-				if (fabs(tempFloat) < 100)
+				if (fabs(tempFloat) < 300)
 					mes.aileronInput = tempFloat;
-
-				// send human readable values of
-				/*
-				char tempString[60];
-				sprintf(tempString, "%4.1f %4.1f %4.1f %4.1f\n\r", mes.elevatorSpeed, mes.aileronSpeed, mes.elevatorInput, mes.aileronInput);
-				Usart4PutString(tempString);
-				*/
 
 				xQueueSend(comm2kalmanQueue, &mes, 0);
 
@@ -209,15 +210,9 @@ void commTask(void *p) {
 		}
 
 		/* -------------------------------------------------------------------- */
-		/*	Receive message from MPC											*/
+		/*	Receive message from MPC task										*/
 		/* -------------------------------------------------------------------- */
 		if (xQueueReceive(mpc2commQueue, &mpcMessage, 0)) {
-
-			/*
-			char tempString[60];
-			sprintf(tempString, "%2.3f %2.3f %d %d\n\r", vector_float_get(elevatorHandler.states, 1), vector_float_get(aileronHandler.states, 1), mpcMessage.elevatorOutput, mpcMessage.aileronOutput);
-			Usart4PutString(tempString);
-			*/
 
 			/* -------------------------------------------------------------------- */
 			/*	Send message to xMega												*/
@@ -225,12 +220,37 @@ void commTask(void *p) {
 
 			// clear the crc
 			crcOut = 0;
-			sendChar('a', &crcOut);		// this character initiates the transmition
-			sendChar(1+8, &crcOut);		// this will be the size of the message
+			sendChar('a', &crcOut);			// this character initiates the transmission
+			sendChar(1+4, &crcOut);			// this will be the size of the message
 
-			sendChar('1', &crcOut);		// id of the message
-			sendFloat(mpcMessage.elevatorOutput, &crcOut);
-			sendFloat(mpcMessage.aileronOutput, &crcOut);
+			sendChar('1', &crcOut);			// id of the message
+			sendInt16((int16_t) mpcMessage.elevatorOutput, &crcOut);
+			sendInt16((int16_t) mpcMessage.aileronOutput, &crcOut);
+
+			sendChar(crcOut, &crcOut);
+		}
+
+		/* -------------------------------------------------------------------- */
+		/*	Receive message from kalman task									*/
+		/* -------------------------------------------------------------------- */
+		if (xQueueReceive(kalman2commQueue, &kalmanMessage, 0)) {
+
+			/* -------------------------------------------------------------------- */
+			/*	Send message to xMega												*/
+			/* -------------------------------------------------------------------- */
+
+			// clear the crc
+			crcOut = 0;
+			sendChar('a', &crcOut);			// this character initiates the transmission
+			sendChar(1+2*3*4, &crcOut);		// this will be the size of the message
+
+			sendChar('2', &crcOut);			// id of the message
+			int i;
+			for (i = 0; i < 3; i++)
+				sendFloat(kalmanMessage.elevatorData[i], &crcOut);
+
+			for (i = 0; i < 3; i++)
+				sendFloat(kalmanMessage.aileronData[i], &crcOut);
 
 			sendChar(crcOut, &crcOut);
 		}

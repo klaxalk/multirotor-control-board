@@ -11,9 +11,6 @@
 #include "uart_driver.h"
 
 float dt = 0.0114;
-#define NUMBER_OF_STATES 3
-#define NUMBER_OF_INPUTS 1
-#define NUMBER_OF_MEASURED_STATES 1
 
 kalmanHandler elevatorHandler;
 kalmanHandler aileronHandler;
@@ -215,11 +212,13 @@ void kalmanTask(void *p) {
 	kalmanInit(&elevatorHandler);
 	kalmanInit(&aileronHandler);
 
-	px4flowMessage message;
-
-	kalman2mpcMessage mpcMessage;
+	comm2kalmanMessage_t message;
 
 	while (1) {
+
+		kalman2mpcMessage_t kalman2mpcMessage;
+
+		kalman2commMessage_t kalman2commMesasge;
 
 		if (xQueueReceive(comm2kalmanQueue, &message, 100)) {
 
@@ -247,9 +246,7 @@ void kalmanTask(void *p) {
 			// set the measurement vector
 			vector_float_set(&measurement_vector, 1, message.elevatorSpeed);
 
-			//portENTER_CRITICAL();
 			kalmanIteration(&elevatorHandler, &measurement_vector, &input_vector, &A_matrix, &B_matrix, &R_matrix, &Q_matrix, &C_matrix, dt);
-			//portEXIT_CRITICAL();
 
 			/* -------------------------------------------------------------------- */
 			/*	Compute aileron kalman												*/
@@ -261,20 +258,25 @@ void kalmanTask(void *p) {
 			// set the measurement vector
 			vector_float_set(&measurement_vector, 1, message.aileronSpeed);
 
-			//portENTER_CRITICAL();
 			kalmanIteration(&aileronHandler, &measurement_vector, &input_vector, &A_matrix, &B_matrix, &R_matrix, &Q_matrix, &C_matrix, dt);
-			//portEXIT_CRITICAL();
 
 			/* -------------------------------------------------------------------- */
-			/*	Create a message for mpc task										*/
+			/*	Create a message for mpcTask										*/
 			/* -------------------------------------------------------------------- */
 
-			//portENTER_CRITICAL();
-			memccpy(&mpcMessage.elevatorData, elevatorHandler.states->data, NUMBER_OF_STATES, sizeof(float));
-			memccpy(&mpcMessage.aileronData, aileronHandler.states->data, NUMBER_OF_STATES, sizeof(float));
-			//portEXIT_CRITICAL();
+			memccpy(&kalman2mpcMessage.elevatorData, elevatorHandler.states->data, NUMBER_OF_STATES, sizeof(float));
+			memccpy(&kalman2mpcMessage.aileronData, aileronHandler.states->data, NUMBER_OF_STATES, sizeof(float));
 
-			xQueueOverwrite(kalman2mpcQueue, &mpcMessage);
+			xQueueOverwrite(kalman2mpcQueue, &kalman2mpcMessage);
+
+			/* -------------------------------------------------------------------- */
+			/*	Create a message for commTask										*/
+			/* -------------------------------------------------------------------- */
+
+			memccpy(&kalman2commMesasge.elevatorData, elevatorHandler.states->data, NUMBER_OF_STATES, sizeof(float));
+			memccpy(&kalman2commMesasge.aileronData, aileronHandler.states->data, NUMBER_OF_STATES, sizeof(float));
+
+			xQueueOverwrite(kalman2commQueue, &kalman2commMesasge);
 		}
 	}
 }
