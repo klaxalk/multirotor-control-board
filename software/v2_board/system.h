@@ -91,6 +91,15 @@
 #define AUX4			7
 #define AUX5			8
 
+	
+/* -------------------------------------------------------------------- */
+/*	Realtime clock														*/
+/* -------------------------------------------------------------------- */
+extern volatile int16_t milisecondsTimer;
+extern volatile int16_t secondsTimer;
+extern volatile int16_t minutesTimer;
+extern volatile int16_t hoursTimer;
+
 /* -------------------------------------------------------------------- */
 /*	Contains signals from RC receiver									*/
 /* -------------------------------------------------------------------- */

@@ -122,6 +122,7 @@ void boardInit() {
 	
 	milisecondsTimer = 0;
 	secondsTimer = 0;
+	minutesTimer = 0;
 	hoursTimer = 0;	
 
 	

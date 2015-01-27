@@ -1,9 +1,3 @@
-/*
-* main.c
-*
-* Created: 24.8.2014 15:10:04
-*  Author: Tomas Baca
-*/
 
 #include "FreeRTOS.h"
 #include "task.h"

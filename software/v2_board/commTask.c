@@ -19,7 +19,7 @@ void commTask(void *p) {
 	int16_t counter20Hz=0;
 	
 	//wait for XBee
-	startLogging();	
+	//startLogging();	
 	vTaskDelay(1000);
 	
 
@@ -28,7 +28,7 @@ void commTask(void *p) {
 		stateChecker();
 		
 		if (counter40Hz++>1000){
-			loggingData();
+			//loggingData();
 			counter40Hz=0;
 		}
 		

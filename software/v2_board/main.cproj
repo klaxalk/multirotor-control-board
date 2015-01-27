@@ -224,6 +224,12 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="logTask.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="logTask.c">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="commands.c">
       <SubType>compile</SubType>
     </Compile>

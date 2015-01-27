@@ -17,7 +17,7 @@ void startLogging(){
 
 void loggingData(){
 	led_blue_toggle();
-	char str[10];
+	char str[50];
 	sprintf(str,"%.3f,",estimatedThrottlePos);    //altitude
 	usartBufferPutString(usart_buffer_log,str,10);
 	sprintf(str,"%.3f,",estimatedThrottleVel);    
@@ -75,5 +75,8 @@ void loggingData(){
 	sprintf(str,"%d,",RCchannel[RUDDER]);
 	usartBufferPutString(usart_buffer_log,str,10);
 	
-	usartBufferPutString(usart_buffer_log,"-OK-\n\r",10);
+	sprintf(str,"Time:%d:%d:%d:%d,",hoursTimer,minutesTimer,secondsTimer,milisecondsTimer);
+	usartBufferPutString(usart_buffer_log,str,10);
+	
+	usartBufferPutString(usart_buffer_log,"-OK-\r\n",10);
 }

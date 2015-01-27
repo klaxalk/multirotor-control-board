@@ -40,7 +40,6 @@ volatile unsigned char gumstixParseCharCrc = 0;
 //send XBee packet
 void sendXBeePacket(unsigned char *packet){
 	int i;
-
 	for (i=0;i<*(packet+2)+4;i++){
 		usartBufferPutByte(usart_buffer_xbee, *(packet+i), 10);
 	}
