@@ -758,12 +758,6 @@
     <Compile Include="MyDrivers\usart_driver_RTOS.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="openLog.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="openLog.h">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="packets.c">
       <SubType>compile</SubType>
     </Compile>

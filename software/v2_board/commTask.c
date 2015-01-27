@@ -6,7 +6,6 @@
 #include "system.h"
 #include "packets.h"
 #include "commands.h"
-#include "openLog.h"
 
 
 
@@ -18,8 +17,7 @@ void commTask(void *p) {
 	int16_t counter40Hz=500;
 	int16_t counter20Hz=0;
 	
-	//wait for XBee
-	//startLogging();	
+	//wait for XBee	
 	vTaskDelay(1000);
 	
 
@@ -28,7 +26,6 @@ void commTask(void *p) {
 		stateChecker();
 		
 		if (counter40Hz++>1000){
-			//loggingData();
 			counter40Hz=0;
 		}
 		
