@@ -61,6 +61,16 @@ int16_t outputThrottleInc = 0;
 int16_t outputThrottleInc2 = 0;
 
 
+	
+/* -------------------------------------------------------------------- */
+/*	Realtime clock														*/
+/* -------------------------------------------------------------------- */
+volatile int16_t milisecondsTimer;
+volatile int16_t secondsTimer;
+volatile int16_t minutesTimer;
+volatile int16_t hoursTimer;
+
+
 /* -------------------------------------------------------------------- */
 /*	Basic initialization of the MCU, peripherals and i/o				*/
 /* -------------------------------------------------------------------- */
@@ -98,6 +108,22 @@ void boardInit() {
 	sysclk_enable_module(SYSCLK_PORT_D, 0xff);
 	sysclk_enable_module(SYSCLK_PORT_E, 0xff);
 	sysclk_enable_module(SYSCLK_PORT_F, 0xff);
+	
+	/* -------------------------------------------------------------------- */
+	/*	Timer for RTC														*/
+	/* -------------------------------------------------------------------- */
+	
+	// select the clock source and pre-scaler by 8
+	TC1_ConfigClockSource(&TCC1, TC_CLKSEL_DIV64_gc);
+	
+	TC1_SetOverflowIntLevel(&TCC1, TC_OVFINTLVL_LO_gc);
+	
+	TC_SetPeriod(&TCC1, 499);
+	
+	milisecondsTimer = 0;
+	secondsTimer = 0;
+	hoursTimer = 0;	
+
 	
 	/* -------------------------------------------------------------------- */
 	/*	Timer TCD1 for measuring incoming PPM with RC Receiver Data			*/
@@ -278,4 +304,20 @@ ISR(TCD0_CCA_vect) {
 	
 	// shut down the output PPM pulse
 	ppm_out_off();
+}
+
+/* -------------------------------------------------------------------- */
+/*	Interrupt for timing the RTC & mergeSignalsToOutput					*/
+/* -------------------------------------------------------------------- */
+ISR(TCC1_OVF_vect) {
+	if (milisecondsTimer++ == 1000) {		
+		milisecondsTimer = 0;		
+		if (secondsTimer++ == 60) {			
+			secondsTimer = 0;
+			if (minutesTimer++ == 60){
+				minutesTimer = 0;
+				hoursTimer++;
+			}
+		}
+	}
 }

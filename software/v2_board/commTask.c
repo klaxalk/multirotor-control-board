@@ -19,9 +19,10 @@ void commTask(void *p) {
 	int16_t counter20Hz=0;
 	
 	//wait for XBee
+	startLogging();	
 	vTaskDelay(1000);
 	
-	startLogging();	
+
 		
 	while (1) {				
 		stateChecker();
