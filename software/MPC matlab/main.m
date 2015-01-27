@@ -2,13 +2,13 @@ clear all;
 
 %% Matice systemu
 
-dt = 0.015;
+dt = 0.0114;
 
 A = [1 dt 0;
-     0 1 2.4239*dt;
-     0 0 1];
+     0 1 dt;
+     0 0 dt*82.6135];
  
-B = [0; 0; 0.1219*dt];
+B = [0; 0; 0.0105*dt];
 
 %% Kovariancni matice mereni
 
@@ -93,7 +93,7 @@ B_roof = B_roof*U;
 %           0,   ..., ...,  S];
 
 Q = [1, 0, 0;
-     0, 0, 0;
+     0, 2, 0;
      0, 0, 0];
 
 S = [10, 0, 0;
@@ -115,7 +115,7 @@ Q_roof(end-n_states+1:end, end-n_states+1:end) = S;
 %           ..., ..., P,    0;
 %           0,   ..., ...,  P];
 
-P = 0.0005;
+P = 0.000005;
 
 P_roof = zeros(n_variables, n_variables);
 
@@ -143,7 +143,7 @@ time(1) = 0;
 % pozadovana pozice
 x_ref = zeros(n_states*simu_len*2, 1);
 
-x_ref((n_states*simu_len)/4+1:3:end, 1) = 1+0.2*sin(linspace(1, 100, length((n_states*simu_len)/4+1:3:length(x_ref))))';
+% x_ref((n_states*simu_len)/4+1:3:end, 1) = 1+0.2*sin(linspace(1, 100, length((n_states*simu_len)/4+1:3:length(x_ref))))';
     
 % pocatecni podminky simulace
 x(:, 1) = [1; 0; 0];
@@ -155,7 +155,7 @@ noisy_hist = [0; 0; 0];
 u = zeros(horizon_len, u_size);
 
 % saturace akcnich zasahu
-saturace = 15;
+saturace = 100;
 
 u_sat = 0;
 
@@ -186,6 +186,8 @@ for i=2:simu_len
 
         u_cf = H_inv*(c./(-2));
         
+        HMM = u_cf;
+        
         u_cf = U*u_cf;
         
         % simulace predikce z aktualniho vektoru akcnich zasahu
@@ -210,7 +212,7 @@ for i=2:simu_len
     % spocti nove stavy podle modelu     
     x(:, i) = A*x(:, i-1) + B*u_sat;
     
-    if (mod(i, 8) == 0)
+    if (mod(i, 4) == 0)
         
         figure(1);
     
@@ -246,5 +248,7 @@ for i=2:simu_len
         axis([0, dt*simu_len, -1, 1]);
 
     end
+    
+clear     drawnow;
     
 end
