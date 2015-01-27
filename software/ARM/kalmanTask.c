@@ -10,7 +10,7 @@
 #include "CMatrixLib.h"
 #include "uart_driver.h"
 
-float dt = 0.015;
+float dt = 0.0114;
 #define NUMBER_OF_STATES 3
 #define NUMBER_OF_INPUTS 1
 #define NUMBER_OF_MEASURED_STATES 1
@@ -28,8 +28,8 @@ void kalmanTask(void *p) {
 	A_matrix.height = NUMBER_OF_STATES;
 	A_matrix.width = NUMBER_OF_STATES;
 	float data_A[NUMBER_OF_STATES*NUMBER_OF_STATES] = {1, dt, 0,
-													   0, 1, 2.4239*dt,
-													   0, 0, 1};
+													   0, 1, dt,
+													   0, 0, dt*82.6135};
 	A_matrix.data = (float *) data_A;
 
 	/* -------------------------------------------------------------------- */
@@ -39,7 +39,7 @@ void kalmanTask(void *p) {
 	B_matrix.name = "System matrix B";
 	B_matrix.height = NUMBER_OF_STATES;
 	B_matrix.width = NUMBER_OF_INPUTS;
-	float data_B[NUMBER_OF_STATES*NUMBER_OF_INPUTS] = {0, 0, 0.1219*dt};
+	float data_B[NUMBER_OF_STATES*NUMBER_OF_INPUTS] = {0, 0, 0.0105*dt};
 	B_matrix.data = (float *) data_B;
 
 	/* -------------------------------------------------------------------- */
@@ -231,10 +231,11 @@ void kalmanTask(void *p) {
 
 			// update the A_matrix
 			matrix_float_set(&A_matrix, 1, 2, dt);
-			matrix_float_set(&A_matrix, 2, 3, 2.4239*dt);
+			matrix_float_set(&A_matrix, 2, 3, dt);
+			matrix_float_set(&A_matrix, 3, 3, dt*82.6135);
 
 			// update the B_matrix
-			matrix_float_set(&B_matrix, 3, 1, 0.1219*dt);
+			matrix_float_set(&B_matrix, 3, 1, 0.0105*dt);
 
 			/* -------------------------------------------------------------------- */
 			/*	Compute elevator kalman												*/
