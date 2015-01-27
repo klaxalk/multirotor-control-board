@@ -9,31 +9,28 @@
 #define _COMMUNICATION_H
 
 #include "mavlink/common/mavlink.h"
-#include <avr/io.h>
-#include "config.h"
-#include "controllers.h"
+#include "system.h"
 
-// merge RC channels with controller output
-// the most important function, do not modify
-// unless you know what you are doing!
-void mergeSignalsToOutput();
+/* -------------------------------------------------------------------- */
+/*	px4flow support														*/
+/* -------------------------------------------------------------------- */
 
-//~ --------------------------------------------------------------------
-//~ if data processing from px4flow computer is on
-//~ --------------------------------------------------------------------
+mavlink_message_t mavlinkMessage;
+mavlink_status_t mavlinkStatus;
 
-extern mavlink_message_t mavlinkMessage;
-extern mavlink_status_t mavlinkStatus;
-
-extern mavlink_optical_flow_t opticalFlowData;
-extern volatile float groundDistance;
-extern volatile float elevatorSpeed;
-extern volatile float aileronSpeed;
-extern volatile uint8_t px4Confidence;
+mavlink_optical_flow_t opticalFlowData;
+volatile float groundDistance;
+volatile float elevatorSpeed;
+volatile float aileronSpeed;
+volatile uint8_t px4Confidence;
 
 extern int8_t opticalFlowDataFlag;
 
 int8_t px4flowParseChar(uint8_t incomingChar);
+
+/* -------------------------------------------------------------------- */
+/*	functions for sending and parsing raw variables to uart				*/
+/* -------------------------------------------------------------------- */
 
 // functions for parsing a variable from a buffer
 float readFloat(char * message, int * indexFrom);

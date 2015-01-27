@@ -173,10 +173,12 @@ void commTask(void *p) {
 			stmMessageReceived = 0;
 		}
 		
-		// xBee received
+		/* -------------------------------------------------------------------- */
+		/*	A character received from XBee										*/
+		/* -------------------------------------------------------------------- */
 		if (usartBufferGetByte(usart_buffer_xbee, &inChar, 0)) {
 
-			// prototype of answering with log to xBee
+			// send a simple telemetry
 			if (inChar == 'b') {
 
 				char crc = 0;
