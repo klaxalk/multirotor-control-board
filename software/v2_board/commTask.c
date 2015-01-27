@@ -182,7 +182,7 @@ void commTask(void *p) {
 			if (inChar == 'b') {
 
 				char crc = 0;
-
+				
 				sendFloat(usart_buffer_xbee, kalmanStates.elevator.position, &crc);
 				sendFloat(usart_buffer_xbee, kalmanStates.aileron.position, &crc);
 			
