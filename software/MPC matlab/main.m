@@ -23,7 +23,7 @@ u_size = size(B, 2);
 %% Pomocne promenne
 
 % delka predikcniho horizontu
-horizon_len = 200;
+horizon_len = 400;
 
 %% Matice U
 
@@ -34,7 +34,7 @@ U = zeros(horizon_len, n_variables);
 U(1:20, 1:20) = eye(20);
 
 for i=1:18
-    U((21+(i-1)*10):(20+i*10), 20+i) = ones(10, 1); 
+    U((21+(i-1)*20):(20+i*20), 20+i) = ones(20, 1); 
 end
 
 % U(1:20, 1:20) = eye(20);
@@ -93,7 +93,7 @@ B_roof = B_roof*U;
 %           0,   ..., ...,  S];
 
 Q = [1, 0, 0;
-     0, 2, 0;
+     0, 1, 0;
      0, 0, 0];
 
 S = [10, 0, 0;
@@ -115,7 +115,7 @@ Q_roof(end-n_states+1:end, end-n_states+1:end) = S;
 %           ..., ..., P,    0;
 %           0,   ..., ...,  P];
 
-P = 0.000005;
+P = 0.00001;
 
 P_roof = zeros(n_variables, n_variables);
 
@@ -124,7 +124,7 @@ for i=1:n_variables
 end
 
 for i=21:38
-    P_roof(i, i) = 10*P; 
+    P_roof(i, i) = 20*P; 
 end
 
 %% Matice H
@@ -155,7 +155,7 @@ noisy_hist = [0; 0; 0];
 u = zeros(horizon_len, u_size);
 
 % saturace akcnich zasahu
-saturace = 100;
+saturace = 300;
 
 u_sat = 0;
 

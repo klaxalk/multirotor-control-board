@@ -10,7 +10,7 @@
 #include "CMatrixLib.h"
 
 #define NUMBER_OF_STATES 	3
-#define HORIZON_LEN			200
+#define HORIZON_LEN			400
 #define REDUCED_HORIZON		38
 
 #define A_ROOF_HEIGHT		HORIZON_LEN*NUMBER_OF_STATES
