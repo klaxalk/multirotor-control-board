@@ -27,7 +27,7 @@
 </editorArea>
 <editor id="org.eclipse.cdt.ui.editor.CEditor" name="commTask.c" partName="commTask.c" path="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/commTask.c" title="commTask.c" tooltip="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/commTask.c" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/ArmMCU/commTask.c"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="5543" selectionTopPixel="3019"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="329" selectionTopPixel="0"/>
 </editor>
 <editor id="org.eclipse.cdt.ui.editor.CEditor" name="commTask.h" partName="commTask.h" path="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/commTask.h" title="commTask.h" tooltip="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/commTask.h" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/ArmMCU/commTask.h"/>
@@ -45,9 +45,9 @@
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/ArmMCU/kalmanTask.h"/>
 <editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="678" selectionTopPixel="0"/>
 </editor>
-<editor id="org.eclipse.cdt.ui.editor.CEditor" name="mpcMatrices.c" partName="mpcMatrices.c" path="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/mpcMatrices.c" title="mpcMatrices.c" tooltip="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/mpcMatrices.c" workbook="DefaultEditorWorkbook">
+<editor activePart="true" focus="true" id="org.eclipse.cdt.ui.editor.CEditor" name="mpcMatrices.c" partName="mpcMatrices.c" path="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/mpcMatrices.c" title="mpcMatrices.c" tooltip="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/mpcMatrices.c" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/ArmMCU/mpcMatrices.c"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="0" selectionTopPixel="660"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="0" selectionTopPixel="26904"/>
 </editor>
 <editor id="org.eclipse.cdt.ui.editor.CEditor" name="mpcTask.c" partName="mpcTask.c" path="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/mpcTask.c" title="mpcTask.c" tooltip="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/mpcTask.c" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/ArmMCU/mpcTask.c"/>
@@ -65,7 +65,7 @@
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/ArmMCU/kalman.c"/>
 <editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="1562" selectionTopPixel="540"/>
 </editor>
-<editor activePart="true" focus="true" id="org.eclipse.cdt.ui.editor.CEditor" name="CMatrixLib.c" partName="CMatrixLib.c" path="C:/Users/klaxalk/Desktop/multirotor-control-board/software/CMatrixLib/CMatrixLib/CMatrixLib.c" title="CMatrixLib.c" tooltip="C:/Users/klaxalk/Desktop/multirotor-control-board/software/CMatrixLib/CMatrixLib/CMatrixLib.c" workbook="DefaultEditorWorkbook">
+<editor id="org.eclipse.cdt.ui.editor.CEditor" name="CMatrixLib.c" partName="CMatrixLib.c" path="C:/Users/klaxalk/Desktop/multirotor-control-board/software/CMatrixLib/CMatrixLib/CMatrixLib.c" title="CMatrixLib.c" tooltip="C:/Users/klaxalk/Desktop/multirotor-control-board/software/CMatrixLib/CMatrixLib/CMatrixLib.c" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/ArmMCU/CMatrixLib.c"/>
 <editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="5792" selectionTopPixel="3720"/>
 </editor>
@@ -77,7 +77,7 @@
 <element path="/ArmMCU"/>
 </expanded>
 <selection>
-<element path="/ArmMCU/CMatrixLib.c"/>
+<element path="/ArmMCU/mpcMatrices.c"/>
 </selection>
 </viewState>
 </view>
@@ -132,7 +132,7 @@
 <fastViewBars>
 <fastViewBar fastViewLocation="1024" id="org.eclipse.ui.internal.ViewStack@586ac6" orientation="256" selectedTabId="org.eclipse.ui.console.ConsoleView" style="0">
 <fastViews>
-<view id="org.eclipse.ui.console.ConsoleView" ratio="0.29936305"/>
+<view id="org.eclipse.ui.console.ConsoleView" ratio="0.29837066"/>
 </fastViews>
 </fastViewBar>
 </fastViewBars>
@@ -287,13 +287,9 @@
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/main.c"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/kalman.c"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/CMatrixLib.c"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/commTask.c"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/mpcMatrices.c"/>
 </editors>
-<item historyLabel="kalmanTask.h" index="2">
-<position info="not_deleted" x="625" y="0"/>
-</item>
-<item historyLabel="commTask.c" index="0">
-<position info="not_deleted" x="526" y="0"/>
-</item>
 <item historyLabel="commTask.c" index="0">
 <position/>
 </item>
@@ -435,7 +431,13 @@
 <item historyLabel="commTask.c" index="0">
 <position info="not_deleted" x="5543" y="0"/>
 </item>
-<item active="true" historyLabel="CMatrixLib.c" index="11">
+<item historyLabel="CMatrixLib.c" index="11">
+<position info="not_deleted" x="0" y="0"/>
+</item>
+<item historyLabel="commTask.c" index="12">
+<position info="not_deleted" x="5585" y="0"/>
+</item>
+<item active="true" historyLabel="mpcMatrices.c" index="13">
 <position info="not_deleted" x="0" y="0"/>
 </item>
 </navigationHistory>
@@ -445,47 +447,47 @@
 <actionBarAdvisor/>
 </window>
 <mruList>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="CMatrixLib.c" tooltip="ArmMCU/CMatrixLib.c">
-<persistable path="/ArmMCU/CMatrixLib.c"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="kalman.c" tooltip="ArmMCU/kalman.c">
-<persistable path="/ArmMCU/kalman.c"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="main.c" tooltip="ArmMCU/main.c">
-<persistable path="/ArmMCU/main.c"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="miscellaneous.c" tooltip="ArmMCU/miscellaneous.c">
-<persistable path="/ArmMCU/miscellaneous.c"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="mpcTask.c" tooltip="ArmMCU/mpcTask.c">
-<persistable path="/ArmMCU/mpcTask.c"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="mpcMatrices.c" tooltip="ArmMCU/mpcMatrices.c">
-<persistable path="/ArmMCU/mpcMatrices.c"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="kalmanTask.h" tooltip="ArmMCU/kalmanTask.h">
-<persistable path="/ArmMCU/kalmanTask.h"/>
-</file>
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="kalmanTask.c" tooltip="ArmMCU/kalmanTask.c">
 <persistable path="/ArmMCU/kalmanTask.c"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="system.c" tooltip="ArmMCU/system.c">
-<persistable path="/ArmMCU/system.c"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="heap_2.c" tooltip="ArmMCU/FreeRTOS/Port/heap_2.c">
+<persistable path="/ArmMCU/FreeRTOS/Port/heap_2.c"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="commTask.h" tooltip="ArmMCU/commTask.h">
-<persistable path="/ArmMCU/commTask.h"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="task.h" tooltip="ArmMCU/FreeRTOS/Source/include/task.h">
+<persistable path="/ArmMCU/FreeRTOS/Source/include/task.h"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="system.h" tooltip="ArmMCU/system.h">
-<persistable path="/ArmMCU/system.h"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="init_board.h" tooltip="ArmMCU/init_board.h">
+<persistable path="/ArmMCU/init_board.h"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="kalman.h" tooltip="ArmMCU/kalman.h">
-<persistable path="/ArmMCU/kalman.h"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="init_board.c" tooltip="ArmMCU/init_board.c">
+<persistable path="/ArmMCU/init_board.c"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="commTask.c" tooltip="ArmMCU/commTask.c">
-<persistable path="/ArmMCU/commTask.c"/>
+<file factoryID="org.eclipse.ui.ide.FileStoreEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="misc.c" tooltip="C:\Users\klaxalk\Desktop\ArmLedTest\STM32F4xx_StdPeriph_Driver\src\misc.c">
+<persistable uri="file:/C:/Users/klaxalk/Desktop/ArmLedTest/STM32F4xx_StdPeriph_Driver/src/misc.c"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="uart_driver.c" tooltip="ArmMCU/uart_driver.c">
-<persistable path="/ArmMCU/uart_driver.c"/>
+<file factoryID="org.eclipse.cdt.ui.ExternalEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="misc.h" tooltip="C:\Users\klaxalk\Desktop\ArmLedTest\STM32F4xx_StdPeriph_Driver\inc\misc.h">
+<persistable path="C:\Users\klaxalk\Desktop\ArmLedTest\STM32F4xx_StdPeriph_Driver\inc\misc.h" project="ArmTest"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="startup_stm32f4xx.c" tooltip="ArmTest/cmsis_boot/startup/startup_stm32f4xx.c">
+<persistable path="/ArmTest/cmsis_boot/startup/startup_stm32f4xx.c"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="system_stm32f4xx.c" tooltip="ArmTest/cmsis_boot/system_stm32f4xx.c">
+<persistable path="/ArmTest/cmsis_boot/system_stm32f4xx.c"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="system_stm32f4xx.h" tooltip="ArmTest/cmsis_boot/system_stm32f4xx.h">
+<persistable path="/ArmTest/cmsis_boot/system_stm32f4xx.h"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="stm32f4xx_conf.h" tooltip="ArmTest/cmsis_boot/stm32f4xx_conf.h">
+<persistable path="/ArmTest/cmsis_boot/stm32f4xx_conf.h"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="stm32f4xx.h" tooltip="ArmTest/cmsis_boot/stm32f4xx.h">
+<persistable path="/ArmTest/cmsis_boot/stm32f4xx.h"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="main.c" tooltip="ArmTest/main.c">
+<persistable path="/ArmTest/main.c"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="main.c" tooltip="ArmMCU/main.c">
+<persistable path="/ArmMCU/main.c"/>
 </file>
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="mpcMatrices.h" tooltip="ArmMCU/mpcMatrices.h">
 <persistable path="/ArmMCU/mpcMatrices.h"/>

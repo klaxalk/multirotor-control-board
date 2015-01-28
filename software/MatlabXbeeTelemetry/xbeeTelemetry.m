@@ -6,7 +6,7 @@ end
 
 clear all
 
-s = serial('COM8');
+s = serial('COM3');
 s.BaudRate = 115200;
 s.BytesAvailableFcnMode = 'terminator';
 s.Terminator = 'CR/LF';

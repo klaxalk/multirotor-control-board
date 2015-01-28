@@ -24,7 +24,7 @@ volatile bool mpcControllerEnabled;
 /*	variables that supports MPC											*/
 /* -------------------------------------------------------------------- */
 
-#define MPC_SATURATION	100
+#define MPC_SATURATION	300
 
 volatile int16_t mpcElevatorOutput;
 volatile int16_t mpcAileronOutput;

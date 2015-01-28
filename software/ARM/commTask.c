@@ -8,6 +8,7 @@
 #include "kalmanTask.h"
 #include "mpcTask.h"
 #include "uart_driver.h"
+#include <stdlib.h>
 
 float readFloat(char * message, int * indexFrom) {
 
@@ -85,6 +86,7 @@ void commTask(void *p) {
 	kalman2commMessage_t kalmanMessage;
 
 	float tempFloat;
+	int16_t tempInt;
 
 	/* -------------------------------------------------------------------- */
 	/*	Needed for receiving from xMega										*/
@@ -190,13 +192,13 @@ void commTask(void *p) {
 				if (fabs(tempFloat) < 1)
 					mes.aileronSpeed = tempFloat;
 
-				tempFloat = readFloat(messageBuffer, &idx);
-				if (fabs(tempFloat) < 300)
-					mes.elevatorInput = tempFloat;
+				tempInt = readInt16(messageBuffer, &idx);
+				if (abs(tempInt) < 300)
+					mes.elevatorInput = (float) tempInt;
 
-				tempFloat = readFloat(messageBuffer, &idx);
-				if (fabs(tempFloat) < 300)
-					mes.aileronInput = tempFloat;
+				tempInt = readFloat(messageBuffer, &idx);
+				if (abs(tempInt) < 300)
+					mes.aileronInput = (float) tempInt;
 
 				xQueueSend(comm2kalmanQueue, &mes, 0);
 

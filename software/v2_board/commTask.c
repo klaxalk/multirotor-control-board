@@ -249,14 +249,14 @@ void commTask(void *p) {
 			// clear the crc
 			char crc = 0;
 			sendChar(usart_buffer_stm, 'a', &crc);		// this character initiates the transmition
-			sendChar(usart_buffer_stm, 1+20, &crc);		// this will be the size of the message
+			sendChar(usart_buffer_stm, 1+16, &crc);		// this will be the size of the message
 			
 			sendChar(usart_buffer_stm, '1', &crc);		// id of the message
 			sendFloat(usart_buffer_stm, dt, &crc);
 			sendFloat(usart_buffer_stm, elevatorSpeed, &crc);
 			sendFloat(usart_buffer_stm, aileronSpeed, &crc);
-			sendFloat(usart_buffer_stm, (float) ((float) outputChannels[ELEVATOR]/2 - PPM_IN_MIDDLE_LENGTH)/10, &crc);
-			sendFloat(usart_buffer_stm, (float) ((float) outputChannels[AILERON]/2 - PPM_IN_MIDDLE_LENGTH)/10, &crc);
+			sendInt16(usart_buffer_stm, mpcElevatorOutput, &crc);
+			sendInt16(usart_buffer_stm, mpcAileronOutput, &crc);
 			
 			sendChar(usart_buffer_stm, crc, &crc);
 		}
