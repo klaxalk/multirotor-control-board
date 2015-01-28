@@ -4,6 +4,7 @@
 #include "communication.h"
 #include "controllers.h"
 #include "system.h"
+#include "commTask.h"
 
 
 
@@ -91,6 +92,10 @@ float telemetryValue(unsigned char type){
 		f=estimatedBlobHorizontal;
     }else if(type==TELEMETRIES.BLOB_VERTICAL){
 		f=estimatedBlobVertical;
+    }else if(type==TELEMETRIES.PITCH_ANGLE){
+		f=(float)pitchAngle/10.0;
+    }else if(type==TELEMETRIES.ROLL_ANGLE){
+		f=(float)rollAngle/10.0;
     }
 	return f;
 }

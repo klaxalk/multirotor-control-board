@@ -25,9 +25,6 @@ volatile int16_t rollBoardAngle = 0;
 volatile int16_t pitchBoardAngle = 0;
 volatile int16_t pitchAngle = 0;
 volatile int16_t rollAngle = 0;
-volatile int16_t prevYawAngle = 0;
-volatile int16_t prevPitchAngle = 0;
-volatile int16_t prevRollAngle = 0;
 
 signed char *pRxData = 0;
 unsigned char RxDataLen = 0;

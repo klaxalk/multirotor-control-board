@@ -250,7 +250,7 @@ void positionEstimator() {
 	//Blob detector 
 	estimatedBlobDistance += (elevatorGumstix-estimatedBlobDistance) * (DT/GUMSTIX_FILTER_CONST);
 	estimatedBlobHorizontal += (aileronGumstix-estimatedBlobHorizontal) * (DT/GUMSTIX_FILTER_CONST);
-	estimatedBlobVertical += (throttleGumstix-estimatedBlobHorizontal) * (DT/GUMSTIX_FILTER_CONST);
+	estimatedBlobVertical += (throttleGumstix-estimatedBlobVertical) * (DT/GUMSTIX_FILTER_CONST);
 	
 	//elevator velocity
 	estimatedElevatorVel += (elevatorSpeed-estimatedElevatorVel) * (DT/PX4FLOW_FILTER_CONST);

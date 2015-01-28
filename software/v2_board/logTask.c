@@ -21,7 +21,7 @@ void logValueStr(float lValue){
 }
 
 void logTaskReadable(void *p){
-	
+	vTaskDelay(1000);	
 	usartBufferPutString(usart_buffer_log,"Start Logging - String\r\n",10);		
 	usartBufferPutString(usart_buffer_log,"Altitude,Elevator,Aileron,Blob,Setpoints,Outputs,RC IN,Time\r\n",10);
 	
@@ -60,19 +60,19 @@ void logTaskReadable(void *p){
 		logValueStr((float)secondsTimer);
 		logValueStr((float)milisecondsTimer);
 				
-		usartBufferPutString(usart_buffer_log,"-OK-\r\n",10);
+		usartBufferPutString(usart_buffer_log,"\r\n",10);
 		vTaskDelay(40);	
 	}
 }
 
 void logTaskBinary(void *p){
+		vTaskDelay(1000);	
 	    usartBufferPutString(usart_buffer_log,"Start Logging - Binary Float\r\n",10);	
-		usartBufferPutString(usart_buffer_log,"Altitude,Elevator,Aileron,Blob,Setpoints,Outputs,RC IN,Time\r\n",10);	
+		usartBufferPutString(usart_buffer_log,"Angles,Altitude,Elevator,Aileron,Blob,Setpoints,Outputs,RC IN,Time\r\n",10);	
 		strBin=str;			
-	while(1){
-		
+	while(1){		
 		led_blue_toggle();		
-		logValueBin((float) (pitchAngle/10.0));
+		logValueBin((float) (pitchAngle/10.0)); //angles
 		logValueBin((float) (rollAngle/10.0));
 		logValueBin(estimatedThrottlePos); //altitude
 		logValueBin(estimatedThrottleVel);
