@@ -20,24 +20,13 @@
 // the controllersTask
 #include "controllersTask.h"
 
-void blink(void *p) {
-	
-	while (1) {
-		
-		led_yellow_toggle();
-		
-		// makes the 70Hz loop
-		vTaskDelay(500);
-	}
-}
+#include "logTask.h"
 
 int main(void)
 {
 		
 	// initialize the hardware
 	boardInit();
-
-	xTaskCreate(blink, (signed char*) "commTask", 128, NULL, 2, NULL);
 
 	/* -------------------------------------------------------------------- */
 	/*	Start the communication task routine								*/
@@ -47,12 +36,17 @@ int main(void)
 	/* -------------------------------------------------------------------- */
 	/*	Start the main task routine											*/
 	/* -------------------------------------------------------------------- */
-	xTaskCreate(mainTask, (signed char*) "mainTask", 1024, NULL, 2, NULL);
+	xTaskCreate(mainTask, (signed char*) "mainTask", 512, NULL, 2, NULL);
 	
 	/* -------------------------------------------------------------------- */
 	/*	Start the controllers task routine									*/
 	/* -------------------------------------------------------------------- */
-	xTaskCreate(controllersTask, (signed char*) "contTasks", 1024, NULL, 2, NULL);
+	xTaskCreate(controllersTask, (signed char*) "contTasks", 512, NULL, 2, NULL);
+	
+	/* -------------------------------------------------------------------- */
+	/*	Start the data logging task routine									*/
+	/* -------------------------------------------------------------------- */
+	xTaskCreate(logTask, (signed char*) "logTask", 1024, NULL, 2, NULL);
 	
 	/* -------------------------------------------------------------------- */
 	/*	Start the FreeRTOS scheduler										*/

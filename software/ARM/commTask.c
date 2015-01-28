@@ -245,12 +245,14 @@ void commTask(void *p) {
 			sendChar(1+2*3*4, &crcOut);		// this will be the size of the message
 
 			sendChar('2', &crcOut);			// id of the message
-			int i;
-			for (i = 0; i < 3; i++)
-				sendFloat(kalmanMessage.elevatorData[i], &crcOut);
 
-			for (i = 0; i < 3; i++)
-				sendFloat(kalmanMessage.aileronData[i], &crcOut);
+			sendFloat(kalmanMessage.elevatorData[0], &crcOut);
+			sendFloat(kalmanMessage.elevatorData[1], &crcOut);
+			sendFloat(kalmanMessage.elevatorData[2], &crcOut);
+
+			sendFloat(kalmanMessage.aileronData[0], &crcOut);
+			sendFloat(kalmanMessage.aileronData[1], &crcOut);
+			sendFloat(kalmanMessage.aileronData[2], &crcOut);
 
 			sendChar(crcOut, &crcOut);
 		}

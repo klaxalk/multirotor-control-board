@@ -121,14 +121,14 @@ void mpcTask(void *p) {
 		if (xQueueReceive(kalman2mpcQueue, &kalmanMessage, 100)) {
 
 			// copy the elevatorStates to states
-			memccpy(states.data, &kalmanMessage.elevatorData, NUMBER_OF_STATES, sizeof(float));
+			memcpy(states.data, &kalmanMessage.elevatorData, NUMBER_OF_STATES*sizeof(float));
 
 			calculateMPC();
 
 			newMessage.elevatorOutput = vector_float_get(&temp_vector3, 1);
 
 			// copy the elevatorStates to states
-			memccpy(states.data, &kalmanMessage.aileronData, NUMBER_OF_STATES, sizeof(float));
+			memcpy(states.data, &kalmanMessage.aileronData, NUMBER_OF_STATES*sizeof(float));
 
 			calculateMPC();
 

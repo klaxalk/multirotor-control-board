@@ -264,8 +264,8 @@ void kalmanTask(void *p) {
 			/*	Create a message for mpcTask										*/
 			/* -------------------------------------------------------------------- */
 
-			memccpy(&kalman2mpcMessage.elevatorData, elevatorHandler.states->data, NUMBER_OF_STATES, sizeof(float));
-			memccpy(&kalman2mpcMessage.aileronData, aileronHandler.states->data, NUMBER_OF_STATES, sizeof(float));
+			memcpy(&kalman2mpcMessage.elevatorData, elevatorHandler.states->data, NUMBER_OF_STATES*sizeof(float));
+			memcpy(&kalman2mpcMessage.aileronData, aileronHandler.states->data, NUMBER_OF_STATES*sizeof(float));
 
 			xQueueOverwrite(kalman2mpcQueue, &kalman2mpcMessage);
 
@@ -273,8 +273,8 @@ void kalmanTask(void *p) {
 			/*	Create a message for commTask										*/
 			/* -------------------------------------------------------------------- */
 
-			memccpy(&kalman2commMesasge.elevatorData, elevatorHandler.states->data, NUMBER_OF_STATES, sizeof(float));
-			memccpy(&kalman2commMesasge.aileronData, aileronHandler.states->data, NUMBER_OF_STATES, sizeof(float));
+			memcpy(&kalman2commMesasge.elevatorData, elevatorHandler.states->data, NUMBER_OF_STATES*sizeof(float));
+			memcpy(&kalman2commMesasge.aileronData, aileronHandler.states->data, NUMBER_OF_STATES*sizeof(float));
 
 			xQueueOverwrite(kalman2commQueue, &kalman2commMesasge);
 		}
