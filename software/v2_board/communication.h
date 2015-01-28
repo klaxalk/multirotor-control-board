@@ -3,10 +3,6 @@
 
 #include "mavlink/common/mavlink.h"
 
-// define mavlink buffers lengths
-#define MAX_SENDE_BUFF 20
-#define MAX_EMPFANGS_BUFF 20
-
 	//XBee
 	extern volatile unsigned char leadKopter[8];
 

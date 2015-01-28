@@ -27,54 +27,54 @@
     <eraseonlaunchrule>0</eraseonlaunchrule>
     <AsfFrameworkConfig>
       <framework-data>
-        <options>
-          <option id="common.boards" value="Add" config="" content-id="Atmel.ASF" />
-          <option id="common.services.basic.clock" value="Add" config="" content-id="Atmel.ASF" />
-          <option id="xmega.drivers.ioport" value="Add" config="" content-id="Atmel.ASF" />
-        </options>
-        <configurations />
-        <files>
-          <file path="src/ASF/common/utils/make/Makefile.avr.in" framework="" version="3.19.0" source="common\utils\make\Makefile.avr.in" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/xmega/drivers/cpu/ccp.s" framework="" version="3.19.0" source="xmega\drivers\cpu\ccp.s" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/xmega/drivers/cpu/xmega_reset_cause.h" framework="" version="3.19.0" source="xmega\drivers\cpu\xmega_reset_cause.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/xmega/drivers/cpu/ccp.h" framework="" version="3.19.0" source="xmega\drivers\cpu\ccp.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/xmega/drivers/nvm/nvm.c" framework="" version="3.19.0" source="xmega\drivers\nvm\nvm.c" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/xmega/drivers/nvm/nvm_asm.s" framework="" version="3.19.0" source="xmega\drivers\nvm\nvm_asm.s" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/xmega/drivers/nvm/nvm.h" framework="" version="3.19.0" source="xmega\drivers\nvm\nvm.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/common/services/clock/xmega/sysclk.c" framework="" version="3.19.0" source="common\services\clock\xmega\sysclk.c" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/common/services/clock/pll.h" framework="" version="3.19.0" source="common\services\clock\pll.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/common/services/clock/genclk.h" framework="" version="3.19.0" source="common\services\clock\genclk.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/common/services/clock/osc.h" framework="" version="3.19.0" source="common\services\clock\osc.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/common/services/clock/xmega/pll.h" framework="" version="3.19.0" source="common\services\clock\xmega\pll.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/common/services/clock/xmega/sysclk.h" framework="" version="3.19.0" source="common\services\clock\xmega\sysclk.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/common/services/clock/xmega/osc.h" framework="" version="3.19.0" source="common\services\clock\xmega\osc.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/common/services/clock/sysclk.h" framework="" version="3.19.0" source="common\services\clock\sysclk.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/Config/conf_clock.h" framework="" version="3.19.0" source="common\services\clock\xmega\module_config_usb\conf_clock.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/common/utils/interrupt.h" framework="" version="3.19.0" source="common\utils\interrupt.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/common/utils/interrupt/interrupt_avr8.h" framework="" version="3.19.0" source="common\utils\interrupt\interrupt_avr8.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/common/utils/parts.h" framework="" version="3.19.0" source="common\utils\parts.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/xmega/utils/progmem.h" framework="" version="3.19.0" source="xmega\utils\progmem.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/xmega/utils/assembler.h" framework="" version="3.19.0" source="xmega\utils\assembler.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/xmega/utils/bit_handling/clz_ctz.h" framework="" version="3.19.0" source="xmega\utils\bit_handling\clz_ctz.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/xmega/utils/preprocessor/preprocessor.h" framework="" version="3.19.0" source="xmega\utils\preprocessor\preprocessor.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/xmega/utils/preprocessor/stringz.h" framework="" version="3.19.0" source="xmega\utils\preprocessor\stringz.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/xmega/utils/preprocessor/tpaste.h" framework="" version="3.19.0" source="xmega\utils\preprocessor\tpaste.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/xmega/utils/compiler.h" framework="" version="3.19.0" source="xmega\utils\compiler.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/xmega/utils/status_codes.h" framework="" version="3.19.0" source="xmega\utils\status_codes.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/xmega/utils/preprocessor/mrepeat.h" framework="" version="3.19.0" source="xmega\utils\preprocessor\mrepeat.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/xmega/utils/assembler/gas.h" framework="" version="3.19.0" source="xmega\utils\assembler\gas.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/common/services/ioport/xmega/ioport_compat.c" framework="" version="3.19.0" source="common\services\ioport\xmega\ioport_compat.c" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/common/services/ioport/xmega/ioport_compat.h" framework="" version="3.19.0" source="common\services\ioport\xmega\ioport_compat.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/common/services/ioport/xmega/ioport.h" framework="" version="3.19.0" source="common\services\ioport\xmega\ioport.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/common/services/ioport/ioport.h" framework="" version="3.19.0" source="common\services\ioport\ioport.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/common/boards/board.h" framework="" version="3.19.0" source="common\boards\board.h" changed="False" content-id="Atmel.ASF" />
-        </files>
-        <documentation help="" />
-        <offline-documentation help="" />
-        <dependencies>
-          <content-extension eid="atmel.asf" uuidref="Atmel.ASF" version="3.6.0" />
-        </dependencies>
-      </framework-data>
+  <options>
+    <option id="common.boards" value="Add" config="" content-id="Atmel.ASF" />
+    <option id="common.services.basic.clock" value="Add" config="" content-id="Atmel.ASF" />
+    <option id="xmega.drivers.ioport" value="Add" config="" content-id="Atmel.ASF" />
+  </options>
+  <configurations />
+  <files>
+    <file path="src/ASF/common/utils/make/Makefile.avr.in" framework="" version="3.19.0" source="common\utils\make\Makefile.avr.in" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/xmega/drivers/cpu/ccp.s" framework="" version="3.19.0" source="xmega\drivers\cpu\ccp.s" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/xmega/drivers/cpu/xmega_reset_cause.h" framework="" version="3.19.0" source="xmega\drivers\cpu\xmega_reset_cause.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/xmega/drivers/cpu/ccp.h" framework="" version="3.19.0" source="xmega\drivers\cpu\ccp.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/xmega/drivers/nvm/nvm.c" framework="" version="3.19.0" source="xmega\drivers\nvm\nvm.c" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/xmega/drivers/nvm/nvm_asm.s" framework="" version="3.19.0" source="xmega\drivers\nvm\nvm_asm.s" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/xmega/drivers/nvm/nvm.h" framework="" version="3.19.0" source="xmega\drivers\nvm\nvm.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/common/services/clock/xmega/sysclk.c" framework="" version="3.19.0" source="common\services\clock\xmega\sysclk.c" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/common/services/clock/pll.h" framework="" version="3.19.0" source="common\services\clock\pll.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/common/services/clock/genclk.h" framework="" version="3.19.0" source="common\services\clock\genclk.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/common/services/clock/osc.h" framework="" version="3.19.0" source="common\services\clock\osc.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/common/services/clock/xmega/pll.h" framework="" version="3.19.0" source="common\services\clock\xmega\pll.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/common/services/clock/xmega/sysclk.h" framework="" version="3.19.0" source="common\services\clock\xmega\sysclk.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/common/services/clock/xmega/osc.h" framework="" version="3.19.0" source="common\services\clock\xmega\osc.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/common/services/clock/sysclk.h" framework="" version="3.19.0" source="common\services\clock\sysclk.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/Config/conf_clock.h" framework="" version="3.19.0" source="common\services\clock\xmega\module_config_usb\conf_clock.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/common/utils/interrupt.h" framework="" version="3.19.0" source="common\utils\interrupt.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/common/utils/interrupt/interrupt_avr8.h" framework="" version="3.19.0" source="common\utils\interrupt\interrupt_avr8.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/common/utils/parts.h" framework="" version="3.19.0" source="common\utils\parts.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/xmega/utils/progmem.h" framework="" version="3.19.0" source="xmega\utils\progmem.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/xmega/utils/assembler.h" framework="" version="3.19.0" source="xmega\utils\assembler.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/xmega/utils/bit_handling/clz_ctz.h" framework="" version="3.19.0" source="xmega\utils\bit_handling\clz_ctz.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/xmega/utils/preprocessor/preprocessor.h" framework="" version="3.19.0" source="xmega\utils\preprocessor\preprocessor.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/xmega/utils/preprocessor/stringz.h" framework="" version="3.19.0" source="xmega\utils\preprocessor\stringz.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/xmega/utils/preprocessor/tpaste.h" framework="" version="3.19.0" source="xmega\utils\preprocessor\tpaste.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/xmega/utils/compiler.h" framework="" version="3.19.0" source="xmega\utils\compiler.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/xmega/utils/status_codes.h" framework="" version="3.19.0" source="xmega\utils\status_codes.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/xmega/utils/preprocessor/mrepeat.h" framework="" version="3.19.0" source="xmega\utils\preprocessor\mrepeat.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/xmega/utils/assembler/gas.h" framework="" version="3.19.0" source="xmega\utils\assembler\gas.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/common/services/ioport/xmega/ioport_compat.c" framework="" version="3.19.0" source="common\services\ioport\xmega\ioport_compat.c" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/common/services/ioport/xmega/ioport_compat.h" framework="" version="3.19.0" source="common\services\ioport\xmega\ioport_compat.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/common/services/ioport/xmega/ioport.h" framework="" version="3.19.0" source="common\services\ioport\xmega\ioport.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/common/services/ioport/ioport.h" framework="" version="3.19.0" source="common\services\ioport\ioport.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/common/boards/board.h" framework="" version="3.19.0" source="common\boards\board.h" changed="False" content-id="Atmel.ASF" />
+  </files>
+  <documentation help="" />
+  <offline-documentation help="" />
+  <dependencies>
+    <content-extension eid="atmel.asf" uuidref="Atmel.ASF" version="3.10.1" />
+  </dependencies>
+</framework-data>
     </AsfFrameworkConfig>
     <avrtool>com.atmel.avrdbg.tool.ispmk2</avrtool>
     <avrtoolinterface>PDI</avrtoolinterface>

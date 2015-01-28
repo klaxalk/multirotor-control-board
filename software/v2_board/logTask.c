@@ -4,6 +4,7 @@
 #include "controllers.h"
 #include "communication.h"
 #include "system.h"
+#include "commTask.h"
 
 char str[10];
 char *strBin;
@@ -20,9 +21,15 @@ void logValueStr(float lValue){
 }
 
 void logTaskReadable(void *p){
+	
 	usartBufferPutString(usart_buffer_log,"Start Logging - String\r\n",10);		
 	usartBufferPutString(usart_buffer_log,"Altitude,Elevator,Aileron,Blob,Setpoints,Outputs,RC IN,Time\r\n",10);
-	while(1){		
+	
+	while(1){	
+		
+		led_blue_toggle();
+		logValueStr((float) (pitchAngle/10.0));
+		logValueStr((float) (rollAngle/10.0));
 		logValueStr(estimatedThrottlePos); //altitude
 		logValueStr(estimatedThrottleVel);
 		logValueStr(estimatedElevatorPos); //elevator
@@ -63,6 +70,10 @@ void logTaskBinary(void *p){
 		usartBufferPutString(usart_buffer_log,"Altitude,Elevator,Aileron,Blob,Setpoints,Outputs,RC IN,Time\r\n",10);	
 		strBin=str;			
 	while(1){
+		
+		led_blue_toggle();		
+		logValueBin((float) (pitchAngle/10.0));
+		logValueBin((float) (rollAngle/10.0));
 		logValueBin(estimatedThrottlePos); //altitude
 		logValueBin(estimatedThrottleVel);
 		logValueBin(estimatedElevatorPos); //elevator
