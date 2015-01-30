@@ -14,4 +14,10 @@
 // the communication task
 void commTask(void *p);
 
+typedef struct {
+
+	float elevatorReference;
+	float aileronReference;
+} comm2mpcMessage_t;
+
 #endif /* COMMTASK_H_ */

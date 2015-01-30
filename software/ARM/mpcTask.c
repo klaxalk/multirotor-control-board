@@ -10,12 +10,17 @@
 #include "system.h"
 #include "miscellaneous.h"
 #include "kalmanTask.h"
+#include "commTask.h"
 
 // precomputed matrices
 matrix_float A_roof;
 vector_float Q_roof_diag;
 matrix_float B_roof;
 matrix_float H_inv;
+
+vector_float reference;
+vector_float elevator_true_reference;
+vector_float aileron_true_reference;
 
 // aux matrices
 vector_float temp_vector1;
@@ -24,16 +29,26 @@ vector_float temp_vector3;
 
 vector_float states;
 
+void filterReference(vector_float * in) {
+
+	reference
+
+	int i;
+
+	for (i = 2; i <= in->length; i++) {
+
+	}
+}
+
 void calculateMPC() {
 
 	int i;
 
-	// tenp_vector1 <- A_roof*states
+	// temp_vector1 <- A_roof*states
 	matrix_float_mul_vec_right(&A_roof, &states, &temp_vector1);
 
-	//
-	// now subtract the state_reference vector
-	//
+	//temp_vector1 <- temp_vector1 - reference
+	vector_float_subtract(&temp_vector1, &reference);
 
 	// X_0'*Q_roof
 	for (i = 1; i <= NUMBER_OF_STATES*HORIZON_LEN; i++) {
@@ -81,6 +96,30 @@ void mpcTask(void *p) {
 	H_inv.width = H_INV_WIDTH;
 	H_inv.name = "H_inv matrix";
 
+	// setup the reference vector (with all states)
+	float reference_data[REFERENCE_LENGTH];
+	reference.data = (float*) reference_data;
+	reference.length = REFERENCE_LENGTH;
+	reference.name = "allstates reference vector";
+	reference.orientation = 0;
+	vector_float_set_zero(&reference);
+
+	// the elevator axis true reference (unfiltered)
+	float elevator_true_reference_data[HORIZON_LEN];
+	elevator_true_reference.data = (float*) elevator_true_reference_data;
+	elevator_true_reference.length = HORIZON_LEN;
+	elevator_true_reference.name = "true elevator reference";
+	elevator_true_reference.orientation = 0;
+	vector_float_set_zero(&elevator_true_reference);
+
+	// the aileron axis true reference (unfiltered)
+	float aileron_true_reference_data[HORIZON_LEN];
+	aileron_true_reference.data = (float*) aileron_true_reference_data;
+	aileron_true_reference.length = HORIZON_LEN;
+	aileron_true_reference.name = "true aileron reference";
+	aileron_true_reference.orientation = 0;
+	vector_float_set_zero(&aileron_true_reference);
+
 	// temp_vector1
 	float temp_vector1_data[NUMBER_OF_STATES*HORIZON_LEN];
 	temp_vector1.data = (float*) &temp_vector1_data;
@@ -109,33 +148,57 @@ void mpcTask(void *p) {
 	states.name = "Current states";
 	states.orientation = 0;
 
-	// message with outputs to send to comms
-	mpc2commMessage_t newMessage;
+	// message with outputs to send to commTask
+	mpc2commMessage_t mpc2commMessage;
+
+	// message received from kalmanTask
+	kalman2mpcMessage_t kalman2mpcMessage;
+
+	// mesasge received from commTask
+	comm2mpcMessage_t comm2mpcMessage;
 
 	vTaskDelay(100);
 
-	kalman2mpcMessage_t kalmanMessage;
-
 	while (1) {
 
-		if (xQueueReceive(kalman2mpcQueue, &kalmanMessage, 100)) {
+		/* -------------------------------------------------------------------- */
+		/*	If there is a message from commTask									*/
+		/* -------------------------------------------------------------------- */
+		if (xQueueReceive(comm2mpcQueue, &comm2mpcMessage, 0)) {
+
+			// copy the incomming set point/s into the local vector
+
+			vector_float_set_to(&elevator_true_reference, comm2mpcMessage.elevatorReference);
+			vector_float_set_to(&aileron_true_reference, comm2mpcMessage.aileronReference);
+		}
+
+		/* -------------------------------------------------------------------- */
+		/*	If there is a message from kalmanTask								*/
+		/* -------------------------------------------------------------------- */
+		if (xQueueReceive(kalman2mpcQueue, &kalman2mpcMessage, 0)) {
 
 			// copy the elevatorStates to states
-			memcpy(states.data, &kalmanMessage.elevatorData, NUMBER_OF_STATES*sizeof(float));
+			memcpy(states.data, &kalman2mpcMessage.elevatorData, NUMBER_OF_STATES*sizeof(float));
 
+			// calculate the elevator MPC
 			calculateMPC();
 
-			newMessage.elevatorOutput = vector_float_get(&temp_vector3, 1);
+			// copy the output to the message
+			mpc2commMessage.elevatorOutput = vector_float_get(&temp_vector3, 1);
 
 			// copy the elevatorStates to states
-			memcpy(states.data, &kalmanMessage.aileronData, NUMBER_OF_STATES*sizeof(float));
+			memcpy(states.data, &kalman2mpcMessage.aileronData, NUMBER_OF_STATES*sizeof(float));
 
+			// calculate the aileron MPC
 			calculateMPC();
 
-			newMessage.aileronOutput = vector_float_get(&temp_vector3, 1);
+			// copy the  output to the message
+			mpc2commMessage.aileronOutput = vector_float_get(&temp_vector3, 1);
 
 			// send outputs to comms
-			xQueueSend(mpc2commQueue, &newMessage, 10);
+			xQueueSend(mpc2commQueue, &mpc2commMessage, 10);
 		}
+
+		taskYIELD();
 	}
 }

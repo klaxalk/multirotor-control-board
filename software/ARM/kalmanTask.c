@@ -102,7 +102,7 @@ void kalmanTask(void *p) {
 	R_matrix.height = NUMBER_OF_STATES;
 	float R_data[NUMBER_OF_STATES*NUMBER_OF_STATES] = {1, 0, 0,
 													   0, 1, 0,
-													   0, 0, 5};
+													   0, 0, 1};
 	R_matrix.data = (float *) R_data;
 
 	/* -------------------------------------------------------------------- */
@@ -112,7 +112,7 @@ void kalmanTask(void *p) {
 	Q_matrix.name = "Q matrix";
 	Q_matrix.height = NUMBER_OF_MEASURED_STATES;
 	Q_matrix.width = NUMBER_OF_MEASURED_STATES;
-	float Q_data[NUMBER_OF_MEASURED_STATES*NUMBER_OF_MEASURED_STATES] = {1000};
+	float Q_data[NUMBER_OF_MEASURED_STATES*NUMBER_OF_MEASURED_STATES] = {100};
 	Q_matrix.data = (float *) Q_data;
 
 	/* -------------------------------------------------------------------- */

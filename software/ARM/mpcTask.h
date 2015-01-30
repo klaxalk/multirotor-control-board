@@ -11,6 +11,11 @@ void mpcTask(void *p);
 
 #include "system.h"
 
+#define REFERENCE_LENGTH	NUMBER_OF_STATES*HORIZON_LEN
+
+// used to filter the setpoint
+#define MAX_SPEED	0.4
+
 typedef struct {
 
 	float elevatorOutput;

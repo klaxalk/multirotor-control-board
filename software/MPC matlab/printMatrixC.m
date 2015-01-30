@@ -1,4 +1,5 @@
-function [  ] = printMatrix(fid, text, format, inMatrix)
+function [  ] = printMatrixC(fid, text, format, inMatrix)
+% Prints a matrix into C code 
 
     fprintf(fid, text);
     fprintf(fid, ' = {\n');

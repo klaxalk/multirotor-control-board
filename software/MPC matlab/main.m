@@ -12,7 +12,7 @@ B = [0; 0; 0.0105*dt];
 
 %% Kovariancni matice mereni
 
-Cov = diag([0.0058, 0.2418, 0]);
+measurement_covariance = diag([0.0058, 0.2000, 0]);
 
 % pocet stavu systemu 
 n_states = size(A, 1);
@@ -23,7 +23,7 @@ u_size = size(B, 2);
 %% Pomocne promenne
 
 % delka predikcniho horizontu
-horizon_len = 400;
+horizon_len = 200;
 
 %% Matice U
 
@@ -34,7 +34,7 @@ U = zeros(horizon_len, n_variables);
 U(1:20, 1:20) = eye(20);
 
 for i=1:18
-    U((21+(i-1)*20):(20+i*20), 20+i) = ones(20, 1); 
+    U((21+(i-1)*10):(20+i*10), 20+i) = ones(10, 1); 
 end
 
 % U(1:20, 1:20) = eye(20);
@@ -93,7 +93,7 @@ B_roof = B_roof*U;
 %           0,   ..., ...,  S];
 
 Q = [1, 0, 0;
-     0, 1, 0;
+     0, 0, 0;
      0, 0, 0];
 
 S = [10, 0, 0;
@@ -115,7 +115,7 @@ Q_roof(end-n_states+1:end, end-n_states+1:end) = S;
 %           ..., ..., P,    0;
 %           0,   ..., ...,  P];
 
-P = 0.00001;
+P = 0.000007;
 
 P_roof = zeros(n_variables, n_variables);
 
@@ -124,7 +124,7 @@ for i=1:n_variables
 end
 
 for i=21:38
-    P_roof(i, i) = 20*P; 
+    P_roof(i, i) = 10*P; 
 end
 
 %% Matice H
@@ -140,22 +140,25 @@ simu_len = 2000;
 
 time(1) = 0;
 
-% pozadovana pozice
-x_ref = zeros(n_states*simu_len*2, 1);
+% reference position
+x_ref = zeros(simu_len+horizon_len, 1);
 
-% x_ref((n_states*simu_len)/4+1:3:end, 1) = 1+0.2*sin(linspace(1, 100, length((n_states*simu_len)/4+1:3:length(x_ref))))';
+% x_ref((simu_len+horizon_len)/2+1:end) = 1 + 0.2*sin(linspace(1, 20, (simu_len+horizon_len)/2))';
     
-% pocatecni podminky simulace
+% initial conditions
 x(:, 1) = [1; 0; 0];
-pid_x(:, 1) = [1; 0; 0];
-
-noisy_hist = [0; 0; 0];
 
 % vektor akcnich zasahu
 u = zeros(horizon_len, u_size);
 
+% history of used actions
+u_hist(1) = 0;
+
 % saturace akcnich zasahu
 saturace = 300;
+
+% max speed
+max_speed = 0.4;
 
 u_sat = 0;
 
@@ -165,42 +168,50 @@ estimate(:, 1) = x;
 
 xd_pure_integration(1) = x(1, 1);
 
-state = 1;
-
 for i=2:simu_len
     
     time(i) = time(i-1)+dt;
     
-    measurement(:, i-1) = createMeasurement(x(:, i-1), Cov);
+    % create the sensor measurement     
+    measurement(:, i-1) = createMeasurement(x(:, i-1), measurement_covariance);
     
+    % pure integration of px4flow velocity     
     xd_pure_integration(i) = xd_pure_integration(i-1) + measurement(2, i-1)*dt;
 
     [estimate(:, i), kalmanCovariance] = kalman(estimate(:, i-1), kalmanCovariance, measurement(2, i-1), u_sat, A, B); 
-
-    if (mod(state, 1) == 0)
         
-        state = 1;
+    reference = estimate(1, i);
+    for j=2:horizon_len
+        diference = reference(j-1) - x_ref(j+i-1);
         
-        X_0 = A_roof*(estimate(:, i)) - x_ref(n_states*(i-1)+1:n_states*(i-1)+horizon_len*n_states, 1);
-        c = (X_0'*Q_roof*B_roof)';
-
-        u_cf = H_inv*(c./(-2));
-        
-        HMM = u_cf;
-        
-        u_cf = U*u_cf;
-        
-        % simulace predikce z aktualniho vektoru akcnich zasahu
-        x_cf(:, 1) = estimate(:, i);
-        for j=2:horizon_len
-            x_cf(:, j) = A*x_cf(:, j-1) + B*u_cf(j-1);
+        if (diference > max_speed*dt)
+            diference = max_speed*dt;
+        elseif (diference < -max_speed*dt)
+            diference = -max_speed*dt;
         end
         
-    else
-        state = state + 1;
+        reference(j) = reference(j-1) - diference;
     end
+
+    my_ref = zeros(n_states*horizon_len, 1);
+    my_ref(1:3:n_states*horizon_len, 1) = reference;
+    
+    X_0 = A_roof*(estimate(:, i)) - my_ref;
+    c = (X_0'*Q_roof*B_roof)';
+    
+    u_cf = H_inv*(c./(-2));
         
-    u_sat = u_cf(state);
+    % stretch the action vector to the whole horizon     
+    u_cf = U*u_cf;
+    
+    % simulace predikce z aktualniho vektoru akcnich zasahu
+    x_cf(:, 1) = estimate(:, i);
+    for j=2:horizon_len
+        x_cf(:, j) = A*x_cf(:, j-1) + B*u_cf(j-1);
+    end
+
+    % take the first action
+    u_sat = u_cf(1);
     
     % saturuj akcni zasah     
     if (u_sat > saturace)
@@ -208,47 +219,46 @@ for i=2:simu_len
     elseif (u_sat < -saturace)
         u_sat = -saturace;
     end
+    
+    u_hist(i) = u_sat;
 
-    % spocti nove stavy podle modelu     
+    % Compute new states     
     x(:, i) = A*x(:, i-1) + B*u_sat;
     
-    if (mod(i, 4) == 0)
-        
-        figure(1);
-    
-        subplot(2, 2, 1);
-        hold off
-        plot(linspace(0, dt*simu_len, simu_len), x_ref(1:3:n_states*simu_len), 'r');
-        hold on
-        plot(time, estimate(1, 1:i), 'b');
-        plot(linspace(i*dt, dt*(i+horizon_len), horizon_len), x_cf(1, :),'--r');
-        title('Position in time');
-        ylabel('Position [m]');
-        axis([0, dt*simu_len, -0.25, 1.25]);
-
-        subplot(2, 2, 2);
-        plot(u_cf, 'r');
-        title('Predicted action');
-        ylabel('Desired angle [deg]');
-        axis([0, horizon_len, -saturace, saturace]);
-        
-        subplot(2, 2, 3);
-        hold off
-        plot(time(1:end-1), estimate(1, 1:(i-1)), 'r');
-        hold on
-        plot(time, x(1, 1:i), 'b');
-        plot(time, xd_pure_integration, 'g');
-        axis([0, dt*simu_len, -0.25, 1.25]);
-
-        subplot(2, 2, 4);
-        hold off
-        plot(time(1:end-1), measurement(2, 1:(i-1)), 'r');
-        hold on
-        plot(time(1:end-1), estimate(2, 1:(i-1)), 'b');
-        axis([0, dt*simu_len, -1, 1]);
-
-    end
-    
-clear     drawnow;
-    
 end
+
+figure(1);
+
+subplot(2, 2, 1);
+hold off
+plot(linspace(0, dt*simu_len, simu_len), x_ref(1:simu_len), 'r');
+hold on
+plot(time, estimate(1, 1:i), 'b');
+plot(linspace(i*dt, dt*(i+horizon_len), horizon_len), x_cf(1, :),'--r');
+title('Position in time');
+ylabel('Position [m]');
+axis([0, dt*simu_len, -0.25, 1.25]);
+
+subplot(2, 2, 2);
+hold off
+plot(time, u_hist, 'r');
+hold on
+plot(time, 0*(1:simu_len), 'b');
+title('Predicted action');
+ylabel('Desired angle [deg]');
+axis([0, dt*simu_len, -saturace, saturace]);
+
+subplot(2, 2, 3);
+hold off
+plot(time(1:end-1), estimate(1, 1:(i-1)), 'r');
+hold on
+plot(time, x(1, 1:i), 'b');
+plot(time, xd_pure_integration, 'g');
+axis([0, dt*simu_len, -0.25, 1.25]);
+
+subplot(2, 2, 4);
+hold off
+plot(time(1:end-1), measurement(2, 1:(i-1)), 'r');
+hold on
+plot(time(1:end-1), estimate(2, 1:(i-1)), 'b');
+axis([0, dt*simu_len, -1, 1]);

@@ -3,13 +3,13 @@ function [ states, covariance ] = kalman( states, covariance, measurement, u, A,
 %% support matrices
 
 % šum procesu
-R = diag([1, 1, 5]);
+R = diag([1, 1, 1]);
 
 
 if (size(measurement, 1) == 1)
 
     % šum mìøení
-    Q = diag([1000]);
+    Q = diag([100]);
     
     C = [0, 1, 0];
 else

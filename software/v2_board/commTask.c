@@ -185,6 +185,15 @@ void commTask(void *p) {
 				
 				sendFloat(usart_buffer_xbee, kalmanStates.elevator.position, &crc);
 				sendFloat(usart_buffer_xbee, kalmanStates.aileron.position, &crc);
+				
+				sendFloat(usart_buffer_xbee, kalmanStates.elevator.velocity, &crc);
+				sendFloat(usart_buffer_xbee, kalmanStates.aileron.velocity, &crc);
+				
+				sendFloat(usart_buffer_xbee, kalmanStates.elevator.acceleration, &crc);
+				sendFloat(usart_buffer_xbee, kalmanStates.aileron.acceleration, &crc);
+				
+				sendFloat(usart_buffer_xbee, elevatorSpeed, &crc);
+				sendFloat(usart_buffer_xbee, aileronSpeed, &crc);
 			
 				sendInt16(usart_buffer_xbee, controllerElevatorOutput, &crc);
 				sendInt16(usart_buffer_xbee, controllerAileronOutput, &crc);

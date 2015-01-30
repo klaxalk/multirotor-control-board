@@ -8,6 +8,7 @@
 #include "system.h"
 #include "kalmanTask.h"
 #include "mpcTask.h"
+#include "commTask.h"
 
 // queues for uart
 QueueHandle_t * usartRxQueue;
@@ -18,6 +19,7 @@ QueueHandle_t * comm2kalmanQueue;
 QueueHandle_t * mpc2commQueue;
 QueueHandle_t * kalman2mpcQueue;
 QueueHandle_t * kalman2commQueue;
+QueueHandle_t * comm2mpcQueue;
 
 void boardInit() {
 
@@ -36,6 +38,9 @@ void boardInit() {
 
     // create a queue from kalmanTask to commTask
     kalman2commQueue = xQueueCreate(1, sizeof(kalman2commMessage_t));
+
+    // create a queue from commTask to mpcTask
+    comm2mpcQueue = xQueueCreate(1, sizeof(comm2mpcMessage_t));
 
 	// set th clock and initialize the GPIO
 	gpioInit();

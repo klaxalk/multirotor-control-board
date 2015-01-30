@@ -6,7 +6,7 @@ end
 
 clear all
 
-s = serial('COM19');
+s = serial('COM23');
 s.BaudRate = 115200;
 s.BytesAvailableFcnMode = 'terminator';
 s.Terminator = 'CR/LF';
@@ -36,9 +36,17 @@ while true
 
     in(pos, 1) = fread(s, 1, 'single');
     in(pos, 2) = fread(s, 1, 'single');
-    in(pos, 3) = fread(s, 1, 'int16');
-    in(pos, 4) = fread(s, 1, 'int16');
+    in(pos, 3) = fread(s, 1, 'single');
+    in(pos, 4) = fread(s, 1, 'single');
+    in(pos, 5) = fread(s, 1, 'single');
+    in(pos, 6) = fread(s, 1, 'single');
+    in(pos, 7) = fread(s, 1, 'single');
+    in(pos, 8) = fread(s, 1, 'single');
+    in(pos, 9) = fread(s, 1, 'int16');
+    in(pos, 10) = fread(s, 1, 'int16');
    
+    std(in(:, 1))
+    
     % read line ending     
     fread(s, 1, 'int16');
     
@@ -50,11 +58,13 @@ while true
     % plot the action
     subplot(2, 1, 2);
     hold off
-    plot(in([pos:end 1:pos-1], 3));
+    plot(in([pos:end 1:pos-1], 9), 'g');
+%     plot(in([pos:end 1:pos-1], 1), 'b');
     hold on
-    plot(in([pos:end 1:pos-1], 4));
+    plot(in([pos:end 1:pos-1], 10), 'b');
+%     plot(in([pos:end 1:pos-1], 3), 'r');
+    axis([0 horizon_length -150 150]);
     
-    axis([1 horizon_length -120 120]);
 % 
 %     s3 = subplot(2, 1, 2);
 %     cla(s3)
