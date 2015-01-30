@@ -68,9 +68,8 @@ volatile uint8_t landingCounter = 0;
 volatile float landingThrottleSetpoint = 0;
 volatile int16_t landingThrottleOutput;
 
-// controller on/off
-volatile unsigned char velocityControllerEnabled = 0;
-volatile unsigned char positionControllerEnabled = 0;
+// controller select
+volatile unsigned char controllerActive = 0x01;
 
 //auto-trajectory variables
 volatile unsigned char trajectoryEnabled = 0;
@@ -127,53 +126,53 @@ void disableLanding(){
 	landingRequest=0;
 }
 
-
-void enableVelocityController() {
-	//if both controllers was off then set altitude controller to default
-	if(velocityControllerEnabled==0 && positionControllerEnabled==0){
-		throttleIntegration = 0;
-		throttleDesiredSetpoint = DEFAULT_THROTTLE_SETPOINT;
-	}
-	//set controller to default
-	if (velocityControllerEnabled == 0) {
-		elevatorVelocityIntegration = 0;
-		aileronVelocityIntegration = 0;		
-						
-		aileronDesiredVelocitySetpoint = DEFAULT_AILERON_VELOCITY_SETPOINT;
-		elevatorDesiredVelocitySetpoint = DEFAULT_ELEVATOR_VELOCITY_SETPOINT;
-	}
-	velocityControllerEnabled = 1;
-}
-
-void disableVelocityController() {
-	velocityControllerEnabled = 0;
-}
-
-void enablePositionController() {
-	//if both controllers was off then set altitude controller to default
-	if(velocityControllerEnabled==0 && positionControllerEnabled==0){
-		throttleIntegration = 0;
-		throttleDesiredSetpoint = DEFAULT_THROTTLE_SETPOINT;
-	}	
-	//set controller to default
-	if (positionControllerEnabled == 0) {
-		elevatorPositionIntegration = 0;
-		aileronPositionIntegration = 0;
+void controllerSet(unsigned char controllerDesired){
+	if(controllerDesired!=controllerActive){
+		//NONE
+		if(controllerDesired==CONTROLLERS.OFF){
+			controllerActive=CONTROLLERS.OFF;			
+		}else
+		//VELOCITY
+		if(controllerDesired==CONTROLLERS.VELOCITY){
+			if(controllerActive==CONTROLLERS.OFF){
+				throttleIntegration=0;	
+				throttleSetpoint=DEFAULT_THROTTLE_SETPOINT;
+			}
+			controllerActive=CONTROLLERS.VELOCITY;
+			elevatorVelocityIntegration = 0;
+			aileronVelocityIntegration = 0;
+			aileronDesiredVelocitySetpoint = DEFAULT_AILERON_VELOCITY_SETPOINT;
+			elevatorDesiredVelocitySetpoint = DEFAULT_ELEVATOR_VELOCITY_SETPOINT;						
+		}else
+		//POSITION
+		if(controllerDesired==CONTROLLERS.POSITION){
+			if(controllerActive==CONTROLLERS.OFF){
+				throttleIntegration=0;
+				throttleSetpoint=DEFAULT_THROTTLE_SETPOINT;				
+			}			
+			controllerActive=CONTROLLERS.POSITION;
+			elevatorPositionIntegration = 0;
+			aileronPositionIntegration = 0;		
+			elevatorPositionSetpoint = DEFAULT_ELEVATOR_POSITION_SETPOINT;
+			aileronPositionSetpoint = DEFAULT_AILERON_POSITION_SETPOINT;
+			elevatorDesiredPositionSetpoint = DEFAULT_ELEVATOR_POSITION_SETPOINT;
+			aileronDesiredPositionSetpoint = DEFAULT_AILERON_POSITION_SETPOINT;		
+			estimatedElevatorPos = elevatorPositionSetpoint;
+			estimatedAileronPos  = aileronPositionSetpoint;					
+		}else
+		//MPC
+		if(controllerDesired==3){
+			if(controllerActive==CONTROLLERS.OFF){
+				throttleIntegration=0;
+				throttleSetpoint=DEFAULT_THROTTLE_SETPOINT;				
+			}			
 		
-		elevatorPositionSetpoint = DEFAULT_ELEVATOR_POSITION_SETPOINT;
-		aileronPositionSetpoint = DEFAULT_AILERON_POSITION_SETPOINT;
-		elevatorDesiredPositionSetpoint = DEFAULT_ELEVATOR_POSITION_SETPOINT;
-		aileronDesiredPositionSetpoint = DEFAULT_AILERON_POSITION_SETPOINT;
+		}
 		
-		estimatedElevatorPos = elevatorPositionSetpoint;
-		estimatedAileronPos  = aileronPositionSetpoint;
 	}
-	positionControllerEnabled = 1;
+
 }
 
-void disablePositionController() {
-	positionControllerEnabled = 0;
-}
 
 void trajectorySetpoints(){
 	float dValue;

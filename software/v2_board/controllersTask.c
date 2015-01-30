@@ -1,14 +1,8 @@
-/*
- * controllersTask.c
- *
- * Created: 13.9.2014 23:57:14
- *  Author: Tomas Baca
- */ 
-
 #include "controllersTask.h"
 #include "controllers.h"
 #include "system.h"
 #include "config.h"
+#include "packets.h"
 
 
 void controllersTask(void *p) {	
@@ -20,7 +14,7 @@ void controllersTask(void *p) {
 		
 		if(landingState!=LS_FLIGHT){
 			setpointsFilter(landingThrottleSetpoint,estimatedAileronPos,estimatedElevatorPos,0,0);
-		}else if(trajectoryEnabled==1 && positionControllerEnabled==1){
+		}else if(trajectoryEnabled==1 && controllerActive==CONTROLLERS.POSITION){
 			trajectorySetpoints();
 		}else{
 			setpointsFilter(throttleDesiredSetpoint,aileronDesiredPositionSetpoint,elevatorDesiredPositionSetpoint,aileronDesiredVelocitySetpoint,elevatorDesiredVelocitySetpoint);

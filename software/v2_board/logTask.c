@@ -16,7 +16,7 @@ void logValueBin(float lValue){
 }
 
 void logValueStr(float lValue){
-	sprintf(str,"%.2f,",lValue);    //altitude
+	sprintf(str,"%.2f,",lValue);    
 	usartBufferPutString(usart_buffer_log,str,10);		
 }
 
@@ -53,8 +53,9 @@ void logTaskReadable(void *p){
 		logValueStr((float)RCchannel[ELEVATOR]);
 		logValueStr((float)RCchannel[AILERON]);
 		logValueStr((float)RCchannel[RUDDER]);
-		logValueStr(secondsTimer);//time
-		logValueStr((float)milisecondsTimer);
+		logValueStr((float)milisecondsTimer); //time	
+		sprintf(str,"%d,",secondsTimer);    
+		usartBufferPutString(usart_buffer_log,str,10);
 				
 		usartBufferPutString(usart_buffer_log,"\r\n",10);
 		vTaskDelay(40);	
@@ -94,8 +95,8 @@ void logTaskBinary(void *p){
 		logValueBin((float)RCchannel[ELEVATOR]);
 		logValueBin((float)RCchannel[AILERON]);		
 		logValueBin((float)RCchannel[RUDDER]);	
-		logValueBin(secondsTimer); //time	
-		logValueBin((float)milisecondsTimer);					
+		logValueBin((float)milisecondsTimer); //time	
+		logValueBin((float)secondsTimer); 					
 		usartBufferPutString(usart_buffer_log,"\r\n",10);				
 	vTaskDelay(14);		
 	}

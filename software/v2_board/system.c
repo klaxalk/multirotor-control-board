@@ -14,6 +14,7 @@
 #include "usart_driver_RTOS.h"
 #include "communication.h"
 #include "controllers.h"
+#include "packets.h"
 
 /* -------------------------------------------------------------------- */
 /*	Variables for PPM input capture										*/
@@ -196,14 +197,14 @@ portENTER_CRITICAL();
 	outputAileron = RCchannel[AILERON];
 	
 
-	if (velocityControllerEnabled == 1 || positionControllerEnabled == 1) {
+	if (controllerActive!=CONTROLLERS.OFF) {
 		if(landingState==LS_FLIGHT){		
 			outputThrottle += saturation(controllerThrottleOutput,CONTROLLER_THROTTLE_SATURATION);				
-			if (velocityControllerEnabled == 1 ) {
+			if (controllerActive == CONTROLLERS.VELOCITY ) {
 				outputElevator += saturation(velocityControllerElevatorOutput,CONTROLLER_ELEVATOR_SATURATION);
 				outputAileron += saturation(velocityControllerAileronOutput,CONTROLLER_AILERON_SATURATION);
 			}	
-			if (positionControllerEnabled == 1) {
+			if (controllerActive == CONTROLLERS.POSITION) {
 				outputElevator += saturation(positionControllerElevatorOutput,CONTROLLER_ELEVATOR_SATURATION);
 				outputAileron += saturation(positionControllerAileronOutput,CONTROLLER_AILERON_SATURATION);
 			}		

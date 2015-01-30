@@ -21,20 +21,17 @@ void mainTask(void *p) {
 		portENTER_CRITICAL();
 		if (       RCchannel[AUX3] < (PPM_IN_MIDDLE_LENGTH - 400)) {
 			if (previous_AUX3 != 1) {			
-				disableVelocityController();
-				disablePositionController();						
+				controllerSet(CONTROLLERS.OFF);						
 				previous_AUX3 = 1;
 			}
 		} else if (RCchannel[AUX3] > (PPM_IN_MIDDLE_LENGTH + 400)) {
 			if (previous_AUX3 != 2) {			
-				enablePositionController();
-				disableVelocityController();				
+				controllerSet(CONTROLLERS.POSITION);					
 				previous_AUX3 = 2;
 			}			
 		} else {
 			if (previous_AUX3 != 0) {			
-				enableVelocityController();
-				disablePositionController();
+				controllerSet(CONTROLLERS.VELOCITY);	
 				previous_AUX3 = 0;
 			}
 		}

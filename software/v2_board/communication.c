@@ -121,8 +121,7 @@ void gumstixParseChar(unsigned char incomingChar) {
 void stateChecker(){
 	static unsigned char landingStateCH=0xFF;
 	static unsigned char trajectoryFollowCH=0xFF;
-	static unsigned char posControllerCH=0xFF;
-	static unsigned char velocityControllerCH=0xFF;
+	static unsigned char aktControllerCH=0xFF;
 	
 	if(landingStateCH!=landingState){
 		landingStateCH=landingState;
@@ -132,17 +131,12 @@ void stateChecker(){
 		trajectoryFollowCH=trajectoryEnabled;
 		kopterTrajectoryFollowReport(ADDRESS.COORDINATOR,ADDRESS.UNKNOWN16,0x00);
 	}
-	if(posControllerCH!=positionControllerEnabled){
-		posControllerCH=positionControllerEnabled;
+	if(aktControllerCH!=controllerActive){
+		aktControllerCH=controllerActive;
 		kopterControllersReport(ADDRESS.COORDINATOR,ADDRESS.UNKNOWN16,0x00);
 	}	
-	if(velocityControllerCH!=velocityControllerEnabled){
-		velocityControllerCH=velocityControllerEnabled;
-		kopterControllersReport(ADDRESS.COORDINATOR,ADDRESS.UNKNOWN16,0x00);
-	}
 	
 	landingStateCH=landingState;
 	trajectoryFollowCH=trajectoryEnabled;
-	posControllerCH=positionControllerEnabled;
-	velocityControllerCH=velocityControllerEnabled;
+	aktControllerCH=controllerActive;
 }

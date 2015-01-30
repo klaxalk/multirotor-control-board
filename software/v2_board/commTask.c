@@ -75,15 +75,14 @@ void commTask(void *p) {
 	while (1) {				
 		stateChecker();
 		
-		if (counter40Hz++>10000){
-			kopterTimeReport(ADDRESS.COORDINATOR,ADDRESS.UNKNOWN16,0x00);
+		if (counter40Hz++>1000){
 			counter40Hz=0;
 		}
 		
 		if (counter20Hz++>2000){
 			counter20Hz=0;
 			telemetryToCoordinatorSend();
-			if(positionControllerEnabled && leadKopter[7]!=0x00){
+			if(controllerActive!=0 && leadKopter[7]!=0x00){
 				kopterLeadDataSend(leadKopter,ADDRESS.UNKNOWN16,estimatedThrottlePos,elevatorDesiredSpeedPosController,aileronDesiredSpeedPosController,elevatorPosContError,aileronPosContError,0x00);			
 				led_blue_toggle();
 			}

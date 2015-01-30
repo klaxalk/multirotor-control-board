@@ -65,9 +65,8 @@ extern volatile int16_t positionControllerElevatorOutput;
 extern volatile int16_t positionControllerAileronOutput;
 extern volatile int16_t controllerThrottleOutput;
 
-// controller on/off
-extern volatile unsigned char velocityControllerEnabled;
-extern volatile unsigned char positionControllerEnabled;
+// controller select
+volatile unsigned char controllerActive;
 
 //vars for estimators
 extern volatile float estimatedElevatorVel2;
@@ -143,10 +142,7 @@ void initTrajectory();
 void trajectorySetpoints();
 
 //enables - disables
-void disableVelocityController();
-void enableVelocityController();
-void disablePositionController();
-void enablePositionController();
+void controllerSet(unsigned char controllerDesired);
 void enableGumstix();
 void disableGumstix();
 void enableLanding();
