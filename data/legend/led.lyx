@@ -166,8 +166,16 @@ Blob
 \begin_layout Standard
 Blob Distance, Blob Horizontal and Blob Vertical values can be trusted only
  when Blob Visible equals one.
- Blob Distance is relative distance between MAVs.
- 
+\end_layout
+
+\begin_layout Standard
+Blob Distance is relative distance between MAVs.
+ Blob Horizontal is horizontal deflection between MAVs.
+ Values are positive, when the first drone is on right side and negative,
+ when it is on left side.
+ Blob Vertical is vertical deflection between MAVs.
+ Values are positive, when first MAV is lower than second MAV and negative,
+ when first MAV is higher than second MAV.
 \end_layout
 
 \begin_layout Subsection*
@@ -175,7 +183,11 @@ Outputs
 \end_layout
 
 \begin_layout Standard
-Outputs are
+Outputs are values for PPM input to 
+\emph on
+Flight-ctrl v2.1 Me
+\emph default
+ stabilization board devided by two.
 \end_layout
 
 \begin_layout Subsection*

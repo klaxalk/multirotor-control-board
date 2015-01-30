@@ -114,16 +114,17 @@ void constInit(){
 	COMMANDS.TRAJECTORY_POINTS=0x16;
 	COMMANDS.GUMSTIX=0x17;
 	COMMANDS.FOLLOWER_SET=0x18;
+	COMMANDS.TIME=0x19;
 
 
 	
 	GET_STATUS=0x95;
 	
-	/*telemetryToCoordinatorArr[TELEMETRIES.GROUND_DISTANCE_ESTIMATED]=1;	
+	telemetryToCoordinatorArr[TELEMETRIES.GROUND_DISTANCE_ESTIMATED]=1;	
 	telemetryToCoordinatorArr[TELEMETRIES.BLOB_DISTANCE]=1;	
 	telemetryToCoordinatorArr[TELEMETRIES.BLOB_HORIZONTAL]=1;
 	telemetryToCoordinatorArr[TELEMETRIES.BLOB_VERTICAL]=1;		
-	telemetryToCoordinatorArr[TELEMETRIES.VALID_GUMSTIX]=1;*/
+	telemetryToCoordinatorArr[TELEMETRIES.VALID_GUMSTIX]=1;
 }
 
 
@@ -139,6 +140,7 @@ void packetHandler(unsigned char *inPacket){
 	float *f4;
 	float *f5;	
 	uint8_t i;
+	int64_t *i64;
 	char ch1[4];
 	char ch2[4];
 	char ch3[4];
@@ -236,10 +238,23 @@ void packetHandler(unsigned char *inPacket){
 						if(*(dataIN+2)==COMMANDS.FOLLOWER_SET){
 							if(*(dataIN+3)==GET_STATUS){
 								kopterFollowerSetReport(address64,address16,0x00);
-								}else{
+							}else{
 								kopterFollowerSet(address64,address16,(dataIN+3));
 							}
-						}					
+						}else
+						//TIME
+						if(*(dataIN+2)==COMMANDS.TIME){
+							if(*(dataIN+3)==GET_STATUS){
+								kopterTimeReport(address64,address16,0x00);
+							}else{
+								ch1[0]=*(dataIN+3);
+								ch1[1]=*(dataIN+4);
+								ch1[2]=*(dataIN+5);
+								ch1[3]=*(dataIN+6);
+								i64=(int64_t *)ch1;
+								kopterTime(address64,address16,*i64);
+							}
+						}				
                     break;
                 //telemetry
                 case 't':     
@@ -287,7 +302,16 @@ void packetHandler(unsigned char *inPacket){
 						 //CONTROLLERS STATUS
 						 if(*(dataIN+2)==COMMANDS.CONTROLLERS){
 							kopterControllersReportReceived(address64,address16,*(dataIN+3));
-						 }					 
+						 }else
+						 //TIME STATUS
+						 if(*(dataIN+2)==COMMANDS.TIME){
+							ch1[0]=*(dataIN+3);
+							ch1[1]=*(dataIN+4);
+							ch1[2]=*(dataIN+5);
+							ch1[3]=*(dataIN+6);
+							i64=(int64_t *)ch1;							 
+							kopterTimeReportReceived(address64,address16,*i64);
+						 }				 
                     break;
                 //warning
                 case 'w':

@@ -75,7 +75,8 @@ void commTask(void *p) {
 	while (1) {				
 		stateChecker();
 		
-		if (counter40Hz++>1000){
+		if (counter40Hz++>10000){
+			kopterTimeReport(ADDRESS.COORDINATOR,ADDRESS.UNKNOWN16,0x00);
 			counter40Hz=0;
 		}
 		

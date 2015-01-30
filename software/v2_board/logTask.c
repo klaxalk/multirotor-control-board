@@ -26,8 +26,6 @@ void logTaskReadable(void *p){
 	usartBufferPutString(usart_buffer_log,"Altitude,Elevator,Aileron,Blob,Setpoints,Outputs,RC IN,Time\r\n",10);
 	
 	while(1){	
-		
-		led_blue_toggle();
 		logValueStr((float) (pitchAngle/10.0));
 		logValueStr((float) (rollAngle/10.0));
 		logValueStr(estimatedThrottlePos); //altitude
@@ -55,9 +53,7 @@ void logTaskReadable(void *p){
 		logValueStr((float)RCchannel[ELEVATOR]);
 		logValueStr((float)RCchannel[AILERON]);
 		logValueStr((float)RCchannel[RUDDER]);
-		logValueStr((float)hoursTimer); //time
-		logValueStr((float)minutesTimer);
-		logValueStr((float)secondsTimer);
+		logValueStr(secondsTimer);//time
 		logValueStr((float)milisecondsTimer);
 				
 		usartBufferPutString(usart_buffer_log,"\r\n",10);
@@ -70,8 +66,7 @@ void logTaskBinary(void *p){
 	    usartBufferPutString(usart_buffer_log,"Start Logging - Binary Float\r\n",10);	
 		usartBufferPutString(usart_buffer_log,"Angles,Altitude,Elevator,Aileron,Blob,Setpoints,Outputs,RC IN,Time\r\n",10);	
 		strBin=str;			
-	while(1){		
-		led_blue_toggle();		
+	while(1){			
 		logValueBin((float) (pitchAngle/10.0)); //angles
 		logValueBin((float) (rollAngle/10.0));
 		logValueBin(estimatedThrottlePos); //altitude
@@ -99,9 +94,7 @@ void logTaskBinary(void *p){
 		logValueBin((float)RCchannel[ELEVATOR]);
 		logValueBin((float)RCchannel[AILERON]);		
 		logValueBin((float)RCchannel[RUDDER]);	
-		logValueBin((float)hoursTimer); //time		
-		logValueBin((float)minutesTimer);
-		logValueBin((float)secondsTimer);		
+		logValueBin(secondsTimer); //time	
 		logValueBin((float)milisecondsTimer);					
 		usartBufferPutString(usart_buffer_log,"\r\n",10);				
 	vTaskDelay(14);		

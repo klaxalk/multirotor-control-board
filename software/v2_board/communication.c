@@ -108,7 +108,10 @@ void gumstixParseChar(unsigned char incomingChar) {
 			validGumstix = gumstixParseTempInt;
 			if (validGumstix == 1) {
 				gumstixDataFlag = 1;
-			} 
+				led_blue_on();
+			}else{
+				led_blue_off();
+			}
 			break;
 		}
 		gumstixParseCharState = 0;
@@ -120,7 +123,6 @@ void stateChecker(){
 	static unsigned char trajectoryFollowCH=0xFF;
 	static unsigned char posControllerCH=0xFF;
 	static unsigned char velocityControllerCH=0xFF;
-	static unsigned char gumstixCH=0xFF;
 	
 	if(landingStateCH!=landingState){
 		landingStateCH=landingState;

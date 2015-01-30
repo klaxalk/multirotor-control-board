@@ -96,9 +96,7 @@
 /*	Realtime clock														*/
 /* -------------------------------------------------------------------- */
 extern volatile int16_t milisecondsTimer;
-extern volatile int16_t secondsTimer;
-extern volatile int16_t minutesTimer;
-extern volatile int16_t hoursTimer;
+extern volatile int64_t secondsTimer;
 
 /* -------------------------------------------------------------------- */
 /*	Contains signals from RC receiver									*/

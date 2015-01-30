@@ -96,6 +96,7 @@ typedef struct
 	unsigned char TRAJECTORY_POINTS;
 	unsigned char GUMSTIX;
 	unsigned char FOLLOWER_SET;
+	unsigned char TIME;
 }COMMANDST;
 
 

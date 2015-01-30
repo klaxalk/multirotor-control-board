@@ -66,9 +66,7 @@ int16_t outputThrottleInc2 = 0;
 /*	Realtime clock														*/
 /* -------------------------------------------------------------------- */
 volatile int16_t milisecondsTimer;
-volatile int16_t secondsTimer;
-volatile int16_t minutesTimer;
-volatile int16_t hoursTimer;
+volatile int64_t secondsTimer;
 
 
 /* -------------------------------------------------------------------- */
@@ -121,9 +119,8 @@ void boardInit() {
 	TC_SetPeriod(&TCC1, 499);
 	
 	milisecondsTimer = 0;
-	secondsTimer = 0;
-	minutesTimer = 0;
-	hoursTimer = 0;	
+	secondsTimer = 0.0;
+
 
 	
 	/* -------------------------------------------------------------------- */
@@ -312,13 +309,7 @@ ISR(TCD0_CCA_vect) {
 /* -------------------------------------------------------------------- */
 ISR(TCC1_OVF_vect) {
 	if (milisecondsTimer++ == 1000) {		
-		milisecondsTimer = 0;		
-		if (secondsTimer++ == 60) {			
-			secondsTimer = 0;
-			if (minutesTimer++ == 60){
-				minutesTimer = 0;
-				hoursTimer++;
-			}
-		}
+		milisecondsTimer = 0;				
+		secondsTimer++;
 	}
 }

@@ -295,7 +295,7 @@ void kopterSetpointsSet(unsigned char *address64,unsigned char *address16,unsign
 	if(type==SETPOINTS.THROTTLE_SP){
 		if(positionType==POSITIONS.ABSOLUT){
 			throttleDesiredSetpoint=value;
-			}else if(positionType==POSITIONS.RELATIV){
+		}else if(positionType==POSITIONS.RELATIV){
 			throttleDesiredSetpoint+=value;
 		}
 		if(throttleDesiredSetpoint > +THROTTLE_SP_HIGH) throttleDesiredSetpoint = +THROTTLE_SP_HIGH;
@@ -603,4 +603,44 @@ void kopterLeadDataReceived(unsigned char *address64,unsigned char *address16,fl
 	throttleDesiredSetpoint=altitude;
 	elevatorDesiredSpeedPosControllerLeader=elevatorVel;
 	aileronDesiredSpeedPosControllerLeader=aileronVel;
+}
+
+//TIME
+void kopterTimeRequest(unsigned char *address64,unsigned char *address16,int64_t time,unsigned char frameID){
+		unsigned char *ch;		
+		
+		*(dataOUT)='c';
+		*(dataOUT+1)=COMMANDS.TIME;
+		
+		ch=(unsigned char *) &time;
+		*(dataOUT+2)=*ch;
+		*(dataOUT+3)=*(ch+1);
+		*(dataOUT+4)=*(ch+2);
+		*(dataOUT+5)=*(ch+3);
+		makeTRPacket(address64,address16,0x00,frameID,dataOUT,6);
+}
+void kopterTime(unsigned char *address64,unsigned char *address16,int64_t time){	
+	secondsTimer=time;
+}
+void kopterTimeStatusRequest(unsigned char *address64,unsigned char *address16,unsigned char frameID){
+	*(dataOUT)='c';
+	*(dataOUT+1)=COMMANDS.TIME;
+	*(dataOUT+2)=GET_STATUS;
+	makeTRPacket(address64,address16,0x00,frameID,dataOUT,3);	
+}
+void kopterTimeReport(unsigned char *address64,unsigned char *address16,unsigned char frameID){
+			unsigned char *ch;
+			
+			*(dataOUT)='r';
+			*(dataOUT+1)=COMMANDS.TIME;
+			
+			ch=(unsigned char *) &secondsTimer;
+			*(dataOUT+2)=*ch;
+			*(dataOUT+3)=*(ch+1);
+			*(dataOUT+4)=*(ch+2);
+			*(dataOUT+5)=*(ch+3);
+			makeTRPacket(address64,address16,0x00,frameID,dataOUT,6);	
+}
+void kopterTimeReportReceived(unsigned char *address64,unsigned char *address16,int64_t time){
+	
 }
