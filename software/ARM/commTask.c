@@ -258,5 +258,7 @@ void commTask(void *p) {
 
 			sendChar(crcOut, &crcOut);
 		}
+
+		taskYIELD();
 	}
 }

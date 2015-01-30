@@ -11,6 +11,7 @@
 #include "miscellaneous.h"
 #include "kalmanTask.h"
 #include "commTask.h"
+#include "mpc.h"
 
 // precomputed matrices
 matrix_float A_roof;
@@ -22,52 +23,15 @@ vector_float reference;
 vector_float elevator_true_reference;
 vector_float aileron_true_reference;
 
-// aux matrices
-vector_float temp_vector1;
-vector_float temp_vector2;
-vector_float temp_vector3;
-
 vector_float states;
 
 void filterReference(vector_float * in) {
-
-	reference
 
 	int i;
 
 	for (i = 2; i <= in->length; i++) {
 
 	}
-}
-
-void calculateMPC() {
-
-	int i;
-
-	// temp_vector1 <- A_roof*states
-	matrix_float_mul_vec_right(&A_roof, &states, &temp_vector1);
-
-	//temp_vector1 <- temp_vector1 - reference
-	vector_float_subtract(&temp_vector1, &reference);
-
-	// X_0'*Q_roof
-	for (i = 1; i <= NUMBER_OF_STATES*HORIZON_LEN; i++) {
-
-		vector_float_set(&temp_vector1, i, vector_float_get(&temp_vector1, i) * vector_float_get(&Q_roof_diag, i));
-	}
-
-	vector_float_transpose(&temp_vector1);
-
-	// c = (X_0'*Q_roof)*B_roof
-	matrix_float_mul_vec_left(&B_roof, &temp_vector1, &temp_vector2);
-
-	vector_float_transpose(&temp_vector2);
-
-	// c./(-2)
-	vector_float_times(&temp_vector2, (float) -0.5);
-
-	// H_inv*(c./(-2))
-	matrix_float_mul_vec_right(&H_inv, &temp_vector2, &temp_vector3);
 }
 
 void mpcTask(void *p) {
@@ -120,27 +84,6 @@ void mpcTask(void *p) {
 	aileron_true_reference.orientation = 0;
 	vector_float_set_zero(&aileron_true_reference);
 
-	// temp_vector1
-	float temp_vector1_data[NUMBER_OF_STATES*HORIZON_LEN];
-	temp_vector1.data = (float*) &temp_vector1_data;
-	temp_vector1.length = NUMBER_OF_STATES*HORIZON_LEN;
-	temp_vector1.orientation = 0;
-	temp_vector1.name = "temp_vector1";
-
-	// temp_vector2
-	float temp_vector2_data[REDUCED_HORIZON];
-	temp_vector2.data = (float*) &temp_vector2_data;
-	temp_vector2.length = REDUCED_HORIZON;
-	temp_vector2.orientation = 1;
-	temp_vector2.name = "temp_vector2";
-
-	// temp_vector3
-	float temp_vector3_data[REDUCED_HORIZON];
-	temp_vector3.data = (float*) &temp_vector3_data;
-	temp_vector3.length = REDUCED_HORIZON;
-	temp_vector3.orientation = 0;
-	temp_vector3.name = "temp_vector3";
-
 	// current state vector
 	float states_data[NUMBER_OF_STATES];
 	states.data = (float*) &states_data;
@@ -166,7 +109,7 @@ void mpcTask(void *p) {
 		/* -------------------------------------------------------------------- */
 		if (xQueueReceive(comm2mpcQueue, &comm2mpcMessage, 0)) {
 
-			// copy the incomming set point/s into the local vector
+			// copy the incoming set point/s into the local vector
 
 			vector_float_set_to(&elevator_true_reference, comm2mpcMessage.elevatorReference);
 			vector_float_set_to(&aileron_true_reference, comm2mpcMessage.aileronReference);
@@ -181,21 +124,15 @@ void mpcTask(void *p) {
 			memcpy(states.data, &kalman2mpcMessage.elevatorData, NUMBER_OF_STATES*sizeof(float));
 
 			// calculate the elevator MPC
-			calculateMPC();
-
-			// copy the output to the message
-			mpc2commMessage.elevatorOutput = vector_float_get(&temp_vector3, 1);
+			mpc2commMessage.elevatorOutput = calculateMPC(&A_roof, &B_roof, &Q_roof_diag, &H_inv, &states, &reference, NUMBER_OF_STATES, HORIZON_LEN, REDUCED_HORIZON);
 
 			// copy the elevatorStates to states
 			memcpy(states.data, &kalman2mpcMessage.aileronData, NUMBER_OF_STATES*sizeof(float));
 
 			// calculate the aileron MPC
-			calculateMPC();
+			mpc2commMessage.aileronOutput = calculateMPC(&A_roof, &B_roof, &Q_roof_diag, &H_inv, &states, &reference, NUMBER_OF_STATES, HORIZON_LEN, REDUCED_HORIZON);
 
-			// copy the  output to the message
-			mpc2commMessage.aileronOutput = vector_float_get(&temp_vector3, 1);
-
-			// send outputs to comms
+			// send outputs to commTask
 			xQueueSend(mpc2commQueue, &mpc2commMessage, 10);
 		}
 

@@ -30,10 +30,6 @@ const float Q_roof_diag_data[Q_ROOF_DIAG_SIZE];
 
 const float B_roof_data[B_ROOF_HEIGHT*B_ROOF_WIDTH];
 
-// for P = 0.0005
 const float H_inv_data[H_INV_HEIGHT*H_INV_WIDTH];
-
-// for P = 0.03
-const float H_inv_data2[H_INV_HEIGHT*H_INV_WIDTH];
 
 #endif /* MPCMATRICES_H_ */

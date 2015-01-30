@@ -62,7 +62,7 @@ void kalmanTask(void *p) {
 	aileron_states_vector.data = (float *) data_aileron_states;
 
 	/* -------------------------------------------------------------------- */
-	/* Elevator kalman covariance matrix												*/
+	/* Elevator kalman covariance matrix									*/
 	/* -------------------------------------------------------------------- */
 	matrix_float elevator_covariance_matrix;
 	elevatorHandler.covariance = &elevator_covariance_matrix;
@@ -73,7 +73,7 @@ void kalmanTask(void *p) {
 	elevator_covariance_matrix.data = (float *) data_elevator_covariance;
 
 	/* -------------------------------------------------------------------- */
-	/* Aileron kalman covariance matrix												*/
+	/* Aileron kalman covariance matrix										*/
 	/* -------------------------------------------------------------------- */
 	matrix_float aileron_covariance_matrix;
 	aileronHandler.covariance = &aileron_covariance_matrix;
@@ -220,7 +220,7 @@ void kalmanTask(void *p) {
 
 		kalman2commMessage_t kalman2commMesasge;
 
-		if (xQueueReceive(comm2kalmanQueue, &message, 100)) {
+		if (xQueueReceive(comm2kalmanQueue, &message, 0)) {
 
 			dt = message.dt;
 
@@ -228,7 +228,7 @@ void kalmanTask(void *p) {
 			/*	Prepare matrices													*/
 			/* -------------------------------------------------------------------- */
 
-			// update the A_matrix
+			// update the A_matrix (dt is probably different then in previous time)
 			matrix_float_set(&A_matrix, 1, 2, dt);
 			matrix_float_set(&A_matrix, 2, 3, dt);
 			matrix_float_set(&A_matrix, 3, 3, dt*82.6135);
@@ -278,5 +278,7 @@ void kalmanTask(void *p) {
 
 			xQueueOverwrite(kalman2commQueue, &kalman2commMesasge);
 		}
+
+		taskYIELD();
 	}
 }
