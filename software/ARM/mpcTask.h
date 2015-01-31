@@ -15,6 +15,7 @@ void mpcTask(void *p);
 
 // used to filter the setpoint
 #define MAX_SPEED	0.4
+#define DT			0.0114
 
 typedef struct {
 

@@ -24,11 +24,11 @@ QueueHandle_t * comm2mpcQueue;
 void boardInit() {
 
     // create queues for usart
-    usartRxQueue = xQueueCreate(16, sizeof(char));
-    usartTxQueue = xQueueCreate(16, sizeof(char));
+    usartRxQueue = xQueueCreate(256, sizeof(char));
+    usartTxQueue = xQueueCreate(256, sizeof(char));
 
     // create a queue from commTask to kalmanTask
-    comm2kalmanQueue = xQueueCreate(10, sizeof(comm2kalmanMessage_t));
+    comm2kalmanQueue = xQueueCreate(1, sizeof(comm2kalmanMessage_t));
 
     // create a queue from mpcTask to commTask
     mpc2commQueue = xQueueCreate(1, sizeof(mpc2commMessage_t));

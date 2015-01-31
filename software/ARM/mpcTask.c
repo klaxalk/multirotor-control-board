@@ -25,12 +25,21 @@ vector_float aileron_true_reference;
 
 vector_float states;
 
-void filterReference(vector_float * in) {
+void filterAttitudeReference(vector_float * in) {
 
 	int i;
+	float diference;
 
 	for (i = 2; i <= in->length; i++) {
 
+		diference = vector_float_get(&reference, (i-2)*NUMBER_OF_STATES + 1) - vector_float_get(in, i);
+
+		if (diference > MAX_SPEED*DT)
+			diference = MAX_SPEED*DT;
+		else if (diference < -MAX_SPEED*DT)
+			diference = -MAX_SPEED*DT;
+
+		vector_float_set(&reference, (i-1)*NUMBER_OF_STATES + 1, vector_float_get(&reference, (i-2)*NUMBER_OF_STATES + 1) - diference);
 	}
 }
 
@@ -110,7 +119,6 @@ void mpcTask(void *p) {
 		if (xQueueReceive(comm2mpcQueue, &comm2mpcMessage, 0)) {
 
 			// copy the incoming set point/s into the local vector
-
 			vector_float_set_to(&elevator_true_reference, comm2mpcMessage.elevatorReference);
 			vector_float_set_to(&aileron_true_reference, comm2mpcMessage.aileronReference);
 		}
@@ -123,19 +131,27 @@ void mpcTask(void *p) {
 			// copy the elevatorStates to states
 			memcpy(states.data, &kalman2mpcMessage.elevatorData, NUMBER_OF_STATES*sizeof(float));
 
+			// filter the reference
+			vector_float_set(&reference, 1, vector_float_get(&states, 1));
+			filterAttitudeReference(&elevator_true_reference);
+
 			// calculate the elevator MPC
 			mpc2commMessage.elevatorOutput = calculateMPC(&A_roof, &B_roof, &Q_roof_diag, &H_inv, &states, &reference, NUMBER_OF_STATES, HORIZON_LEN, REDUCED_HORIZON);
 
 			// copy the elevatorStates to states
 			memcpy(states.data, &kalman2mpcMessage.aileronData, NUMBER_OF_STATES*sizeof(float));
 
+			// filter the reference
+			vector_float_set(&reference, 1, vector_float_get(&states, 1));
+			filterAttitudeReference(&aileron_true_reference);
+
 			// calculate the aileron MPC
 			mpc2commMessage.aileronOutput = calculateMPC(&A_roof, &B_roof, &Q_roof_diag, &H_inv, &states, &reference, NUMBER_OF_STATES, HORIZON_LEN, REDUCED_HORIZON);
 
 			// send outputs to commTask
-			xQueueSend(mpc2commQueue, &mpc2commMessage, 10);
-		}
+			xQueueOverwrite(mpc2commQueue, &mpc2commMessage);
 
-		taskYIELD();
+			led_toggle();
+		}
 	}
 }

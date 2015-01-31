@@ -12,6 +12,9 @@
 
 void controllersTask(void *p) {
 	
+	mpcSetpoints.elevatorSetpoint = 0;
+	mpcSetpoints.aileronSetpoint = 0;
+	
 	while (1) {
 		
 		altitudeEstimator();

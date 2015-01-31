@@ -11,6 +11,18 @@
 #include <stdio.h>
 #include "controllers.h"
 
+/* -------------------------------------------------------------------- */
+/*	MPC support variables	 											*/
+/* -------------------------------------------------------------------- */
+volatile int16_t mpcCounter = 0;
+volatile int16_t mpcRate = 0;
+
+/* -------------------------------------------------------------------- */
+/*	kalman support variables	 										*/
+/* -------------------------------------------------------------------- */
+volatile int16_t kalmanCounter = 0;
+volatile int16_t kalmanRate = 0;
+
 void commTask(void *p) {
 	
 	unsigned char inChar;
@@ -44,7 +56,7 @@ void commTask(void *p) {
 	kalmanStates.aileron.position = 0;
 	kalmanStates.aileron.velocity = 0;
 	kalmanStates.aileron.acceleration = 0;
-	
+		
 	while (1) {
 		
 		/* -------------------------------------------------------------------- */
@@ -154,6 +166,8 @@ void commTask(void *p) {
 				controllerElevatorOutput = mpcElevatorOutput;
 				controllerAileronOutput = mpcAileronOutput;
 				
+				mpcCounter++;
+				
 				portEXIT_CRITICAL();
 				
 			/* -------------------------------------------------------------------- */
@@ -168,6 +182,8 @@ void commTask(void *p) {
 				kalmanStates.aileron.position = readFloat(stmRxBuffer, &idx);
 				kalmanStates.aileron.velocity = readFloat(stmRxBuffer, &idx);
 				kalmanStates.aileron.acceleration = readFloat(stmRxBuffer, &idx);
+				
+				kalmanCounter++;
 			}
 			
 			stmMessageReceived = 0;
@@ -182,21 +198,9 @@ void commTask(void *p) {
 			if (inChar == 'b') {
 
 				char crc = 0;
-				
-				sendFloat(usart_buffer_xbee, kalmanStates.elevator.position, &crc);
-				sendFloat(usart_buffer_xbee, kalmanStates.aileron.position, &crc);
-				
-				sendFloat(usart_buffer_xbee, kalmanStates.elevator.velocity, &crc);
-				sendFloat(usart_buffer_xbee, kalmanStates.aileron.velocity, &crc);
-				
-				sendFloat(usart_buffer_xbee, kalmanStates.elevator.acceleration, &crc);
-				sendFloat(usart_buffer_xbee, kalmanStates.aileron.acceleration, &crc);
-				
-				sendFloat(usart_buffer_xbee, elevatorSpeed, &crc);
-				sendFloat(usart_buffer_xbee, aileronSpeed, &crc);
-			
-				sendInt16(usart_buffer_xbee, controllerElevatorOutput, &crc);
-				sendInt16(usart_buffer_xbee, controllerAileronOutput, &crc);
+						
+				sendInt16(usart_buffer_xbee, kalmanRate, &crc);
+				sendInt16(usart_buffer_xbee, mpcRate, &crc);
 
 				usartBufferPutString(usart_buffer_xbee, "\r\n", 10);
 			}
@@ -229,8 +233,6 @@ void commTask(void *p) {
 			}
 
 			px4Confidence = opticalFlowData.quality;
-			
-			led_yellow_toggle();
 
 			opticalFlowDataFlag = 0;
 			
@@ -257,7 +259,7 @@ void commTask(void *p) {
 			
 			// clear the crc
 			char crc = 0;
-			sendChar(usart_buffer_stm, 'a', &crc);		// this character initiates the transmition
+			sendChar(usart_buffer_stm, 'a', &crc);		// this character initiates the transmission
 			sendChar(usart_buffer_stm, 1+16, &crc);		// this will be the size of the message
 			
 			sendChar(usart_buffer_stm, '1', &crc);		// id of the message
@@ -266,6 +268,18 @@ void commTask(void *p) {
 			sendFloat(usart_buffer_stm, aileronSpeed, &crc);
 			sendInt16(usart_buffer_stm, mpcElevatorOutput, &crc);
 			sendInt16(usart_buffer_stm, mpcAileronOutput, &crc);
+			
+			sendChar(usart_buffer_stm, crc, &crc);
+			
+			led_yellow_toggle();
+			
+			crc = 0;			
+			sendChar(usart_buffer_stm, 'a', &crc);		// this character initiates the transmission
+			sendChar(usart_buffer_stm, 1+8, &crc);		// this will be the size of the message
+			
+			sendChar(usart_buffer_stm, 's', &crc);		// id of the message
+			sendFloat(usart_buffer_stm, mpcSetpoints.elevatorSetpoint, &crc);
+			sendFloat(usart_buffer_stm, mpcSetpoints.aileronSetpoint, &crc);
 			
 			sendChar(usart_buffer_stm, crc, &crc);
 		}
@@ -279,12 +293,12 @@ void commTask(void *p) {
 			if (main2commMessage.messageType == CLEAR_STATES) {
 	
 				char crc = 0;
-				sendChar(usart_buffer_stm, 'a', &crc);		// this character initiates the transmition
+				sendChar(usart_buffer_stm, 'a', &crc);		// this character initiates the transmission
 				sendChar(usart_buffer_stm, 1, &crc);		// this will be the size of the message
 			
 				sendChar(usart_buffer_stm, '2', &crc);		// id of the message
 			
-				sendChar(usart_buffer_stm, crc, &crc);		// isend crc
+				sendChar(usart_buffer_stm, crc, &crc);		// send crc
 			}
 		}
 	}

@@ -129,9 +129,9 @@ extern volatile int16_t controllerRudderOutput;
 /* -------------------------------------------------------------------- */
 /*	RTC																	*/
 /* -------------------------------------------------------------------- */
-extern volatile int16_t milisecondsTimer;
-extern volatile int16_t secondsTimer;
-extern volatile int16_t hoursTimer;
+volatile int16_t milisecondsTimer;
+volatile int16_t secondsTimer;
+volatile int16_t hoursTimer;
 
 /* -------------------------------------------------------------------- */
 /*	Queue from main to comms											*/

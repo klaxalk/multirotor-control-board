@@ -22,6 +22,8 @@ volatile bool mpcControllerEnabled;
 volatile int16_t mpcElevatorOutput = 0;
 volatile int16_t mpcAileronOutput = 0;
 
+volatile mpcSetpoints_t mpcSetpoints;
+
 /* -------------------------------------------------------------------- */
 /*	variables that support kalman filter (running on STM)				*/
 /* -------------------------------------------------------------------- */

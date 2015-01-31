@@ -200,12 +200,26 @@ void commTask(void *p) {
 				if (abs(tempInt) < 300)
 					mes.aileronInput = (float) tempInt;
 
-				xQueueSend(comm2kalmanQueue, &mes, 0);
+				xQueueOverwrite(comm2kalmanQueue, &mes);
 
 			} else if (messageId == '2') {
 
 				vector_float_set_zero(elevatorHandler.states);
 				vector_float_set_zero(aileronHandler.states);
+
+			} else if (messageId == 's') {
+
+				comm2mpcMessage_t comm2mpcMessage;
+
+				tempFloat = readFloat(messageBuffer, &idx);
+				if (fabs(tempFloat) < 5)
+					comm2mpcMessage.elevatorReference = tempFloat;
+
+				tempFloat = readFloat(messageBuffer, &idx);
+				if (fabs(tempFloat) < 5)
+					comm2mpcMessage.aileronReference = tempFloat;
+
+				xQueueOverwrite(comm2mpcQueue, &comm2mpcMessage);
 			}
 
 			messageReceived = 0;
@@ -258,7 +272,5 @@ void commTask(void *p) {
 
 			sendChar(crcOut, &crcOut);
 		}
-
-		taskYIELD();
 	}
 }

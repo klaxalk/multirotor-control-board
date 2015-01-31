@@ -278,7 +278,5 @@ void kalmanTask(void *p) {
 
 			xQueueOverwrite(kalman2commQueue, &kalman2commMesasge);
 		}
-
-		taskYIELD();
 	}
 }

@@ -31,46 +31,32 @@ while true
     fprintf(s, '%c', 'b');
     
     % wait for data       
-    while (s.BytesAvailable == 14)
+    while (s.BytesAvailable <= 0)
     end
 
-    in(pos, 1) = fread(s, 1, 'single');
-    in(pos, 2) = fread(s, 1, 'single');
-    in(pos, 3) = fread(s, 1, 'single');
-    in(pos, 4) = fread(s, 1, 'single');
-    in(pos, 5) = fread(s, 1, 'single');
-    in(pos, 6) = fread(s, 1, 'single');
-    in(pos, 7) = fread(s, 1, 'single');
-    in(pos, 8) = fread(s, 1, 'single');
-    in(pos, 9) = fread(s, 1, 'int16');
-    in(pos, 10) = fread(s, 1, 'int16');
-   
-    std(in(:, 1))
+    kalmanRate = fread(s, 1, 'int16');
+    mpcRate = fread(s, 1, 'int16');
+    
+    kalmanRate;
+    mpcRate
     
     % read line ending     
     fread(s, 1, 'int16');
     
     % plot the position     
-    subplot(2, 1, 1);
-    scatter(-in(pos, 2), in(pos, 1), 'filled');
-    axis([-1 1 -1 1]);
+%     subplot(2, 1, 1);
+%     scatter(-in(pos, 2), in(pos, 1), 'filled');
+%     axis([-1 1 -1 1]);
     
     % plot the action
-    subplot(2, 1, 2);
-    hold off
-    plot(in([pos:end 1:pos-1], 9), 'g');
-%     plot(in([pos:end 1:pos-1], 1), 'b');
-    hold on
-    plot(in([pos:end 1:pos-1], 10), 'b');
-%     plot(in([pos:end 1:pos-1], 3), 'r');
-    axis([0 horizon_length -150 150]);
-    
-% 
-%     s3 = subplot(2, 1, 2);
-%     cla(s3)
+%     subplot(2, 1, 2);
 %     hold off
-%     text(.1,.5,['\fontsize{16}Øízení 1. úrovnì: ']);
-%     if (controllerEnabled == 1)
+%     plot(in([pos:end 1:pos-1], 9), 'g');
+%     hold on
+%     plot(in([pos:end 1:pos-1], 10), 'b');
+%     axis([0 horizon_length -350 350]);
+    
+    %     if (controllerEnabled == 1)
 %         text(.5,.5,['\fontsize{16}\color{green}Zapnuto ']);
 %     else
 %         text(.5,.5,['\fontsize{16}\color{red}Vypnuto ']);

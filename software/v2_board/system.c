@@ -54,7 +54,7 @@ UsartBuffer * usart_buffer_4;
 /* -------------------------------------------------------------------- */
 /*	Realtime clock														*/
 /* -------------------------------------------------------------------- */
-volatile int16_t milisecondsTimer;
+volatile int16_t milisecondsTimer = 0;
 volatile int16_t secondsTimer;
 volatile int16_t hoursTimer;
 
@@ -301,8 +301,13 @@ ISR(TCD0_CCA_vect) {
 /*	Interrupt for timing the RTC & mergeSignalsToOutput					*/
 /* -------------------------------------------------------------------- */
 ISR(TCC1_OVF_vect) {
-
+	
 	if (milisecondsTimer++ == 1000) {
+		
+		mpcRate = mpcCounter;
+		mpcCounter = 0;
+		kalmanRate = kalmanCounter;
+		kalmanCounter = 0;
 		
 		milisecondsTimer = 0;
 		
@@ -312,6 +317,6 @@ ISR(TCC1_OVF_vect) {
 			hoursTimer++;
 		}
 	}
-
+	
 	mergeSignalsToOutput();
 }

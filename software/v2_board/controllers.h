@@ -24,10 +24,19 @@ volatile bool mpcControllerEnabled;
 /*	variables that supports MPC											*/
 /* -------------------------------------------------------------------- */
 
-#define MPC_SATURATION	300
+#define MPC_SATURATION	350
 
 volatile int16_t mpcElevatorOutput;
 volatile int16_t mpcAileronOutput;
+
+// this structure hold setpoints for elevator and aileron position
+typedef struct {
+	
+	float elevatorSetpoint;
+	float aileronSetpoint;
+} mpcSetpoints_t;
+
+volatile mpcSetpoints_t mpcSetpoints;
 
 /* -------------------------------------------------------------------- */
 /*	variables that support kalman filter (running on STM)				*/
