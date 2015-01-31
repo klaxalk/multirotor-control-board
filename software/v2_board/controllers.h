@@ -14,40 +14,22 @@
 
 //constants for setpoints
 #define DEFAULT_AILERON_POSITION_SETPOINT 0
-#define DEFAULT_ELEVATOR_POSITION_SETPOINT -1.5
+#define DEFAULT_ELEVATOR_POSITION_SETPOINT 0
 #define DEFAULT_THROTTLE_SETPOINT 1
 #define DEFAULT_AILERON_VELOCITY_SETPOINT 0
 #define DEFAULT_ELEVATOR_VELOCITY_SETPOINT 0
 
 // constants for position and velocity controllers
-#define POSITION_MAXIMUM   2000 //in mm, must be positive! crops Gumstix values
 #define SPEED_MAX 0.4 // in m/s, must be positive!
 
-#define VELOCITY_KV 250
-#define VELOCITY_KI 10
-#define VELOCITY_KA 35
-
-
-#define POSITION_KP 85
-#define POSITION_KI 5
-#define POSITION_KV 180
-#define POSITION_KA 9
 
 // constants for altitude and landing controllers
 #define ALTITUDE_MAXIMUM  3.00 //used to crop values from PX4Flow
 #define ALTITUDE_MINIMUM  0.35 //used for landing (must be > 0.3)
 #define ALTITUDE_SPEED_MAX 0.8 //in m/s, must be positive!
-#define LANDING_SPEED     -0.4 //in m/s, must be negative!
 
-#define THROTTLE_SP_HIGH  2.0
+#define THROTTLE_SP_HIGH  2.5
 #define THROTTLE_SP_LOW   ALTITUDE_MINIMUM
-
-#define ALTITUDE_KP 180
-#define ALTITUDE_KI 120
-#define ALTITUDE_KV 200
-
-#define LANDING_KV 180
-#define LANDING_KI 120
 
 // controllers saturations
 #define CONTROLLER_ELEVATOR_SATURATION 100
@@ -57,20 +39,16 @@
 // leading data TTL (sec)
 #define LEADING_DATA_TTL 0.5
 
-// common global variables
 // controllers output variables
-extern volatile int16_t velocityControllerElevatorOutput;
-extern volatile int16_t velocityControllerAileronOutput;
-extern volatile int16_t positionControllerElevatorOutput;
-extern volatile int16_t positionControllerAileronOutput;
+extern volatile int16_t controllerElevatorOutput;
+extern volatile int16_t controllerAileronOutput;
+extern volatile int16_t controllerRudderOutput;
 extern volatile int16_t controllerThrottleOutput;
 
 // controller select
 volatile unsigned char controllerActive;
 
 //vars for estimators
-extern volatile float estimatedElevatorVel2;
-extern volatile float estimatedAileronVel2;
 
 extern volatile float estimatedElevatorPos;
 extern volatile float estimatedAileronPos;
@@ -110,15 +88,7 @@ extern volatile float aileronPosContError;
 extern volatile unsigned char gumstixEnabled;
 
 //auto-landing variables and state defines
-extern volatile float landingThrottleSetpoint;
-extern volatile int16_t landingThrottleOutput;
-extern volatile unsigned char landingRequest;
 extern volatile unsigned char landingState;
-#define LS_STABILIZATION      2
-#define LS_LANDING            1
-#define LS_ON_GROUND          0
-#define LS_TAKEOFF            3
-#define LS_FLIGHT             4
 
 //auto-trajectory variables and types
 extern volatile unsigned char trajectoryEnabled;
@@ -149,19 +119,17 @@ void enableLanding();
 void disableLanding();
 void enableTrajectoryFollow();
 void disableTrajectoryFollow();
-
-//setpoint and trajectory handling
-void setpointsFilter(float throttleDSP,float aileronPosDSP,float elevatorPosDSP,float aileronVelDSP,float elevatorVelDSP);
+void controllerSet(unsigned char controllerDesired);
 
 //position estimator and controllers
 void positionEstimator();
-void velocityController();
-void positionController();
+void velocityController(int16_t *elevator, int16_t *aileron, float elevatorSetpoint, float aileronSetpoint);
+void positionController(int16_t *elevator, int16_t *aileron, float elevatorSetpoint, float aileronSetpoint);
 
 //altitude estimator and controllers
 void altitudeEstimator();
-void altitudeController();
-void landingStateAutomat();
+void altitudeController(int16_t *throttle, float setpoint);
+void landingController();
 
 //leading data age checker
 void leadingDataActualCheck();

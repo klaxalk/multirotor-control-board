@@ -5,13 +5,13 @@
 #include "commands.h"
 
 // controllers output variables
-volatile int16_t velocityControllerElevatorOutput;
-volatile int16_t velocityControllerAileronOutput;
-volatile int16_t positionControllerElevatorOutput;
-volatile int16_t positionControllerAileronOutput;
+volatile int16_t controllerElevatorOutput=0;
+volatile int16_t controllerAileronOutput=0;
+volatile int16_t controllerRudderOutput=0;
+volatile int16_t controllerThrottleOutput=0;
 
-volatile int16_t controllerThrottleOutput;
-volatile int16_t controllerRudderOutput;
+// controller select
+volatile unsigned char controllerActive = 0x01;
 
 //vars for estimators
 volatile float estimatedElevatorPos = 0;
@@ -19,12 +19,8 @@ volatile float estimatedAileronPos  = 0;
 volatile float estimatedThrottlePos = 0;
 
 volatile float estimatedElevatorVel = 0;
-volatile float estimatedElevatorVel2 = 0;
 volatile float estimatedAileronVel  = 0;
-volatile float estimatedAileronVel2 = 0;
 volatile float estimatedThrottleVel = 0;
-volatile float estimatedElevatorVel_Prev = 0;
-volatile float estimatedAileronVel_Prev  = 0;
 
 volatile float estimatedElevatorAcc = 0;
 volatile float estimatedAileronAcc = 0;
@@ -62,14 +58,8 @@ volatile float aileronDesiredVelocitySetpoint  = DEFAULT_AILERON_VELOCITY_SETPOI
 
 
 //auto-landing variables
-volatile unsigned char landingRequest = 0;
-volatile unsigned char landingState = LS_ON_GROUND;
-volatile uint8_t landingCounter = 0;
-volatile float landingThrottleSetpoint = 0;
-volatile int16_t landingThrottleOutput;
+volatile unsigned char landingState = 0x00;
 
-// controller select
-volatile unsigned char controllerActive = 0x01;
 
 //auto-trajectory variables
 volatile unsigned char trajectoryEnabled = 0;
@@ -119,11 +109,15 @@ void disableTrajectoryFollow(){
 }
 
 void enableLanding(){	
-	landingRequest=1;
+	if(landingState==LANDING.FLIGHT || landingState==LANDING.TAKE_OFF){
+		landingState=LANDING.STABILIZATION;
+	}
 }
 
 void disableLanding(){	
-	landingRequest=0;
+	if(landingState!=LANDING.FLIGHT){
+		landingState=LANDING.TAKE_OFF;
+	}
 }
 
 void controllerSet(unsigned char controllerDesired){
@@ -165,14 +159,10 @@ void controllerSet(unsigned char controllerDesired){
 			if(controllerActive==CONTROLLERS.OFF){
 				throttleIntegration=0;
 				throttleSetpoint=DEFAULT_THROTTLE_SETPOINT;				
-			}			
-		
-		}
-		
+			}					
+		}		
 	}
-
 }
-
 
 void trajectorySetpoints(){
 	float dValue;
@@ -211,34 +201,14 @@ void trajectorySetpoints(){
 	} 
 }
 
-void setpointsFilter(float throttleDSP,float aileronPosDSP,float elevatorPosDSP,float aileronVelDSP,float elevatorVelDSP) {	
-	//safety saturation
-	if(throttleDSP<THROTTLE_SP_LOW){throttleDSP=THROTTLE_SP_LOW;}
-	if(throttleDSP>THROTTLE_SP_HIGH){throttleDSP=THROTTLE_SP_HIGH;}
-		
-	if(elevatorVelDSP<-SPEED_MAX){elevatorVelDSP=-SPEED_MAX;}
-	if(elevatorVelDSP>SPEED_MAX){elevatorVelDSP=SPEED_MAX;}
-		
-	if(aileronVelDSP<-SPEED_MAX){aileronVelDSP=-SPEED_MAX;}
-	if(aileronVelDSP>SPEED_MAX){aileronVelDSP=SPEED_MAX;}
-			
-	//filter	
-	elevatorPositionSetpoint += (elevatorPosDSP-elevatorPositionSetpoint) * (DT/SETPOINT_FILTER_CONST);
-	aileronPositionSetpoint += (aileronPosDSP-aileronPositionSetpoint) * (DT/SETPOINT_FILTER_CONST);
-	
-	throttleSetpoint += (throttleDSP-throttleSetpoint) * (DT/SETPOINT_FILTER_CONST);
-	
-	elevatorVelocitySetpoint += (elevatorVelDSP-elevatorVelocitySetpoint) * (DT/SETPOINT_FILTER_CONST);
-	aileronVelocitySetpoint += (aileronVelDSP-aileronVelocitySetpoint) * (DT/SETPOINT_FILTER_CONST);			
-}
-
 void positionEstimator() {
-	//help variable for acceleration
+	static float estimatedElevatorVel_Prev = 0;
+	static float estimatedAileronVel_Prev  = 0;	
 	float acc_new;
 	
 	//gustix valid delay - filters faulty values
 	static uint8_t gumstix_counter = 0;
-	uint8_t gumstix_delay = 7;
+	const uint8_t gumstix_delay = 7;
 
 	if(validGumstix == 1) {
 		if(gumstix_counter < gumstix_delay) gumstix_counter++;
@@ -252,80 +222,71 @@ void positionEstimator() {
 	estimatedBlobVertical += (throttleGumstix-estimatedBlobVertical) * (DT/GUMSTIX_FILTER_CONST);
 	
 	//elevator velocity
-	estimatedElevatorVel += (elevatorSpeed-estimatedElevatorVel) * (DT/PX4FLOW_FILTER_CONST);
-	estimatedElevatorVel2 += (estimatedElevatorVel-estimatedElevatorVel2)* (DT/(PX4FLOW_FILTER_CONST+0.02));
-	
+	estimatedElevatorVel += (elevatorSpeed-estimatedElevatorVel) * (DT/PX4FLOW_FILTER_CONST);	
 	//elevator acceleration
-	acc_new = (estimatedElevatorVel2 - estimatedElevatorVel_Prev) / DT;
-	estimatedElevatorVel_Prev = estimatedElevatorVel2;
+	acc_new = (estimatedElevatorVel - estimatedElevatorVel_Prev) / DT;
+	estimatedElevatorVel_Prev = estimatedElevatorVel;
 	estimatedElevatorAcc += (acc_new - estimatedElevatorAcc) * (DT/PX4FLOW_FILTER_CONST);
-
 	//elevator position
 	if(estimatedThrottlePos>ALTITUDE_MINIMUM){
 		estimatedElevatorPos += estimatedElevatorVel * DT;	
 	}
 
 	//aileron velocity
-	estimatedAileronVel += (aileronSpeed-estimatedAileronVel) * (DT/PX4FLOW_FILTER_CONST);
-	estimatedAileronVel2 += (estimatedAileronVel-estimatedAileronVel2) * (DT/PX4FLOW_FILTER_CONST+0.02);
-	
+	estimatedAileronVel += (aileronSpeed-estimatedAileronVel) * (DT/PX4FLOW_FILTER_CONST);	
 	//aileron acceleration
-	acc_new = (estimatedAileronVel2 - estimatedAileronVel_Prev) / DT;
-	estimatedAileronVel_Prev = estimatedAileronVel2;
+	acc_new = (estimatedAileronVel - estimatedAileronVel_Prev) / DT;
+	estimatedAileronVel_Prev = estimatedAileronVel;
 	estimatedAileronAcc += (acc_new - estimatedAileronAcc) * (DT/PX4FLOW_FILTER_CONST);
-
 	//aileron position
 	if(estimatedThrottlePos>ALTITUDE_MINIMUM){
 		estimatedAileronPos += estimatedAileronVel * DT;		
 	}
 }
 
-void velocityController() {
+void velocityController(int16_t *elevator, int16_t *aileron, float elevatorSetpoint, float aileronSetpoint) {
 	float error;
-	float KI, KV, KA;
+	static const float KI=10, KV=25, KA=35;
 
-	//set controller constants
-	KI = VELOCITY_KI;
-	KV = VELOCITY_KV;
-	KA = VELOCITY_KA;
-
-	//velocity controller
-	error = elevatorVelocitySetpoint - estimatedElevatorVel2;
+	//elevator setpoints
+	if(elevatorSetpoint<-SPEED_MAX){elevatorSetpoint=-SPEED_MAX;}
+	if(elevatorSetpoint>SPEED_MAX){elevatorSetpoint=SPEED_MAX;}
+	elevatorVelocitySetpoint += (elevatorSetpoint-elevatorVelocitySetpoint) * (DT/SETPOINT_FILTER_CONST);
+			
+	//elevator controller		
+	error = elevatorVelocitySetpoint - estimatedElevatorVel;
 
 	elevatorVelocityIntegration += KI * error * DT;
 	if (elevatorVelocityIntegration > CONTROLLER_ELEVATOR_SATURATION/3) {elevatorVelocityIntegration = CONTROLLER_ELEVATOR_SATURATION/3;} else
 	if (elevatorVelocityIntegration < -CONTROLLER_ELEVATOR_SATURATION/3) {elevatorVelocityIntegration = -CONTROLLER_ELEVATOR_SATURATION/3;}
 
-	velocityControllerElevatorOutput = (KV * error) + elevatorPositionIntegration - (KA * estimatedElevatorAcc);
-	if (velocityControllerElevatorOutput > CONTROLLER_ELEVATOR_SATURATION) {velocityControllerElevatorOutput = CONTROLLER_ELEVATOR_SATURATION;} else 
-	if (velocityControllerElevatorOutput < -CONTROLLER_ELEVATOR_SATURATION) {velocityControllerElevatorOutput = -CONTROLLER_ELEVATOR_SATURATION;}
+	*elevator=saturation((int16_t)((KV * error) + elevatorPositionIntegration - (KA * estimatedElevatorAcc)),CONTROLLER_ELEVATOR_SATURATION);
 
-
+	//aileron setpoints
+	if(aileronSetpoint<-SPEED_MAX){aileronSetpoint=-SPEED_MAX;}
+	if(aileronSetpoint>SPEED_MAX){aileronSetpoint=SPEED_MAX;}
+	aileronVelocitySetpoint += (aileronSetpoint-aileronVelocitySetpoint) * (DT/SETPOINT_FILTER_CONST);	
+		
 	//aileron controller
-	error = aileronVelocitySetpoint - estimatedAileronVel2;	
+	error = aileronVelocitySetpoint - estimatedAileronVel;	
 
 	aileronVelocityIntegration += KI * error * DT;
 	if (aileronVelocityIntegration > CONTROLLER_AILERON_SATURATION/3) {aileronVelocityIntegration = CONTROLLER_AILERON_SATURATION/3;} else 
 	if (aileronVelocityIntegration < -CONTROLLER_AILERON_SATURATION/3) {aileronVelocityIntegration = -CONTROLLER_AILERON_SATURATION/3;}
 
-	velocityControllerAileronOutput = (KV * error) + aileronPositionIntegration - (KA * estimatedAileronAcc);
-	if (velocityControllerAileronOutput > CONTROLLER_AILERON_SATURATION) {velocityControllerAileronOutput = CONTROLLER_AILERON_SATURATION;} else 
-	if (velocityControllerAileronOutput < -CONTROLLER_AILERON_SATURATION) {velocityControllerAileronOutput = -CONTROLLER_AILERON_SATURATION;}	
+	*aileron=saturation((int16_t)((KV * error) + aileronPositionIntegration - (KA * estimatedAileronAcc)),CONTROLLER_AILERON_SATURATION);
 }
 
-void positionController() {
-	float KX, KI, KP, KV, KA;
+void positionController(int16_t *elevator, int16_t *aileron, float elevatorSetpoint, float aileronSetpoint) {
+	static const float KI=5, KP=85, KV=180, KA=9;
 
-	//set controller constants
-	KI = POSITION_KI;
-	KP = POSITION_KP;
-	KV = POSITION_KV;
-	KA = POSITION_KA;
-	KX = KP / KV;
+	//setpoints filter
+	elevatorPositionSetpoint += (elevatorSetpoint-elevatorPositionSetpoint) * (DT/SETPOINT_FILTER_CONST);
+	aileronPositionSetpoint += (aileronSetpoint-aileronPositionSetpoint) * (DT/SETPOINT_FILTER_CONST);
 
 	//elevator controller
 	elevatorPosContError = elevatorPositionSetpoint - estimatedElevatorPos;
-	elevatorDesiredSpeedPosController = KX * elevatorPosContError/* + elevatorDesiredSpeedPosControllerLeader*/;
+	elevatorDesiredSpeedPosController = (KP/KV) * elevatorPosContError;
 	if(elevatorDesiredSpeedPosController > +SPEED_MAX) elevatorDesiredSpeedPosController = +SPEED_MAX;
 	if(elevatorDesiredSpeedPosController < -SPEED_MAX) elevatorDesiredSpeedPosController = -SPEED_MAX;
 
@@ -333,14 +294,11 @@ void positionController() {
 	if (elevatorPositionIntegration > CONTROLLER_ELEVATOR_SATURATION/3) {elevatorPositionIntegration = CONTROLLER_ELEVATOR_SATURATION/3;} else 
 	if (elevatorPositionIntegration < -CONTROLLER_ELEVATOR_SATURATION/3) {elevatorPositionIntegration = -CONTROLLER_ELEVATOR_SATURATION/3;}
 
-	positionControllerElevatorOutput = KV * (elevatorDesiredSpeedPosController - estimatedElevatorVel2) + elevatorPositionIntegration - (KA * estimatedElevatorAcc);
-	if (positionControllerElevatorOutput > CONTROLLER_ELEVATOR_SATURATION) {positionControllerElevatorOutput = CONTROLLER_ELEVATOR_SATURATION;} else 
-	if (positionControllerElevatorOutput < -CONTROLLER_ELEVATOR_SATURATION) {positionControllerElevatorOutput = -CONTROLLER_ELEVATOR_SATURATION;}
-
+	*elevator=saturation((int16_t)(KV * (elevatorDesiredSpeedPosController - estimatedElevatorVel) + elevatorPositionIntegration - (KA * estimatedElevatorAcc)),CONTROLLER_ELEVATOR_SATURATION);
 
 	//aileron controller
 	aileronPosContError = aileronPositionSetpoint - estimatedAileronPos;
-	aileronDesiredSpeedPosController = KX * aileronPosContError/* + aileronDesiredSpeedPosControllerLeader*/;
+	aileronDesiredSpeedPosController = (KP/KV) * aileronPosContError;
 	if(aileronDesiredSpeedPosController > +SPEED_MAX) aileronDesiredSpeedPosController = +SPEED_MAX;
 	if(aileronDesiredSpeedPosController < -SPEED_MAX) aileronDesiredSpeedPosController = -SPEED_MAX;
 
@@ -348,10 +306,7 @@ void positionController() {
 	if (aileronPositionIntegration > CONTROLLER_AILERON_SATURATION/3) {aileronPositionIntegration = CONTROLLER_AILERON_SATURATION/3;} else 
 	if (aileronPositionIntegration < -CONTROLLER_AILERON_SATURATION/3) {aileronPositionIntegration = -CONTROLLER_AILERON_SATURATION/3;} 
 
-	positionControllerAileronOutput = KV * (aileronDesiredSpeedPosController - estimatedAileronVel2) + aileronPositionIntegration - (KA * estimatedAileronAcc);
-	if (positionControllerAileronOutput > CONTROLLER_AILERON_SATURATION) {positionControllerAileronOutput = CONTROLLER_AILERON_SATURATION;} else 
-	if (positionControllerAileronOutput < -CONTROLLER_AILERON_SATURATION) {positionControllerAileronOutput = -CONTROLLER_AILERON_SATURATION;}
-
+	*aileron=saturation((int16_t)(KV * (aileronDesiredSpeedPosController - estimatedAileronVel) + aileronPositionIntegration - (KA * estimatedAileronAcc)),CONTROLLER_AILERON_SATURATION);
 }
 
 void altitudeEstimator() {
@@ -379,15 +334,16 @@ void altitudeEstimator() {
     }
 }
 
-void altitudeController() {
+void altitudeController(int16_t *throttle,float setpoint) {
 	float error;
 	float vd; //desired velocity
-	float KX, KI, KV;
-
-	KX = ((float)ALTITUDE_KP / ALTITUDE_KV);
-	KI = ALTITUDE_KI;
-	KV = ALTITUDE_KV;
-
+	static const float KX=0.9, KI=120, KV=200;
+	
+	//setpoint filter
+	if(setpoint<THROTTLE_SP_LOW){setpoint=THROTTLE_SP_LOW;}
+	if(setpoint>THROTTLE_SP_HIGH){setpoint=THROTTLE_SP_HIGH;}
+	throttleSetpoint += (setpoint-throttleSetpoint) * (DT/SETPOINT_FILTER_CONST);
+	
 	error =(throttleSetpoint - estimatedThrottlePos);
 	vd = KX * error;
 	if(vd > +ALTITUDE_SPEED_MAX) vd = +ALTITUDE_SPEED_MAX;
@@ -404,75 +360,49 @@ void altitudeController() {
 	}
 
 	//total output
-	controllerThrottleOutput =
-		KV * (vd - estimatedThrottleVel) + throttleIntegration;
-	if (controllerThrottleOutput > CONTROLLER_THROTTLE_SATURATION) {
-		controllerThrottleOutput = CONTROLLER_THROTTLE_SATURATION;
-	}
-	if (controllerThrottleOutput < -CONTROLLER_THROTTLE_SATURATION) {
-		controllerThrottleOutput = -CONTROLLER_THROTTLE_SATURATION;
-	}
-
+	*throttle=saturation((int16_t)(KV * (vd - estimatedThrottleVel) + throttleIntegration),CONTROLLER_THROTTLE_SATURATION);
 }
 
-void landingStateAutomat(){
-	switch(landingState){
-		case LS_ON_GROUND:
-			landingThrottleOutput = -CONTROLLER_THROTTLE_SATURATION;
-			if(!landingRequest){
-				landingCounter = 0;
-				landingState = LS_TAKEOFF;
-			} break;
-		case LS_TAKEOFF:
-			if(landingRequest){
-				landingCounter = 0;
-				landingState = LS_STABILIZATION;				
+void landingController(int16_t *throttle, int16_t *elevator, int16_t *aileron){
+	static int8_t landingCounter=0;
+		if(landingState==LANDING.ON_GROUND){
+			*throttle = -CONTROLLER_THROTTLE_SATURATION;
+			*elevator = 0;
+			*aileron = 0;
+		}else
+		if(landingState=LANDING.TAKE_OFF){
+			altitudeController(throttle,throttleDesiredSetpoint);
+			velocityController(elevator,aileron,0,0);				
+			//stabilize altitude for 0.5s
+			if(fabs(throttleSetpoint - estimatedThrottlePos) < 0.1 && fabs(estimatedThrottleVel) < 0.2){
+				landingCounter++;
 			}else{
-				landingThrottleSetpoint = throttleDesiredSetpoint;
-				landingThrottleOutput=controllerThrottleOutput;
-				
-				//stabilize altitude for 0.5s
-				if(fabs(throttleSetpoint - estimatedThrottlePos) < 0.1 && fabs(estimatedThrottleVel) < 0.2){
-					landingCounter++;
-				}else{
-					landingCounter = 0;
-				}
-				if(landingCounter >= 35){
-					landingState = LS_FLIGHT;
-				}
-			} break;
-		case LS_FLIGHT:
-			if(landingRequest){
 				landingCounter = 0;
-				landingState = LS_STABILIZATION;
-			} break;
-		case LS_STABILIZATION:
-			if(!landingRequest){
-				landingState = LS_TAKEOFF;
-			}else{				
-				//stabilize altitude for 0.5s
-				landingThrottleSetpoint = ALTITUDE_MINIMUM;
-				if(fabs(throttleSetpoint - estimatedThrottlePos) < 0.1 && fabs(estimatedThrottleVel ) < 0.2){
-					landingCounter++;
-					landingThrottleOutput+=(controllerThrottleOutput-landingThrottleOutput)*(DT/PX4FLOW_FILTER_CONST);
-				}else{
-					landingCounter = 0;
-					landingThrottleOutput=controllerThrottleOutput;
-				}
-				if(landingCounter >= 35){
-					landingState = LS_LANDING;					
-				}
-			} break;
-		default: //LS_LANDING
-			if(!landingRequest){
-				landingCounter = 0;
-				landingState = LS_TAKEOFF;
-			}else{
-				landingThrottleOutput-=5;
-				if(landingThrottleOutput <= -CONTROLLER_THROTTLE_SATURATION){
-					landingState = LS_ON_GROUND;
-				}
 			}
-	} //endswitch
-
+			if(landingCounter >= 35){
+				landingState =LANDING.FLIGHT;
+			}
+		}else	
+		if(landingState=LANDING.STABILIZATION){
+			//stabilize altitude for 0.5s
+			altitudeController(throttle,ALTITUDE_MINIMUM);
+			velocityController(elevator,aileron,0,0);
+			
+			if(fabs(throttleSetpoint - estimatedThrottlePos) < 0.1 && fabs(estimatedThrottleVel) < 0.1){
+				landingCounter++;
+			}else{
+				landingCounter = 0;
+			}
+			if(landingCounter >= 35){
+				landingState = LANDING.LANDING;					
+			}
+		}else
+		if(landingState=LANDING.LANDING){
+			*throttle=*throttle-5;
+			*elevator=*elevator;
+			*aileron=*aileron;
+			if(*throttle <= -CONTROLLER_THROTTLE_SATURATION){
+				landingState = LANDING.ON_GROUND;
+			}			
+		}
 }

@@ -9,7 +9,7 @@
 
 
 //XBee data payload
-unsigned char dataOUT[25];
+unsigned char dataOUT[200];
 
 
 //GENERAL
@@ -42,14 +42,10 @@ float telemetryValue(unsigned char type){
 		f=controllerThrottleOutput;
 	}else if(type==TELEMETRIES.THROTTLE_SPEED){
 		f=estimatedThrottleVel;
-	}else if(type==TELEMETRIES.AILERON_POS_CONTROLLER_OUTPUT){
-		f=positionControllerAileronOutput;
-	}else if(type==TELEMETRIES.ELEVATOR_POS_CONTROLLER_OUTPUT){
-		f=positionControllerElevatorOutput;
-	}else if(type==TELEMETRIES.AILERON_VEL_CONTROLLER_OUTPUT){
-		f=velocityControllerAileronOutput;
-	}else if(type==TELEMETRIES.ELEVATOR_VEL_CONTROLLER_OUTPUT){
-		f=velocityControllerElevatorOutput;
+	}else if(type==TELEMETRIES.AILERON_CONTROLLER_OUTPUT){
+		f=controllerAileronOutput;
+	}else if(type==TELEMETRIES.ELEVATOR_CONTROLLER_OUTPUT){
+		f=controllerElevatorOutput;
 	}else if(type==TELEMETRIES.THROTTLE_SETPOINT){
 		f=throttleSetpoint;
 	}else if(type==TELEMETRIES.ELEVATOR_POS_SETPOINT){
@@ -60,10 +56,6 @@ float telemetryValue(unsigned char type){
 		f=elevatorVelocitySetpoint;
 	}else if(type==TELEMETRIES.AILERON_VEL_SETPOINT){
 		f=aileronVelocitySetpoint;
-	}else if(type==TELEMETRIES.ELEVATOR_SPEED_ESTIMATED2){
-		f=estimatedElevatorVel2;
-	}else if(type==TELEMETRIES.AILERON_SPEED_ESTIMATED2){
-		f=estimatedAileronVel2;
 	}else if(type==TELEMETRIES.ELEVATOR_ACC){
 		f=estimatedElevatorAcc;
 	}else if(type==TELEMETRIES.AILERON_ACC){
@@ -99,7 +91,6 @@ float telemetryValue(unsigned char type){
     }
 	return f;
 }
-
 void telemetrySend(unsigned char *address64,unsigned char *address16,unsigned char type,unsigned char frameID){
 	float f=0;
 	unsigned char *ch;
@@ -142,13 +133,9 @@ void telemetryReceive(unsigned char *address64,unsigned char *address16,unsigned
 		
 		}else if(type==TELEMETRIES.THROTTLE_SPEED){
 		
-		}else if(type==TELEMETRIES.AILERON_POS_CONTROLLER_OUTPUT){
+		}else if(type==TELEMETRIES.AILERON_CONTROLLER_OUTPUT){
 		
-		}else if(type==TELEMETRIES.ELEVATOR_POS_CONTROLLER_OUTPUT){
-		
-		}else if(type==TELEMETRIES.AILERON_VEL_CONTROLLER_OUTPUT){
-		
-		}else if(type==TELEMETRIES.ELEVATOR_VEL_CONTROLLER_OUTPUT){
+		}else if(type==TELEMETRIES.ELEVATOR_CONTROLLER_OUTPUT){
 		
 		}else if(type==TELEMETRIES.THROTTLE_SETPOINT){
 		
@@ -159,10 +146,6 @@ void telemetryReceive(unsigned char *address64,unsigned char *address16,unsigned
 		}else if(type==TELEMETRIES.ELEVATOR_VEL_SETPOINT){
 		
 		}else if(type==TELEMETRIES.AILERON_VEL_SETPOINT){
-		
-		}else if(type==TELEMETRIES.ELEVATOR_SPEED_ESTIMATED2){
-		
-		}else if(type==TELEMETRIES.AILERON_SPEED_ESTIMATED2){
 
 		}else if(type==TELEMETRIES.ELEVATOR_ACC){
 		
@@ -261,15 +244,15 @@ void kopterLandReport(unsigned char *address64,unsigned char *address16,unsigned
 	makeTRPacket(address64,address16,0x00,frameID,dataOUT,3);
 }
 void kopterLandReportRecieved(unsigned char *address64,unsigned char *address16,unsigned char status){
-	if(status==LS_LANDING){
+	if(status==LANDING.LANDING){
 		
-	}else if(status==LS_FLIGHT){
+	}else if(status==LANDING.FLIGHT){
 		
-	}else if(status==LS_STABILIZATION){
+	}else if(status==LANDING.STABILIZATION){
 	
-	}else if(status==LS_ON_GROUND){
+	}else if(status==LANDING.ON_GROUND){
 
-	}else if(status==LS_TAKEOFF){
+	}else if(status==LANDING.TAKE_OFF){
 
 	}
 }

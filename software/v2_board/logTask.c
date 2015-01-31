@@ -39,8 +39,9 @@ void logTaskReadable(void *p){
 		logValueStr(validGumstix); //blob detector
 		logValueStr(estimatedBlobDistance);
 		logValueStr(estimatedBlobHorizontal);
-		logValueStr(estimatedBlobVertical); //setpoints
-		logValueStr(throttleSetpoint);
+		logValueStr(estimatedBlobVertical); 
+		logValueStr((float)controllerActive); //controller		
+		logValueStr(throttleSetpoint);  //setpoints
 		logValueStr(elevatorPositionSetpoint);
 		logValueStr(aileronPositionSetpoint);
 		logValueStr(elevatorVelocitySetpoint);
@@ -81,8 +82,9 @@ void logTaskBinary(void *p){
 		logValueBin(validGumstix); //blob detector
 		logValueBin(estimatedBlobDistance);
 		logValueBin(estimatedBlobHorizontal);
-		logValueBin(estimatedBlobVertical); //setpoints
-		logValueBin(throttleSetpoint);
+		logValueBin(estimatedBlobVertical); 
+		logValueBin((float)controllerActive); //controller		
+		logValueBin(throttleSetpoint); //setpoints
 		logValueBin(elevatorPositionSetpoint);
 		logValueBin(aileronPositionSetpoint);
 		logValueBin(elevatorVelocitySetpoint);

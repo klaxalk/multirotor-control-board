@@ -7,6 +7,9 @@
 #include "packets.h"
 #include "commands.h"
 
+//in mm, must be positive! crops Gumstix values
+#define POSITION_MAXIMUM   2000 
+
 // serial1 RX and TX
 #define MAX_SENDE_BUFF     170
 #define MAX_EMPFANGS_BUFF  170

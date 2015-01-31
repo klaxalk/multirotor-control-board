@@ -1,10 +1,3 @@
-/*
- * system.c
- *
- * Created: 10.9.2014 21:52:53
- *  Author: Tomas Baca
- */ 
-
 #include "system.h"
 #include "pmic_driver.h"
 #include "TC_driver.h"
@@ -58,11 +51,6 @@ int16_t outputElevator = PULSE_OUT_MIDDLE/2;
 int16_t outputAileron = PULSE_OUT_MIDDLE/2;
 int16_t outputRudder = PULSE_OUT_MIDDLE/2;
 
-int16_t outputThrottleInc = 0;
-int16_t outputThrottleInc2 = 0;
-
-
-	
 /* -------------------------------------------------------------------- */
 /*	Realtime clock														*/
 /* -------------------------------------------------------------------- */
@@ -196,23 +184,10 @@ portENTER_CRITICAL();
 	outputElevator = RCchannel[ELEVATOR];
 	outputAileron = RCchannel[AILERON];
 	
-
 	if (controllerActive!=CONTROLLERS.OFF) {
-		if(landingState==LS_FLIGHT){		
-			outputThrottle += saturation(controllerThrottleOutput,CONTROLLER_THROTTLE_SATURATION);				
-			if (controllerActive == CONTROLLERS.VELOCITY ) {
-				outputElevator += saturation(velocityControllerElevatorOutput,CONTROLLER_ELEVATOR_SATURATION);
-				outputAileron += saturation(velocityControllerAileronOutput,CONTROLLER_AILERON_SATURATION);
-			}	
-			if (controllerActive == CONTROLLERS.POSITION) {
-				outputElevator += saturation(positionControllerElevatorOutput,CONTROLLER_ELEVATOR_SATURATION);
-				outputAileron += saturation(positionControllerAileronOutput,CONTROLLER_AILERON_SATURATION);
-			}		
-		}else{		
-			outputElevator += saturation(velocityControllerElevatorOutput,CONTROLLER_ELEVATOR_SATURATION);
-			outputAileron += saturation(velocityControllerAileronOutput,CONTROLLER_AILERON_SATURATION);
-			outputThrottle += saturation(landingThrottleOutput,CONTROLLER_THROTTLE_SATURATION);								
-		}
+		outputElevator += saturation(controllerElevatorOutput,CONTROLLER_ELEVATOR_SATURATION);
+		outputAileron += saturation(controllerAileronOutput,CONTROLLER_AILERON_SATURATION);
+		outputThrottle += saturation(controllerThrottleOutput,CONTROLLER_THROTTLE_SATURATION);				
 	}
 
 	// Everything is *2 because the PPM incoming to this board is twice slower then the PPM goeing out

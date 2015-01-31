@@ -120,6 +120,8 @@ extern int16_t outputElevator;
 extern int16_t outputAileron;
 extern int16_t outputRudder;
 
+int16_t saturation(int16_t variable,int16_t maxValue);
+
 /* Basic initialization of the MCU, peripherals and i/o */
 void boardInit();
 
