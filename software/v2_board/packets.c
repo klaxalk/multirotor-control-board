@@ -40,14 +40,12 @@ void packetHandler(unsigned char *inPacket){
 	float *f2;
 	float *f3;
 	float *f4;
-	float *f5;	
 	uint8_t i;
 	int64_t *i64;
 	char ch1[4];
 	char ch2[4];
 	char ch3[4];
-	char ch4[4];
-	char ch5[4];	
+	char ch4[4];	
 	unsigned char usc;
 
     switch ((int)*(inPacket+3)) {
@@ -227,9 +225,7 @@ void packetHandler(unsigned char *inPacket){
 						ch1[0]=*(dataIN+2); ch1[1]=*(dataIN+3); ch1[2]=*(dataIN+4); ch1[3]=*(dataIN+5); f1=(float *)ch1;
 						ch2[0]=*(dataIN+6); ch2[1]=*(dataIN+7); ch2[2]=*(dataIN+8); ch2[3]=*(dataIN+9); f2=(float *)ch2;
 						ch3[0]=*(dataIN+10); ch3[1]=*(dataIN+11); ch3[2]=*(dataIN+12); ch3[3]=*(dataIN+13); f3=(float *)ch3;
-						ch4[0]=*(dataIN+14); ch2[1]=*(dataIN+15); ch2[2]=*(dataIN+16); ch2[3]=*(dataIN+17); f4=(float *)ch4;
-						ch5[0]=*(dataIN+18); ch3[1]=*(dataIN+19); ch3[2]=*(dataIN+20); ch3[3]=*(dataIN+21); f5=(float *)ch5;
-						kopterLeadDataReceived(address64,address16,*f1,*f2,*f3,*f4,*f5);
+						kopterLeadDataReceived(address64,address16,*f1,*f2,*f3);
 					break;								
                 default:
                         dataTypeError(address64,address16,dataIN);

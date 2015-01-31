@@ -167,10 +167,16 @@ void boardInit() {
 	PMIC_EnableLowLevel();
 }
 
-int16_t saturation(int16_t variable,int16_t maxValue){
+int16_t saturationInt(int16_t variable,int16_t maxValue){
 	if(variable>maxValue){return maxValue;}
 	else if(variable<-maxValue){return -maxValue;}
 	else {return variable;} 			
+}
+
+float saturationFloat(float variable,float maxValue){
+	if(variable>maxValue){return maxValue;}
+	else if(variable<-maxValue){return -maxValue;}
+	else {return variable;}
 }
 
 /* -------------------------------------------------------------------- */
@@ -185,9 +191,9 @@ portENTER_CRITICAL();
 	outputAileron = RCchannel[AILERON];
 	
 	if (controllerActive!=CONTROLLERS.OFF) {
-		outputElevator += saturation(controllerElevatorOutput,CONTROLLER_ELEVATOR_SATURATION);
-		outputAileron += saturation(controllerAileronOutput,CONTROLLER_AILERON_SATURATION);
-		outputThrottle += saturation(controllerThrottleOutput,CONTROLLER_THROTTLE_SATURATION);				
+		outputElevator += saturationInt(controllerElevatorOutput,CONTROLLER_ELEVATOR_SATURATION);
+		outputAileron += saturationInt(controllerAileronOutput,CONTROLLER_AILERON_SATURATION);
+		outputThrottle += saturationInt(controllerThrottleOutput,CONTROLLER_THROTTLE_SATURATION);				
 	}
 
 	// Everything is *2 because the PPM incoming to this board is twice slower then the PPM goeing out

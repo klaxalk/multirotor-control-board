@@ -35,10 +35,6 @@ typedef struct
 	unsigned char ELEVATOR_ACC;
 	unsigned char AILERON_ACC;
 	unsigned char VALID_GUMSTIX;
-	unsigned char ELEVATOR_DESIRED_SPEED_POS_CONT;
-	unsigned char AILERON_DESIRED_SPEED_POS_CONT;
-	unsigned char ELE_DES_SPEED_POS_CONT_LEADER;
-	unsigned char AIL_DES_SPEED_POS_CONT_LEADER;
 	unsigned char OUTPUT_THROTTLE;
 	unsigned char OUTPUT_ELEVATOR;
 	unsigned char OUTPUT_AILERON;

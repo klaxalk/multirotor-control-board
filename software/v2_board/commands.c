@@ -62,14 +62,6 @@ float telemetryValue(unsigned char type){
 		f=estimatedAileronAcc;
 	}else if(type==TELEMETRIES.VALID_GUMSTIX){
 		f=validGumstix;
-	}else if(type==TELEMETRIES.ELEVATOR_DESIRED_SPEED_POS_CONT){
-		f=elevatorDesiredSpeedPosController;
-	}else if(type==TELEMETRIES.AILERON_DESIRED_SPEED_POS_CONT){
-		f=aileronDesiredSpeedPosController;
-	}else if(type==TELEMETRIES.ELE_DES_SPEED_POS_CONT_LEADER){
-		f=elevatorDesiredSpeedPosControllerLeader;
-	}else if(type==TELEMETRIES.AIL_DES_SPEED_POS_CONT_LEADER){
-		f=aileronDesiredSpeedPosControllerLeader;
     }else if(type==TELEMETRIES.OUTPUT_THROTTLE){
 		f=(float)outputThrottle;
     }else if(type==TELEMETRIES.OUTPUT_ELEVATOR){
@@ -152,15 +144,7 @@ void telemetryReceive(unsigned char *address64,unsigned char *address16,unsigned
 		}else if(type==TELEMETRIES.AILERON_ACC){
 		
 		}else if(type==TELEMETRIES.VALID_GUMSTIX){
-		
-		}else if(type==TELEMETRIES.ELEVATOR_DESIRED_SPEED_POS_CONT){
-
-		}else if(type==TELEMETRIES.AILERON_DESIRED_SPEED_POS_CONT){
-		
-		}else if(type==TELEMETRIES.ELE_DES_SPEED_POS_CONT_LEADER){
-		
-		}else if(type==TELEMETRIES.AIL_DES_SPEED_POS_CONT_LEADER){
-		
+				
 		}
 }
 
@@ -548,32 +532,23 @@ void receiveXBeeMessage(unsigned char *address64,unsigned char *address16,char *
 }
 
 //LEADING
-void kopterLeadDataSend(unsigned char *address64,unsigned char *address16,volatile float altitude,volatile float elevatorVel,volatile float aileronVel,volatile float elevatorError,volatile float aileronError,unsigned char frameID){
-	unsigned char *ch;
-	
+void kopterLeadDataSend(unsigned char *address64,unsigned char *address16,volatile float altitude,volatile float elevatorError,volatile float aileronError,unsigned char frameID){
+	unsigned char *ch;	
 	*(dataOUT)='l';
 	
 	ch=(unsigned char *) &altitude;
 	*(dataOUT+1)=*ch; *(dataOUT+2)=*(ch+1); *(dataOUT+3)=*(ch+2); *(dataOUT+4)=*(ch+3);
 	
-	ch=(unsigned char *) &elevatorVel;
+	ch=(unsigned char *) &elevatorError;
 	*(dataOUT+5)=*ch; *(dataOUT+6)=*(ch+1); *(dataOUT+7)=*(ch+2); *(dataOUT+8)=*(ch+3);
 	
-	ch=(unsigned char *) &aileronVel;
-	*(dataOUT+9)=*ch; *(dataOUT+10)=*(ch+1); *(dataOUT+11)=*(ch+2); *(dataOUT+12)=*(ch+3);
-	
-	ch=(unsigned char *) &elevatorError;
-	*(dataOUT+13)=*ch; *(dataOUT+14)=*(ch+1); *(dataOUT+15)=*(ch+2); *(dataOUT+16)=*(ch+3);
-	
 	ch=(unsigned char *) &aileronError;
-	*(dataOUT+17)=*ch; *(dataOUT+18)=*(ch+1); *(dataOUT+19)=*(ch+2); *(dataOUT+20)=*(ch+3);		
+	*(dataOUT+9)=*ch; *(dataOUT+10)=*(ch+1); *(dataOUT+11)=*(ch+2); *(dataOUT+12)=*(ch+3);		
 	
-	makeTRPacket(address64,address16,0x00,frameID,dataOUT,21);
+	makeTRPacket(address64,address16,0x00,frameID,dataOUT,13);
 }
-void kopterLeadDataReceived(unsigned char *address64,unsigned char *address16,float altitude,float elevatorVel, float aileronVel, float elevatorError, float aileronError){
+void kopterLeadDataReceived(unsigned char *address64,unsigned char *address16,float altitude, float elevatorError, float aileronError){
 	throttleDesiredSetpoint=altitude;
-	elevatorDesiredSpeedPosControllerLeader=elevatorVel;
-	aileronDesiredSpeedPosControllerLeader=aileronVel;
 }
 
 //TIME
