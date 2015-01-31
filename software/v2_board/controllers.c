@@ -29,13 +29,7 @@ volatile float estimatedBlobDistance = 0;
 volatile float estimatedBlobHorizontal = 0;
 volatile float estimatedBlobVertical = 0;
 
-//vars for controllers
-volatile float elevatorPositionIntegration = 0;
-volatile float aileronPositionIntegration  = 0;
-volatile float elevatorVelocityIntegration = 0;
-volatile float aileronVelocityIntegration  = 0;
-volatile float throttleIntegration = 0;
-
+//setpoints
 volatile float elevatorDesiredSpeedPosController=0;
 volatile float aileronDesiredSpeedPosController=0;
 volatile float elevatorDesiredSpeedPosControllerLeader=0;
@@ -128,38 +122,14 @@ void controllerSet(unsigned char controllerDesired){
 		}else
 		//VELOCITY
 		if(controllerDesired==CONTROLLERS.VELOCITY){
-			if(controllerActive==CONTROLLERS.OFF){
-				throttleIntegration=0;	
-				throttleSetpoint=DEFAULT_THROTTLE_SETPOINT;
-			}
-			controllerActive=CONTROLLERS.VELOCITY;
-			elevatorVelocityIntegration = 0;
-			aileronVelocityIntegration = 0;
-			aileronDesiredVelocitySetpoint = DEFAULT_AILERON_VELOCITY_SETPOINT;
-			elevatorDesiredVelocitySetpoint = DEFAULT_ELEVATOR_VELOCITY_SETPOINT;						
+			controllerActive=CONTROLLERS.VELOCITY;					
 		}else
 		//POSITION
-		if(controllerDesired==CONTROLLERS.POSITION){
-			if(controllerActive==CONTROLLERS.OFF){
-				throttleIntegration=0;
-				throttleSetpoint=DEFAULT_THROTTLE_SETPOINT;				
-			}			
-			controllerActive=CONTROLLERS.POSITION;
-			elevatorPositionIntegration = 0;
-			aileronPositionIntegration = 0;		
-			elevatorPositionSetpoint = DEFAULT_ELEVATOR_POSITION_SETPOINT;
-			aileronPositionSetpoint = DEFAULT_AILERON_POSITION_SETPOINT;
-			elevatorDesiredPositionSetpoint = DEFAULT_ELEVATOR_POSITION_SETPOINT;
-			aileronDesiredPositionSetpoint = DEFAULT_AILERON_POSITION_SETPOINT;		
-			estimatedElevatorPos = elevatorPositionSetpoint;
-			estimatedAileronPos  = aileronPositionSetpoint;					
+		if(controllerDesired==CONTROLLERS.POSITION){		
+			controllerActive=CONTROLLERS.POSITION;			
 		}else
 		//MPC
-		if(controllerDesired==3){
-			if(controllerActive==CONTROLLERS.OFF){
-				throttleIntegration=0;
-				throttleSetpoint=DEFAULT_THROTTLE_SETPOINT;				
-			}					
+		if(controllerDesired==3){				
 		}		
 	}
 }
@@ -247,6 +217,18 @@ void positionEstimator() {
 void velocityController(int16_t *elevator, int16_t *aileron, float elevatorSetpoint, float aileronSetpoint) {
 	float error;
 	static const float KI=10, KV=25, KA=35;
+	static int64_t time = 0;
+	static float elevatorIntegration = 0;
+	static float aileronIntegration = 0;
+	
+	//controller turned on
+	if((secondsTimer-time)>1){
+		elevatorIntegration=0;
+		aileronIntegration=0;
+		aileronDesiredVelocitySetpoint = DEFAULT_AILERON_VELOCITY_SETPOINT;
+		elevatorDesiredVelocitySetpoint = DEFAULT_ELEVATOR_VELOCITY_SETPOINT;		
+	}
+	time=secondsTimer;	
 
 	//elevator setpoints
 	if(elevatorSetpoint<-SPEED_MAX){elevatorSetpoint=-SPEED_MAX;}
@@ -256,11 +238,11 @@ void velocityController(int16_t *elevator, int16_t *aileron, float elevatorSetpo
 	//elevator controller		
 	error = elevatorVelocitySetpoint - estimatedElevatorVel;
 
-	elevatorVelocityIntegration += KI * error * DT;
-	if (elevatorVelocityIntegration > CONTROLLER_ELEVATOR_SATURATION/3) {elevatorVelocityIntegration = CONTROLLER_ELEVATOR_SATURATION/3;} else
-	if (elevatorVelocityIntegration < -CONTROLLER_ELEVATOR_SATURATION/3) {elevatorVelocityIntegration = -CONTROLLER_ELEVATOR_SATURATION/3;}
+	elevatorIntegration += KI * error * DT;
+	if (elevatorIntegration > CONTROLLER_ELEVATOR_SATURATION/3) {elevatorIntegration = CONTROLLER_ELEVATOR_SATURATION/3;} else
+	if (elevatorIntegration < -CONTROLLER_ELEVATOR_SATURATION/3) {elevatorIntegration = -CONTROLLER_ELEVATOR_SATURATION/3;}
 
-	*elevator=saturation((int16_t)((KV * error) + elevatorPositionIntegration - (KA * estimatedElevatorAcc)),CONTROLLER_ELEVATOR_SATURATION);
+	*elevator=saturation((int16_t)((KV * error) + elevatorIntegration - (KA * estimatedElevatorAcc)),CONTROLLER_ELEVATOR_SATURATION);
 
 	//aileron setpoints
 	if(aileronSetpoint<-SPEED_MAX){aileronSetpoint=-SPEED_MAX;}
@@ -270,15 +252,31 @@ void velocityController(int16_t *elevator, int16_t *aileron, float elevatorSetpo
 	//aileron controller
 	error = aileronVelocitySetpoint - estimatedAileronVel;	
 
-	aileronVelocityIntegration += KI * error * DT;
-	if (aileronVelocityIntegration > CONTROLLER_AILERON_SATURATION/3) {aileronVelocityIntegration = CONTROLLER_AILERON_SATURATION/3;} else 
-	if (aileronVelocityIntegration < -CONTROLLER_AILERON_SATURATION/3) {aileronVelocityIntegration = -CONTROLLER_AILERON_SATURATION/3;}
+	aileronIntegration += KI * error * DT;
+	if (aileronIntegration > CONTROLLER_AILERON_SATURATION/3) {aileronIntegration = CONTROLLER_AILERON_SATURATION/3;} else 
+	if (aileronIntegration < -CONTROLLER_AILERON_SATURATION/3) {aileronIntegration = -CONTROLLER_AILERON_SATURATION/3;}
 
-	*aileron=saturation((int16_t)((KV * error) + aileronPositionIntegration - (KA * estimatedAileronAcc)),CONTROLLER_AILERON_SATURATION);
+	*aileron=saturation((int16_t)((KV * error) + aileronIntegration - (KA * estimatedAileronAcc)),CONTROLLER_AILERON_SATURATION);
 }
 
 void positionController(int16_t *elevator, int16_t *aileron, float elevatorSetpoint, float aileronSetpoint) {
 	static const float KI=5, KP=85, KV=180, KA=9;
+	static int64_t time = 0;
+	static float elevatorIntegration = 0;
+	static float aileronIntegration = 0;
+	
+	//controller turned on	
+	if((secondsTimer-time)>1){
+		elevatorIntegration=0;
+		aileronIntegration=0;
+		elevatorPositionSetpoint = DEFAULT_ELEVATOR_POSITION_SETPOINT;
+		aileronPositionSetpoint = DEFAULT_AILERON_POSITION_SETPOINT;
+		elevatorDesiredPositionSetpoint = DEFAULT_ELEVATOR_POSITION_SETPOINT;
+		aileronDesiredPositionSetpoint = DEFAULT_AILERON_POSITION_SETPOINT;
+		estimatedElevatorPos = elevatorPositionSetpoint;
+		estimatedAileronPos  = aileronPositionSetpoint;		
+	}
+	time=secondsTimer;
 
 	//setpoints filter
 	elevatorPositionSetpoint += (elevatorSetpoint-elevatorPositionSetpoint) * (DT/SETPOINT_FILTER_CONST);
@@ -290,11 +288,11 @@ void positionController(int16_t *elevator, int16_t *aileron, float elevatorSetpo
 	if(elevatorDesiredSpeedPosController > +SPEED_MAX) elevatorDesiredSpeedPosController = +SPEED_MAX;
 	if(elevatorDesiredSpeedPosController < -SPEED_MAX) elevatorDesiredSpeedPosController = -SPEED_MAX;
 
-	elevatorPositionIntegration += KI * elevatorPosContError * DT;
-	if (elevatorPositionIntegration > CONTROLLER_ELEVATOR_SATURATION/3) {elevatorPositionIntegration = CONTROLLER_ELEVATOR_SATURATION/3;} else 
-	if (elevatorPositionIntegration < -CONTROLLER_ELEVATOR_SATURATION/3) {elevatorPositionIntegration = -CONTROLLER_ELEVATOR_SATURATION/3;}
+	elevatorIntegration += KI * elevatorPosContError * DT;
+	if (elevatorIntegration > CONTROLLER_ELEVATOR_SATURATION/3) {elevatorIntegration = CONTROLLER_ELEVATOR_SATURATION/3;} else 
+	if (elevatorIntegration < -CONTROLLER_ELEVATOR_SATURATION/3) {elevatorIntegration = -CONTROLLER_ELEVATOR_SATURATION/3;}
 
-	*elevator=saturation((int16_t)(KV * (elevatorDesiredSpeedPosController - estimatedElevatorVel) + elevatorPositionIntegration - (KA * estimatedElevatorAcc)),CONTROLLER_ELEVATOR_SATURATION);
+	*elevator=saturation((int16_t)(KV * (elevatorDesiredSpeedPosController - estimatedElevatorVel) + elevatorIntegration - (KA * estimatedElevatorAcc)),CONTROLLER_ELEVATOR_SATURATION);
 
 	//aileron controller
 	aileronPosContError = aileronPositionSetpoint - estimatedAileronPos;
@@ -302,11 +300,11 @@ void positionController(int16_t *elevator, int16_t *aileron, float elevatorSetpo
 	if(aileronDesiredSpeedPosController > +SPEED_MAX) aileronDesiredSpeedPosController = +SPEED_MAX;
 	if(aileronDesiredSpeedPosController < -SPEED_MAX) aileronDesiredSpeedPosController = -SPEED_MAX;
 
-	aileronPositionIntegration += KI * aileronPosContError * DT;
-	if (aileronPositionIntegration > CONTROLLER_AILERON_SATURATION/3) {aileronPositionIntegration = CONTROLLER_AILERON_SATURATION/3;} else 
-	if (aileronPositionIntegration < -CONTROLLER_AILERON_SATURATION/3) {aileronPositionIntegration = -CONTROLLER_AILERON_SATURATION/3;} 
+	aileronIntegration += KI * aileronPosContError * DT;
+	if (aileronIntegration > CONTROLLER_AILERON_SATURATION/3) {aileronIntegration = CONTROLLER_AILERON_SATURATION/3;} else 
+	if (aileronIntegration < -CONTROLLER_AILERON_SATURATION/3) {aileronIntegration = -CONTROLLER_AILERON_SATURATION/3;} 
 
-	*aileron=saturation((int16_t)(KV * (aileronDesiredSpeedPosController - estimatedAileronVel) + aileronPositionIntegration - (KA * estimatedAileronAcc)),CONTROLLER_AILERON_SATURATION);
+	*aileron=saturation((int16_t)(KV * (aileronDesiredSpeedPosController - estimatedAileronVel) + aileronIntegration - (KA * estimatedAileronAcc)),CONTROLLER_AILERON_SATURATION);
 }
 
 void altitudeEstimator() {
@@ -338,6 +336,15 @@ void altitudeController(int16_t *throttle,float setpoint) {
 	float error;
 	float vd; //desired velocity
 	static const float KX=0.9, KI=120, KV=200;
+	static int64_t time = 0;
+	static float throttleIntegration = 0;
+	
+	//controller turned on	
+	if((secondsTimer-time)>1){
+		throttleIntegration=0;
+		throttleSetpoint=DEFAULT_THROTTLE_SETPOINT;				
+	}
+	time=secondsTimer;	
 	
 	//setpoint filter
 	if(setpoint<THROTTLE_SP_LOW){setpoint=THROTTLE_SP_LOW;}

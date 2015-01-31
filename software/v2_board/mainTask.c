@@ -18,7 +18,6 @@ unsigned char previous_AUX5 = 5;
 void mainTask(void *p) {	
 	while (1) {					
 		// controllers on/off
-		portENTER_CRITICAL();
 		if (       RCchannel[AUX3] < (PPM_IN_MIDDLE_LENGTH - 400)) {
 			if (previous_AUX3 != 1) {			
 				controllerSet(CONTROLLERS.OFF);						
@@ -35,7 +34,6 @@ void mainTask(void *p) {
 				previous_AUX3 = 0;
 			}
 		}
-		portEXIT_CRITICAL();
 
 		// landing on/off, trajectory on/off
 		if (RCchannel[AUX4] < (PPM_IN_MIDDLE_LENGTH - 400)) {
