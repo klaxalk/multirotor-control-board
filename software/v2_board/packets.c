@@ -41,7 +41,7 @@ void packetHandler(unsigned char *inPacket){
 	float *f3;
 	float *f4;
 	uint8_t i;
-	int64_t *i64;
+	uint32_t *ui32;
 	char ch1[4];
 	char ch2[4];
 	char ch3[4];
@@ -151,8 +151,8 @@ void packetHandler(unsigned char *inPacket){
 								ch1[1]=*(dataIN+4);
 								ch1[2]=*(dataIN+5);
 								ch1[3]=*(dataIN+6);
-								i64=(int64_t *)ch1;
-								kopterTime(address64,address16,*i64);
+								ui32=(uint32_t *)ch1;
+								kopterTime(address64,address16,*ui32);
 							}
 						}				
                     break;
@@ -209,8 +209,8 @@ void packetHandler(unsigned char *inPacket){
 							ch1[1]=*(dataIN+4);
 							ch1[2]=*(dataIN+5);
 							ch1[3]=*(dataIN+6);
-							i64=(int64_t *)ch1;							 
-							kopterTimeReportReceived(address64,address16,*i64);
+							ui32=(uint32_t *)ch1;							 
+							kopterTimeReportReceived(address64,address16,*ui32);
 						 }				 
                     break;
                 //warning

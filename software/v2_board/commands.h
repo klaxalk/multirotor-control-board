@@ -60,10 +60,10 @@ void kopterLeadDataSend(unsigned char *address64,unsigned char *address16,volati
 void kopterLeadDataReceived(unsigned char *address64,unsigned char *address16,float altitude, float elevatorError, float aileronError);
 
 
-void kopterTimeRequest(unsigned char *address64,unsigned char *address16,int64_t time,unsigned char frameID);
-void kopterTime(unsigned char *address64,unsigned char *address16,int64_t time);
+void kopterTimeRequest(unsigned char *address64,unsigned char *address16,uint32_t time,unsigned char frameID);
+void kopterTime(unsigned char *address64,unsigned char *address16,uint32_t time);
 void kopterTimeStatusRequest(unsigned char *address64,unsigned char *address16,unsigned char frameID);
 void kopterTimeReport(unsigned char *address64,unsigned char *address16,unsigned char frameID);
-void kopterTimeReportReceived(unsigned char *address64,unsigned char *address16,int64_t time);
+void kopterTimeReportReceived(unsigned char *address64,unsigned char *address16,uint32_t time);
 
 #endif /*COMMANDS_H*/

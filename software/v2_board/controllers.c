@@ -208,7 +208,7 @@ void positionEstimator() {
 void velocityController(int16_t *elevator, int16_t *aileron, float elevatorSetpoint, float aileronSetpoint) {
 	float error;
 	static const float KI=10, KV=25, KA=35;
-	static int64_t time = 0;
+	static uint32_t time = 0;
 	static float elevatorIntegration = 0;
 	static float aileronIntegration = 0;
 	
@@ -244,7 +244,7 @@ void positionController(int16_t *elevator, int16_t *aileron, float elevatorSetpo
     float speed;
 	float error;
 	
-	static int64_t time = 0;
+	static uint32_t time = 0;
 	static float elevatorIntegration = 0;
 	static float aileronIntegration = 0;
 	
@@ -308,7 +308,7 @@ void altitudeEstimator() {
 void altitudeController(int16_t *throttle,float setpoint) {
 	float error;
 	static const float KX=0.9, KI=120, KV=200;
-	static int64_t time = 0;
+	static uint32_t time = 0;
 	static float throttleIntegration = 0;
 	
 	//controller turned on	

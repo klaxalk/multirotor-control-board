@@ -55,7 +55,7 @@ int16_t outputRudder = PULSE_OUT_MIDDLE/2;
 /*	Realtime clock														*/
 /* -------------------------------------------------------------------- */
 volatile int16_t milisecondsTimer;
-volatile int64_t secondsTimer;
+volatile uint32_t secondsTimer;
 
 
 /* -------------------------------------------------------------------- */

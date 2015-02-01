@@ -552,7 +552,7 @@ void kopterLeadDataReceived(unsigned char *address64,unsigned char *address16,fl
 }
 
 //TIME
-void kopterTimeRequest(unsigned char *address64,unsigned char *address16,int64_t time,unsigned char frameID){
+void kopterTimeRequest(unsigned char *address64,unsigned char *address16,uint32_t time,unsigned char frameID){
 		unsigned char *ch;		
 		
 		*(dataOUT)='c';
@@ -565,7 +565,7 @@ void kopterTimeRequest(unsigned char *address64,unsigned char *address16,int64_t
 		*(dataOUT+5)=*(ch+3);
 		makeTRPacket(address64,address16,0x00,frameID,dataOUT,6);
 }
-void kopterTime(unsigned char *address64,unsigned char *address16,int64_t time){	
+void kopterTime(unsigned char *address64,unsigned char *address16,uint32_t time){	
 	secondsTimer=time;
 }
 void kopterTimeStatusRequest(unsigned char *address64,unsigned char *address16,unsigned char frameID){
@@ -587,6 +587,6 @@ void kopterTimeReport(unsigned char *address64,unsigned char *address16,unsigned
 			*(dataOUT+5)=*(ch+3);
 			makeTRPacket(address64,address16,0x00,frameID,dataOUT,6);	
 }
-void kopterTimeReportReceived(unsigned char *address64,unsigned char *address16,int64_t time){
+void kopterTimeReportReceived(unsigned char *address64,unsigned char *address16,uint32_t time){
 	
 }
