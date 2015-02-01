@@ -27,19 +27,19 @@
 </editorArea>
 <editor activePart="true" focus="true" id="org.eclipse.cdt.ui.editor.CEditor" name="mpcTask.c" partName="mpcTask.c" path="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/mpcTask.c" title="mpcTask.c" tooltip="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/mpcTask.c" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/ArmMCU/mpcTask.c"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="4490" selectionTopPixel="1459"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="3715" selectionTopPixel="1474"/>
 </editor>
 <editor id="org.eclipse.cdt.ui.editor.CEditor" name="mpcTask.h" partName="mpcTask.h" path="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/mpcTask.h" title="mpcTask.h" tooltip="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/mpcTask.h" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/ArmMCU/mpcTask.h"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="275" selectionTopPixel="0"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="231" selectionTopPixel="0"/>
 </editor>
-<editor id="org.eclipse.cdt.ui.editor.CEditor" name="main.c" partName="main.c" path="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/main.c" title="main.c" tooltip="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/main.c" workbook="DefaultEditorWorkbook">
-<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/ArmMCU/main.c"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="1314" selectionTopPixel="0"/>
+<editor id="org.eclipse.cdt.ui.editor.CEditor" name="CMatrixLib.c" partName="CMatrixLib.c" path="C:/Users/klaxalk/Desktop/multirotor-control-board/software/CMatrixLib/CMatrixLib/CMatrixLib.c" title="CMatrixLib.c" tooltip="C:/Users/klaxalk/Desktop/multirotor-control-board/software/CMatrixLib/CMatrixLib/CMatrixLib.c" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/ArmMCU/CMatrixLib.c"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="6093" selectionTopPixel="4005"/>
 </editor>
 <editor id="org.eclipse.cdt.ui.editor.CEditor" name="commTask.c" partName="commTask.c" path="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/commTask.c" title="commTask.c" tooltip="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/commTask.c" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/ArmMCU/commTask.c"/>
-<editorState selectionHorizontalPixel="0" selectionLength="17" selectionOffset="1924" selectionTopPixel="1140"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="3456" selectionTopPixel="2100"/>
 </editor>
 <editor id="org.eclipse.cdt.ui.editor.CEditor" name="commTask.h" partName="commTask.h" path="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/commTask.h" title="commTask.h" tooltip="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/commTask.h" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/ArmMCU/commTask.h"/>
@@ -51,15 +51,15 @@
 </editor>
 <editor id="org.eclipse.cdt.ui.editor.CEditor" name="system.c" partName="system.c" path="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/system.c" title="system.c" tooltip="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/system.c" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/ArmMCU/system.c"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="628" selectionTopPixel="120"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="777" selectionTopPixel="120"/>
 </editor>
 <editor id="org.eclipse.cdt.ui.editor.CEditor" name="kalmanTask.c" partName="kalmanTask.c" path="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/kalmanTask.c" title="kalmanTask.c" tooltip="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/kalmanTask.c" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/ArmMCU/kalmanTask.c"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="11654" selectionTopPixel="3349"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="10443" selectionTopPixel="2929"/>
 </editor>
 <editor id="org.eclipse.cdt.ui.editor.CEditor" name="mpcMatrices.c" partName="mpcMatrices.c" path="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/mpcMatrices.c" title="mpcMatrices.c" tooltip="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/mpcMatrices.c" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/ArmMCU/mpcMatrices.c"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="536" selectionTopPixel="0"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="362" selectionTopPixel="0"/>
 </editor>
 <editor id="org.eclipse.cdt.ui.editor.CEditor" name="system.h" partName="system.h" path="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/system.h" title="system.h" tooltip="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/system.h" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/ArmMCU/system.h"/>
@@ -77,14 +77,16 @@
 <element path="/ArmMCU"/>
 </expanded>
 <selection>
-<element path="/ArmMCU/commTask.c"/>
+<element path="/ArmMCU/mpcTask.c"/>
 </selection>
 </viewState>
 </view>
 <view id="org.coocox.codebugger.trace.ui.traceview" partName="Semihosting">
 <viewState/>
 </view>
-<view id="org.eclipse.debug.ui.DebugView" partName="Debug"/>
+<view id="org.eclipse.debug.ui.DebugView" partName="Debug">
+<viewState/>
+</view>
 <view id="org.eclipse.ui.console.ConsoleView" partName="Console">
 <viewState/>
 </view>
@@ -195,38 +197,38 @@
 <alwaysOnActionSet id="org.coocox.welcome.ui.actionSet"/>
 <alwaysOnActionSet id="org.eclipse.debug.ui.breakpointActionSet"/>
 <alwaysOnActionSet id="org.eclipse.debug.ui.debugActionSet"/>
-<hide_menu_item_id id="org.coocox.builder.ui.newFile"/>
 <hide_menu_item_id id="org.coocox.builder.ui.newFolder"/>
-<hide_menu_item_id id="org.coocox.builder.ui.openFile"/>
+<hide_menu_item_id id="org.coocox.welcome.ui.action.repository"/>
 <hide_menu_item_id id="org.eclipse.ui.file.save"/>
-<hide_menu_item_id id="org.eclipse.ui.file.saveAs"/>
+<hide_menu_item_id id="org.eclipse.jdt.ui.refactoring.menu"/>
 <hide_menu_item_id id="org.eclipse.ui.file.saveAll"/>
+<hide_menu_item_id id="org.coocox.builder.ui.rebuild"/>
+<hide_menu_item_id id="org.coocox.builder.ui.openFile"/>
+<hide_menu_item_id id="org.eclipse.ui.file.saveAs"/>
 <hide_menu_item_id id="org.coocox.builder.rcp.projectMenu"/>
 <hide_menu_item_id id="org.coocox.builder.rcp.flashMenu"/>
-<hide_menu_item_id id="org.coocox.builder.ui.showHelpViewAction"/>
-<hide_menu_item_id id="org.coocox.component.ui.ShowRepositoryAction"/>
 <hide_menu_item_id id="org.coocox.builder.ui.debug"/>
-<hide_menu_item_id id="org.coocox.builder.ui.build"/>
-<hide_menu_item_id id="org.coocox.builder.ui.rebuild"/>
-<hide_menu_item_id id="org.eclipse.jdt.ui.refactoring.menu"/>
-<hide_menu_item_id id="org.eclipse.jdt.ui.source.menu"/>
+<hide_menu_item_id id="org.coocox.builder.ui.showHelpViewAction"/>
+<hide_menu_item_id id="org.coocox.builder.ui.newFile"/>
 <hide_menu_item_id id="org.coocox.builder.ui.actions.ConfigurationAction"/>
+<hide_menu_item_id id="org.eclipse.jdt.ui.source.menu"/>
+<hide_menu_item_id id="org.coocox.builder.ui.build"/>
 <hide_menu_item_id id="org.coocox.welcome.ui.action.welcome"/>
-<hide_menu_item_id id="org.coocox.welcome.ui.action.repository"/>
-<hide_toolbar_item_id id="org.coocox.builder.ui.newProject"/>
-<hide_toolbar_item_id id="org.coocox.builder.ui.newFile"/>
-<hide_toolbar_item_id id="org.eclipse.ui.file.save"/>
-<hide_toolbar_item_id id="org.coocox.component.ui.ShowRepositoryAction"/>
-<hide_toolbar_item_id id="org.coocox.builder.ui.build"/>
-<hide_toolbar_item_id id="org.coocox.builder.ui.rebuild"/>
-<hide_toolbar_item_id id="org.coocox.builder.ui.debug"/>
-<hide_toolbar_item_id id="org.coocox.codebugger.configuration.coideProgramDownloadAction"/>
-<hide_toolbar_item_id id="org.coocox.codebugger.configuration.coideFlashEraseAction"/>
+<hide_menu_item_id id="org.coocox.component.ui.ShowRepositoryAction"/>
 <hide_toolbar_item_id id="org.coocox.builder.ui.actions.TargetManageAction"/>
-<hide_toolbar_item_id id="org.coocox.builder.ui.actions.ConfigurationAction"/>
-<hide_toolbar_item_id id="org.coocox.welcome.ui.action.welcome"/>
+<hide_toolbar_item_id id="org.coocox.builder.ui.newProject"/>
 <hide_toolbar_item_id id="org.coocox.welcome.ui.action.repository"/>
+<hide_toolbar_item_id id="org.eclipse.ui.file.save"/>
+<hide_toolbar_item_id id="org.coocox.builder.ui.rebuild"/>
+<hide_toolbar_item_id id="org.coocox.codebugger.configuration.coideFlashEraseAction"/>
+<hide_toolbar_item_id id="org.coocox.builder.ui.debug"/>
+<hide_toolbar_item_id id="org.coocox.builder.ui.newFile"/>
+<hide_toolbar_item_id id="org.coocox.builder.ui.actions.ConfigurationAction"/>
 <hide_toolbar_item_id id="org.eclipse.ui.edit.text.toggleShowSelectedElementOnly"/>
+<hide_toolbar_item_id id="org.coocox.builder.ui.build"/>
+<hide_toolbar_item_id id="org.coocox.welcome.ui.action.welcome"/>
+<hide_toolbar_item_id id="org.coocox.component.ui.ShowRepositoryAction"/>
+<hide_toolbar_item_id id="org.coocox.codebugger.configuration.coideProgramDownloadAction"/>
 <view id="org.eclipse.ui.console.ConsoleView"/>
 <view id="org.eclipse.debug.ui.DebugView"/>
 <view id="org.coocox.codebugger.trace.ui.traceview"/>
@@ -234,34 +236,49 @@
 <view id="org.coocox.builder.ui.views.ProjectView"/>
 <fastViewBars/>
 <viewLayoutRec closeable="false" id="org.eclipse.debug.ui.DebugView"/>
-<layout>&#x0A;<mainWindow>&#x0A;<info folder="true" part="org.eclipse.ui.internal.ViewStack@1cc5ffb">&#x0A;<folder activePageID="org.coocox.builder.ui.views.ProjectView" appearance="2" expanded="2">&#x0A;<page content="org.coocox.builder.ui.views.ProjectView" label="Project"/>
-<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">&#x0A;<part id="0"/>
+<layout>
+<mainWindow>
+<info folder="true" part="org.eclipse.ui.internal.ViewStack@1cc5ffb">
+<folder activePageID="org.coocox.builder.ui.views.ProjectView" appearance="2" expanded="2">
+<page content="org.coocox.builder.ui.views.ProjectView" label="Project"/>
+<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
+<part id="0"/>
 </presentation>
 </folder>
 </info>
-<info folder="true" part="stickyFolderRight" ratio="0.75" ratioLeft="702" ratioRight="234" relationship="2" relative="org.eclipse.ui.internal.ViewStack@1cc5ffb">&#x0A;<folder appearance="2" expanded="2">&#x0A;<page content="org.eclipse.help.ui.HelpView" label="LabelNotFound"/>
+<info folder="true" part="stickyFolderRight" ratio="0.75" ratioLeft="702" ratioRight="234" relationship="2" relative="org.eclipse.ui.internal.ViewStack@1cc5ffb">
+<folder appearance="2" expanded="2">
+<page content="org.eclipse.help.ui.HelpView" label="LabelNotFound"/>
 <page content="org.eclipse.ui.internal.introview" label="LabelNotFound"/>
 </folder>
 </info>
-<info folder="true" part="org.eclipse.ui.internal.ViewStack@c873e2" ratio="0.69978404" ratioLeft="648" ratioRight="278" relationship="4" relative="org.eclipse.ui.internal.ViewStack@1cc5ffb">&#x0A;<folder activePageID="org.eclipse.ui.console.ConsoleView" appearance="2" expanded="2">&#x0A;<page content="org.eclipse.ui.console.ConsoleView" label="Console"/>
+<info folder="true" part="org.eclipse.ui.internal.ViewStack@c873e2" ratio="0.69978404" ratioLeft="648" ratioRight="278" relationship="4" relative="org.eclipse.ui.internal.ViewStack@1cc5ffb">
+<folder activePageID="org.eclipse.debug.ui.DebugView" appearance="2" expanded="2">
+<page content="org.eclipse.ui.console.ConsoleView" label="Console"/>
 <page content="org.eclipse.debug.ui.DebugView" label="Debug"/>
 <page content="org.eclipse.debug.ui.BreakpointView" label="LabelNotFound"/>
-<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">&#x0A;<part id="0"/>
+<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
+<part id="0"/>
 <part id="1"/>
 </presentation>
 </folder>
 </info>
-<info folder="true" part="org.eclipse.ui.internal.ViewStack@1d92b1d" ratio="0.5" ratioLeft="468" ratioRight="468" relationship="2" relative="org.eclipse.ui.internal.ViewStack@c873e2">&#x0A;<folder activePageID="org.coocox.codebugger.trace.ui.traceview" appearance="2" expanded="2">&#x0A;<page content="org.coocox.codebugger.trace.ui.traceview" label="Semihosting"/>
+<info folder="true" part="org.eclipse.ui.internal.ViewStack@1d92b1d" ratio="0.5" ratioLeft="468" ratioRight="468" relationship="2" relative="org.eclipse.ui.internal.ViewStack@c873e2">
+<folder activePageID="org.coocox.codebugger.trace.ui.traceview" appearance="2" expanded="2">
+<page content="org.coocox.codebugger.trace.ui.traceview" label="Semihosting"/>
 <page content="org.eclipse.debug.ui.VariableView" label="Variables"/>
 <page content="org.eclipse.debug.ui.ExpressionView" label="LabelNotFound"/>
 <page content="org.eclipse.debug.ui.MemoryView" label="LabelNotFound"/>
 <page content="org.eclipse.cdt.debug.ui.memory.memorybrowser.MemoryBrowser" label="LabelNotFound"/>
-<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">&#x0A;<part id="0"/>
+<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
+<part id="0"/>
 <part id="1"/>
 </presentation>
 </folder>
 </info>
-<info folder="true" part="org.eclipse.ui.internal.ViewStack@9dad0d" ratio="0.75" ratioLeft="702" ratioRight="234" relationship="2" relative="org.eclipse.ui.internal.ViewStack@1cc5ffb">&#x0A;<folder appearance="2" expanded="2">&#x0A;<page content="org.eclipse.cdt.dsf.debug.ui.disassembly.view" label="LabelNotFound"/>
+<info folder="true" part="org.eclipse.ui.internal.ViewStack@9dad0d" ratio="0.75" ratioLeft="702" ratioRight="234" relationship="2" relative="org.eclipse.ui.internal.ViewStack@1cc5ffb">
+<folder appearance="2" expanded="2">
+<page content="org.eclipse.cdt.dsf.debug.ui.disassembly.view" label="LabelNotFound"/>
 <page content="org.eclipse.ui.views.ContentOutline" label="LabelNotFound"/>
 <page content="org.eclipse.debug.ui.RegisterView" label="LabelNotFound"/>
 <page content="org.coocox.coassistant.view.CoAssistantView_debug" label="LabelNotFound"/>
@@ -284,75 +301,17 @@
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/kalmanTask.c"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/mpcMatrices.c"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/system.h"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/mpcMatrices.h"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/commTask.h"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/system.c"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/mpcTask.h"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/mpcMatrices.c"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/kalmanTask.c"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/mpcTask.c"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/commTask.c"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/kalmanTask.c"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/main.c"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/CMatrixLib.c"/>
 </editors>
-<item historyLabel="commTask.c" index="2">
-<position info="not_deleted" x="4762" y="0"/>
-</item>
-<item historyLabel="commTask.c" index="2">
-<position info="not_deleted" x="5108" y="0"/>
-</item>
-<item historyLabel="commTask.c" index="2">
-<position info="not_deleted" x="4938" y="0"/>
-</item>
-<item historyLabel="system.c" index="4">
-<position info="not_deleted" x="1621" y="0"/>
-</item>
-<item historyLabel="mpc.c" index="3">
-<position info="not_deleted" x="0" y="0"/>
-</item>
-<item historyLabel="commTask.c" index="2">
-<position info="not_deleted" x="4543" y="15"/>
-</item>
-<item historyLabel="mpcTask.c" index="0">
-<position info="not_deleted" x="3519" y="0"/>
-</item>
-<item historyLabel="mpc.c" index="3">
-<position info="not_deleted" x="0" y="0"/>
-</item>
-<item historyLabel="system.h" index="7">
-<position info="not_deleted" x="0" y="0"/>
-</item>
-<item historyLabel="mpcMatrices.h" index="8">
-<position info="not_deleted" x="0" y="0"/>
-</item>
-<item historyLabel="mpcTask.h" index="1">
-<position info="not_deleted" x="395" y="0"/>
-</item>
-<item historyLabel="mpcTask.c" index="0">
-<position info="not_deleted" x="4142" y="0"/>
-</item>
-<item historyLabel="system.c" index="4">
-<position info="not_deleted" x="877" y="0"/>
-</item>
-<item historyLabel="mpcTask.h" index="1">
-<position info="not_deleted" x="368" y="0"/>
-</item>
-<item historyLabel="system.c" index="4">
-<position info="not_deleted" x="449" y="33"/>
-</item>
-<item historyLabel="system.h" index="7">
-<position/>
-</item>
-<item historyLabel="mpcMatrices.c" index="6">
-<position info="not_deleted" x="536" y="0"/>
-</item>
-<item historyLabel="mpcTask.c" index="0">
-<position info="not_deleted" x="4142" y="0"/>
-</item>
-<item historyLabel="mpcTask.c" index="0">
-<position/>
-</item>
-<item historyLabel="mpcTask.c" index="0">
-<position info="not_deleted" x="4771" y="0"/>
-</item>
-<item historyLabel="mpcTask.c" index="0">
-<position/>
-</item>
-<item historyLabel="mpcTask.c" index="0">
-<position info="not_deleted" x="1781" y="16"/>
-</item>
 <item historyLabel="mpcTask.h" index="1">
 <position info="not_deleted" x="152" y="16"/>
 </item>
@@ -431,11 +390,77 @@
 <item historyLabel="commTask.c" index="2">
 <position info="not_deleted" x="1924" y="17"/>
 </item>
-<item historyLabel="commTask.h" index="9">
+<item historyLabel="commTask.h" index="8">
 <position info="not_deleted" x="50" y="0"/>
 </item>
-<item active="true" historyLabel="mpcTask.c" index="0">
+<item historyLabel="mpcTask.c" index="0">
 <position info="not_deleted" x="5001" y="74"/>
+</item>
+<item historyLabel="system.c" index="9">
+<position info="not_deleted" x="595" y="0"/>
+</item>
+<item historyLabel="mpcTask.h" index="10">
+<position info="not_deleted" x="276" y="0"/>
+</item>
+<item historyLabel="mpcMatrices.c" index="11">
+<position info="not_deleted" x="0" y="0"/>
+</item>
+<item historyLabel="mpcMatrices.c" index="11">
+<position info="not_deleted" x="362" y="0"/>
+</item>
+<item historyLabel="mpcTask.h" index="10">
+<position info="not_deleted" x="396" y="0"/>
+</item>
+<item historyLabel="kalmanTask.c" index="12">
+<position info="not_deleted" x="11654" y="0"/>
+</item>
+<item historyLabel="mpcTask.c" index="13">
+<position info="not_deleted" x="4967" y="0"/>
+</item>
+<item historyLabel="commTask.c" index="14">
+<position info="not_deleted" x="1924" y="17"/>
+</item>
+<item historyLabel="kalmanTask.c" index="15">
+<position info="not_deleted" x="10443" y="0"/>
+</item>
+<item historyLabel="commTask.c" index="14">
+<position info="not_deleted" x="3456" y="0"/>
+</item>
+<item historyLabel="mpcTask.c" index="13">
+<position info="not_deleted" x="4050" y="0"/>
+</item>
+<item historyLabel="main.c" index="16">
+<position info="not_deleted" x="1314" y="0"/>
+</item>
+<item historyLabel="main.c" index="16">
+<position info="not_deleted" x="551" y="0"/>
+</item>
+<item historyLabel="mpcTask.c" index="13">
+<position info="not_deleted" x="4052" y="0"/>
+</item>
+<item historyLabel="mpcTask.c" index="13">
+<position info="not_deleted" x="4172" y="0"/>
+</item>
+<item historyLabel="CMatrixLib.c" index="17">
+<position info="not_deleted" x="6285" y="0"/>
+</item>
+<item historyLabel="CMatrixLib.c" index="17">
+<position info="not_deleted" x="6326" y="0"/>
+</item>
+<item historyLabel="CMatrixLib.c" index="17">
+<position info="not_deleted" x="6402" y="0"/>
+</item>
+<item historyLabel="CMatrixLib.c" index="17">
+<position info="not_deleted" x="6052" y="0"/>
+</item>
+<item historyLabel="CMatrixLib.c" index="17">
+<position info="not_deleted" x="6093" y="0"/>
+</item>
+<item historyLabel="mpcTask.c" index="13">
+<position info="not_deleted" x="4330" y="0"/>
+</item>
+<item active="true" historyLabel="mpcTask.c" index="13">
+<position info="not_deleted" x="4052" y="0"/>
 </item>
 </navigationHistory>
 <input factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/" type="8"/>

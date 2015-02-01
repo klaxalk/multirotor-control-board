@@ -115,7 +115,7 @@ Q_roof(end-n_states+1:end, end-n_states+1:end) = S;
 %           ..., ..., P,    0;
 %           0,   ..., ...,  P];
 
-P = 0.000007;
+P = 0.000005;
 
 P_roof = zeros(n_variables, n_variables);
 
@@ -158,7 +158,7 @@ u_hist(1) = 0;
 saturace = 300;
 
 % max speed
-max_speed = 0.4;
+max_speed = 0.35;
 
 u_sat = 0;
 

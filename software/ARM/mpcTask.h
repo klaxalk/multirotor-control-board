@@ -14,7 +14,7 @@ void mpcTask(void *p);
 #define REFERENCE_LENGTH	NUMBER_OF_STATES*HORIZON_LEN
 
 // used to filter the setpoint
-#define MAX_SPEED	0.4
+#define MAX_SPEED	0.35
 #define DT			0.0114
 
 typedef struct {
