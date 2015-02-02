@@ -4,15 +4,17 @@ clear all;
 
 dt = 0.0114;
 
-A = [1 dt 0;
-     0 1 dt;
-     0 0 dt*82.6135];
+A = [1 dt   0  0            0;
+     0 1    dt 0            0;
+     0 0    0  1            1;
+     0 0    0  dt*82.6135   0;
+     0 0    0  0            1];
  
-B = [0; 0; 0.0105*dt];
+B = [0; 0; 0; 0.0105*dt; 0];
 
 %% Kovariancni matice mereni
 
-measurement_covariance = diag([0.0058, 0.2000, 0]);
+measurement_covariance = diag([0.0058, 0.2000, 0, 0, 0]);
 
 % pocet stavu systemu 
 n_states = size(A, 1);
@@ -92,13 +94,17 @@ B_roof = B_roof*U;
 %           ..., ..., Q,    0;
 %           0,   ..., ...,  S];
 
-Q = [1, 0, 0;
-     0, 0, 0;
-     0, 0, 0];
+Q = [1, 0, 0, 0, 0;
+     0, 0, 0, 0, 0;
+     0, 0, 0, 0, 0;
+     0, 0, 0, 0, 0;
+     0, 0, 0, 0, 0];
 
-S = [10, 0, 0;
-     0, 0, 0;
-     0, 0, 0];
+S = [10, 0, 0, 0, 0;
+     0, 0, 0, 0, 0;
+     0, 0, 0, 0, 0;
+     0, 0, 0, 0, 0;
+     0, 0, 0, 0, 0];
  
 Q_roof = zeros(n_states * horizon_len, n_states * horizon_len);
 
@@ -146,7 +152,7 @@ x_ref = zeros(simu_len+horizon_len, 1);
 % x_ref((simu_len+horizon_len)/2+1:end) = 1 + 0.2*sin(linspace(1, 20, (simu_len+horizon_len)/2))';
     
 % initial conditions
-x(:, 1) = [1; 0; 0];
+x(:, 1) = [1; 0; 0; 0; 0.2];
 
 % vektor akcnich zasahu
 u = zeros(horizon_len, u_size);
@@ -163,8 +169,8 @@ max_speed = 0.35;
 u_sat = 0;
 
 % kalman variables
-kalmanCovariance = eye(3);
-estimate(:, 1) = x;
+kalmanCovariance = eye(5);
+estimate(:, 1) = [1; 0; 0; 0; 0];
 
 xd_pure_integration(1) = x(1, 1);
 
@@ -194,7 +200,7 @@ for i=2:simu_len
     end
 
     my_ref = zeros(n_states*horizon_len, 1);
-    my_ref(1:3:n_states*horizon_len, 1) = reference;
+    my_ref(1:n_states:n_states*horizon_len, 1) = reference;
     
     X_0 = A_roof*(estimate(:, i)) - my_ref;
     c = (X_0'*Q_roof*B_roof)';
@@ -223,7 +229,7 @@ for i=2:simu_len
     u_hist(i) = u_sat;
 
     % Compute new states     
-    x(:, i) = A*x(:, i-1) + B*u_sat;
+    x(:, i) = A*x(:, i-1) + (B*u_sat);
     
 end
 
