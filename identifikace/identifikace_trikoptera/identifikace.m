@@ -13,7 +13,7 @@ input = 4;
 
 % okrojení dat
 from = 2000;
-to = size(data, 1)-1000;
+to = from + 2800;
 
 % od-do fitování
 plot_window = from:to;
@@ -35,7 +35,7 @@ position = integrate(data(plot_window, velocity), data(plot_window, dt));
 %% velocity
 
 % fituji rychlost polynomem
-velocity_pol = polyfit(time_plot', data(plot_window, velocity)', 40);
+velocity_pol = polyfit(time_plot', data(plot_window, velocity)', 80);
 velocity_fit = polyval(velocity_pol, time_identifikace);
 
 %% acceleration
@@ -47,14 +47,14 @@ acceleration_fit = polyval(acceleration_pol, time_identifikace);
 %% input
 
 % shift input of the offset
-data(:, input) = data(:, input) - mean(data(plot_window(1:50), input));
+data(:, input) = data(:, input) - mean(data(plot_window(1:50), input))*0.960;
 
 %% identify transfare input -> acceleration
 input_window = data(iden_window, input);
 dt_window = data(iden_window, dt);
 
 B = acceleration_fit(2:end);
-A = [acceleration_fit(1:end-1).*dt_window(1:end-1) input_window(2:end).*dt_window(2:end)];
+A = [acceleration_fit(1:end-1) input_window(2:end).*dt_window(2:end)];
 
 P = A\B;
 P0 = P(1)
