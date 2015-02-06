@@ -206,8 +206,12 @@ void commTask(void *p) {
 
 			} else if (messageId == '2') {
 
-				vector_float_set_zero(elevatorKalmanHandler.states);
-				vector_float_set_zero(aileronKalmanHandler.states);
+				resetKalmanMessage_t mes;
+
+				mes.elevatorPosition = 0;
+				mes.aileronPosition = 0;
+
+				xQueueOverwrite(resetKalmanQueue, &mes);
 
 			} else if (messageId == 's') {
 

@@ -5,12 +5,11 @@
  */
 
 #include "kalman/elevator/elevatorKalman.h"
-#include "kalman/kalman.h"
 #include "miscellaneous.h"
 
 kalmanHandler_t elevatorKalmanHandler;
 
-void initializeElevatorKalman() {
+kalmanHandler_t * initializeElevatorKalman() {
 
 	/* -------------------------------------------------------------------- */
 	/* System A matrix														*/
@@ -25,7 +24,7 @@ void initializeElevatorKalman() {
 	matrix_float_set(elevatorKalmanHandler.system_A, 2, 3, DT_ELEVATOR);
 	matrix_float_set(elevatorKalmanHandler.system_A, 3, 1, 0);
 	matrix_float_set(elevatorKalmanHandler.system_A, 3, 2, 0);
-	matrix_float_set(elevatorKalmanHandler.system_A, 3, 3, DT_ELEVATOR*82.6135);
+	matrix_float_set(elevatorKalmanHandler.system_A, 3, 3, DT_ELEVATOR*82.2945);
 
 	/* -------------------------------------------------------------------- */
 	/* System B matrix														*/
@@ -34,7 +33,7 @@ void initializeElevatorKalman() {
 
 	matrix_float_set(elevatorKalmanHandler.system_B, 1, 1, 0);
 	matrix_float_set(elevatorKalmanHandler.system_B, 2, 1, 0);
-	matrix_float_set(elevatorKalmanHandler.system_B, 3, 1, 0.0105*DT_ELEVATOR);
+	matrix_float_set(elevatorKalmanHandler.system_B, 3, 1, 0.0113*DT_ELEVATOR);
 
 	/* -------------------------------------------------------------------- */
 	/*	Input vector														*/
@@ -45,14 +44,12 @@ void initializeElevatorKalman() {
 	/* elevator kalman states vector										*/
 	/* -------------------------------------------------------------------- */
 	elevatorKalmanHandler.states = vector_float_alloc(NUMBER_OF_STATES_ELEVATOR, 0);
-	elevatorKalmanHandler.states->name = "states vector";
 	vector_float_set_zero(elevatorKalmanHandler.states);
 
 	/* -------------------------------------------------------------------- */
 	/* elevator kalman covariance matrix									*/
 	/* -------------------------------------------------------------------- */
 	elevatorKalmanHandler.covariance = matrix_float_alloc(NUMBER_OF_STATES_ELEVATOR, NUMBER_OF_STATES_ELEVATOR);
-	elevatorKalmanHandler.covariance->name = "covariance matrix";
 	matrix_float_set_identity(elevatorKalmanHandler.covariance);
 
 	/* -------------------------------------------------------------------- */
@@ -63,4 +60,6 @@ void initializeElevatorKalman() {
 
 	elevatorKalmanHandler.number_of_inputs = NUMBER_OF_INPUTS_ELEVATOR;
 	elevatorKalmanHandler.number_of_states = NUMBER_OF_STATES_ELEVATOR;
+
+	return &elevatorKalmanHandler;
 }

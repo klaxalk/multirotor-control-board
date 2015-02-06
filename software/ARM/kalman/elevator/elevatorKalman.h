@@ -14,10 +14,7 @@
 
 #define DT_ELEVATOR					0.0114
 
-// this struct holds all variables for this kalman
-kalmanHandler_t elevatorKalmanHandler;
-
 // this method initializes the kalman handler
-void initializeElevatorKalman();
+kalmanHandler_t * initializeElevatorKalman();
 
 #endif /* ELEVATORKALMAN_H_ */

@@ -4,12 +4,12 @@
  *  Author: Tomas Baca
  */
 
-#include "aileronKalman.h"
+#include "kalman/aileron/aileronKalman.h"
 #include "miscellaneous.h"
 
 kalmanHandler_t aileronKalmanHandler;
 
-void initializeAileronKalman() {
+kalmanHandler_t * initializeAileronKalman() {
 
 	/* -------------------------------------------------------------------- */
 	/* System A matrix														*/
@@ -24,7 +24,7 @@ void initializeAileronKalman() {
 	matrix_float_set(aileronKalmanHandler.system_A, 2, 3, DT_AILERON);
 	matrix_float_set(aileronKalmanHandler.system_A, 3, 1, 0);
 	matrix_float_set(aileronKalmanHandler.system_A, 3, 2, 0);
-	matrix_float_set(aileronKalmanHandler.system_A, 3, 3, DT_AILERON*82.6135);
+	matrix_float_set(aileronKalmanHandler.system_A, 3, 3, DT_AILERON*82.2945);
 
 	/* -------------------------------------------------------------------- */
 	/* System B matrix														*/
@@ -33,7 +33,7 @@ void initializeAileronKalman() {
 
 	matrix_float_set(aileronKalmanHandler.system_B, 1, 1, 0);
 	matrix_float_set(aileronKalmanHandler.system_B, 2, 1, 0);
-	matrix_float_set(aileronKalmanHandler.system_B, 3, 1, 0.0105*DT_AILERON);
+	matrix_float_set(aileronKalmanHandler.system_B, 3, 1, 0.0113*DT_AILERON);
 
 	/* -------------------------------------------------------------------- */
 	/*	Input vector														*/
@@ -44,7 +44,6 @@ void initializeAileronKalman() {
 	/* Aileron kalman states vector											*/
 	/* -------------------------------------------------------------------- */
 	aileronKalmanHandler.states = vector_float_alloc(NUMBER_OF_STATES_AILERON, 0);
-	aileronKalmanHandler.states->name = "states vector";
 	vector_float_set_zero(aileronKalmanHandler.states);
 
 	/* -------------------------------------------------------------------- */
@@ -61,4 +60,6 @@ void initializeAileronKalman() {
 
 	aileronKalmanHandler.number_of_inputs = NUMBER_OF_INPUTS_AILERON;
 	aileronKalmanHandler.number_of_states = NUMBER_OF_STATES_AILERON;
+
+	return &aileronKalmanHandler;
 }

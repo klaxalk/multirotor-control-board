@@ -11,7 +11,6 @@
 #include "FreeRTOS.h"
 #include "queue.h"
 #include "task.h"
-#include "CMatrixLib.h"
 
 // Must be included if using STM32F4 Discovery board or processor
 #include "stm32f4xx.h"
@@ -25,6 +24,9 @@
 
 // UART driver
 #include "uart_driver.h"
+
+#include "kalman/elevator/elevatorKalman.h"
+#include "kalman/aileron/aileronKalman.h"
 
 /**********************************************************************************
  *
@@ -42,6 +44,59 @@ GPIO_InitTypeDef	GPIO_InitStruct;
 QueueHandle_t * usartRxQueue;
 QueueHandle_t * usartTxQueue;
 
+/* -------------------------------------------------------------------- */
+/*	Messages types for communication between tasks						*/
+/* -------------------------------------------------------------------- */
+
+// setpoint message
+typedef struct {
+
+	float elevatorReference;
+	float aileronReference;
+} comm2mpcMessage_t;
+
+// px4flow fresh data message
+typedef struct {
+
+	float dt;
+	float elevatorSpeed;
+	float aileronSpeed;
+	float elevatorInput;
+	float aileronInput;
+} comm2kalmanMessage_t;
+
+// mpc output message
+typedef struct {
+
+	float elevatorOutput;
+	float aileronOutput;
+} mpc2commMessage_t;
+
+// message to reset the kalman states
+typedef struct {
+
+	float elevatorPosition;
+	float aileronPosition;
+} resetKalmanMessage_t;
+
+// kalman output message (to mpc)
+typedef struct {
+
+	float elevatorData[NUMBER_OF_STATES_ELEVATOR];
+	float aileronData[NUMBER_OF_STATES_AILERON];
+} kalman2mpcMessage_t;
+
+// kalman output message (to comm)
+typedef struct {
+
+	float elevatorData[NUMBER_OF_STATES_ELEVATOR];
+	float aileronData[NUMBER_OF_STATES_AILERON];
+} kalman2commMessage_t;
+
+/* -------------------------------------------------------------------- */
+/*	Queues for communication between tasks								*/
+/* -------------------------------------------------------------------- */
+
 // queue from commTask to kalmanTask
 QueueHandle_t * comm2kalmanQueue;
 
@@ -56,6 +111,9 @@ QueueHandle_t * kalman2commQueue;
 
 // queue from commTask to mpcTask
 QueueHandle_t * comm2mpcQueue;
+
+// queue to reset a kalman
+QueueHandle_t * resetKalmanQueue;
 
 #define led_toggle() GPIO_ToggleBits(GPIOC, GPIO_Pin_2)
 #define led_on() GPIO_WriteBit(GPIOC, GPIO_Pin_2, 1)

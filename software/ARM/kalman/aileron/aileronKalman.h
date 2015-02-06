@@ -14,10 +14,7 @@
 
 #define DT_AILERON					0.0114
 
-// this struct holds all variables for this kalman
-kalmanHandler_t aileronKalmanHandler;
-
 // this method initializes the kalman handler
-void initializeAileronKalman();
+kalmanHandler_t * initializeAileronKalman();
 
 #endif /* AILERONKALMAN_H_ */
