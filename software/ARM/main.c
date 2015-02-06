@@ -4,14 +4,12 @@
  *  Author: Tomas Baca
  */
 
-// GPIO initialization and other minor stuff
 #include "system.h"
 #include "commTask.h"
 #include "kalmanTask.h"
 #include "mpcTask.h"
 
-int main(void)
-{
+int main(void) {
 
 	// this line is one ******* SUNDAY
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_4);

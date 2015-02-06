@@ -9,6 +9,8 @@
 #include "mpcTask.h"
 #include "uart_driver.h"
 #include <stdlib.h>
+#include "kalman/aileron/aileronKalman.h"
+#include "kalman/elevator/elevatorKalman.h"
 
 float readFloat(char * message, int * indexFrom) {
 
@@ -204,8 +206,8 @@ void commTask(void *p) {
 
 			} else if (messageId == '2') {
 
-				vector_float_set_zero(elevatorHandler.states);
-				vector_float_set_zero(aileronHandler.states);
+				vector_float_set_zero(elevatorKalmanHandler.states);
+				vector_float_set_zero(aileronKalmanHandler.states);
 
 			} else if (messageId == 's') {
 

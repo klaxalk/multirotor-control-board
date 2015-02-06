@@ -12,13 +12,6 @@
 #include "kalman.h"
 #include "miscellaneous.h"
 
-#define NUMBER_OF_STATES 3
-#define NUMBER_OF_INPUTS 1
-#define NUMBER_OF_MEASURED_STATES 1
-
-kalmanHandler elevatorHandler;
-kalmanHandler aileronHandler;
-
 typedef struct {
 
 	float dt;
@@ -30,14 +23,14 @@ typedef struct {
 
 typedef struct {
 
-	float elevatorData[NUMBER_OF_STATES];
-	float aileronData[NUMBER_OF_STATES];
+	float elevatorData[3];	/* REWORK */
+	float aileronData[3];	/* REWORK */
 } kalman2mpcMessage_t;
 
 typedef struct {
 
-	float elevatorData[3];
-	float aileronData[3];
+	float elevatorData[3];	/* REWORK */
+	float aileronData[3];	/* REWORK */
 } kalman2commMessage_t;
 
 // the communication task

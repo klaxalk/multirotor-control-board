@@ -4,515 +4,54 @@
 <window>
 <fastViewData fastViewLocation="1024"/>
 <perspectiveBar/>
-<page focus="true" label="Workspace - CooCox CoBuilder">
-<editors>
-<editorArea activeWorkbook="DefaultEditorWorkbook">
-<info part="DefaultEditorWorkbook">
-<folder appearance="1" expanded="2">
-<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
-<part id="0"/>
-<part id="1"/>
-<part id="2"/>
-<part id="3"/>
-<part id="4"/>
-<part id="5"/>
-<part id="6"/>
-<part id="7"/>
-<part id="8"/>
-<part id="9"/>
-<part id="10"/>
-</presentation>
-</folder>
-</info>
-</editorArea>
-<editor activePart="true" focus="true" id="org.eclipse.cdt.ui.editor.CEditor" name="mpcTask.c" partName="mpcTask.c" path="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/mpcTask.c" title="mpcTask.c" tooltip="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/mpcTask.c" workbook="DefaultEditorWorkbook">
-<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/ArmMCU/mpcTask.c"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="3715" selectionTopPixel="1474"/>
-</editor>
-<editor id="org.eclipse.cdt.ui.editor.CEditor" name="mpcTask.h" partName="mpcTask.h" path="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/mpcTask.h" title="mpcTask.h" tooltip="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/mpcTask.h" workbook="DefaultEditorWorkbook">
-<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/ArmMCU/mpcTask.h"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="231" selectionTopPixel="0"/>
-</editor>
-<editor id="org.eclipse.cdt.ui.editor.CEditor" name="CMatrixLib.c" partName="CMatrixLib.c" path="C:/Users/klaxalk/Desktop/multirotor-control-board/software/CMatrixLib/CMatrixLib/CMatrixLib.c" title="CMatrixLib.c" tooltip="C:/Users/klaxalk/Desktop/multirotor-control-board/software/CMatrixLib/CMatrixLib/CMatrixLib.c" workbook="DefaultEditorWorkbook">
-<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/ArmMCU/CMatrixLib.c"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="6093" selectionTopPixel="4005"/>
-</editor>
-<editor id="org.eclipse.cdt.ui.editor.CEditor" name="commTask.c" partName="commTask.c" path="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/commTask.c" title="commTask.c" tooltip="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/commTask.c" workbook="DefaultEditorWorkbook">
-<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/ArmMCU/commTask.c"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="3456" selectionTopPixel="2100"/>
-</editor>
-<editor id="org.eclipse.cdt.ui.editor.CEditor" name="commTask.h" partName="commTask.h" path="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/commTask.h" title="commTask.h" tooltip="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/commTask.h" workbook="DefaultEditorWorkbook">
-<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/ArmMCU/commTask.h"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="50" selectionTopPixel="0"/>
-</editor>
-<editor id="org.eclipse.cdt.ui.editor.CEditor" name="mpc.c" partName="mpc.c" path="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/mpc.c" title="mpc.c" tooltip="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/mpc.c" workbook="DefaultEditorWorkbook">
-<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/ArmMCU/mpc.c"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="1184" selectionTopPixel="60"/>
-</editor>
-<editor id="org.eclipse.cdt.ui.editor.CEditor" name="system.c" partName="system.c" path="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/system.c" title="system.c" tooltip="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/system.c" workbook="DefaultEditorWorkbook">
-<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/ArmMCU/system.c"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="777" selectionTopPixel="120"/>
-</editor>
-<editor id="org.eclipse.cdt.ui.editor.CEditor" name="kalmanTask.c" partName="kalmanTask.c" path="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/kalmanTask.c" title="kalmanTask.c" tooltip="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/kalmanTask.c" workbook="DefaultEditorWorkbook">
-<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/ArmMCU/kalmanTask.c"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="10443" selectionTopPixel="2929"/>
-</editor>
-<editor id="org.eclipse.cdt.ui.editor.CEditor" name="mpcMatrices.c" partName="mpcMatrices.c" path="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/mpcMatrices.c" title="mpcMatrices.c" tooltip="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/mpcMatrices.c" workbook="DefaultEditorWorkbook">
-<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/ArmMCU/mpcMatrices.c"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="362" selectionTopPixel="0"/>
-</editor>
-<editor id="org.eclipse.cdt.ui.editor.CEditor" name="system.h" partName="system.h" path="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/system.h" title="system.h" tooltip="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/system.h" workbook="DefaultEditorWorkbook">
-<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/ArmMCU/system.h"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="1221" selectionTopPixel="169"/>
-</editor>
-<editor id="org.eclipse.cdt.ui.editor.CEditor" name="mpcMatrices.h" partName="mpcMatrices.h" path="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/mpcMatrices.h" title="mpcMatrices.h" tooltip="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/mpcMatrices.h" workbook="DefaultEditorWorkbook">
-<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/ArmMCU/mpcMatrices.h"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="0" selectionTopPixel="0"/>
-</editor>
-</editors>
-<views>
-<view id="org.coocox.builder.ui.views.ProjectView" partName="Project">
-<viewState CommonNavigator.LINKING_ENABLED="0" horizontalPosition="0" org.eclipse.ui.navigator.resources.workingSets.showTopLevelWorkingSets="0" verticalPosition="0">
-<expanded>
-<element path="/ArmMCU"/>
-</expanded>
-<selection>
-<element path="/ArmMCU/mpcTask.c"/>
-</selection>
-</viewState>
-</view>
-<view id="org.coocox.codebugger.trace.ui.traceview" partName="Semihosting">
-<viewState/>
-</view>
-<view id="org.eclipse.debug.ui.DebugView" partName="Debug">
-<viewState/>
-</view>
-<view id="org.eclipse.ui.console.ConsoleView" partName="Console">
-<viewState/>
-</view>
-<view id="org.eclipse.debug.ui.VariableView" partName="Variables"/>
-<view id="org.eclipse.ui.views.ContentOutline" partName="Outline">
-<viewState/>
-</view>
-<view id="org.coocox.component.ui.Help" partName="Help">
-<viewState/>
-</view>
-</views>
-<perspectives activePart="org.eclipse.cdt.ui.editor.CEditor" activePerspective="org.coocox.builder.perspective.CoBuilder">
-<perspective editorAreaTrimState="2" editorAreaVisible="1" fixed="0" version="0.016">
-<descriptor class="org.coocox.builder.ui.PerspectiveCoBuilder" id="org.coocox.builder.perspective.CoBuilder" label="CooCox CoBuilder"/>
-<alwaysOnActionSet id="org.eclipse.search.searchActionSet"/>
-<alwaysOnActionSet id="org.eclipse.ui.edit.text.actionSet.annotationNavigation"/>
-<alwaysOnActionSet id="org.eclipse.ui.edit.text.actionSet.navigation"/>
-<alwaysOnActionSet id="org.eclipse.ui.edit.text.actionSet.convertLineDelimitersTo"/>
-<alwaysOnActionSet id="org.eclipse.ui.actionSet.keyBindings"/>
-<alwaysOnActionSet id="org.eclipse.ui.actionSet.openFiles"/>
-<alwaysOnActionSet id="org.coocox.component.ui.actionSet"/>
-<alwaysOnActionSet id="org.coocox.welcome.ui.actionSet"/>
-<alwaysOnActionSet id="org.eclipse.debug.ui.breakpointActionSet"/>
-<alwaysOnActionSet id="org.coocox.userspace.actionSet"/>
-<hide_menu_item_id id="org.coocox.codebugger.configuration.showMemoryAction"/>
-<hide_menu_item_id id="org.eclipse.jdt.ui.refactoring.menu"/>
-<hide_menu_item_id id="org.coocox.codebugger.configuration.ShowDisassemblyAction"/>
-<hide_menu_item_id id="org.coocox.codebugger.configuration.showExpressionsAction"/>
-<hide_menu_item_id id="org.coocox.codebugger.configuration.showDebugAction"/>
-<hide_menu_item_id id="org.coocox.codebugger.configuration.showConsoleAction"/>
-<hide_menu_item_id id="org.eclipse.cdt.debug.internal.ui.actions.ToggleInstructionStepModeAction"/>
-<hide_menu_item_id id="org.eclipse.jdt.ui.source.menu"/>
-<hide_menu_item_id id="org.coocox.codebugger.configuration.showMemoryBrowserAction"/>
-<hide_menu_item_id id="org.coocox.codebugger.configuration.showVariablesAction"/>
-<hide_menu_item_id id="org.coocox.builder.ui.openProjectExplorerAction"/>
-<hide_menu_item_id id="org.coocox.codebugger.trace.actions.ShowTraceControlAction"/>
-<hide_menu_item_id id="org.eclipse.debug.ui.commands.TerminateAndRelaunch"/>
-<hide_menu_item_id id="org.coocox.codebugger.configuration.showRegistersAction"/>
-<hide_toolbar_item_id id="org.eclipse.cdt.debug.internal.ui.actions.ToggleInstructionStepModeAction"/>
-<hide_toolbar_item_id id="org.eclipse.ui.edit.text.toggleShowSelectedElementOnly"/>
-<hide_toolbar_item_id id="org.eclipse.debug.ui.commands.TerminateAndRelaunch"/>
-<view id="org.coocox.builder.ui.views.ProjectView"/>
-<fastViewBars>
-<fastViewBar fastViewLocation="131072" id="org.eclipse.ui.internal.ViewStack@17da562" orientation="512" selectedTabId="org.eclipse.ui.views.ContentOutline" style="0">
-<fastViews>
-<view id="org.coocox.component.ui.Help" ratio="0.3"/>
-<view id="org.eclipse.ui.views.ContentOutline" ratio="0.3"/>
-</fastViews>
-</fastViewBar>
-<fastViewBar fastViewLocation="1024" id="org.eclipse.ui.internal.ViewStack@586ac6" orientation="256" selectedTabId="org.eclipse.ui.console.ConsoleView" style="0">
-<fastViews>
-<view id="org.eclipse.ui.console.ConsoleView" ratio="0.29723993"/>
-</fastViews>
-</fastViewBar>
-</fastViewBars>
-<layout>
-<mainWindow>
-<info folder="true" part="org.eclipse.ui.internal.ViewStack@ced6e2">
-<folder activePageID="org.coocox.builder.ui.views.ProjectView" appearance="2" expanded="2">
-<page content="org.coocox.builder.ui.views.ProjectView" label="Project"/>
-<page content="org.coocox.component.ui.ComponentView" label="LabelNotFound"/>
-<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
-<part id="0"/>
-</presentation>
-</folder>
-</info>
-<info folder="true" part="stickyFolderRight" ratio="0.75" ratioLeft="1434" ratioRight="478" relationship="2" relative="org.eclipse.ui.internal.ViewStack@ced6e2">
-<folder appearance="2" expanded="2">
-<page content="org.eclipse.help.ui.HelpView" label="LabelNotFound"/>
-<page content="org.eclipse.ui.internal.introview" label="LabelNotFound"/>
-</folder>
-</info>
-<info folder="true" part="org.eclipse.ui.internal.ViewStack@586ac6" ratio="0.771033" ratioLeft="724" ratioRight="215" relationship="4" relative="org.eclipse.ui.internal.ViewStack@ced6e2">
-<folder appearance="2" expanded="2">
-<page content="org.eclipse.ui.console.ConsoleView" label="LabelNotFound"/>
-<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory"/>
-</folder>
-</info>
-<info folder="true" part="org.eclipse.ui.internal.ViewStack@1a3a66c" ratio="0.14525746" ratioLeft="268" ratioRight="1577" relationship="2" relative="org.eclipse.ui.internal.ViewStack@ced6e2">
-<folder appearance="2" expanded="2">
-<page content="org.coocox.builder.ui.exampleView" label="LabelNotFound"/>
-<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory"/>
-</folder>
-</info>
-<info folder="true" part="org.eclipse.ui.internal.ViewStack@17da562" ratio="0.84384567" ratioLeft="1378" ratioRight="255" relationship="2" relative="org.eclipse.ui.internal.ViewStack@1a3a66c">
-<folder appearance="2" expanded="2">
-<page content="org.coocox.component.ui.Help" label="LabelNotFound"/>
-<page content="org.eclipse.ui.views.ContentOutline" label="LabelNotFound"/>
-<page content="org.eclipse.debug.ui.BreakpointView" label="LabelNotFound"/>
-<page content="org.coocox.coassistant.view.CoAssistantView" label="LabelNotFound"/>
-<page content="org.coocox.builder.ui.MoreExampleView" label="LabelNotFound"/>
-<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory"/>
-</folder>
-</info>
-<info part="org.eclipse.ui.editorss" ratio="0.4490446" ratioLeft="423" ratioRight="519" relationship="4" relative="org.eclipse.ui.internal.ViewStack@1a3a66c"/>
-</mainWindow>
-</layout>
-</perspective>
-<perspective editorAreaTrimState="2" editorAreaVisible="1" fixed="0" version="0.016">
-<descriptor class="org.coocox.codebugger.configuration.ui.Perspective" id="org.coocox.codebugger.configuration.perspective" label="CoDebugger"/>
-<alwaysOnActionSet id="org.eclipse.search.searchActionSet"/>
-<alwaysOnActionSet id="org.eclipse.ui.edit.text.actionSet.annotationNavigation"/>
-<alwaysOnActionSet id="org.eclipse.ui.edit.text.actionSet.navigation"/>
-<alwaysOnActionSet id="org.eclipse.ui.edit.text.actionSet.convertLineDelimitersTo"/>
-<alwaysOnActionSet id="org.eclipse.ui.actionSet.keyBindings"/>
-<alwaysOnActionSet id="org.eclipse.ui.actionSet.openFiles"/>
-<alwaysOnActionSet id="org.coocox.component.ui.actionSet"/>
-<alwaysOnActionSet id="org.coocox.welcome.ui.actionSet"/>
-<alwaysOnActionSet id="org.eclipse.debug.ui.breakpointActionSet"/>
-<alwaysOnActionSet id="org.eclipse.debug.ui.debugActionSet"/>
-<hide_menu_item_id id="org.coocox.builder.ui.newFolder"/>
-<hide_menu_item_id id="org.coocox.welcome.ui.action.repository"/>
-<hide_menu_item_id id="org.eclipse.ui.file.save"/>
-<hide_menu_item_id id="org.eclipse.jdt.ui.refactoring.menu"/>
-<hide_menu_item_id id="org.eclipse.ui.file.saveAll"/>
-<hide_menu_item_id id="org.coocox.builder.ui.rebuild"/>
-<hide_menu_item_id id="org.coocox.builder.ui.openFile"/>
-<hide_menu_item_id id="org.eclipse.ui.file.saveAs"/>
-<hide_menu_item_id id="org.coocox.builder.rcp.projectMenu"/>
-<hide_menu_item_id id="org.coocox.builder.rcp.flashMenu"/>
-<hide_menu_item_id id="org.coocox.builder.ui.debug"/>
-<hide_menu_item_id id="org.coocox.builder.ui.showHelpViewAction"/>
-<hide_menu_item_id id="org.coocox.builder.ui.newFile"/>
-<hide_menu_item_id id="org.coocox.builder.ui.actions.ConfigurationAction"/>
-<hide_menu_item_id id="org.eclipse.jdt.ui.source.menu"/>
-<hide_menu_item_id id="org.coocox.builder.ui.build"/>
-<hide_menu_item_id id="org.coocox.welcome.ui.action.welcome"/>
-<hide_menu_item_id id="org.coocox.component.ui.ShowRepositoryAction"/>
-<hide_toolbar_item_id id="org.coocox.builder.ui.actions.TargetManageAction"/>
-<hide_toolbar_item_id id="org.coocox.builder.ui.newProject"/>
-<hide_toolbar_item_id id="org.coocox.welcome.ui.action.repository"/>
-<hide_toolbar_item_id id="org.eclipse.ui.file.save"/>
-<hide_toolbar_item_id id="org.coocox.builder.ui.rebuild"/>
-<hide_toolbar_item_id id="org.coocox.codebugger.configuration.coideFlashEraseAction"/>
-<hide_toolbar_item_id id="org.coocox.builder.ui.debug"/>
-<hide_toolbar_item_id id="org.coocox.builder.ui.newFile"/>
-<hide_toolbar_item_id id="org.coocox.builder.ui.actions.ConfigurationAction"/>
-<hide_toolbar_item_id id="org.eclipse.ui.edit.text.toggleShowSelectedElementOnly"/>
-<hide_toolbar_item_id id="org.coocox.builder.ui.build"/>
-<hide_toolbar_item_id id="org.coocox.welcome.ui.action.welcome"/>
-<hide_toolbar_item_id id="org.coocox.component.ui.ShowRepositoryAction"/>
-<hide_toolbar_item_id id="org.coocox.codebugger.configuration.coideProgramDownloadAction"/>
-<view id="org.eclipse.ui.console.ConsoleView"/>
-<view id="org.eclipse.debug.ui.DebugView"/>
-<view id="org.coocox.codebugger.trace.ui.traceview"/>
-<view id="org.eclipse.debug.ui.VariableView"/>
-<view id="org.coocox.builder.ui.views.ProjectView"/>
-<fastViewBars/>
-<viewLayoutRec closeable="false" id="org.eclipse.debug.ui.DebugView"/>
-<layout>
-<mainWindow>
-<info folder="true" part="org.eclipse.ui.internal.ViewStack@1cc5ffb">
-<folder activePageID="org.coocox.builder.ui.views.ProjectView" appearance="2" expanded="2">
-<page content="org.coocox.builder.ui.views.ProjectView" label="Project"/>
-<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
-<part id="0"/>
-</presentation>
-</folder>
-</info>
-<info folder="true" part="stickyFolderRight" ratio="0.75" ratioLeft="702" ratioRight="234" relationship="2" relative="org.eclipse.ui.internal.ViewStack@1cc5ffb">
-<folder appearance="2" expanded="2">
-<page content="org.eclipse.help.ui.HelpView" label="LabelNotFound"/>
-<page content="org.eclipse.ui.internal.introview" label="LabelNotFound"/>
-</folder>
-</info>
-<info folder="true" part="org.eclipse.ui.internal.ViewStack@c873e2" ratio="0.69978404" ratioLeft="648" ratioRight="278" relationship="4" relative="org.eclipse.ui.internal.ViewStack@1cc5ffb">
-<folder activePageID="org.eclipse.debug.ui.DebugView" appearance="2" expanded="2">
-<page content="org.eclipse.ui.console.ConsoleView" label="Console"/>
-<page content="org.eclipse.debug.ui.DebugView" label="Debug"/>
-<page content="org.eclipse.debug.ui.BreakpointView" label="LabelNotFound"/>
-<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
-<part id="0"/>
-<part id="1"/>
-</presentation>
-</folder>
-</info>
-<info folder="true" part="org.eclipse.ui.internal.ViewStack@1d92b1d" ratio="0.5" ratioLeft="468" ratioRight="468" relationship="2" relative="org.eclipse.ui.internal.ViewStack@c873e2">
-<folder activePageID="org.coocox.codebugger.trace.ui.traceview" appearance="2" expanded="2">
-<page content="org.coocox.codebugger.trace.ui.traceview" label="Semihosting"/>
-<page content="org.eclipse.debug.ui.VariableView" label="Variables"/>
-<page content="org.eclipse.debug.ui.ExpressionView" label="LabelNotFound"/>
-<page content="org.eclipse.debug.ui.MemoryView" label="LabelNotFound"/>
-<page content="org.eclipse.cdt.debug.ui.memory.memorybrowser.MemoryBrowser" label="LabelNotFound"/>
-<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
-<part id="0"/>
-<part id="1"/>
-</presentation>
-</folder>
-</info>
-<info folder="true" part="org.eclipse.ui.internal.ViewStack@9dad0d" ratio="0.75" ratioLeft="702" ratioRight="234" relationship="2" relative="org.eclipse.ui.internal.ViewStack@1cc5ffb">
-<folder appearance="2" expanded="2">
-<page content="org.eclipse.cdt.dsf.debug.ui.disassembly.view" label="LabelNotFound"/>
-<page content="org.eclipse.ui.views.ContentOutline" label="LabelNotFound"/>
-<page content="org.eclipse.debug.ui.RegisterView" label="LabelNotFound"/>
-<page content="org.coocox.coassistant.view.CoAssistantView_debug" label="LabelNotFound"/>
-<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory"/>
-</folder>
-</info>
-<info part="org.eclipse.ui.editorss" ratio="0.2991453" ratioLeft="210" ratioRight="492" relationship="2" relative="org.eclipse.ui.internal.ViewStack@1cc5ffb"/>
-</mainWindow>
-</layout>
-</perspective>
-</perspectives>
-<workingSets/>
-<navigationHistory>
-<editors>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/mpcTask.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/mpcTask.h"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/commTask.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/mpc.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/system.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/kalmanTask.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/mpcMatrices.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/system.h"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/commTask.h"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/system.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/mpcTask.h"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/mpcMatrices.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/kalmanTask.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/mpcTask.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/commTask.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/kalmanTask.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/main.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/CMatrixLib.c"/>
-</editors>
-<item historyLabel="mpcTask.h" index="1">
-<position info="not_deleted" x="152" y="16"/>
-</item>
-<item historyLabel="mpcTask.c" index="0">
-<position info="not_deleted" x="4190" y="0"/>
-</item>
-<item historyLabel="commTask.c" index="2">
-<position info="not_deleted" x="4543" y="15"/>
-</item>
-<item historyLabel="commTask.c" index="2">
-<position/>
-</item>
-<item historyLabel="commTask.c" index="2">
-<position info="not_deleted" x="7071" y="0"/>
-</item>
-<item historyLabel="mpcMatrices.c" index="6">
-<position info="not_deleted" x="536" y="0"/>
-</item>
-<item historyLabel="mpcTask.c" index="0">
-<position info="not_deleted" x="733" y="9"/>
-</item>
-<item historyLabel="mpcTask.h" index="1">
-<position info="not_deleted" x="275" y="0"/>
-</item>
-<item historyLabel="mpcTask.c" index="0">
-<position info="not_deleted" x="4595" y="0"/>
-</item>
-<item historyLabel="commTask.c" index="2">
-<position info="not_deleted" x="7071" y="0"/>
-</item>
-<item historyLabel="mpcTask.c" index="0">
-<position info="not_deleted" x="361" y="0"/>
-</item>
-<item historyLabel="mpc.c" index="3">
-<position info="not_deleted" x="1184" y="0"/>
-</item>
-<item historyLabel="mpcTask.c" index="0">
-<position info="not_deleted" x="361" y="0"/>
-</item>
-<item historyLabel="mpcTask.c" index="0">
-<position info="not_deleted" x="4164" y="0"/>
-</item>
-<item historyLabel="commTask.c" index="2">
-<position info="not_deleted" x="7109" y="0"/>
-</item>
-<item historyLabel="system.c" index="4">
-<position info="not_deleted" x="1243" y="0"/>
-</item>
-<item historyLabel="system.h" index="7">
-<position info="not_deleted" x="1221" y="0"/>
-</item>
-<item historyLabel="commTask.c" index="2">
-<position info="not_deleted" x="5903" y="0"/>
-</item>
-<item historyLabel="mpcTask.c" index="0">
-<position info="not_deleted" x="4170" y="0"/>
-</item>
-<item historyLabel="kalmanTask.c" index="5">
-<position info="not_deleted" x="11654" y="0"/>
-</item>
-<item historyLabel="commTask.c" index="2">
-<position info="not_deleted" x="6152" y="0"/>
-</item>
-<item historyLabel="kalmanTask.c" index="5">
-<position info="not_deleted" x="11654" y="0"/>
-</item>
-<item historyLabel="mpcMatrices.c" index="6">
-<position info="not_deleted" x="536" y="0"/>
-</item>
-<item historyLabel="mpcTask.c" index="0">
-<position info="not_deleted" x="5073" y="0"/>
-</item>
-<item historyLabel="system.c" index="4">
-<position info="not_deleted" x="628" y="0"/>
-</item>
-<item historyLabel="commTask.c" index="2">
-<position info="not_deleted" x="1924" y="17"/>
-</item>
-<item historyLabel="commTask.h" index="8">
-<position info="not_deleted" x="50" y="0"/>
-</item>
-<item historyLabel="mpcTask.c" index="0">
-<position info="not_deleted" x="5001" y="74"/>
-</item>
-<item historyLabel="system.c" index="9">
-<position info="not_deleted" x="595" y="0"/>
-</item>
-<item historyLabel="mpcTask.h" index="10">
-<position info="not_deleted" x="276" y="0"/>
-</item>
-<item historyLabel="mpcMatrices.c" index="11">
-<position info="not_deleted" x="0" y="0"/>
-</item>
-<item historyLabel="mpcMatrices.c" index="11">
-<position info="not_deleted" x="362" y="0"/>
-</item>
-<item historyLabel="mpcTask.h" index="10">
-<position info="not_deleted" x="396" y="0"/>
-</item>
-<item historyLabel="kalmanTask.c" index="12">
-<position info="not_deleted" x="11654" y="0"/>
-</item>
-<item historyLabel="mpcTask.c" index="13">
-<position info="not_deleted" x="4967" y="0"/>
-</item>
-<item historyLabel="commTask.c" index="14">
-<position info="not_deleted" x="1924" y="17"/>
-</item>
-<item historyLabel="kalmanTask.c" index="15">
-<position info="not_deleted" x="10443" y="0"/>
-</item>
-<item historyLabel="commTask.c" index="14">
-<position info="not_deleted" x="3456" y="0"/>
-</item>
-<item historyLabel="mpcTask.c" index="13">
-<position info="not_deleted" x="4050" y="0"/>
-</item>
-<item historyLabel="main.c" index="16">
-<position info="not_deleted" x="1314" y="0"/>
-</item>
-<item historyLabel="main.c" index="16">
-<position info="not_deleted" x="551" y="0"/>
-</item>
-<item historyLabel="mpcTask.c" index="13">
-<position info="not_deleted" x="4052" y="0"/>
-</item>
-<item historyLabel="mpcTask.c" index="13">
-<position info="not_deleted" x="4172" y="0"/>
-</item>
-<item historyLabel="CMatrixLib.c" index="17">
-<position info="not_deleted" x="6285" y="0"/>
-</item>
-<item historyLabel="CMatrixLib.c" index="17">
-<position info="not_deleted" x="6326" y="0"/>
-</item>
-<item historyLabel="CMatrixLib.c" index="17">
-<position info="not_deleted" x="6402" y="0"/>
-</item>
-<item historyLabel="CMatrixLib.c" index="17">
-<position info="not_deleted" x="6052" y="0"/>
-</item>
-<item historyLabel="CMatrixLib.c" index="17">
-<position info="not_deleted" x="6093" y="0"/>
-</item>
-<item historyLabel="mpcTask.c" index="13">
-<position info="not_deleted" x="4330" y="0"/>
-</item>
-<item active="true" historyLabel="mpcTask.c" index="13">
-<position info="not_deleted" x="4052" y="0"/>
-</item>
-</navigationHistory>
-<input factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/" type="8"/>
-</page>
 <workbenchWindowAdvisor/>
 <actionBarAdvisor/>
 </window>
 <mruList>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="mpcMatrices.h" tooltip="ArmMCU/mpcMatrices.h">
-<persistable path="/ArmMCU/mpcMatrices.h"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="commTask.c" tooltip="ArmMCU/commTask.c">
+<persistable path="/ArmMCU/commTask.c"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="system.h" tooltip="ArmMCU/system.h">
-<persistable path="/ArmMCU/system.h"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="aileronKalman.h" tooltip="ArmMCU/kalman/aileron/aileronKalman.h">
+<persistable path="/ArmMCU/kalman/aileron/aileronKalman.h"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="mpcMatrices.c" tooltip="ArmMCU/mpcMatrices.c">
-<persistable path="/ArmMCU/mpcMatrices.c"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="elevatorKalman.h" tooltip="ArmMCU/kalman/elevator/elevatorKalman.h">
+<persistable path="/ArmMCU/kalman/elevator/elevatorKalman.h"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="elevatorKalman.c" tooltip="ArmMCU/kalman/elevator/elevatorKalman.c">
+<persistable path="/ArmMCU/kalman/elevator/elevatorKalman.c"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="kalman.c" tooltip="ArmMCU/kalman/kalman.c">
+<persistable path="/ArmMCU/kalman/kalman.c"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="miscellaneous.h" tooltip="ArmMCU/miscellaneous.h">
+<persistable path="/ArmMCU/miscellaneous.h"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="miscellaneous.c" tooltip="ArmMCU/miscellaneous.c">
+<persistable path="/ArmMCU/miscellaneous.c"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="aileronKalman.c" tooltip="ArmMCU/kalman/aileron/aileronKalman.c">
+<persistable path="/ArmMCU/kalman/aileron/aileronKalman.c"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="kalman.h" tooltip="ArmMCU/kalman/kalman.h">
+<persistable path="/ArmMCU/kalman/kalman.h"/>
 </file>
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="kalmanTask.c" tooltip="ArmMCU/kalmanTask.c">
 <persistable path="/ArmMCU/kalmanTask.c"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="system.c" tooltip="ArmMCU/system.c">
-<persistable path="/ArmMCU/system.c"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="mpc.c" tooltip="ArmMCU/mpc/mpc.c">
+<persistable path="/ArmMCU/mpc/mpc.c"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="mpc.c" tooltip="ArmMCU/mpc.c">
-<persistable path="/ArmMCU/mpc.c"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="elevAileMpcMattices.c" tooltip="ArmMCU/mpc/elevator_and_aileron/elevAileMpcMattices.c">
+<persistable path="/ArmMCU/mpc/elevator_and_aileron/elevAileMpcMattices.c"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="commTask.h" tooltip="ArmMCU/commTask.h">
-<persistable path="/ArmMCU/commTask.h"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="elevAileMpcMatrices.h" tooltip="ArmMCU/mpc/elevator_and_aileron/elevAileMpcMatrices.h">
+<persistable path="/ArmMCU/mpc/elevator_and_aileron/elevAileMpcMatrices.h"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="commTask.c" tooltip="ArmMCU/commTask.c">
-<persistable path="/ArmMCU/commTask.c"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="elevatorMpc.h" tooltip="ArmMCU/mpc/elevator/elevatorMpc.h">
+<persistable path="/ArmMCU/mpc/elevator/elevatorMpc.h"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="main.c" tooltip="ArmMCU/main.c">
-<persistable path="/ArmMCU/main.c"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="mpcTask.h" tooltip="ArmMCU/mpcTask.h">
-<persistable path="/ArmMCU/mpcTask.h"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="uart_driver.c" tooltip="ArmMCU/uart_driver.c">
-<persistable path="/ArmMCU/uart_driver.c"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="mpcTask.c" tooltip="ArmMCU/mpcTask.c">
-<persistable path="/ArmMCU/mpcTask.c"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="kalmanTask.h" tooltip="ArmMCU/kalmanTask.h">
-<persistable path="/ArmMCU/kalmanTask.h"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="CMatrixLib.h" tooltip="ArmMCU/CMatrixLib.h">
-<persistable path="/ArmMCU/CMatrixLib.h"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="CMatrixLib.c" tooltip="ArmMCU/CMatrixLib.c">
-<persistable path="/ArmMCU/CMatrixLib.c"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="elevatorMpc.c" tooltip="ArmMCU/mpc/elevator/elevatorMpc.c">
+<persistable path="/ArmMCU/mpc/elevator/elevatorMpc.c"/>
 </file>
 </mruList>
 </workbench>

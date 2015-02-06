@@ -7,6 +7,66 @@
 #include "CMatrixLib.h"
 #include "system.h"
 
+/**
+ * dynamically allocate the matrix using FreeRTOS pvPortMalloc
+ */
+matrix_float * matrix_float_alloc(const int16_t h, const int16_t w) {
+
+	matrix_float * m = 0;
+
+	// dimensions must be positive
+	if ((h > 0) && (w > 0)) {
+
+		m = (matrix_float *) pvPortMalloc(sizeof (matrix_float));
+
+		// if didn't failed to allocated the space
+		if (m != 0) {
+
+			m->height = h;
+			m->width = w;
+			m->data = (float *) pvPortMalloc(w*h*sizeof(float));
+		}
+	}
+
+	return m;
+}
+
+// vector allocation
+vector_float * vector_float_alloc(const int16_t length, int8_t orientation) {
+
+	vector_float * v = 0;
+
+	// dimension must be positive
+	if (length > 0) {
+
+		v = (vector_float *) pvPortMalloc(sizeof (vector_float));
+
+		// if didn't failed to allocated the space
+		if (v != 0) {
+
+			v->length = length;
+			v->orientation = orientation;
+			v->data = (float *) pvPortMalloc(length*sizeof(float));
+		}
+	}
+
+	return v;
+}
+
+// deallocate the matrix using FreeRTOS vPortFree
+void matrix_float_free(matrix_float * m) {
+
+	vPortFree(m->data);
+	vPortFree(m);
+}
+
+// vector deallocation
+void vector_float_free(vector_float * v) {
+
+	vPortFree(v->data);
+	vPortFree(v);
+}
+
 // print the matrix to serial output
 void matrix_float_print(const matrix_float * a) {
 
