@@ -4,14 +4,15 @@
 #include "commands.h"
 #include "communication.h"
 #include "usart_driver_RTOS.h"
+#include "system.h"
 
 extern volatile int8_t trajMaxIndex;
 
 //Telemetry sending
 volatile unsigned char telemetryToCoordinatorArr[TELEMETRY_VARIABLES]={0};
 	
-//Leading received
-volatile unsigned char leadingDataReceived=0;
+//Blob Deflection timer
+volatile uint16_t leadFreshTimer;
 
 
 void makeTRPacket(unsigned char *adr64,unsigned char *adr16,unsigned char options,unsigned char frameID,unsigned char *data, unsigned char dataLength);
@@ -89,28 +90,18 @@ void packetHandler(unsigned char *inPacket){
 								kopterLandReport(address64,address16,0x00);								
 							}
 						} else
-						//TRAJECTORY FOLLOW REQUEST
-						if(*(dataIN+2)==COMMANDS.TRAJECTORY_FOLLOW){
-							if(		 *(dataIN+3)==ONOFF.ON){
-								kopterTrajectoryFollow(address64,address16,1);
-							}else if(*(dataIN+3)==ONOFF.OFF){
-								kopterTrajectoryFollow(address64,address16,0);
-							}else if(*(dataIN+3)==GET_STATUS){
-								kopterTrajectoryFollowReport(address64,address16,0x00);								
-							}
-						} else
-						//TRAJECTORY ADD POINT REQUEST
+						//TRAJECTORY REQUEST
 						if(*(dataIN+2)==COMMANDS.TRAJECTORY_POINTS){
 							if(*(dataIN+3)==GET_STATUS){																
 								for(i=0;i<=trajMaxIndex;i++){
 										kopterTrajectoryPointReport(address64,address16,i,0x00);
 								}								
 							}else{								
-								ch1[0]=*(dataIN+4); ch1[1]=*(dataIN+5); ch1[2]=*(dataIN+6); ch1[3]=*(dataIN+7); f1=(float *)ch1;
+								ch1[0]=*(dataIN+4); ch1[1]=*(dataIN+5); ch1[2]=*(dataIN+6); ch1[3]=*(dataIN+7); ui32=(uint32_t *)ch1;
 								ch2[0]=*(dataIN+8); ch2[1]=*(dataIN+9); ch2[2]=*(dataIN+10); ch2[3]=*(dataIN+11); f2=(float *)ch2;
 								ch3[0]=*(dataIN+12); ch3[1]=*(dataIN+13); ch3[2]=*(dataIN+14); ch3[3]=*(dataIN+15); f3=(float *)ch3;
 								ch4[0]=*(dataIN+16); ch4[1]=*(dataIN+17); ch4[2]=*(dataIN+18); ch4[3]=*(dataIN+19); f4=(float *)ch4;
-								kopterTrajectoryAddPoint(address64,address16,*(dataIN+3),*f1,*f2,*f3,*f4);																															
+								kopterTrajectoryAddPoint(address64,address16,*(dataIN+3),*ui32,*f2,*f3,*f4);																															
 							}
 						} else																		
 						//SETPOINTS REQUEST
@@ -154,6 +145,19 @@ void packetHandler(unsigned char *inPacket){
 								ui32=(uint32_t *)ch1;
 								kopterTime(address64,address16,*ui32);
 							}
+						}else
+						//LOCK ON BLOB
+						if(*(dataIN+2)==COMMANDS.LOCK_ON_BLOB){
+							if(*(dataIN+3)==GET_STATUS){
+								kopterLockOnBlobReport(address64,address16,0x00);
+							}else{
+								ch1[0]=*(dataIN+3);
+								ch1[1]=*(dataIN+4);
+								ch1[2]=*(dataIN+5);
+								ch1[3]=*(dataIN+6);
+								f1=(float *)ch1;
+								kopterLockOnBlob(address64,address16,*f1);
+							}
 						}				
                     break;
                 //telemetry
@@ -178,17 +182,13 @@ void packetHandler(unsigned char *inPacket){
 				         if(*(dataIN+2)==COMMANDS.LANDING){
 					         kopterLandReportRecieved(address64,address16,*(dataIN+3));
 				         } else
-						 //TRAJECTORY FOLLOW STATUS
-						 if(*(dataIN+2)==COMMANDS.TRAJECTORY_FOLLOW){
-							 kopterTrajectoryFollowReportRecieved(address64,address16,*(dataIN+3));
-						 } else
 						 //TRAJECTORY POINTS
 				         if(*(dataIN+2)==COMMANDS.TRAJECTORY_POINTS){							 
-							 ch1[0]=*(dataIN+4); ch1[1]=*(dataIN+5); ch1[2]=*(dataIN+6); ch1[3]=*(dataIN+7); f1=(float *)ch1;
+							 ch1[0]=*(dataIN+4); ch1[1]=*(dataIN+5); ch1[2]=*(dataIN+6); ch1[3]=*(dataIN+7); ui32=(uint32_t *)ch1;
 							 ch2[0]=*(dataIN+8); ch2[1]=*(dataIN+9); ch2[2]=*(dataIN+10); ch2[3]=*(dataIN+11); f2=(float *)ch2;
 							 ch3[0]=*(dataIN+12); ch3[1]=*(dataIN+13); ch3[2]=*(dataIN+14); ch3[3]=*(dataIN+15); f3=(float *)ch3;
 							 ch4[0]=*(dataIN+16); ch4[1]=*(dataIN+17); ch4[2]=*(dataIN+18); ch4[3]=*(dataIN+19); f4=(float *)ch4;
-							 kopterTrajectoryPointReportReceived(address64,address16,*(dataIN+3),*f1,*f2,*f3,*f4);
+							 kopterTrajectoryPointReportReceived(address64,address16,*(dataIN+3),*ui32,*f2,*f3,*f4);
 				         } else
 						 //SETPOINTS STATUS
 						 if(*(dataIN+2)==COMMANDS.SET_SETPOINTS){
@@ -211,7 +211,16 @@ void packetHandler(unsigned char *inPacket){
 							ch1[3]=*(dataIN+6);
 							ui32=(uint32_t *)ch1;							 
 							kopterTimeReportReceived(address64,address16,*ui32);
-						 }				 
+						}else
+						//LOCK ON BLOB
+						if(*(dataIN+2)==COMMANDS.LOCK_ON_BLOB){						
+							ch1[0]=*(dataIN+3);
+							ch1[1]=*(dataIN+4);
+							ch1[2]=*(dataIN+5);
+							ch1[3]=*(dataIN+6);
+							f1=(float *)ch1;
+							kopterLockOnBlobReportRecieved(address64,address16,*f1);					
+						}				 
                     break;
                 //warning
                 case 'w':
@@ -221,7 +230,7 @@ void packetHandler(unsigned char *inPacket){
                     break;	
 				//leading	
 				case 'l':
-						leadingDataReceived++;
+						leadFreshTimer=0;
 						ch1[0]=*(dataIN+2); ch1[1]=*(dataIN+3); ch1[2]=*(dataIN+4); ch1[3]=*(dataIN+5); f1=(float *)ch1;
 						ch2[0]=*(dataIN+6); ch2[1]=*(dataIN+7); ch2[2]=*(dataIN+8); ch2[3]=*(dataIN+9); f2=(float *)ch2;
 						ch3[0]=*(dataIN+10); ch3[1]=*(dataIN+11); ch3[2]=*(dataIN+12); ch3[3]=*(dataIN+13); f3=(float *)ch3;

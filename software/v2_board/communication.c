@@ -1,6 +1,5 @@
 #include <avr/io.h>
 #include "ioport.h"
-#include "config.h"
 #include "controllers.h"
 #include "communication.h"
 #include "system.h"
@@ -120,16 +119,11 @@ void gumstixParseChar(unsigned char incomingChar) {
 
 void stateChecker(){
 	static unsigned char landingStateCH=0xFF;
-	static unsigned char trajectoryFollowCH=0xFF;
 	static unsigned char aktControllerCH=0xFF;
 	
 	if(landingStateCH!=landingState){
 		landingStateCH=landingState;
 		kopterLandReport(ADDRESS.COORDINATOR,ADDRESS.UNKNOWN16,0x00);
-	}
-	if(trajectoryFollowCH!=trajectoryEnabled){
-		trajectoryFollowCH=trajectoryEnabled;
-		kopterTrajectoryFollowReport(ADDRESS.COORDINATOR,ADDRESS.UNKNOWN16,0x00);
 	}
 	if(aktControllerCH!=controllerActive){
 		aktControllerCH=controllerActive;
@@ -137,6 +131,5 @@ void stateChecker(){
 	}	
 	
 	landingStateCH=landingState;
-	trajectoryFollowCH=trajectoryEnabled;
 	aktControllerCH=controllerActive;
 }

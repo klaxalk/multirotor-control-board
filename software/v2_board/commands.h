@@ -23,17 +23,11 @@ void kopterLandStatusRequest(unsigned char *address64,unsigned char *address16,u
 void kopterLandReport(unsigned char *address64,unsigned char *address16,unsigned char frameID);
 void kopterLandReportRecieved(unsigned char *address64,unsigned char *address16,unsigned char status);
 
-void kopterTrajectoryFollowRequest(unsigned char *address64,unsigned char *address16,unsigned char options,unsigned char frameID);
-void kopterTrajectoryFollow(unsigned char *address64,unsigned char *address16,unsigned char on);
-void kopterTrajectoryFollowStatusRequest(unsigned char *address64,unsigned char *address16,unsigned char frameID);
-void kopterTrajectoryFollowReport(unsigned char *address64,unsigned char *address16,unsigned char frameID);
-void kopterTrajectoryFollowReportRecieved(unsigned char *address64,unsigned char *address16,unsigned char status);
-
-void kopterTrajectoryAddPointRequest(unsigned char *address64,unsigned char *address16,unsigned char index,float time,float elevatorPos,float aileronPos,float throttlePos,unsigned char frameID);
-void kopterTrajectoryAddPoint(unsigned char *address64,unsigned char *address16,unsigned char index,float time,float elevatorPos,float aileronPos,float throttlePos);
+void kopterTrajectoryAddPointRequest(unsigned char *address64,unsigned char *address16,unsigned char index,uint32_t time,float elevatorPos,float aileronPos,float throttlePos,unsigned char frameID);
+void kopterTrajectoryAddPoint(unsigned char *address64,unsigned char *address16,unsigned char index,uint32_t time,float elevatorPos,float aileronPos,float throttlePos);
 void kopterTrajectoryPointStatusRequest(unsigned char *address64,unsigned char *address16,unsigned char frameID);
 void kopterTrajectoryPointReport(unsigned char *address64,unsigned char *address16,unsigned char index,unsigned char frameID);
-void kopterTrajectoryPointReportReceived(unsigned char *address64,unsigned char *address16,unsigned char index,float time,float elevatorPos,float aileronPos,float throttlePos);
+void kopterTrajectoryPointReportReceived(unsigned char *address64,unsigned char *address16,unsigned char index,uint32_t time,float elevatorPos,float aileronPos,float throttlePos);
 
 void kopterSetpointsSetRequest(unsigned char *address64,unsigned char *address16,unsigned char type,unsigned char positionType,float value,unsigned char frameID);
 void kopterSetpointsSet(unsigned char *address64,unsigned char *address16,unsigned char type,unsigned char positionType,float value);
@@ -53,12 +47,17 @@ void kopterFollowerSetStatusRequest(unsigned char *address64,unsigned char *addr
 void kopterFollowerSetReport(unsigned char *address64,unsigned char *address16,unsigned char frameID);
 void kopterFollowerSetReportRecieved(unsigned char *address64,unsigned char *address16,unsigned char *followerAddr);
 
+void kopterLockOnBlobRequest(unsigned char *address64,unsigned char *address16,float distance,unsigned char frameID);
+void kopterLockOnBlob(unsigned char *address64,unsigned char *address16,float distance);
+void kopterLockOnBlobStatusRequest(unsigned char *address64,unsigned char *address16,unsigned char frameID);
+void kopterLockOnBlobReport(unsigned char *address64,unsigned char *address16,unsigned char frameID);
+void kopterLockOnBlobReportRecieved(unsigned char *address64,unsigned char *address16,float distance);
+
 void sendXBeeMessage(unsigned char *address64,unsigned char *address16,char *message,unsigned char frameID);
 void receiveXBeeMessage(unsigned char *address64,unsigned char *address16,char *message);
 
 void kopterLeadDataSend(unsigned char *address64,unsigned char *address16,volatile float altitude,volatile float elevatorError,volatile float aileronError,unsigned char frameID);
 void kopterLeadDataReceived(unsigned char *address64,unsigned char *address16,float altitude, float elevatorError, float aileronError);
-
 
 void kopterTimeRequest(unsigned char *address64,unsigned char *address16,uint32_t time,unsigned char frameID);
 void kopterTime(unsigned char *address64,unsigned char *address16,uint32_t time);

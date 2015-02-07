@@ -25,8 +25,8 @@ volatile float estimatedThrottleVel = 0;
 volatile float estimatedElevatorAcc = 0;
 volatile float estimatedAileronAcc = 0;
 
-volatile float estimatedBlobDistance = 0;
-volatile float estimatedBlobHorizontal = 0;
+volatile float estimatedBlobElevator = 0;
+volatile float estimatedBlobAileron = 0;
 volatile float estimatedBlobVertical = 0;
 
 //setpoints
@@ -42,55 +42,28 @@ volatile float throttleDesiredSetpoint = DEFAULT_THROTTLE_SETPOINT;
 volatile float elevatorDesiredVelocitySetpoint = DEFAULT_ELEVATOR_VELOCITY_SETPOINT;
 volatile float aileronDesiredVelocitySetpoint  = DEFAULT_AILERON_VELOCITY_SETPOINT;
 
+//Gumstix 
+volatile unsigned char gumstixStable=0;
+volatile float blobElevatorDeflection=0;
+volatile float blobAileronDeflection=0;
+volatile float lockOnBlobDistance = -1; 
 
-//auto-landing variables
+//landing variables
 volatile unsigned char landingState = 0x00;
 
-
-//auto-trajectory variables
-volatile unsigned char trajectoryEnabled = 0;
-volatile float trajTimer=0;
-volatile int8_t trajIndex = -1;
-volatile int8_t trajMaxIndex = -1;
+//trajectory variables
+volatile int8_t trajIndex = 0;
+volatile int8_t trajMaxIndex = 0;
 volatile trajectoryPoint_t trajectory[TRAJECTORY_LENGTH];
 
-static uint8_t estimator_cycle = 0;
-static float   estimatedThrottlePos_prev = 0;
-
-//no leading data counter
-volatile uint8_t neLeadCounter=0;
-
-void leadingDataActualCheck(){
-	if(leadingDataReceived>0){
-		neLeadCounter=0;
-	}else{
-		if(neLeadCounter<(LEADING_DATA_TTL/DT)){
-			neLeadCounter++;
-		}else{
-
-		}
-	}
-	leadingDataReceived=0;
-}
-
+ 
 void initTrajectory(){
-	int8_t i=0;
+	uint32_t i=0;
 	// (i, time (s), x (+ forward), y (+ leftward), z (altitude))
 	for(i=0;i<TRAJECTORY_LENGTH;i++){
-		TRAJ_POINT(i,1,elevatorPositionSetpoint,aileronPositionSetpoint,throttleSetpoint);
+		TRAJ_POINT(i,secondsTimer+1,elevatorPositionSetpoint,aileronPositionSetpoint,throttleSetpoint);
 	}
 	trajMaxIndex=-1;
-}
-
-void enableTrajectoryFollow(){
-	if (trajectoryEnabled==0){
-		trajIndex=-1;
-	}
-	trajectoryEnabled=1;
-}
-
-void disableTrajectoryFollow(){
-	trajectoryEnabled=0;
 }
 
 void enableLanding(){	
@@ -103,6 +76,14 @@ void disableLanding(){
 	if(landingState!=LANDING.FLIGHT){
 		landingState=LANDING.TAKE_OFF;
 	}
+}
+
+void enableLockOnBlob(float distance){
+	lockOnBlobDistance=distance;
+}
+
+void disableLockOnBlob(){
+	lockOnBlobDistance=-1;
 }
 
 void controllerSet(unsigned char controllerDesired){
@@ -125,69 +106,75 @@ void controllerSet(unsigned char controllerDesired){
 	}
 }
 
-void trajectorySetpoints(){
-	float dValue;
-	static float aileronIncrement;
-	static float elevatorIncrement;
-	static float throttleIncrement;
+void setpointsCalculate(){
+	float distLeft,speed,timeLeft;
 	
-	if(trajIndex < trajMaxIndex){
-		//if copter reaches desired position move to next waypoint
-		if(trajIndex < 0 
-		||(fabs(trajectory[trajIndex].throttlePos - estimatedThrottlePos) < 0.1 
-		&& fabs(trajectory[trajIndex].elevatorPos - estimatedElevatorPos) < 0.1 
-		&& fabs(trajectory[trajIndex].aileronPos  - estimatedAileronPos ) < 0.1)){
-			trajIndex++;
-			trajTimer=0;
-			//calculate increments to setpoints
-			dValue = (trajectory[trajIndex].elevatorPos - elevatorPositionSetpoint);
-			elevatorIncrement = dValue / trajectory[trajIndex].time;
-			dValue = (trajectory[trajIndex].aileronPos - aileronPositionSetpoint);
-			aileronIncrement = dValue / trajectory[trajIndex].time;
-			dValue = (trajectory[trajIndex].throttlePos - throttleSetpoint);
-			throttleIncrement = dValue / trajectory[trajIndex].time;
-		}			
+	//trajectory waypoint shift
+	while((secondsTimer>=trajectory[trajIndex].time) && (trajIndex<trajMaxIndex)){
+		trajIndex++;
+	}
 		
-		//increment setpoints
-		if(trajTimer<trajectory[trajIndex].time){
-			trajTimer+=DT;
-			throttleSetpoint  += throttleIncrement*DT;
-			elevatorPositionSetpoint += elevatorIncrement*DT;
-			aileronPositionSetpoint  += aileronIncrement*DT;
-		}else{
-			throttleSetpoint = trajectory[trajIndex].throttlePos;
-			elevatorPositionSetpoint = trajectory[trajIndex].elevatorPos;
-			aileronPositionSetpoint = trajectory[trajIndex].aileronPos;
-		}
-	} 
+	//end of trajectory	
+	if(secondsTimer>=trajectory[trajIndex].time){
+		elevatorDesiredPositionSetpoint=trajectory[trajIndex].elevatorPos;	
+		aileronDesiredPositionSetpoint=trajectory[trajIndex].aileronPos;	
+			
+		elevatorDesiredVelocitySetpoint=0;
+		aileronDesiredVelocitySetpoint=0;	
+	}else{
+	//setpoints calculation			
+		timeLeft=(float)(trajectory[trajIndex].time-secondsTimer)-(milisecondsTimer/1000.0);	
+		//elevator
+		distLeft=trajectory[trajIndex].elevatorPos-elevatorDesiredPositionSetpoint;		
+		speed=distLeft/timeLeft;
+		elevatorDesiredPositionSetpoint+=speed*DT;
+		elevatorDesiredVelocitySetpoint=speed;
+		//aileron
+		distLeft=trajectory[trajIndex].aileronPos-aileronDesiredPositionSetpoint;
+		speed=distLeft/timeLeft;
+		aileronDesiredPositionSetpoint+=speed*DT;		
+		aileronDesiredVelocitySetpoint=speed;	
+		//throttle
+		distLeft=trajectory[trajIndex].throttlePos-throttleDesiredSetpoint;
+		speed=distLeft/timeLeft;
+		throttleDesiredSetpoint+=speed*DT;			
+	}
 }
 
 void positionEstimator() {
 	static float estimatedElevatorVel_Prev = 0;
 	static float estimatedAileronVel_Prev  = 0;	
-	float acc_new;
+	float accNew;
 	
 	//gustix valid delay - filters faulty values
-	static uint8_t gumstix_counter = 0;
-	const uint8_t gumstix_delay = 7;
+	static uint8_t gumstixCounter = 0;
+	const uint8_t gumstixDelay = 7;
 
 	if(validGumstix == 1) {
-		if(gumstix_counter < gumstix_delay) gumstix_counter++;
+		if(gumstixCounter < gumstixDelay){ 
+			gumstixCounter++;
+		}else{
+			gumstixStable=1;		
+		}
 	} else {
-		gumstix_counter = 0;
+		gumstixCounter = 0;
+		gumstixStable=0;
 	}
 	
-	//Blob detector 
-	estimatedBlobDistance += (elevatorGumstix-estimatedBlobDistance) * (DT/GUMSTIX_FILTER_CONST);
-	estimatedBlobHorizontal += (aileronGumstix-estimatedBlobHorizontal) * (DT/GUMSTIX_FILTER_CONST);
-	estimatedBlobVertical += (throttleGumstix-estimatedBlobVertical) * (DT/GUMSTIX_FILTER_CONST);
+
+	if(gumstixStable==1){
+		//Blob detector
+		estimatedBlobElevator += (elevatorGumstix-estimatedBlobElevator) * (DT/GUMSTIX_FILTER_CONST);
+		estimatedBlobAileron += (aileronGumstix-estimatedBlobAileron) * (DT/GUMSTIX_FILTER_CONST);
+		estimatedBlobVertical += (throttleGumstix-estimatedBlobVertical) * (DT/GUMSTIX_FILTER_CONST);				
+	}
 	
 	//elevator velocity
 	estimatedElevatorVel += (elevatorSpeed-estimatedElevatorVel) * (DT/PX4FLOW_FILTER_CONST);	
 	//elevator acceleration
-	acc_new = (estimatedElevatorVel - estimatedElevatorVel_Prev) / DT;
+	accNew = (estimatedElevatorVel - estimatedElevatorVel_Prev) / DT;
 	estimatedElevatorVel_Prev = estimatedElevatorVel;
-	estimatedElevatorAcc += (acc_new - estimatedElevatorAcc) * (DT/PX4FLOW_FILTER_CONST);
+	estimatedElevatorAcc += (accNew - estimatedElevatorAcc) * (DT/PX4FLOW_FILTER_CONST);
 	//elevator position
 	if(estimatedThrottlePos>ALTITUDE_MINIMUM){
 		estimatedElevatorPos += estimatedElevatorVel * DT;	
@@ -196,9 +183,9 @@ void positionEstimator() {
 	//aileron velocity
 	estimatedAileronVel += (aileronSpeed-estimatedAileronVel) * (DT/PX4FLOW_FILTER_CONST);	
 	//aileron acceleration
-	acc_new = (estimatedAileronVel - estimatedAileronVel_Prev) / DT;
+	accNew = (estimatedAileronVel - estimatedAileronVel_Prev) / DT;
 	estimatedAileronVel_Prev = estimatedAileronVel;
-	estimatedAileronAcc += (acc_new - estimatedAileronAcc) * (DT/PX4FLOW_FILTER_CONST);
+	estimatedAileronAcc += (accNew - estimatedAileronAcc) * (DT/PX4FLOW_FILTER_CONST);
 	//aileron position
 	if(estimatedThrottlePos>ALTITUDE_MINIMUM){
 		estimatedAileronPos += estimatedAileronVel * DT;		
@@ -281,6 +268,8 @@ void positionController(int16_t *elevator, int16_t *aileron, float elevatorSetpo
 }
 
 void altitudeEstimator() {
+static uint8_t estimator_cycle = 0;
+static float   estimatedThrottlePos_prev = 0;	
    //new cycle 
    estimator_cycle++;
     if(groundDistance != estimatedThrottlePos_prev) {//input data changed
@@ -372,4 +361,19 @@ void landingController(int16_t *throttle, int16_t *elevator, int16_t *aileron){
 				landingState = LANDING.ON_GROUND;
 			}			
 		}
+}
+
+void lockOnBlob(float distance){	
+	float error;
+	float drift;
+	
+	if(gumstixStable){
+		error=estimatedElevatorPos-elevatorPositionSetpoint;
+		drift=estimatedBlobElevator-blobElevatorDeflection-distance+error;
+		estimatedElevatorPos+=(-drift)*(DT/GUMSTIX_FILTER_CONST);
+		
+		error=estimatedAileronPos-aileronPositionSetpoint;
+		drift=estimatedBlobAileron-blobAileronDeflection+error;
+		estimatedAileronPos+=(-drift)*(DT/GUMSTIX_FILTER_CONST);
+	}	
 }

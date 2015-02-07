@@ -36,9 +36,6 @@
 #define CONTROLLER_AILERON_SATURATION  100
 #define CONTROLLER_THROTTLE_SATURATION 300
 
-// leading data TTL (sec)
-#define LEADING_DATA_TTL 0.5
-
 // controllers output variables
 extern volatile int16_t controllerElevatorOutput;
 extern volatile int16_t controllerAileronOutput;
@@ -49,7 +46,6 @@ extern volatile int16_t controllerThrottleOutput;
 volatile unsigned char controllerActive;
 
 //vars for estimators
-
 extern volatile float estimatedElevatorPos;
 extern volatile float estimatedAileronPos;
 extern volatile float estimatedThrottlePos;
@@ -59,8 +55,8 @@ extern volatile float estimatedThrottleVel;
 extern volatile float estimatedElevatorAcc;
 extern volatile float estimatedAileronAcc;
 
-extern volatile float estimatedBlobDistance;
-extern volatile float estimatedBlobHorizontal;
+extern volatile float estimatedBlobElevator;
+extern volatile float estimatedBlobAileron;
 extern volatile float estimatedBlobVertical;
 
 //vars for controllers
@@ -76,35 +72,45 @@ extern volatile float throttleDesiredSetpoint;
 extern volatile float elevatorDesiredVelocitySetpoint;
 extern volatile float aileronDesiredVelocitySetpoint;
 
-//auto-landing variables and state defines
+//Blob
+extern volatile unsigned char gumstixStable;
+extern volatile float blobElevatorDeflection;
+extern volatile float blobAileronDeflection;
+extern volatile float lockOnBlobDistance;
+
+//landing variables
 extern volatile unsigned char landingState;
 
-//auto-trajectory variables and types
-extern volatile unsigned char trajectoryEnabled;
-extern volatile int8_t trajMaxIndex;
+//trajectory variables and types
 typedef struct {
-	float time;
+	uint32_t time;
 	float elevatorPos; //position in m
 	float aileronPos;  //position in m
 	float throttlePos; //position in m
 } trajectoryPoint_t;
+
+extern volatile int8_t trajIndex;
+extern volatile int8_t trajMaxIndex;
 extern volatile trajectoryPoint_t trajectory[];
+
 #define TRAJECTORY_LENGTH	10
 #define TRAJ_POINT(i,t,e,a,th) \
-	trajectory[i].time = t; \
-	trajectory[i].elevatorPos = e; \
-	trajectory[i].aileronPos = a; \
-	trajectory[i].throttlePos = th
+trajectory[i].time = t; \
+trajectory[i].elevatorPos = e; \
+trajectory[i].aileronPos = a; \
+trajectory[i].throttlePos = th
 
 //trajectory Follow
 void initTrajectory();
-void trajectorySetpoints();
+void setpointsCalculate();
 
 //enables - disables
 void enableLanding();
 void disableLanding();
 void enableTrajectoryFollow();
 void disableTrajectoryFollow();
+void enableLockOnBlob(float distance);
+void disableLockOnBlob();
 void controllerSet(unsigned char controllerDesired);
 
 //position estimator and controllers
@@ -117,7 +123,7 @@ void altitudeEstimator();
 void altitudeController(int16_t *throttle, float setpoint);
 void landingController();
 
-//leading data age checker
-void leadingDataActualCheck();
+//Blob is origin of setpoint
+void lockOnBlob(float distance);
 
 #endif // _CONTROLLERS_H

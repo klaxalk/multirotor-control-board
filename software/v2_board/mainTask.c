@@ -16,9 +16,31 @@ unsigned char previous_AUX4 = 5;
 unsigned char previous_AUX5 = 5;
 
 void mainTask(void *p) {	
-	while (1) {					
+	while (1) {		
+		
+		if(RCchannel[AUX1]<PPM_IN_MIDDLE_LENGTH){
+			if(previous_AUX1!=0){
+				previous_AUX1=0;
+			}
+		}else{
+			if(previous_AUX1!=1){
+				previous_AUX1=1;
+			}
+		}
+		
+				
+		if(RCchannel[AUX2]<(PPM_IN_MIDDLE_LENGTH)){
+			if(previous_AUX2!=0){
+				previous_AUX2=0;
+			}
+		}else{
+			if(previous_AUX2!=1){
+				previous_AUX2=1;
+			}
+		}
+					
 		// controllers on/off
-		if (       RCchannel[AUX3] < (PPM_IN_MIDDLE_LENGTH - 400)) {
+		if (RCchannel[AUX3] < (PPM_IN_MIDDLE_LENGTH - 400)) {
 			if (previous_AUX3 != 1) {			
 				controllerSet(CONTROLLERS.OFF);						
 				previous_AUX3 = 1;
@@ -38,47 +60,18 @@ void mainTask(void *p) {
 		// landing on/off, trajectory on/off
 		if (RCchannel[AUX4] < (PPM_IN_MIDDLE_LENGTH - 400)) {
 			if(previous_AUX4!=0){				
-				enableLanding();
-				trajectoryEnabled = 0;		
+				enableLanding();	
 				previous_AUX4 = 0;
 			}
 		} else if(RCchannel[AUX4] > (PPM_IN_MIDDLE_LENGTH + 400)) {
 			if(previous_AUX4!=1){
-				disableLanding();
-				trajectoryEnabled = 1;					
+				disableLanding();				
 				previous_AUX4=1;
 			}
 		}else{
 			if(previous_AUX4!=2){
-				disableLanding();
-				trajectoryEnabled = 0;				
+				disableLanding();			
 				previous_AUX4=2;
-			}
-		}
-
-		//velocity null setpoints
-		if(RCchannel[AUX2]<(PPM_IN_MIDDLE_LENGTH)){
-			if(previous_AUX2!=0){	
-						
-			previous_AUX2=0;
-			}
-		}else{
-			if(previous_AUX2!=1){	
-				aileronDesiredVelocitySetpoint = DEFAULT_AILERON_VELOCITY_SETPOINT;			
-				elevatorDesiredVelocitySetpoint = DEFAULT_ELEVATOR_VELOCITY_SETPOINT;					
-			previous_AUX2=1;
-			}
-		}
-
-
-		//gumstix enable
-		if(RCchannel[AUX1]<PPM_IN_MIDDLE_LENGTH){
-			if(previous_AUX1!=0){	
-				previous_AUX1=0;
-			}
-		}else{
-			if(previous_AUX1!=1){
-				previous_AUX1=1;
 			}
 		}
 	

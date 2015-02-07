@@ -70,11 +70,11 @@ float telemetryValue(unsigned char type){
 		f=(float)outputAileron;
     }else if(type==TELEMETRIES.OUTPUT_RUDDER){
 		f=(float)outputRudder;
-    }else if(type==TELEMETRIES.BLOB_DISTANCE){
-		f=estimatedBlobDistance;
-    }else if(type==TELEMETRIES.BLOB_HORIZONTAL){
-		f=estimatedBlobHorizontal;
-    }else if(type==TELEMETRIES.BLOB_VERTICAL){
+    }else if(type==TELEMETRIES.BLOB_ELEVATOR){
+		f=estimatedBlobElevator;
+    }else if(type==TELEMETRIES.BLOB_AILERON){
+		f=estimatedBlobAileron;
+    }else if(type==TELEMETRIES.BLOB_ALTITUDE){
 		f=estimatedBlobVertical;
     }else if(type==TELEMETRIES.PITCH_ANGLE){
 		f=(float)pitchAngle/10.0;
@@ -392,42 +392,9 @@ void kopterControllersReportReceived(unsigned char *address64,unsigned char *add
 	}
 }
 
-//TRAJECTORY
-void kopterTrajectoryFollowRequest(unsigned char *address64,unsigned char *address16,unsigned char options,unsigned char frameID){
-	*(dataOUT)='c';
-	*(dataOUT+1)=COMMANDS.TRAJECTORY_FOLLOW;
-	*(dataOUT+2)=options;
-	makeTRPacket(address64,address16,0x00,frameID,dataOUT,3);
-}
-void kopterTrajectoryFollow(unsigned char *address64,unsigned char *address16,unsigned char on){
-	trajectoryEnabled=on;
-}
-void kopterTrajectoryFollowStatusRequest(unsigned char *address64,unsigned char *address16,unsigned char frameID){
-	*dataOUT='c';
-	*(dataOUT+1)=COMMANDS.TRAJECTORY_FOLLOW;
-	*(dataOUT+2)=GET_STATUS;
-	makeTRPacket(address64,address16,0x00,frameID,dataOUT,3);
-}
-void kopterTrajectoryFollowReport(unsigned char *address64,unsigned char *address16,unsigned char frameID){
-	*dataOUT='r';
-	*(dataOUT+1)=COMMANDS.TRAJECTORY_FOLLOW;
-	if(trajectoryEnabled){
-		*(dataOUT+2)=ONOFF.ON;
-	}else{
-		*(dataOUT+2)=ONOFF.OFF;
-	}
-	makeTRPacket(address64,address16,0x00,frameID,dataOUT,3);
-}
-void kopterTrajectoryFollowReportRecieved(unsigned char *address64,unsigned char *address16,unsigned char status){
-	if(			status==ONOFF.ON){
-		
-	}else if(status==ONOFF.OFF){
-		
-	}
-}
 
 //TRAJECTORY POINTS
-void kopterTrajectoryAddPointRequest(unsigned char *address64,unsigned char *address16,unsigned char index,float time,float elevatorPos,float aileronPos,float throttlePos,unsigned char frameID){
+void kopterTrajectoryAddPointRequest(unsigned char *address64,unsigned char *address16,unsigned char index,uint32_t time,float elevatorPos,float aileronPos,float throttlePos,unsigned char frameID){
 	unsigned char *ch;
 	
 	*(dataOUT)='c';
@@ -448,9 +415,10 @@ void kopterTrajectoryAddPointRequest(unsigned char *address64,unsigned char *add
 		
 	makeTRPacket(address64,address16,0x00,frameID,dataOUT,19);
 }
-void kopterTrajectoryAddPoint(unsigned char *address64,unsigned char *address16,unsigned char index,float time,float elevatorPos,float aileronPos,float throttlePos){
+void kopterTrajectoryAddPoint(unsigned char *address64,unsigned char *address16,unsigned char index,uint32_t time,float elevatorPos,float aileronPos,float throttlePos){
 	if(index<TRAJECTORY_LENGTH){
 		trajMaxIndex=index;
+		trajIndex=0;
 		TRAJ_POINT(index,time,elevatorPos,aileronPos,throttlePos);
 	}		
 }
@@ -481,7 +449,7 @@ void kopterTrajectoryPointReport(unsigned char *address64,unsigned char *address
 	
 	makeTRPacket(address64,address16,0x00,frameID,dataOUT,19);
 }
-void kopterTrajectoryPointReportReceived(unsigned char *address64,unsigned char *address16,unsigned char index,float time,float elevatorPos,float aileronPos,float throttlePos){
+void kopterTrajectoryPointReportReceived(unsigned char *address64,unsigned char *address16,unsigned char index,uint32_t time,float elevatorPos,float aileronPos,float throttlePos){
 	
 }
 
@@ -520,6 +488,37 @@ void kopterFollowerSetReportRecieved(unsigned char *address64,unsigned char *add
 	
 }
 
+//LOCK ON BLOB
+void kopterLockOnBlobRequest(unsigned char *address64,unsigned char *address16,float distance,unsigned char frameID){
+	unsigned char *ch;
+	*(dataOUT)='c';
+	*(dataOUT+1)=COMMANDS.LOCK_ON_BLOB;
+	ch=(unsigned char *) &distance;
+	*(dataOUT+2)=*ch; *(dataOUT+3)=*(ch+1); *(dataOUT+4)=*(ch+2); *(dataOUT+5)=*(ch+3);
+	makeTRPacket(address64,address16,0x00,frameID,dataOUT,6);	
+}
+void kopterLockOnBlob(unsigned char *address64,unsigned char *address16,float distance){
+	lockOnBlobDistance=distance;
+}
+void kopterLockOnBlobStatusRequest(unsigned char *address64,unsigned char *address16,unsigned char frameID){
+	*dataOUT='c';
+	*(dataOUT+1)=COMMANDS.LOCK_ON_BLOB;
+	*(dataOUT+2)=GET_STATUS;
+	makeTRPacket(address64,address16,0x00,frameID,dataOUT,3);		
+}
+void kopterLockOnBlobReport(unsigned char *address64,unsigned char *address16,unsigned char frameID){
+	unsigned char *ch;	
+	*dataOUT='r';
+	*(dataOUT+1)=COMMANDS.LOCK_ON_BLOB;
+	ch=(unsigned char *) &lockOnBlobDistance;
+	*(dataOUT+2)=*ch; *(dataOUT+3)=*(ch+1); *(dataOUT+4)=*(ch+2); *(dataOUT+5)=*(ch+3);
+	makeTRPacket(address64,address16,0x00,frameID,dataOUT,6);
+}
+void kopterLockOnBlobReportRecieved(unsigned char *address64,unsigned char *address16,float distance){
+	
+}
+
+
 //MESSAGES
 void sendXBeeMessage(unsigned char *address64,unsigned char *address16,char *message,unsigned char frameID){
 	char out[100];
@@ -549,6 +548,8 @@ void kopterLeadDataSend(unsigned char *address64,unsigned char *address16,volati
 }
 void kopterLeadDataReceived(unsigned char *address64,unsigned char *address16,float altitude, float elevatorError, float aileronError){
 	throttleDesiredSetpoint=altitude;
+	blobElevatorDeflection=elevatorError;
+	blobAileronDeflection=aileronError;
 }
 
 //TIME
@@ -567,6 +568,7 @@ void kopterTimeRequest(unsigned char *address64,unsigned char *address16,uint32_
 }
 void kopterTime(unsigned char *address64,unsigned char *address16,uint32_t time){	
 	secondsTimer=time;
+	milisecondsTimer=0;
 }
 void kopterTimeStatusRequest(unsigned char *address64,unsigned char *address16,unsigned char frameID){
 	*(dataOUT)='c';

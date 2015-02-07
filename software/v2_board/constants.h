@@ -1,6 +1,7 @@
 #ifndef CONSTANTS_H_
 #define CONSTANTS_H_
 
+#include "system.h"
 
 typedef struct
 {
@@ -39,9 +40,9 @@ typedef struct
 	unsigned char OUTPUT_ELEVATOR;
 	unsigned char OUTPUT_AILERON;
 	unsigned char OUTPUT_RUDDER;
-	unsigned char BLOB_DISTANCE;
-	unsigned char BLOB_HORIZONTAL;
-	unsigned char BLOB_VERTICAL;
+	unsigned char BLOB_ELEVATOR;
+	unsigned char BLOB_AILERON;
+	unsigned char BLOB_ALTITUDE;
 	unsigned char PITCH_ANGLE;
 	unsigned char ROLL_ANGLE;
 } TELEMETRIEST;
@@ -94,9 +95,8 @@ typedef struct
 	unsigned char LANDING;
 	unsigned char SET_SETPOINTS;
 	unsigned char CONTROLLERS;
-	unsigned char TRAJECTORY_FOLLOW;
 	unsigned char TRAJECTORY_POINTS;
-	unsigned char GUMSTIX;
+	unsigned char LOCK_ON_BLOB;
 	unsigned char FOLLOWER_SET;
 	unsigned char TIME;
 }COMMANDST;

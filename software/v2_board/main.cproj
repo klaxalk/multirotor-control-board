@@ -254,9 +254,6 @@
     <Compile Include="communication.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="config.h">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="controllers.c">
       <SubType>compile</SubType>
     </Compile>

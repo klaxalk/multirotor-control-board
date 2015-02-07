@@ -1,22 +1,22 @@
 #include "controllersTask.h"
 #include "controllers.h"
 #include "system.h"
-#include "config.h"
 #include "packets.h"
 
 
 void controllersTask(void *p) {	
 	initTrajectory();
 	controllerSet(CONTROLLERS.OFF);
-	while (1) {
-		leadingDataActualCheck();
+	while (1) {		
 		
 		positionEstimator();
 		altitudeEstimator();
+		setpointsCalculate();		
 		
-		if(trajectoryEnabled==1 && controllerActive==CONTROLLERS.POSITION){
-			trajectorySetpoints();
-		}
+		if(lockOnBlobDistance>0){
+			lockOnBlob(lockOnBlobDistance);
+		}		
+		
 					
 		//MANUAL
 		if(controllerActive==CONTROLLERS.OFF){

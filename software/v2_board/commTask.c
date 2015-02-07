@@ -33,6 +33,8 @@ signed char *pRxData = 0;
 unsigned char RxDataLen = 0;
 
 
+
+
 // decode the base64 encoded data
 void Decode64(void) {
 	
@@ -77,6 +79,10 @@ void commTask(void *p) {
 		
 	while (1) {				
 		stateChecker();
+		if (leadFreshTimer>300){
+			blobAileronDeflection=0;
+			blobElevatorDeflection=0;
+		}
 		
 		if (counter40Hz++>1000){
 			counter40Hz=0;
@@ -130,16 +136,10 @@ void commTask(void *p) {
 				if(zPosGumstixNew > +POSITION_MAXIMUM) zPosGumstixNew = +POSITION_MAXIMUM;
 				if(zPosGumstixNew < -POSITION_MAXIMUM) zPosGumstixNew = -POSITION_MAXIMUM;
 
-				#if GUMSTIX_CAMERA_POINTING == FORWARD //camera led on up side
 					//Camera pointing forward and being LANDSCAPE oriented
 					elevatorGumstix = - (float) xPosGumstixNew / 1000;
-					aileronGumstix  = - (float) yPosGumstixNew / 1000;
-					throttleGumstix = - (float) zPosGumstixNew / 1000;
-				#elif GUMSTIX_CAMERA_POINTING == DOWNWARD //camera led on front side
-					elevatorGumstix = + (float) yPosGumstixNew / 1000;
-					aileronGumstix  = - (float) zPosGumstixNew / 1000;
-					throttleGumstix = + (float) xPosGumstixNew / 1000;
-				#endif
+					aileronGumstix  = + (float) yPosGumstixNew / 1000;
+					throttleGumstix = + (float) zPosGumstixNew / 1000;
 			}
 			gumstixDataFlag = 0;
 		}
