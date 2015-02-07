@@ -31,5 +31,11 @@ mpcHandler_t * initializeElevatorMPC() {
 
 	elevatorMpcHandler.max_speed = ATTITUDE_MAX_SPEED;
 
+	elevatorMpcHandler.number_of_states = NUMBER_OF_STATES_ELEVATOR;
+
+	elevatorMpcHandler.horizon_len = HORIZON_LEN;
+
+	elevatorMpcHandler.reduced_horizon_len = REDUCED_HORIZON;
+
 	return &elevatorMpcHandler;
 }

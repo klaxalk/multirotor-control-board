@@ -6,7 +6,7 @@ end
 
 clear all
 
-s = serial('COM19');
+s = serial('COM23');
 s.BaudRate = 115200;
 s.BytesAvailableFcnMode = 'terminator';
 s.Terminator = 'CR/LF';
@@ -39,6 +39,14 @@ while true
     in(pos, 3) = fread(s, 1, 'single');
     in(pos, 4) = fread(s, 1, 'single');
     
+    kalmanRate = fread(s, 1, 'int16');
+    mpcRate = fread(s, 1, 'int16');
+    
+    mpcRate
+    
+    in(pos, 5) = fread(s, 1, 'int16');
+    in(pos, 6) = fread(s, 1, 'int16');
+    
     % read line ending     
     fread(s, 1, 'int16');
     
@@ -50,10 +58,10 @@ while true
     % plot the action
     subplot(2, 1, 2);
     hold off
-    plot(in([pos:end 1:pos-1], 3), 'g');
+    plot(in([pos:end 1:pos-1], 5), 'g');
     hold on
-    plot(in([pos:end 1:pos-1], 4), 'b');
-    axis([0 horizon_length -1 1]);
+    plot(in([pos:end 1:pos-1], 6), 'b');
+    axis([0 horizon_length -300 300]);
     
     %     if (controllerEnabled == 1)
 %         text(.5,.5,['\fontsize{16}\color{green}Zapnuto ']);

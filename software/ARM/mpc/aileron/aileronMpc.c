@@ -31,5 +31,11 @@ mpcHandler_t * initializeAileronMPC() {
 
 	aileronMpcHandler.max_speed = ATTITUDE_MAX_SPEED;
 
+	aileronMpcHandler.number_of_states = NUMBER_OF_STATES_AILERON;
+
+	aileronMpcHandler.horizon_len = HORIZON_LEN;
+
+	aileronMpcHandler.reduced_horizon_len = REDUCED_HORIZON;
+
 	return &aileronMpcHandler;
 }

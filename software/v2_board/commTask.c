@@ -58,14 +58,7 @@ void commTask(void *p) {
 	kalmanStates.aileron.acceleration = 0;
 		
 	while (1) {
-		
-		/*
-		if (usartBufferGetByte(usart_buffer_stm, &inChar, 0)) {
-		
-			usartBufferPutByte(usart_buffer_xbee, inChar, 10);	
-		}
-		*/
-		
+				
 		/* -------------------------------------------------------------------- */
 		/*	A character received from STM										*/
 		/* -------------------------------------------------------------------- */
@@ -205,14 +198,17 @@ void commTask(void *p) {
 			if (inChar == 'b') {
 
 				char crc = 0;
-						
-				// sendInt16(usart_buffer_xbee, kalmanRate, &crc);
-				// sendInt16(usart_buffer_xbee, mpcRate, &crc);
 
-			sendFloat(usart_buffer_xbee, kalmanStates.elevator.position, &crc);
-			sendFloat(usart_buffer_xbee, kalmanStates.aileron.position, &crc);
-			sendFloat(usart_buffer_xbee, kalmanStates.elevator.velocity, &crc);
-			sendFloat(usart_buffer_xbee, kalmanStates.aileron.velocity, &crc);
+				sendFloat(usart_buffer_xbee, kalmanStates.elevator.position, &crc);
+				sendFloat(usart_buffer_xbee, kalmanStates.aileron.position, &crc);
+				sendFloat(usart_buffer_xbee, kalmanStates.elevator.velocity, &crc);
+				sendFloat(usart_buffer_xbee, kalmanStates.aileron.velocity, &crc);
+				
+				sendInt16(usart_buffer_xbee, kalmanRate, &crc);
+				sendInt16(usart_buffer_xbee, mpcRate, &crc);
+				
+				sendInt16(usart_buffer_xbee, mpcElevatorOutput, &crc);
+				sendInt16(usart_buffer_xbee, mpcAileronOutput, &crc);
 
 				usartBufferPutString(usart_buffer_xbee, "\r\n", 10);
 			}
