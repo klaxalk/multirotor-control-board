@@ -45,10 +45,16 @@ void logTask(void *p) {
 		sprintf(temp, "%d, ", controllerAileronOutput);
 		usartBufferPutString(usart_buffer_log, temp, 10);
 		
-		sprintf(temp, "%2.3f, ", groundDistance);
+		sprintf(temp, "%2.4f, ", opticalFlowData.ground_distance);
+		usartBufferPutString(usart_buffer_log, temp, 10);
+		
+		sprintf(temp, "%d, ", RCchannel[THROTTLE]);
 		usartBufferPutString(usart_buffer_log, temp, 10);
 		
 		sprintf(temp, "%d, ", controllerThrottleOutput);
+		usartBufferPutString(usart_buffer_log, temp, 10);
+		
+		sprintf(temp, "%d, ", altitudeControllerEnabled);
 		usartBufferPutString(usart_buffer_log, temp, 10);
 		
 		sprintf(temp, "%d", mpcControllerEnabled);

@@ -34,6 +34,8 @@ void kalmanTask(void *p) {
 	matrix_float_set(px4flow_C_matrix_1_state, 1, 1, 0);
 	matrix_float_set(px4flow_C_matrix_1_state, 1, 2, 1);
 	matrix_float_set(px4flow_C_matrix_1_state, 1, 3, 0);
+	matrix_float_set(px4flow_C_matrix_1_state, 1, 4, 0);
+	matrix_float_set(px4flow_C_matrix_1_state, 1, 5, 0);
 
 	/* -------------------------------------------------------------------- */
 	/* Messages between tasks												*/

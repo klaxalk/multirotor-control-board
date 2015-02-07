@@ -9,7 +9,7 @@
 
 #include "kalman.h"
 
-#define	NUMBER_OF_STATES_AILERON	3
+#define	NUMBER_OF_STATES_AILERON	5
 #define NUMBER_OF_INPUTS_AILERON	1
 
 #define DT_AILERON					0.0114

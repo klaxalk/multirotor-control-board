@@ -10,10 +10,10 @@
 % % H_inv matrix
 % dlmwrite('H_inv.txt', H_inv, 'precision', '%20.10f');
 
-fid = fopen('mpcMatrices.c', 'w');
+fid = fopen('elevAileMpcMatrices.c', 'w');
 
 fprintf(fid, '#include "CMatrixLib.h"\n');
-fprintf(fid, '#include "mpcMatrices.h"\n\n');
+fprintf(fid, '#include "elevAileMpcMatrices.h"\n\n');
 
 fprintf(fid, '/*\n');
 fprintf(fid, 'This file was created automatically with following parameters\n\n');
@@ -32,16 +32,16 @@ fprintf(fid, '*/\n\n');
 
 %% Print A_roof
 
-printMatrixC(fid, 'const float A_roof_data[A_ROOF_HEIGHT*A_ROOF_WIDTH]', '%15.20f', A_roof);
+printMatrixC(fid, 'const float A_roof_data_Attitude[ATTITUDE_A_ROOF_HEIGHT*ATTITUDE_A_ROOF_WIDTH]', '%15.20f', A_roof);
 
 %% Print Q_roof_diag
 
-printMatrixC(fid, 'const float Q_roof_diag_data[Q_ROOF_DIAG_SIZE]', '%3.1f', diag(Q_roof));
+printMatrixC(fid, 'const float Q_roof_diag_data_Attitude[ATTITUDE_Q_ROOF_DIAG_SIZE]', '%3.1f', diag(Q_roof));
 
 %% Print B_roof
 
-printMatrixC(fid, 'const float B_roof_data[B_ROOF_HEIGHT*B_ROOF_WIDTH]', '%15.20f', B_roof);
+printMatrixC(fid, 'const float B_roof_data_Attitude[ATTITUDE_B_ROOF_HEIGHT*ATTITUDE_B_ROOF_WIDTH]', '%15.20f', B_roof);
 
 %% Print H_inv
 
-printMatrixC(fid, 'const float H_inv_data[H_INV_HEIGHT*H_INV_WIDTH]', '%15.20f', H_inv);
+printMatrixC(fid, 'const float H_inv_data_Attitude[ATTITUDE_H_INV_HEIGHT*ATTITUDE_H_INV_WIDTH]', '%15.20f', H_inv);

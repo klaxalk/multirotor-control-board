@@ -48,6 +48,8 @@ typedef struct {
 	volatile float position;
 	volatile float velocity;
 	volatile float acceleration;
+	volatile float acceleration_input;
+	volatile float acceleration_error;
 	
 } oneAxisStates_t;
 

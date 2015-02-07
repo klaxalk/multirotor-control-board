@@ -29,22 +29,27 @@ horizon_len = 200;
 
 %% Matice U
 
-n_variables = 38;
+n_variables = 20;
 
 U = zeros(horizon_len, n_variables);
  
-U(1:20, 1:20) = eye(20);
-
-for i=1:18
-    U((21+(i-1)*10):(20+i*10), 20+i) = ones(10, 1); 
-end
-
 % U(1:20, 1:20) = eye(20);
- 
-% U(21:30, 21) = 1;
-% U(31:40, 22) = 1;
-% U(41:50, 23) = 1;
-% U(51:60, 24) = 1;
+% 
+% for i=1:9
+%     U((21+(i-1)*20):(20+i*20), 20+i) = ones(20, 1); 
+% end
+
+U(1:10, 1:10) = eye(10);
+U(11:20, 11) = 1;
+U(21:30, 12) = 1;
+U(31:40, 13) = 1;
+U(41:50, 14) = 1;
+U(51:60, 15) = 1;
+U(61:70, 16) = 1;
+U(71:80, 17) = 1;
+U(81:90, 18) = 1;
+U(91:100, 19) = 1;
+U(101:200, 20) = 1;
 
 % n_variables = 21;
 % 
@@ -129,9 +134,11 @@ for i=1:n_variables
     P_roof(i, i) = P;
 end
 
-for i=21:38
+for i=11:19
     P_roof(i, i) = 10*P; 
 end
+
+P_roof(20, 20) = 100*P;
 
 %% Matice H
 % matice kvadratickeho clenu kvadraticke formy QP

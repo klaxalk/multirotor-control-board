@@ -47,6 +47,9 @@ while true
     in(pos, 5) = fread(s, 1, 'int16');
     in(pos, 6) = fread(s, 1, 'int16');
     
+    in(pos, 7) = fread(s, 1, 'single');
+    in(pos, 8) = fread(s, 1, 'single');
+    
     % read line ending     
     fread(s, 1, 'int16');
     

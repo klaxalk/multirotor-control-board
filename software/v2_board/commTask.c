@@ -178,10 +178,14 @@ void commTask(void *p) {
 				kalmanStates.elevator.position = readFloat(stmRxBuffer, &idx);
 				kalmanStates.elevator.velocity = readFloat(stmRxBuffer, &idx);
 				kalmanStates.elevator.acceleration = readFloat(stmRxBuffer, &idx);
+				kalmanStates.elevator.acceleration_input = readFloat(stmRxBuffer, &idx);
+				kalmanStates.elevator.acceleration_error = readFloat(stmRxBuffer, &idx);
 				
 				kalmanStates.aileron.position = readFloat(stmRxBuffer, &idx);
 				kalmanStates.aileron.velocity = readFloat(stmRxBuffer, &idx);
 				kalmanStates.aileron.acceleration = readFloat(stmRxBuffer, &idx);
+				kalmanStates.aileron.acceleration_input = readFloat(stmRxBuffer, &idx);
+				kalmanStates.aileron.acceleration_error = readFloat(stmRxBuffer, &idx);
 				
 				kalmanCounter++;
 			}
@@ -209,6 +213,9 @@ void commTask(void *p) {
 				
 				sendInt16(usart_buffer_xbee, mpcElevatorOutput, &crc);
 				sendInt16(usart_buffer_xbee, mpcAileronOutput, &crc);
+				
+				sendFloat(usart_buffer_xbee, kalmanStates.elevator.acceleration_error, &crc);
+				sendFloat(usart_buffer_xbee, kalmanStates.aileron.acceleration_error, &crc);
 
 				usartBufferPutString(usart_buffer_xbee, "\r\n", 10);
 			}
