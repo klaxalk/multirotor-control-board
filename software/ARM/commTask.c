@@ -198,7 +198,7 @@ void commTask(void *p) {
 				if (abs(tempInt) < 300)
 					mes.elevatorInput = (float) tempInt;
 
-				tempInt = readFloat(messageBuffer, &idx);
+				tempInt = readInt16(messageBuffer, &idx);
 				if (abs(tempInt) < 300)
 					mes.aileronInput = (float) tempInt;
 

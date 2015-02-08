@@ -126,7 +126,7 @@ Q_roof(end-n_states+1:end, end-n_states+1:end) = S;
 %           ..., ..., P,    0;
 %           0,   ..., ...,  P];
 
-P = 0.000005;
+P = 0.000002;
 
 P_roof = zeros(n_variables, n_variables);
 
@@ -275,3 +275,6 @@ plot(time(1:end-1), measurement(2, 1:(i-1)), 'r');
 hold on
 plot(time(1:end-1), estimate(2, 1:(i-1)), 'b');
 axis([0, dt*simu_len, -1, 1]);
+
+figure(2);
+plot(estimate(5, :));

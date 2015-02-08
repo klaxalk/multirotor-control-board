@@ -24,7 +24,7 @@ volatile bool mpcControllerEnabled;
 /*	variables that supports MPC											*/
 /* -------------------------------------------------------------------- */
 
-#define MPC_SATURATION	400
+#define MPC_SATURATION	800
 
 volatile int16_t mpcElevatorOutput;
 volatile int16_t mpcAileronOutput;
@@ -70,8 +70,8 @@ volatile kalmanStates_t kalmanStates;
 #define CONTROLLER_THROTTLE_SATURATION 300
 
 #define ALTITUDE_KP 180
-#define ALTITUDE_KI 120
-#define ALTITUDE_KV 200
+#define ALTITUDE_KI 70
+#define ALTITUDE_KV 180
 
 #define THROTTLE_SP_HIGH  1.5
 #define THROTTLE_SP_LOW   0.5

@@ -24,7 +24,7 @@ void kalmanTask(void *p) {
 	/* px4flow speed measurement noise matrix	(Q)	(1-state)				*/
 	/* -------------------------------------------------------------------- */
 	matrix_float * px4flow_Q_matrix_1_state = matrix_float_alloc(1, 1);
-	matrix_float_set(px4flow_Q_matrix_1_state, 1, 1, 100);
+	matrix_float_set(px4flow_Q_matrix_1_state, 1, 1, 120);
 
 	/* -------------------------------------------------------------------- */
 	/* px4flow speed C matrix (transfer measurements -> states)				*/

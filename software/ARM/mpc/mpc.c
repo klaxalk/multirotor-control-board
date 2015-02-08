@@ -10,6 +10,8 @@ void filterReferenceTrajectory(mpcHandler_t * handler) {
 
 	float difference;
 
+	vector_float_set(handler->allstate_reference, 1, vector_float_get(handler->initial_cond, 1));
+
 	int i;
 	for (i = 2; i <= handler->position_reference->length; i++) {
 

@@ -61,10 +61,9 @@ while true
     % plot the action
     subplot(2, 1, 2);
     hold off
-    plot(in([pos:end 1:pos-1], 5), 'g');
+    plot(in([pos:end 1:pos-1], 8), 'g');
     hold on
-    plot(in([pos:end 1:pos-1], 6), 'b');
-    axis([0 horizon_length -300 300]);
+    axis([0 horizon_length -0.5 0.5]);
     
     %     if (controllerEnabled == 1)
 %         text(.5,.5,['\fontsize{16}\color{green}Zapnuto ']);
