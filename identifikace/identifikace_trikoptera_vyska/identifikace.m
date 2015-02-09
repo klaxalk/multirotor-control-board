@@ -50,14 +50,14 @@ acceleration_fit = polyval(acceleration_pol, time_identifikace);
 %% input
 
 % shift input of the offset
-action = data(plot_window, input) - mean(data(plot_window, input)) - 3;
-action_pol = polyfit(time_plot', action, 70);
+action = data(plot_window, input) - mean(data(plot_window, input)) - 4;
+action_pol = polyfit(time_plot', action, 250);
 action_fit = polyval(action_pol, time_identifikace);
 
 %% identify transfare input -> acceleration
 
 B = acceleration_fit(2:end);
-A = [acceleration_fit(1:end-1).*dt action_fit(2:end).*dt];
+A = [acceleration_fit(1:end-1) action_fit(2:end)];
 
 P = A\B;
 P0 = P(1)
@@ -65,7 +65,7 @@ P1 = P(2)
 
 %% Estimating all values from input
 
-acceleration_est = firstOrder(action(margin:end-margin-1), ones(1, length(iden_window)).*dt, P) + acceleration_fit(1);
+acceleration_est = firstOrder(action(margin:end-margin-1), ones(1, length(iden_window)), P) + acceleration_fit(1);
 
 velocity_est = integrate(acceleration_est, ones(1, length(iden_window)).*dt);
 
@@ -79,6 +79,7 @@ hold off
 plot(time_plot, position, 'b');
 hold on
 plot(time_identifikace, position_fit, 'r');
+% plot(time_identifikace, position_est, 'g');
 title('Position');
 legend('px4flow', 'estimated from input');
 xlabel('time [s]');
