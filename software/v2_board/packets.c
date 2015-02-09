@@ -3,10 +3,9 @@
 #include "defines.h"
 #include "commands.h"
 #include "communication.h"
+#include "controllers.h"
 #include "usart_driver_RTOS.h"
 #include "system.h"
-
-extern volatile int8_t trajMaxIndex;
 
 //Telemetry sending
 volatile unsigned char telemetryToCoordinatorArr[TELEMETRY_VARIABLES]={0};
@@ -50,17 +49,6 @@ void packetHandler(unsigned char *inPacket){
 	unsigned char usc;
 
     switch ((int)*(inPacket+3)) {
-    //Modem Status
-    case 0x8A:
-
-        break;
-    //Transmit Status
-    case 0x8B:
-        parTSPacket(inPacket,recieveOptions,address16,recieveOptions+1,recieveOptions+2,recieveOptions+3);        
-        break;
-    //Route record indicator
-    case 0xA1:
-        break;
     //Receive Packet
     case 0x90:
             parReceivePacket(inPacket,address64,address16,recieveOptions,dataIN);
@@ -117,7 +105,7 @@ void packetHandler(unsigned char *inPacket){
 								kopterSetpointsSet(address64,address64,*(dataIN+3),*(dataIN+4),*f1);
 							}
 						}else
-						//CONTROLLERS ON/OFF
+						//CONTROLLERS
 						if(*(dataIN+2)==COMMANDS.CONTROLLERS){
 							if(*(dataIN+3)==GET_STATUS){
 								kopterControllersReport(address64,address16,0x00);
@@ -288,51 +276,6 @@ void makeTRPacket(unsigned char *adr64,unsigned char *adr16,unsigned char option
         }
         *(outPacket+18+dataLength)=0x00;
         sendXBeePacket(outPacket);
-}
-
-//parse Modem Status 0x8A
-void parMSPacket(unsigned char *inPacket,unsigned char *status){
-    *status=*(inPacket+4);
-    /*0 = Hardware reset
-    1 = Watchdog timer reset
-    2 =Joined network (routers and end devices)
-    3 =Disassociated
-    6 =Coordinator started
-    7 = Network security key was updated
-    0x0D = Voltage supply limit exceeded (PRO S2B only)
-    0x11 = Modem configuration changed while join in progress
-    0x80+ = stack error*/
-}
-
-//parse Transmit Status 0x8B
-void parTSPacket(unsigned char *inPacket,unsigned char *frameID,unsigned char *address16,unsigned char *TrRetryCount,unsigned char *deliveryStatus,unsigned char *discoveryStatus){
-    *frameID=*(inPacket+4);
-    *address16=*(inPacket+5);
-    *(address16+1)=*(inPacket+6);
-    *TrRetryCount=*(inPacket+7);
-    *deliveryStatus=*(inPacket+8);
-    /*0x00 = Success
-    0x01 = MAC ACK Failure
-    0x02 = CCA Failure
-    0x15 = Invalid destination endpoint
-    0x21 = Network ACK Failure
-    0x22 = Not Joined to Network
-    0x23 = Self-addressed
-    0x24 = Address Not Found
-    0x25 = Route Not Found
-    0x26 = Broadcast source failed to hear a neighbor relay the message
-    0x2B = Invalid binding table index
-    0x2C = Resource error lack of free buffers, timers, etc.
-    0x2D = Attempted broadcast with APS transmission
-    0x2E = Attempted unicast with APS transmission, but EE=0
-    0x32 = Resource error lack of free buffers, timers, etc.
-    0x74 = Data payload too large*/
-    *discoveryStatus=*(inPacket+9);
-    /*0x00 = No Discovery Overhead
-    0x01 = Address Discovery
-    0x02 = Route Discovery
-    0x03 = Address and Route
-    0x40 = Extended Timeout Discovery*/
 }
 
 //parse Receive Packet 0x90

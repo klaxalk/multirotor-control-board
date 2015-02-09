@@ -21,9 +21,10 @@ void logValueStr(float lValue){
 }
 
 void logTaskReadable(void *p){
-	vTaskDelay(1000);	
+	
 	usartBufferPutString(usart_buffer_log,"Start Logging - String\r\n",10);		
 	usartBufferPutString(usart_buffer_log,"Altitude,Elevator,Aileron,Blob,Setpoints,Outputs,RC IN,Time\r\n",10);
+	vTaskDelay(100);	
 	
 	while(1){	
 		logValueStr((float) (pitchAngle/10.0));

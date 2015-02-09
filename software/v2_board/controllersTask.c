@@ -7,12 +7,20 @@
 void controllersTask(void *p) {	
 	initTrajectory();
 	controllerSet(CONTROLLERS.OFF);
-	while (1) {		
+	while (1) {	
+			
+		//Leading data check
+		if (leadFreshTimer>300){
+			blobAileronDeflection=0;
+			blobElevatorDeflection=0;
+		}		
 		
+		//values calculation
 		positionEstimator();
 		altitudeEstimator();
-		setpointsCalculate();		
+		setpointsCalculate();						
 		
+		//lock on blob with leading data improvement
 		if(lockOnBlobDistance>0){
 			lockOnBlob(lockOnBlobDistance);
 		}		
@@ -46,6 +54,5 @@ void controllersTask(void *p) {
 		}			
 		// makes the 70Hz loop
 		vTaskDelay(14);
-	}
-	
+	}	
 }

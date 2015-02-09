@@ -36,8 +36,7 @@ unsigned char RxDataLen = 0;
 
 
 // decode the base64 encoded data
-void Decode64(void) {
-	
+void Decode64(void) {	
 	unsigned char a,b,c,d;
 	unsigned char x,y,z;
 	unsigned char ptrIn = 3; // start at begin of data block
@@ -65,7 +64,6 @@ void Decode64(void) {
 }
 
 void commTask(void *p) {	
-	//cca 40kHz	
 	unsigned char inChar;
 	unsigned char packet[60];	
 	int8_t i;
@@ -74,26 +72,22 @@ void commTask(void *p) {
 	
 	//wait for XBee	
 	vTaskDelay(1000);
-	
-
 		
-	while (1) {				
-		stateChecker();
-		if (leadFreshTimer>300){
-			blobAileronDeflection=0;
-			blobElevatorDeflection=0;
-		}
+	while (1) {			
+		//Auto state reports	
+		stateChecker();		
 		
+		//40Hz loop
 		if (counter40Hz++>1000){
 			counter40Hz=0;
 		}
 		
+		//20Hz loop
 		if (counter20Hz++>2000){
 			counter20Hz=0;
 			telemetryToCoordinatorSend();
 			if(controllerActive!=0 && leadKopter[7]!=0x00){
-				kopterLeadDataSend(leadKopter,ADDRESS.UNKNOWN16,estimatedThrottlePos,elevatorPositionSetpoint - estimatedElevatorPos,aileronPositionSetpoint - estimatedAileronPos,0x00);			
-				led_blue_toggle();
+				kopterLeadDataSend(leadKopter,ADDRESS.UNKNOWN16,estimatedThrottlePos,elevatorPositionSetpoint - estimatedElevatorPos,aileronPositionSetpoint - estimatedAileronPos,0x00);				
 			}
 		}		
 		
