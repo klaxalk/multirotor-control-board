@@ -184,10 +184,6 @@ void commTask(void *p) {
 
 				tempFloat = readFloat(messageBuffer, &idx);
 				if (fabs(tempFloat) < 1)
-					mes.dt = tempFloat;
-
-				tempFloat = readFloat(messageBuffer, &idx);
-				if (fabs(tempFloat) < 1)
 					mes.elevatorSpeed = tempFloat;
 
 				tempFloat = readFloat(messageBuffer, &idx);

@@ -11,51 +11,31 @@
 #include <stdio.h>
 #include "controllers.h"
 
+#include "mpcHandler.h"
+
 /* -------------------------------------------------------------------- */
-/*	MPC support variables	 											*/
+/*	For calculating rate of MPC and Kalman								*/
 /* -------------------------------------------------------------------- */
 volatile int16_t mpcCounter = 0;
 volatile int16_t mpcRate = 0;
-
-/* -------------------------------------------------------------------- */
-/*	kalman support variables	 										*/
-/* -------------------------------------------------------------------- */
 volatile int16_t kalmanCounter = 0;
 volatile int16_t kalmanRate = 0;
+
+/* -------------------------------------------------------------------- */
+/*	Queues between tasks		 										*/
+/* -------------------------------------------------------------------- */
+main2commMessage_t main2commMessage;
+
+/* -------------------------------------------------------------------- */
+/*	The message handler for STM	 										*/
+/* -------------------------------------------------------------------- */
+stmMessageHandler_t stmMessage;
 
 void commTask(void *p) {
 	
 	unsigned char inChar;
 	
-	main2commMessage_t main2commMessage;
-	
-	/* -------------------------------------------------------------------- */
-	/*	Needed for receiving from STM										*/
-	/* -------------------------------------------------------------------- */
-	char payloadSize = 0;
-	char stmRxBuffer[STM_BUFFER_SIZE];
-	int bytesReceived;
-	char stmMessageReceived = 0;
-	char receivingMessage = 0;
-	int receiverState = 0;
-	char crcIn = 0;
-	
-	/* -------------------------------------------------------------------- */
-	/*	For computing dt for STM											*/
-	/* -------------------------------------------------------------------- */
-	int16_t lastMiliseconds = 0;
-	float dt;
-	
-	/* -------------------------------------------------------------------- */
-	/*	initialize kalmanStates 											*/
-	/* -------------------------------------------------------------------- */
-	kalmanStates.elevator.position = 0;
-	kalmanStates.elevator.velocity = 0;
-	kalmanStates.elevator.acceleration = 0;
-	
-	kalmanStates.aileron.position = 0;
-	kalmanStates.aileron.velocity = 0;
-	kalmanStates.aileron.acceleration = 0;
+	initializeKalmanStates();
 		
 	while (1) {
 				
@@ -64,133 +44,58 @@ void commTask(void *p) {
 		/* -------------------------------------------------------------------- */
 		if (usartBufferGetByte(usart_buffer_stm, &inChar, 0)) {
 
-			if (receivingMessage) {
-
-				// expecting to receive the payload size
-				if (receiverState == 0) {
-
-					// check the message length
-					if (inChar >= 0 && inChar < STM_BUFFER_SIZE) {
-
-						payloadSize = inChar;
-						receiverState = 1;
-						crcIn += inChar;
+			// parse it and handle the message if it is complete
+			if (stmParseChar(inChar, &stmMessage)) {
+				
+				// index for iterating the rxBuffer
+				int idx = 0;
+				
+				if (stmMessage.messageId == '1') {
 					
-					// the receiving message is over the buffer size	
+					int16_t tempInt;
+				
+					portENTER_CRITICAL();
+				
+					// saturate the incoming elevator output
+					tempInt = readInt16(stmMessage.messageBuffer, &idx);
+					if (tempInt > MPC_SATURATION)
+						mpcElevatorOutput = MPC_SATURATION;
+					else if (tempInt < -MPC_SATURATION)
+						mpcElevatorOutput = -MPC_SATURATION;
+					else
+						mpcElevatorOutput = tempInt;
+				
+					// saturate the incoming aileron output
+					tempInt = readInt16(stmMessage.messageBuffer, &idx);
+					if (tempInt > MPC_SATURATION) {
+						mpcAileronOutput = MPC_SATURATION;
+					} else if (tempInt < -MPC_SATURATION) {
+						mpcAileronOutput = -MPC_SATURATION;
 					} else {
-
-						receivingMessage = 0;
-						receiverState = 0;
+						mpcAileronOutput = tempInt;
 					}
-
-				// expecting to receive the payload
-				} else if (receiverState == 1) {
-
-					// put the char in the buffer
-					stmRxBuffer[bytesReceived++] = inChar;
-					// add crc
-					crcIn += inChar;
-
-					// if the message should end, change state
-					if (bytesReceived >= payloadSize)
-						receiverState = 2;
-
-				// expecting to receive the crc
-				} else if (receiverState == 2) {
-
-					if (crcIn == inChar) {
-
-						stmMessageReceived = 1;
-						receivingMessage = 0;
-						} else {
-
-						receivingMessage = 0;
-						receiverState = 0;
-					}
-				}
-
-			} else {
-
-				// this character precedes every message
-				if (inChar == 'a') {
-
-					crcIn = inChar;
-
-					receivingMessage = 1;
-					receiverState = 0;
-					bytesReceived = 0;
+				
+					// copy the saturated values
+					controllerElevatorOutput = mpcElevatorOutput;
+					controllerAileronOutput = mpcAileronOutput;
+				
+					portEXIT_CRITICAL();
+					
+				} else if (stmMessage.messageId == '2') {
+					
+					kalmanStates.elevator.position = readFloat(stmMessage.messageBuffer, &idx);
+					kalmanStates.elevator.velocity = readFloat(stmMessage.messageBuffer, &idx);
+					kalmanStates.elevator.acceleration = readFloat(stmMessage.messageBuffer, &idx);
+					kalmanStates.elevator.acceleration_input = readFloat(stmMessage.messageBuffer, &idx);
+					kalmanStates.elevator.acceleration_error = readFloat(stmMessage.messageBuffer, &idx);
+					
+					kalmanStates.aileron.position = readFloat(stmMessage.messageBuffer, &idx);
+					kalmanStates.aileron.velocity = readFloat(stmMessage.messageBuffer, &idx);
+					kalmanStates.aileron.acceleration = readFloat(stmMessage.messageBuffer, &idx);
+					kalmanStates.aileron.acceleration_input = readFloat(stmMessage.messageBuffer, &idx);
+					kalmanStates.aileron.acceleration_error = readFloat(stmMessage.messageBuffer, &idx);
 				}
 			}
-		}
-		
-		/* -------------------------------------------------------------------- */
-		/*	A message received from STM											*/
-		/* -------------------------------------------------------------------- */
-		if (stmMessageReceived) {
-			
-			int idx = 0;
-
-			//  read the message ID
-			char messageId = readChar(stmRxBuffer, &idx);
-			
-			/* -------------------------------------------------------------------- */
-			/*	If the message contains output of MPC								*/
-			/* -------------------------------------------------------------------- */
-			if (messageId == '1') {
-				
-				int16_t tempInt;
-				
-				// saturate and save incoming data
-				
-				portENTER_CRITICAL();
-				
-				tempInt = readInt16(stmRxBuffer, &idx);
-				if (tempInt > MPC_SATURATION) {
-					mpcElevatorOutput = MPC_SATURATION;
-				} else if (tempInt < -MPC_SATURATION) {
-					mpcElevatorOutput = -MPC_SATURATION;
-				} else {
-					mpcElevatorOutput = tempInt;
-				}
-				
-				tempInt = readInt16(stmRxBuffer, &idx);
-				if (tempInt > MPC_SATURATION) {
-					mpcAileronOutput = MPC_SATURATION;
-				} else if (tempInt < -MPC_SATURATION) {
-					mpcAileronOutput = -MPC_SATURATION;
-				} else {
-					mpcAileronOutput = tempInt;
-				}
-				
-				// convert degrees to the time units of PPM
-				controllerElevatorOutput = mpcElevatorOutput;
-				controllerAileronOutput = mpcAileronOutput;
-				
-				mpcCounter++;
-				
-				portEXIT_CRITICAL();
-				
-			/* -------------------------------------------------------------------- */
-			/*	If the message contains output of kalman filter						*/
-			/* -------------------------------------------------------------------- */
-			} else if (messageId == '2') {
-				
-				kalmanStates.elevator.position = readFloat(stmRxBuffer, &idx);
-				kalmanStates.elevator.velocity = readFloat(stmRxBuffer, &idx);
-				kalmanStates.elevator.acceleration = readFloat(stmRxBuffer, &idx);
-				kalmanStates.elevator.acceleration_input = readFloat(stmRxBuffer, &idx);
-				kalmanStates.elevator.acceleration_error = readFloat(stmRxBuffer, &idx);
-				
-				kalmanStates.aileron.position = readFloat(stmRxBuffer, &idx);
-				kalmanStates.aileron.velocity = readFloat(stmRxBuffer, &idx);
-				kalmanStates.aileron.acceleration = readFloat(stmRxBuffer, &idx);
-				kalmanStates.aileron.acceleration_input = readFloat(stmRxBuffer, &idx);
-				kalmanStates.aileron.acceleration_error = readFloat(stmRxBuffer, &idx);
-				
-				kalmanCounter++;
-			}
-			
-			stmMessageReceived = 0;
 		}
 		
 		/* -------------------------------------------------------------------- */
@@ -255,48 +160,10 @@ void commTask(void *p) {
 			/*	Send data to ARM													*/
 			/* -------------------------------------------------------------------- */
 			
-			// compute the dt
-			portENTER_CRITICAL();
-			
-			if ((milisecondsTimer - lastMiliseconds) > 0) {
-				
-				dt = (float) ((float) (milisecondsTimer - lastMiliseconds) * 0.001);
-			} else {
-				
-				dt = (float) ((float) (milisecondsTimer - lastMiliseconds + 1000) * 0.001);
-			}
-			
-			lastMiliseconds = milisecondsTimer;
-		
-			portEXIT_CRITICAL();
-			
-			// send data to ARM
-			
-			// clear the crc
-			char crc = 0;
-			sendChar(usart_buffer_stm, 'a', &crc);		// this character initiates the transmission
-			sendChar(usart_buffer_stm, 1+16, &crc);		// this will be the size of the message
-			
-			sendChar(usart_buffer_stm, '1', &crc);		// id of the message
-			sendFloat(usart_buffer_stm, dt, &crc);
-			sendFloat(usart_buffer_stm, elevatorSpeed, &crc);
-			sendFloat(usart_buffer_stm, aileronSpeed, &crc);
-			sendInt16(usart_buffer_stm, mpcElevatorOutput, &crc);
-			sendInt16(usart_buffer_stm, mpcAileronOutput, &crc);
-			
-			sendChar(usart_buffer_stm, crc, &crc);
-			
 			led_yellow_toggle();
 			
-			crc = 0;			
-			sendChar(usart_buffer_stm, 'a', &crc);		// this character initiates the transmission
-			sendChar(usart_buffer_stm, 1+8, &crc);		// this will be the size of the message
-			
-			sendChar(usart_buffer_stm, 's', &crc);		// id of the message
-			sendFloat(usart_buffer_stm, mpcSetpoints.elevatorSetpoint, &crc);
-			sendFloat(usart_buffer_stm, mpcSetpoints.aileronSetpoint, &crc);
-			
-			sendChar(usart_buffer_stm, crc, &crc);
+			stmSendMeasurement(elevatorSpeed, aileronSpeed, mpcElevatorOutput, mpcAileronOutput);
+			stmSendSetpointsSimple();			
 		}
 		
 		/* -------------------------------------------------------------------- */
@@ -307,13 +174,7 @@ void commTask(void *p) {
 			// send message to STM to reset its Kalman filter			
 			if (main2commMessage.messageType == CLEAR_STATES) {
 	
-				char crc = 0;
-				sendChar(usart_buffer_stm, 'a', &crc);		// this character initiates the transmission
-				sendChar(usart_buffer_stm, 1, &crc);		// this will be the size of the message
-			
-				sendChar(usart_buffer_stm, '2', &crc);		// id of the message
-			
-				sendChar(usart_buffer_stm, crc, &crc);		// send crc
+				stmResetKalman(0, 0);
 			}
 		}
 	}

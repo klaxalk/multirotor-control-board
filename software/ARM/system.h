@@ -58,7 +58,6 @@ typedef struct {
 // px4flow fresh data message
 typedef struct {
 
-	float dt;
 	float elevatorSpeed;
 	float aileronSpeed;
 	float elevatorInput;

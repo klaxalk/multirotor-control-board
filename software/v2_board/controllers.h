@@ -21,55 +21,12 @@ volatile bool altitudeControllerEnabled;
 volatile bool mpcControllerEnabled;
 
 /* -------------------------------------------------------------------- */
-/*	variables that supports MPC											*/
-/* -------------------------------------------------------------------- */
-
-#define MPC_SATURATION	800
-
-volatile int16_t mpcElevatorOutput;
-volatile int16_t mpcAileronOutput;
-
-// this structure hold setpoints for elevator and aileron position
-typedef struct {
-	
-	float elevatorSetpoint;
-	float aileronSetpoint;
-} mpcSetpoints_t;
-
-volatile mpcSetpoints_t mpcSetpoints;
-
-/* -------------------------------------------------------------------- */
-/*	variables that support kalman filter (running on STM)				*/
-/* -------------------------------------------------------------------- */
-
-// this struct contains variables for elevator&aileron axis
-typedef struct {
-	
-	volatile float position;
-	volatile float velocity;
-	volatile float acceleration;
-	volatile float acceleration_input;
-	volatile float acceleration_error;
-	
-} oneAxisStates_t;
-
-// this struct contains states computed by kalman filter in STM MCU
-typedef struct {
-
-	oneAxisStates_t elevator;
-	oneAxisStates_t aileron;
-	
-} kalmanStates_t;
-
-volatile kalmanStates_t kalmanStates;
-
-/* -------------------------------------------------------------------- */
 /*	variables that support altitude controller and estimator			*/
 /* -------------------------------------------------------------------- */
 
 #define CONTROLLER_THROTTLE_SATURATION 300
 
-#define ALTITUDE_KP 180
+#define ALTITUDE_KP 150
 #define ALTITUDE_KI 70
 #define ALTITUDE_KV 180
 

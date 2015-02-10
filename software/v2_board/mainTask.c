@@ -13,6 +13,8 @@
 #include <stdio.h> // sprintf
 #include <stdlib.h> // abs
 
+#include "mpcHandler.h"
+
 // timestamp for debug and logging
 volatile double timeStamp = 0;
 volatile uint16_t main_cycle = 0;

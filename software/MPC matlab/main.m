@@ -14,7 +14,7 @@ B = [0; 0; 0; 0.0045*dt; 0];
 
 %% Kovariancni matice mereni
 
-measurement_covariance = diag([0.0058, 0.2000, 0, 0, 0]);
+measurement_covariance = diag([0.0058, 0.04000, 0, 0, 0]);
 
 % pocet stavu systemu 
 n_states = size(A, 1);
@@ -126,7 +126,7 @@ Q_roof(end-n_states+1:end, end-n_states+1:end) = S;
 %           ..., ..., P,    0;
 %           0,   ..., ...,  P];
 
-P = 0.000004;
+P = 0.00001;
 
 P_roof = zeros(n_variables, n_variables);
 

@@ -16,21 +16,6 @@ volatile bool altitudeControllerEnabled;
 volatile bool mpcControllerEnabled;
 
 /* -------------------------------------------------------------------- */
-/*	variables that supports MPC											*/
-/* -------------------------------------------------------------------- */
-
-volatile int16_t mpcElevatorOutput = 0;
-volatile int16_t mpcAileronOutput = 0;
-
-volatile mpcSetpoints_t mpcSetpoints;
-
-/* -------------------------------------------------------------------- */
-/*	variables that support kalman filter (running on STM)				*/
-/* -------------------------------------------------------------------- */
-
-volatile kalmanStates_t kalmanStates;
-
-/* -------------------------------------------------------------------- */
 /*	variables that support altitude controller and estimator			*/
 /* -------------------------------------------------------------------- */
 

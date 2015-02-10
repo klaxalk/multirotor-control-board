@@ -10,6 +10,8 @@
 #include "system.h"
 #include "config.h"
 
+#include "mpcHandler.h"
+
 void controllersTask(void *p) {
 	
 	mpcSetpoints.elevatorSetpoint = 0;

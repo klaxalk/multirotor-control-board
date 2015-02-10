@@ -732,6 +732,12 @@
     <Compile Include="mavlink\protocol.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="mpcHandler.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mpcHandler.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="MyDrivers\pmic_driver.c">
       <SubType>compile</SubType>
     </Compile>

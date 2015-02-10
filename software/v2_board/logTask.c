@@ -11,6 +11,8 @@
 #include "communication.h"
 #include <stdio.h>
 
+#include "mpcHandler.h"
+
 #define DELAY_MILISECONDS 14
 
 void logTask(void *p) {
