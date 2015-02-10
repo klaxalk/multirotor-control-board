@@ -8,7 +8,6 @@
 #include "controllersTask.h"
 #include "controllers.h"
 #include "system.h"
-#include "config.h"
 
 #include "mpcHandler.h"
 

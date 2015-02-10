@@ -11,21 +11,18 @@
 #include "system.h"
 
 #define STM_BUFFER_SIZE	256
-
-typedef struct {
-
-	char messageId;
-	char * messageBuffer;
-} stmMessageHandler_t;
+#define MPC_SATURATION	800
 
 /* -------------------------------------------------------------------- */
 /*	variables that supports MPC											*/
 /* -------------------------------------------------------------------- */
 
-#define MPC_SATURATION	800
+// this structure holds a message received from STM
+typedef struct {
 
-volatile int16_t mpcElevatorOutput;
-volatile int16_t mpcAileronOutput;
+	char messageId;
+	char * messageBuffer;
+} stmMessageHandler_t;
 
 // this structure hold setpoints for elevator and aileron position
 typedef struct {
@@ -33,6 +30,9 @@ typedef struct {
 	float elevatorSetpoint;
 	float aileronSetpoint;
 } mpcSetpoints_t;
+
+volatile int16_t mpcElevatorOutput;
+volatile int16_t mpcAileronOutput;
 
 volatile mpcSetpoints_t mpcSetpoints;
 

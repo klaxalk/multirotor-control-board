@@ -33,7 +33,7 @@ volatile bool mpcControllerEnabled;
 // constants for altitude and landing controllers
 #define ALTITUDE_MAXIMUM	3.00 // used to crop values from PX4Flow
 #define ALTITUDE_MINIMUM	0.35 // used for landing (must be > 0.3)
-#define ALTITUDE_SPEED_MAX	0.3 // in m/s, must be positive!
+#define ALTITUDE_SPEED_MAX	0.8 // in m/s, must be positive!
 
 // for altitude estimator
 volatile float estimatedThrottlePos;

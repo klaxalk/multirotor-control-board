@@ -15,7 +15,7 @@ data(:, dt) = diference(data(:, dt)).*0.001;
 
 % okrojení dat
 from = 900;
-to = from + 1000;
+to = from + 1300;
 
 % od-do fitování
 plot_window = from:to;
@@ -25,7 +25,7 @@ margin = 200;
 iden_window = (from+margin):(to-margin); 
 
 data(:, velocity) = data(:, velocity) - mean(data(from:from+30, velocity));
-data(:, input) = data(:, input) -  mean(data(from:from+40, input))*1.0055;
+data(:, input) = data(:, input) -  mean(data(from:from+40, input))*1.0072;
 
 %% integrate dt to time vector
 
@@ -40,7 +40,7 @@ position = integrate(data(plot_window, velocity), data(plot_window, dt));
 %% velocity
 
 % fituji rychlost polynomem
-velocity_pol = polyfit(time_plot', data(plot_window, velocity)', 50);
+velocity_pol = polyfit(time_plot', data(plot_window, velocity)', 200);
 velocity_fit = polyval(velocity_pol, time_identifikace);
 
 %% acceleration

@@ -7,19 +7,11 @@
 
 #include "FreeRTOS.h"
 #include "task.h"
-
-// basic system functions
 #include "system.h"
 
-// the main task routine
 #include "mainTask.h"
-
-// the communication task
 #include "commTask.h"
-
-// the controllersTask
 #include "controllersTask.h"
-
 #include "logTask.h"
 
 int main(void)

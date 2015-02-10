@@ -12,7 +12,7 @@
 #include "mpcHandler.h"
 
 // for on-off by AUX3 channel
-int8_t previous_AUX3 = 0;
+int8_t AUX1_previous = 0;
 
 void mainTask(void *p) {
 
@@ -29,32 +29,33 @@ void mainTask(void *p) {
 		// controller on/off
 		if (abs(RCchannel[AUX1] - PPM_IN_MIDDLE_LENGTH) < 500) {
 		
-			if (previous_AUX3 == 0) {
+			if (AUX1_previous == 0) {
 				enableAltitudeController();
 			}
 		
 			disableMpcController();
-			previous_AUX3 = 1;
+			AUX1_previous = 1;
 			
 		} else if (RCchannel[AUX1] > (PPM_IN_MIDDLE_LENGTH + 500)) {
 			
-			if (previous_AUX3 == 1) {
+			if (AUX1_previous == 1) {
 				
 				main2commMessage.messageType = CLEAR_STATES;
 				xQueueSend(main2commsQueue, &main2commMessage, 0);
 				
+				// wait between reseting the kalman and starting the controller
 				vTaskDelay(50);
 				
 				enableMpcController();
 			}
 		
-			previous_AUX3 = 2;
+			AUX1_previous = 2;
 		
 		} else {
 		
 			disableAltitudeController();
 			disableMpcController();
-			previous_AUX3 = 0;
+			AUX1_previous = 0;
 		}
 		
 		// filter the AUX2 value

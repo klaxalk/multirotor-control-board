@@ -9,11 +9,15 @@
 #define SYSTEM_H_
 
 #include <stdint.h>
-#include "usart_driver_RTOS.h"
-#include "ioport.h"
-#include <avr/pgmspace.h>
 #include <stdio.h> // sprintf
 #include <stdlib.h> // abs
+#include "usart_driver_RTOS.h"
+#include "ioport.h"
+
+/* -------------------------------------------------------------------- */
+/*	CPU clock															*/
+/* -------------------------------------------------------------------- */
+#define F_CPU 32000000UL
 
 /* -------------------------------------------------------------------- */
 /*	LED masks															*/
@@ -101,13 +105,13 @@ volatile uint16_t outputChannels[6];
 /* -------------------------------------------------------------------- */
 /*	Buffers for USARTs													*/
 /* -------------------------------------------------------------------- */
-extern UsartBuffer * usart_buffer_stm;
-extern UsartBuffer * usart_buffer_xbee;
-extern UsartBuffer * usart_buffer_log;
-extern UsartBuffer * usart_buffer_1;
-extern UsartBuffer * usart_buffer_2;
-extern UsartBuffer * usart_buffer_3;
-extern UsartBuffer * usart_buffer_4;
+UsartBuffer * usart_buffer_stm;
+UsartBuffer * usart_buffer_xbee;
+UsartBuffer * usart_buffer_log;
+UsartBuffer * usart_buffer_1;
+UsartBuffer * usart_buffer_2;
+UsartBuffer * usart_buffer_3;
+UsartBuffer * usart_buffer_4;
 
 /* -------------------------------------------------------------------- */
 /*	USART baud rates													*/
