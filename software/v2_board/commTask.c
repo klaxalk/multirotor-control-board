@@ -8,7 +8,6 @@
 #include "system.h"
 #include "commTask.h"
 #include "communication.h"
-#include <stdio.h>
 #include "controllers.h"
 
 #include "mpcHandler.h"
@@ -36,6 +35,9 @@ void commTask(void *p) {
 	unsigned char inChar;
 	
 	initializeKalmanStates();
+	
+	mpcSetpoints.elevatorSetpoint = 0;
+	mpcSetpoints.aileronSetpoint = 0;
 		
 	while (1) {
 				
@@ -50,6 +52,8 @@ void commTask(void *p) {
 				// index for iterating the rxBuffer
 				int idx = 0;
 				
+				// messageId == '1'
+				// receive control actions computed by MPC
 				if (stmMessage.messageId == '1') {
 					
 					int16_t tempInt;
@@ -81,6 +85,8 @@ void commTask(void *p) {
 				
 					portEXIT_CRITICAL();
 					
+				// messageId == '2'
+				// receive all states estimated by kalman filter
 				} else if (stmMessage.messageId == '2') {
 					
 					kalmanStates.elevator.position = readFloat(stmMessage.messageBuffer, &idx);
@@ -132,38 +138,35 @@ void commTask(void *p) {
 		if (usartBufferGetByte(usart_buffer_1, &inChar, 0)) {
 
 			px4flowParseChar((uint8_t) inChar);
-		}
 		
-		/* -------------------------------------------------------------------- */
-		/*	A message received from px4flow										*/
-		/* -------------------------------------------------------------------- */
-		if (opticalFlowDataFlag == 1) {
+			if (opticalFlowDataFlag == 1) {
 
-			// decode the message (there will be new values in opticalFlowData...
-			mavlink_msg_optical_flow_decode(&mavlinkMessage, &opticalFlowData);
-			
-			// rotate px4flow data
-			elevatorSpeed = -opticalFlowData.flow_comp_m_x;
-			aileronSpeed  = +opticalFlowData.flow_comp_m_y;
+				// decode the message (there will be new values in opticalFlowData...
+				mavlink_msg_optical_flow_decode(&mavlinkMessage, &opticalFlowData);
+					
+				// rotate px4flow data
+				elevatorSpeed = -opticalFlowData.flow_comp_m_x;
+				aileronSpeed  = +opticalFlowData.flow_comp_m_y;
 
-			// saturate the ground distance
-			if (opticalFlowData.ground_distance < ALTITUDE_MAXIMUM && opticalFlowData.ground_distance > 0.3) {
+				// saturate the ground distance
+				if (opticalFlowData.ground_distance < ALTITUDE_MAXIMUM && opticalFlowData.ground_distance > 0.3) {
 
-				groundDistance = opticalFlowData.ground_distance;
+					groundDistance = opticalFlowData.ground_distance;
+				}
+
+				px4Confidence = opticalFlowData.quality;
+
+				opticalFlowDataFlag = 0;
+					
+				/* -------------------------------------------------------------------- */
+				/*	Send data to ARM													*/
+				/* -------------------------------------------------------------------- */
+					
+				led_yellow_toggle();
+					
+				stmSendMeasurement(elevatorSpeed, aileronSpeed, mpcElevatorOutput, mpcAileronOutput);
+				stmSendSetpointsSimple();
 			}
-
-			px4Confidence = opticalFlowData.quality;
-
-			opticalFlowDataFlag = 0;
-			
-			/* -------------------------------------------------------------------- */
-			/*	Send data to ARM													*/
-			/* -------------------------------------------------------------------- */
-			
-			led_yellow_toggle();
-			
-			stmSendMeasurement(elevatorSpeed, aileronSpeed, mpcElevatorOutput, mpcAileronOutput);
-			stmSendSetpointsSimple();			
 		}
 		
 		/* -------------------------------------------------------------------- */

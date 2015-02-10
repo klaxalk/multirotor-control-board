@@ -12,6 +12,8 @@
 #include "usart_driver_RTOS.h"
 #include "ioport.h"
 #include <avr/pgmspace.h>
+#include <stdio.h> // sprintf
+#include <stdlib.h> // abs
 
 /* -------------------------------------------------------------------- */
 /*	LED masks															*/

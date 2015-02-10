@@ -20,14 +20,10 @@ typedef struct {
 } main2commMessage_t;
 
 /* -------------------------------------------------------------------- */
-/*	MPC support variables	 											*/
+/*	Variables for measuring MPC and kalman rates						*/
 /* -------------------------------------------------------------------- */
 volatile int16_t mpcCounter;
 volatile int16_t mpcRate;
-
-/* -------------------------------------------------------------------- */
-/*	kalman support variables	 										*/
-/* -------------------------------------------------------------------- */
 volatile int16_t kalmanCounter;
 volatile int16_t kalmanRate;
 

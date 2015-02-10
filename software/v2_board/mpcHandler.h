@@ -62,6 +62,57 @@ typedef struct {
 volatile kalmanStates_t kalmanStates;
 
 /**
+ * @brief read a float value from a message starting at indexFrom
+ *
+ * @param message pointer to a buffer with the message
+ * @param index in the buffer where the value starts
+ */
+float readFloat(char * message, int * indexFrom);
+
+/**
+ * @brief read a int16_t value from a message starting at indexFrom
+ *
+ * @param message pointer to a buffer with the message
+ * @param index in the buffer where the value starts
+ */
+int16_t readInt16(char * message, int * indexFrom);
+
+/**
+ * @brief read a char value from a message starting at indexFrom
+ *
+ * @param message pointer to a buffer with the message
+ * @param index in the buffer where the value starts
+ */
+char readChar(char * message, int * indexFrom);
+
+/**
+ * @brief send a float value to a usartBuffer, incrementing crc
+ * 
+ * @param usartBuffer where to send the data
+ * @param var variable to send
+ * @param crc variable to accumulate the control summ
+ */
+void sendFloat(UsartBuffer * usartBuffer, const float var, char * crc);
+
+/**
+ * @brief send a int16_t value to a usartBuffer, incrementing crc
+ *
+ * @param usartBuffer where to send the data
+ * @param var variable to send
+ * @param crc variable to accumulate the control summ
+ */
+void sendInt16(UsartBuffer * usartBuffer, const int16_t var, char * crc);
+
+/**
+ * @brief send a char value to a usartBuffer, incrementing crc
+ *
+ * @param usartBuffer where to send the data
+ * @param var variable to send
+ * @param crc variable to accumulate the control summ
+ */
+void sendChar(UsartBuffer * usartBuffer, const char var, char * crc);
+
+/**
  * @brief send a px4flow measurement to STM together with currently used controller actions
  * 
  * @param elevSpeed Elevator speed

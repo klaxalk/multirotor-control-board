@@ -8,16 +8,8 @@
 #include "mainTask.h"
 #include "system.h"
 #include "controllers.h"
-#include "communication.h"
 #include "commTask.h"
-#include <stdio.h> // sprintf
-#include <stdlib.h> // abs
-
 #include "mpcHandler.h"
-
-// timestamp for debug and logging
-volatile double timeStamp = 0;
-volatile uint16_t main_cycle = 0;
 
 // for on-off by AUX3 channel
 int8_t previous_AUX3 = 0;
@@ -33,8 +25,6 @@ void mainTask(void *p) {
 	int16_t aux2filtered = PPM_IN_MIDDLE_LENGTH; 
 		
 	while (1) {
-		
-		main_cycle++;
 		
 		// controller on/off
 		if (abs(RCchannel[AUX1] - PPM_IN_MIDDLE_LENGTH) < 500) {
