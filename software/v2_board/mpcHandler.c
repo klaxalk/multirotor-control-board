@@ -121,10 +121,11 @@ int8_t stmParseChar(char inChar, stmMessageHandler_t * messageHandler) {
 		}
 	}
 	
-	if (receivingMessage) {
+	if (stmMessageReceived) {
 		
 		messageHandler->messageBuffer = stmRxBuffer+1;
 		messageHandler->messageId = stmRxBuffer[0];
+		stmMessageReceived = 0;
 		return 1;
 	}
 	

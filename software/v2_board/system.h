@@ -123,10 +123,10 @@ extern UsartBuffer * usart_buffer_4;
 /* -------------------------------------------------------------------- */
 /*	Controllers output to mix with RC and send to FlightCTRL			*/
 /* -------------------------------------------------------------------- */
-extern volatile int16_t controllerElevatorOutput;
-extern volatile int16_t controllerAileronOutput;
-extern volatile int16_t controllerThrottleOutput;
-extern volatile int16_t controllerRudderOutput;
+volatile int16_t controllerElevatorOutput;
+volatile int16_t controllerAileronOutput;
+volatile int16_t controllerThrottleOutput;
+volatile int16_t controllerRudderOutput;
 
 /* -------------------------------------------------------------------- */
 /*	RTC																	*/

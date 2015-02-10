@@ -13,7 +13,7 @@
 
 #include "mpcHandler.h"
 
-#define DELAY_MILISECONDS 14
+#define DELAY_MILISECONDS 20
 
 void logTask(void *p) {
 	
@@ -29,16 +29,22 @@ void logTask(void *p) {
 		sprintf(temp, "%2.3f, ", kalmanStates.aileron.position);
 		usartBufferPutString(usart_buffer_log, temp, 10);
 		
-		sprintf(temp, "%2.5f, ", kalmanStates.elevator.velocity);
+		sprintf(temp, "%2.3f, ", kalmanStates.elevator.velocity);
 		usartBufferPutString(usart_buffer_log, temp, 10);
 		
-		sprintf(temp, "%2.5f, ", kalmanStates.aileron.velocity);
+		sprintf(temp, "%2.3f, ", kalmanStates.aileron.velocity);
 		usartBufferPutString(usart_buffer_log, temp, 10);
 		
-		sprintf(temp, "%2.5f, ", elevatorSpeed);
+		sprintf(temp, "%2.3f, ", kalmanStates.elevator.acceleration_error);
 		usartBufferPutString(usart_buffer_log, temp, 10);
 		
-		sprintf(temp, "%2.5f, ", aileronSpeed);
+		sprintf(temp, "%2.3f, ", kalmanStates.aileron.acceleration_error);
+		usartBufferPutString(usart_buffer_log, temp, 10);
+		
+		sprintf(temp, "%2.3f, ", elevatorSpeed);
+		usartBufferPutString(usart_buffer_log, temp, 10);
+		
+		sprintf(temp, "%2.3f, ", aileronSpeed);
 		usartBufferPutString(usart_buffer_log, temp, 10);
 		
 		sprintf(temp, "%d, ", controllerElevatorOutput);
@@ -47,7 +53,7 @@ void logTask(void *p) {
 		sprintf(temp, "%d, ", controllerAileronOutput);
 		usartBufferPutString(usart_buffer_log, temp, 10);
 		
-		sprintf(temp, "%2.4f, ", opticalFlowData.ground_distance);
+		sprintf(temp, "%2.3f, ", opticalFlowData.ground_distance);
 		usartBufferPutString(usart_buffer_log, temp, 10);
 		
 		sprintf(temp, "%d, ", RCchannel[THROTTLE]);
@@ -64,7 +70,7 @@ void logTask(void *p) {
 		
 		usartBufferPutString(usart_buffer_log, "\n", 10);
 				
-		// makes the 70Hz loop
+		// makes the 50Hz loop
 		vTaskDelay(DELAY_MILISECONDS);
 	}
 }
