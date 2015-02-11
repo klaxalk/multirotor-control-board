@@ -2,7 +2,7 @@
  * mpcHandler.c
  *
  * Created: 10.2.2015 10:46:19
- *  Author: klaxalk
+ *  Author: Tomas Baca
  */ 
 
 #include "mpcHandler.h"

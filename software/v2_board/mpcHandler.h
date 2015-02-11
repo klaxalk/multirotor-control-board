@@ -2,7 +2,7 @@
  * mpcHandler.h
  *
  * Created: 10.2.2015 10:46:34
- *  Author: klaxalk
+ *  Author: Tomas Baca
  */ 
 
 #ifndef MPCHANDLER_H_
@@ -128,7 +128,7 @@ void stmSendMeasurement(float elevSpeed, float aileSpeed, int16_t elevInput, int
 void stmSendSetpointsSimple();
 
 /**
- * @brief initialize the local kalman states to ZERO
+ * @brief initialize the LOCAL copy of kalman states to ZERO
  */
 void initializeKalmanStates();
 
