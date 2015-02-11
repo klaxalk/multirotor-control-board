@@ -326,7 +326,7 @@ void landingController(int16_t *throttle, int16_t *elevator, int16_t *aileron){
 			*elevator = 0;
 			*aileron = 0;
 		}else
-		if(landingState=LANDING.TAKE_OFF){
+		if(landingState==LANDING.TAKE_OFF){
 			altitudeController(throttle,throttleDesiredSetpoint);
 			velocityController(elevator,aileron,0,0);				
 			//stabilize altitude for 0.5s
@@ -336,10 +336,11 @@ void landingController(int16_t *throttle, int16_t *elevator, int16_t *aileron){
 				landingCounter = 0;
 			}
 			if(landingCounter >= 35){
-				landingState =LANDING.FLIGHT;
+				landingState=LANDING.FLIGHT;
+				landingCounter=0;
 			}
 		}else	
-		if(landingState=LANDING.STABILIZATION){
+		if(landingState==LANDING.STABILIZATION){
 			//stabilize altitude for 0.5s
 			altitudeController(throttle,ALTITUDE_MINIMUM);
 			velocityController(elevator,aileron,0,0);
@@ -350,10 +351,11 @@ void landingController(int16_t *throttle, int16_t *elevator, int16_t *aileron){
 				landingCounter = 0;
 			}
 			if(landingCounter >= 35){
-				landingState = LANDING.LANDING;					
+				landingState = LANDING.LANDING;	
+				landingCounter=0;				
 			}
 		}else
-		if(landingState=LANDING.LANDING){
+		if(landingState==LANDING.LANDING){
 			*throttle=*throttle-5;
 			*elevator=*elevator;
 			*aileron=*aileron;

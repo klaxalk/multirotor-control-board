@@ -31,27 +31,28 @@ void controllersTask(void *p) {
 			controllerAileronOutput=0;
 			controllerElevatorOutput=0;
 			controllerThrottleOutput=0;
-		}else		
-		//FLIGHT
-		if(landingState=LANDING.FLIGHT){	
-			//VELOCITY	
-			if(controllerActive==CONTROLLERS.VELOCITY){
-				velocityController(&controllerElevatorOutput,&controllerAileronOutput,elevatorDesiredVelocitySetpoint,aileronDesiredVelocitySetpoint);
-				altitudeController(&controllerThrottleOutput,throttleDesiredSetpoint);	
-			}else
-			//POSITION
-			if(controllerActive==CONTROLLERS.POSITION){
-				positionController(&controllerElevatorOutput,&controllerAileronOutput,elevatorDesiredPositionSetpoint,aileronDesiredPositionSetpoint);	
-				altitudeController(&controllerThrottleOutput,throttleDesiredSetpoint);	
-			}else
-			//PREDICTIVE
-			if(controllerActive==CONTROLLERS.MPC){
+		}else{		
+			//FLIGHT
+			if(landingState==LANDING.FLIGHT){	
+				//VELOCITY	
+				if(controllerActive==CONTROLLERS.VELOCITY){
+					velocityController(&controllerElevatorOutput,&controllerAileronOutput,elevatorDesiredVelocitySetpoint,aileronDesiredVelocitySetpoint);
+					altitudeController(&controllerThrottleOutput,throttleDesiredSetpoint);	
+				}else
+				//POSITION
+				if(controllerActive==CONTROLLERS.POSITION){
+					positionController(&controllerElevatorOutput,&controllerAileronOutput,elevatorDesiredPositionSetpoint,aileronDesiredPositionSetpoint);	
+					altitudeController(&controllerThrottleOutput,throttleDesiredSetpoint);	
+				}else
+				//PREDICTIVE
+				if(controllerActive==CONTROLLERS.MPC){
 			
-			}
-		}else{
-			//LANDING
-			landingController(&controllerThrottleOutput,&controllerElevatorOutput,&controllerAileronOutput);						
-		}			
+				}
+			}else{
+				//LANDING
+				landingController(&controllerThrottleOutput,&controllerElevatorOutput,&controllerAileronOutput);						
+			}	
+		}		
 		// makes the 70Hz loop
 		vTaskDelay(14);
 	}	
