@@ -39,7 +39,7 @@ void altitudeEstimator() {
 		// extreme filter
 		if(fabs(groundDistance - estimatedThrottlePos_prev) <= 0.5) {//limitation cca 3m/s
 			// compute new values
-			estimatedThrottleVel = (groundDistance - estimatedThrottlePos_prev) / (7*DT);
+			estimatedThrottleVel = (groundDistance - estimatedThrottlePos_prev) / (12*DT);
 			estimatedThrottlePos      = groundDistance;
 			estimatedThrottlePos_prev = groundDistance;
 			estimator_cycle = 0;
