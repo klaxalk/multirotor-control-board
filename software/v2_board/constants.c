@@ -91,6 +91,6 @@ void constInit(){
 	
 	telemetryToCoordinatorArr[TELEMETRIES.GROUND_DISTANCE_ESTIMATED]=1;
 	telemetryToCoordinatorArr[TELEMETRIES.THROTTLE_SETPOINT]=1;
-	telemetryToCoordinatorArr[TELEMETRIES.BLOB_ELEVATOR]=1;
+	telemetryToCoordinatorArr[TELEMETRIES.THROTTLE_CONTROLLER_OUTPUT]=1;
 	telemetryToCoordinatorArr[TELEMETRIES.VALID_GUMSTIX]=1;
 }

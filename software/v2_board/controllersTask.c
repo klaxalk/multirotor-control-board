@@ -36,13 +36,13 @@ void controllersTask(void *p) {
 			if(landingState==LANDING.FLIGHT){	
 				//VELOCITY	
 				if(controllerActive==CONTROLLERS.VELOCITY){
-					velocityController(&controllerElevatorOutput,&controllerAileronOutput,elevatorDesiredVelocitySetpoint,aileronDesiredVelocitySetpoint);
-					altitudeController(&controllerThrottleOutput,throttleDesiredSetpoint);	
+					velocityController(elevatorDesiredVelocitySetpoint,aileronDesiredVelocitySetpoint);
+					altitudeController(throttleDesiredSetpoint);	
 				}else
 				//POSITION
 				if(controllerActive==CONTROLLERS.POSITION){
-					positionController(&controllerElevatorOutput,&controllerAileronOutput,elevatorDesiredPositionSetpoint,aileronDesiredPositionSetpoint);	
-					altitudeController(&controllerThrottleOutput,throttleDesiredSetpoint);	
+					positionController(elevatorDesiredPositionSetpoint,aileronDesiredPositionSetpoint);	
+					altitudeController(throttleDesiredSetpoint);	
 				}else
 				//PREDICTIVE
 				if(controllerActive==CONTROLLERS.MPC){
@@ -50,7 +50,7 @@ void controllersTask(void *p) {
 				}
 			}else{
 				//LANDING
-				landingController(&controllerThrottleOutput,&controllerElevatorOutput,&controllerAileronOutput);						
+				landingController();						
 			}	
 		}		
 		// makes the 70Hz loop

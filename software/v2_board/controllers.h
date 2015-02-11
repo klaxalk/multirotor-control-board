@@ -115,12 +115,12 @@ void controllerSet(unsigned char controllerDesired);
 
 //position estimator and controllers
 void positionEstimator();
-void velocityController(int16_t *elevator, int16_t *aileron, float elevatorSetpoint, float aileronSetpoint);
-void positionController(int16_t *elevator, int16_t *aileron, float elevatorSetpoint, float aileronSetpoint);
+void velocityController(float elevatorSetpoint, float aileronSetpoint);
+void positionController(float elevatorSetpoint, float aileronSetpoint);
 
 //altitude estimator and controllers
 void altitudeEstimator();
-void altitudeController(int16_t *throttle, float setpoint);
+void altitudeController(float setpoint);
 void landingController();
 
 //Blob is origin of setpoint

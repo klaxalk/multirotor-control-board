@@ -33,7 +33,7 @@ signed char *pRxData = 0;
 unsigned char RxDataLen = 0;
 
 //XBee
-#define XBEE_BUFFER_SIZE 
+#define XBEE_BUFFER_SIZE 60
 unsigned char XBeeBuffer[XBEE_BUFFER_SIZE];	
 uint8_t packetIn=0;
 uint8_t packetLength=XBEE_BUFFER_SIZE-1;

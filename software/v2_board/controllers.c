@@ -192,7 +192,7 @@ void positionEstimator() {
 	}
 }
 
-void velocityController(int16_t *elevator, int16_t *aileron, float elevatorSetpoint, float aileronSetpoint) {
+void velocityController(float elevatorSetpoint, float aileronSetpoint) {
 	float error;
 	static const float KI=10, KV=25, KA=35;
 	static uint32_t time = 0;
@@ -214,19 +214,17 @@ void velocityController(int16_t *elevator, int16_t *aileron, float elevatorSetpo
 			
 	//elevator controller		
 	error = elevatorVelocitySetpoint - estimatedElevatorVel;
-	elevatorIntegration +=saturationFloat(KI * error * DT,CONTROLLER_ELEVATOR_SATURATION/3.0);
-
-	*elevator=saturationInt((int16_t)((KV * error) + elevatorIntegration - (KA * estimatedElevatorAcc)),CONTROLLER_ELEVATOR_SATURATION);
+	elevatorIntegration = saturationFloat(elevatorIntegration+(KI * error * DT),CONTROLLER_ELEVATOR_SATURATION/3.0);
+	controllerElevatorOutput=saturationInt16((int16_t)((KV * error) + elevatorIntegration - (KA * estimatedElevatorAcc)),CONTROLLER_ELEVATOR_SATURATION);
 
 		
 	//aileron controller
 	error = aileronVelocitySetpoint - estimatedAileronVel;	
-	aileronIntegration += saturationFloat(KI * error * DT,CONTROLLER_AILERON_SATURATION/3.0);
-
-	*aileron=saturationInt((int16_t)((KV * error) + aileronIntegration - (KA * estimatedAileronAcc)),CONTROLLER_AILERON_SATURATION);
+	aileronIntegration = saturationFloat(aileronIntegration+(KI * error * DT),CONTROLLER_AILERON_SATURATION/3.0);
+	controllerAileronOutput=saturationInt16((int16_t)((KV * error) + aileronIntegration - (KA * estimatedAileronAcc)),CONTROLLER_AILERON_SATURATION);
 }
 
-void positionController(int16_t *elevator, int16_t *aileron, float elevatorSetpoint, float aileronSetpoint) {
+void positionController(float elevatorSetpoint, float aileronSetpoint) {
 	static const float KI=5, KP=85, KV=180, KA=9;
     float speed;
 	float error;
@@ -255,16 +253,14 @@ void positionController(int16_t *elevator, int16_t *aileron, float elevatorSetpo
 	//elevator controller
 	error = elevatorPositionSetpoint - estimatedElevatorPos;
 	speed = saturationFloat((KP/KV) * error,SPEED_MAX);
-	elevatorIntegration += saturationFloat(KI * error * DT,CONTROLLER_ELEVATOR_SATURATION/3.0);
-	
-	*elevator=saturationInt((int16_t)(KV * (speed - estimatedElevatorVel) + elevatorIntegration - (KA * estimatedElevatorAcc)),CONTROLLER_ELEVATOR_SATURATION);
+	elevatorIntegration = saturationFloat(elevatorIntegration+(KI * error * DT),CONTROLLER_ELEVATOR_SATURATION/3.0);	
+	controllerElevatorOutput=saturationInt16((int16_t)(KV * (speed - estimatedElevatorVel) + elevatorIntegration - (KA * estimatedElevatorAcc)),CONTROLLER_ELEVATOR_SATURATION);
 
 	//aileron controller
 	error = aileronPositionSetpoint - estimatedAileronPos;
 	speed = saturationFloat((KP/KV) * error,SPEED_MAX);
-	aileronIntegration += saturationFloat(KI * error * DT,CONTROLLER_AILERON_SATURATION/3.0);
-	
-	*aileron=saturationInt((int16_t)(KV * (speed - estimatedAileronVel) + aileronIntegration - (KA * estimatedAileronAcc)),CONTROLLER_AILERON_SATURATION);
+	aileronIntegration = saturationFloat(aileronIntegration+(KI * error * DT),CONTROLLER_AILERON_SATURATION/3.0);	
+	controllerAileronOutput=saturationInt16((int16_t)(KV * (speed - estimatedAileronVel) + aileronIntegration - (KA * estimatedAileronAcc)),CONTROLLER_AILERON_SATURATION);
 }
 
 void altitudeEstimator() {
@@ -294,9 +290,10 @@ static float   estimatedThrottlePos_prev = 0;
     }
 }
 
-void altitudeController(int16_t *throttle,float setpoint) {
+void altitudeController(float setpoint) {
 	float error;
-	static const float KX=0.9, KI=120, KV=200;
+	//static const float KX=0.9, KI=120, KV=200;
+	static const float KX=0.9, KI=160, KV=200;
 	static uint32_t time = 0;
 	static float throttleIntegration = 0;
 	
@@ -311,24 +308,23 @@ void altitudeController(int16_t *throttle,float setpoint) {
 	if(setpoint<THROTTLE_SP_LOW){setpoint=THROTTLE_SP_LOW;}
 	if(setpoint>THROTTLE_SP_HIGH){setpoint=THROTTLE_SP_HIGH;}
 	throttleSetpoint += (setpoint-throttleSetpoint) * (DT/SETPOINT_FILTER_CONST);
-	
-	
+		
 	//throttle controller
 	error =(throttleSetpoint - estimatedThrottlePos);
-	throttleIntegration += saturationFloat(KI * error * DT,CONTROLLER_THROTTLE_SATURATION*2/3.0) ;
-	*throttle=saturationInt((int16_t)(KV * (saturationFloat(KX * error,KX * error) - estimatedThrottleVel) + throttleIntegration),CONTROLLER_THROTTLE_SATURATION);
+	throttleIntegration = saturationFloat(throttleIntegration+(KI * error * DT),CONTROLLER_THROTTLE_SATURATION*(1.8/3.0)) ;
+	controllerThrottleOutput=saturationInt16((int16_t)(KV * (saturationFloat(KX * error,ALTITUDE_SPEED_MAX) - estimatedThrottleVel) + throttleIntegration),CONTROLLER_THROTTLE_SATURATION);
 }
 
-void landingController(int16_t *throttle, int16_t *elevator, int16_t *aileron){
+void landingController(){
 	static int8_t landingCounter=0;
 		if(landingState==LANDING.ON_GROUND){
-			*throttle = -CONTROLLER_THROTTLE_SATURATION;
-			*elevator = 0;
-			*aileron = 0;
+			controllerThrottleOutput = -CONTROLLER_THROTTLE_SATURATION;
+			controllerElevatorOutput = 0;
+			controllerAileronOutput = 0;
 		}else
 		if(landingState==LANDING.TAKE_OFF){
-			altitudeController(throttle,throttleDesiredSetpoint);
-			velocityController(elevator,aileron,0,0);				
+			altitudeController(throttleDesiredSetpoint);
+			velocityController(0,0);				
 			//stabilize altitude for 0.5s
 			if(fabs(throttleSetpoint - estimatedThrottlePos) < 0.1 && fabs(estimatedThrottleVel) < 0.2){
 				landingCounter++;
@@ -342,8 +338,8 @@ void landingController(int16_t *throttle, int16_t *elevator, int16_t *aileron){
 		}else	
 		if(landingState==LANDING.STABILIZATION){
 			//stabilize altitude for 0.5s
-			altitudeController(throttle,ALTITUDE_MINIMUM);
-			velocityController(elevator,aileron,0,0);
+			altitudeController(ALTITUDE_MINIMUM);
+			velocityController(0,0);
 			
 			if(fabs(throttleSetpoint - estimatedThrottlePos) < 0.1 && fabs(estimatedThrottleVel) < 0.1){
 				landingCounter++;
@@ -356,10 +352,8 @@ void landingController(int16_t *throttle, int16_t *elevator, int16_t *aileron){
 			}
 		}else
 		if(landingState==LANDING.LANDING){
-			*throttle=*throttle-5;
-			*elevator=*elevator;
-			*aileron=*aileron;
-			if(*throttle <= -CONTROLLER_THROTTLE_SATURATION){
+			controllerThrottleOutput-=5;
+			if(controllerThrottleOutput <= -CONTROLLER_THROTTLE_SATURATION){
 				landingState = LANDING.ON_GROUND;
 			}			
 		}
