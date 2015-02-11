@@ -90,8 +90,7 @@ void constInit(){
 	GET_STATUS=0x95;
 	
 	telemetryToCoordinatorArr[TELEMETRIES.GROUND_DISTANCE_ESTIMATED]=1;
+	telemetryToCoordinatorArr[TELEMETRIES.ELEVATOR_POS_ESTIMATED]=1;
 	telemetryToCoordinatorArr[TELEMETRIES.BLOB_ELEVATOR]=1;
-	telemetryToCoordinatorArr[TELEMETRIES.BLOB_AILERON]=1;
-	telemetryToCoordinatorArr[TELEMETRIES.BLOB_ALTITUDE]=1;
 	telemetryToCoordinatorArr[TELEMETRIES.VALID_GUMSTIX]=1;
 }

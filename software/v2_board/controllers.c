@@ -61,7 +61,7 @@ void initTrajectory(){
 	uint32_t i=0;
 	// (i, time (s), x (+ forward), y (+ leftward), z (altitude))
 	for(i=0;i<TRAJECTORY_LENGTH;i++){
-		TRAJ_POINT(i,secondsTimer+1,elevatorPositionSetpoint,aileronPositionSetpoint,throttleSetpoint);
+		TRAJ_POINT(i,secondsTimer+1,0,0,1);
 	}
 	trajMaxIndex=-1;
 }
@@ -369,7 +369,7 @@ void lockOnBlob(float distance){
 	
 	if(gumstixStable){
 		error=estimatedElevatorPos-elevatorPositionSetpoint;
-		drift=estimatedBlobElevator-blobElevatorDeflection-distance+error;
+		drift=estimatedBlobElevator-blobElevatorDeflection-distance+error;		
 		estimatedElevatorPos+=(-drift)*(DT/GUMSTIX_FILTER_CONST);
 		
 		error=estimatedAileronPos-aileronPositionSetpoint;

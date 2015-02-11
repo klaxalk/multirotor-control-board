@@ -31,10 +31,12 @@ void mainTask(void *p) {
 				
 		if(RCchannel[AUX2]<(PPM_IN_MIDDLE_LENGTH)){
 			if(previous_AUX2!=0){
+				disableLockOnBlob();
 				previous_AUX2=0;
 			}
 		}else{
 			if(previous_AUX2!=1){
+				enableLockOnBlob(1.5);				
 				previous_AUX2=1;
 			}
 		}

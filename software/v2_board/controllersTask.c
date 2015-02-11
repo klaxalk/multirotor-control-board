@@ -21,7 +21,7 @@ void controllersTask(void *p) {
 		setpointsCalculate();						
 		
 		//lock on blob with leading data improvement
-		if(lockOnBlobDistance>0){
+		if(lockOnBlobDistance>=0){
 			lockOnBlob(lockOnBlobDistance);
 		}		
 		

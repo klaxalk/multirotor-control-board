@@ -32,6 +32,12 @@ volatile int16_t rollAngle = 0;
 signed char *pRxData = 0;
 unsigned char RxDataLen = 0;
 
+//XBee
+#define XBEE_BUFFER_SIZE 
+unsigned char XBeeBuffer[XBEE_BUFFER_SIZE];	
+uint8_t packetIn=0;
+uint8_t packetLength=XBEE_BUFFER_SIZE-1;
+
 
 
 
@@ -65,7 +71,6 @@ void Decode64(void) {
 
 void commTask(void *p) {	
 	unsigned char inChar;
-	unsigned char packet[60];	
 	int8_t i;
 	int16_t counter40Hz=500;
 	int16_t counter20Hz=0;
@@ -96,15 +101,39 @@ void commTask(void *p) {
 		if (usartBufferGetByte(usart_buffer_xbee, &inChar, 0)) {					
 			 //packet received
 			 if (inChar == 0x7E){
-				 *packet=inChar;
-				 while(!usartBufferGetByte(usart_buffer_xbee, packet+1, 0));
-				 while(!usartBufferGetByte(usart_buffer_xbee, packet+2, 0));
-				 for (i=0;i<*(packet+2)+1;i++){
-					while(!usartBufferGetByte(usart_buffer_xbee, packet+3+i, 0));
+				 *XBeeBuffer=inChar;
+				 while(!usartBufferGetByte(usart_buffer_xbee, XBeeBuffer+1, 0));
+				 while(!usartBufferGetByte(usart_buffer_xbee, XBeeBuffer+2, 0));
+				 for (i=0;i<*(XBeeBuffer+2)+1;i++){
+					while(!usartBufferGetByte(usart_buffer_xbee, XBeeBuffer+3+i, 0));
 				 }
-				 packetHandler(packet);
+				 packetHandler(XBeeBuffer);
 			 }
 		}
+		
+		// XBee
+		/*if (usartBufferGetByte(usart_buffer_xbee, &inChar, 0)) {
+			//packet received
+			if (inChar == 0x7E){
+				*XBeeBuffer=inChar;
+				packetIn=1;
+			}
+			if(packetIn>0 && packetIn<=packetLength){
+				*(XBeeBuffer+packetIn)=inChar;		
+				if(packetIn==2){
+					packetLength
+				}
+				packetIn++;
+			}
+			
+				while(!usartBufferGetByte(usart_buffer_xbee, XBeeBuffer+1, 0));
+				while(!usartBufferGetByte(usart_buffer_xbee, XBeeBuffer+2, 0));
+				for (i=0;i<*(XBeeBuffer+2)+1;i++){
+					while(!usartBufferGetByte(usart_buffer_xbee, XBeeBuffer+3+i, 0));
+				}
+				packetHandler(XBeeBuffer);
+			}
+		}	*/	
 		
 
 		//Gumstix
@@ -131,7 +160,7 @@ void commTask(void *p) {
 				if(zPosGumstixNew < -POSITION_MAXIMUM) zPosGumstixNew = -POSITION_MAXIMUM;
 
 					//Camera pointing forward and being LANDSCAPE oriented
-					elevatorGumstix = - (float) xPosGumstixNew / 1000;
+					elevatorGumstix = + (float) xPosGumstixNew / 1000;
 					aileronGumstix  = + (float) yPosGumstixNew / 1000;
 					throttleGumstix = + (float) zPosGumstixNew / 1000;
 			}
