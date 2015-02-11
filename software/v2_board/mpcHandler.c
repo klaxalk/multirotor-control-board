@@ -247,9 +247,12 @@ void stmResetKalman(float initElevator, float initAileron) {
 	char crc = 0;
 	
 	sendChar(usart_buffer_stm, 'a', &crc);		// this character initiates the transmission
-	sendChar(usart_buffer_stm, 1, &crc);		// this will be the size of the message
+	sendChar(usart_buffer_stm, 1 + 2*4, &crc);		// this will be the size of the message
 				
 	sendChar(usart_buffer_stm, '2', &crc);		// id of the message
+	
+	sendFloat(usart_buffer_stm, initElevator, &crc);
+	sendFloat(usart_buffer_stm, initAileron, &crc);
 
 	// at last send the crc, ends the transmission
 	sendChar(usart_buffer_stm, crc, &crc);

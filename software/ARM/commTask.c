@@ -204,8 +204,13 @@ void commTask(void *p) {
 
 				resetKalmanMessage_t mes;
 
-				mes.elevatorPosition = 0;
-				mes.aileronPosition = 0;
+				tempFloat = readFloat(messageBuffer, &idx);
+				if (fabs(tempFloat) < 5)
+					mes.elevatorPosition = tempFloat;
+
+				tempFloat = readFloat(messageBuffer, &idx);
+				if (fabs(tempFloat) < 5)
+					mes.aileronPosition = tempFloat;
 
 				xQueueOverwrite(resetKalmanQueue, &mes);
 
