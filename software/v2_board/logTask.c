@@ -13,7 +13,7 @@
 
 #include "mpcHandler.h"
 
-#define DELAY_MILISECONDS 20
+#define DELAY_MILISECONDS 33
 
 void logTask(void *p) {
 	
@@ -39,6 +39,15 @@ void logTask(void *p) {
 		usartBufferPutString(usart_buffer_log, temp, 10);
 		
 		sprintf(temp, "%2.3f, ", kalmanStates.aileron.acceleration_error);
+		usartBufferPutString(usart_buffer_log, temp, 10);
+		
+		sprintf(temp, "%2.3f, ", mpcSetpoints.elevatorSetpoint);
+		usartBufferPutString(usart_buffer_log, temp, 10);
+		
+		sprintf(temp, "%2.3f, ", mpcSetpoints.aileronSetpoint);
+		usartBufferPutString(usart_buffer_log, temp, 10);
+		
+		sprintf(temp, "%2.3f, ", kalmanStates.aileron.position);
 		usartBufferPutString(usart_buffer_log, temp, 10);
 		
 		sprintf(temp, "%2.3f, ", elevatorSpeed);

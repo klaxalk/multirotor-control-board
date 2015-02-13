@@ -116,7 +116,7 @@ Q_roof(end-n_states+1:end, end-n_states+1:end) = S;
 %           ..., ..., P,    0;
 %           0,   ..., ...,  P];
 
-P = 0.000005;
+P = 0.0000025;
 
 P_roof = zeros(n_variables, n_variables);
 
@@ -158,7 +158,7 @@ u = zeros(horizon_len, u_size);
 u_hist(1) = 0;
 
 % saturace akcnich zasahu
-saturace = 300;
+saturace = 800;
 
 % max speed
 max_speed = 0.35;
@@ -168,7 +168,7 @@ u_sat = 0;
 % kalman variables
 
 kalmanCovariance = eye(5);
-estimate(:, 1) = [1; 0; 0; 0; 0];
+estimate(:, 1) = [2; 0; 0; 0; 0];
 
 xd_pure_integration(1) = x(1, 1);
 

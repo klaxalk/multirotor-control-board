@@ -116,17 +116,12 @@ void commTask(void *p) {
 
 				sendFloat(usart_buffer_xbee, kalmanStates.elevator.position, &crc);
 				sendFloat(usart_buffer_xbee, kalmanStates.aileron.position, &crc);
-				sendFloat(usart_buffer_xbee, kalmanStates.elevator.velocity, &crc);
-				sendFloat(usart_buffer_xbee, kalmanStates.aileron.velocity, &crc);
 				
-				sendInt16(usart_buffer_xbee, kalmanRate, &crc);
-				sendInt16(usart_buffer_xbee, mpcRate, &crc);
-				
+				sendFloat(usart_buffer_xbee, mpcSetpoints.elevatorSetpoint, &crc);
+				sendFloat(usart_buffer_xbee, mpcSetpoints.aileronSetpoint, &crc);
+					
 				sendInt16(usart_buffer_xbee, mpcElevatorOutput, &crc);
 				sendInt16(usart_buffer_xbee, mpcAileronOutput, &crc);
-				
-				sendFloat(usart_buffer_xbee, kalmanStates.elevator.acceleration_error, &crc);
-				sendFloat(usart_buffer_xbee, kalmanStates.aileron.acceleration_error, &crc);
 
 				usartBufferPutString(usart_buffer_xbee, "\r\n", 10);
 			}

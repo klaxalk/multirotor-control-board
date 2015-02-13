@@ -61,6 +61,6 @@ void mainTask(void *p) {
 		// filter the AUX2 value
 		aux2filtered = aux2filtered*0.97 + RCchannel[AUX2]*0.03;
 		
-		mpcSetpoints.aileronSetpoint = 2.5*((aux2filtered - PPM_IN_MIDDLE_LENGTH)/((float) (PPM_IN_MAX_LENGTH - PPM_IN_MIN_LENGTH)));
+		mpcSetpoints.elevatorSetpoint = 2.5*((aux2filtered - PPM_IN_MIDDLE_LENGTH)/((float) (PPM_IN_MAX_LENGTH - PPM_IN_MIN_LENGTH)));
 	}
 }
