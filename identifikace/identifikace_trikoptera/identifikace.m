@@ -54,7 +54,7 @@ input_window = data(iden_window, input);
 dt_window = data(iden_window, dt);
 
 B = acceleration_fit(2:end);
-A = [acceleration_fit(1:end-1) input_window(2:end).*0.0114];
+A = [acceleration_fit(1:end-1) input_window(2:end)];
 
 P = A\B;
 P0 = P(1)
@@ -62,7 +62,7 @@ P1 = P(2)
 
 %% Estimating all values from input
 
-acceleration_est = firstOrder(data(plot_window, input), data(plot_window, dt), P);
+acceleration_est = firstOrder(data(plot_window, input), P);
 
 velocity_est = integrate(acceleration_est, data(plot_window, dt));
 

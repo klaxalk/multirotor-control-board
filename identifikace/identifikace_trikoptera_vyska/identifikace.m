@@ -65,7 +65,7 @@ P1 = P(2)
 
 %% Estimating all values from input
 
-acceleration_est = firstOrder(action(margin:end-margin-1), ones(1, length(iden_window)), P) + acceleration_fit(1);
+acceleration_est = firstOrder(action(margin:end-margin-1), P) + acceleration_fit(1);
 
 velocity_est = integrate(acceleration_est, ones(1, length(iden_window)).*dt);
 
