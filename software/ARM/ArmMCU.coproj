@@ -41,7 +41,7 @@
           <Memory name="IROM2" type="ReadOnly" size="" startValue=""/>
           <Memory name="IRAM2" type="ReadWrite" size="0x00010000" startValue="0x10000000"/>
         </MemoryAreas>
-        <LocateLinkFile path="../../../../../../coocox/coide/configuration/programdata/armmcu/arm-gcc-link.ld" type="0"/>
+        <LocateLinkFile path="../../../../../../coocox/coide/configuration/programdata/armmcu/link.ld" type="0"/>
       </Link>
       <Output>
         <Option name="OutputFileType" value="0"/>
@@ -99,9 +99,9 @@
     <File name="cmsis_lib/include/stm32f4xx_usart.h" path="cmsis_lib/include/stm32f4xx_usart.h" type="1"/>
     <File name="miscellaneous.c" path="miscellaneous.c" type="1"/>
     <File name="FreeRTOS/Source/include/timers.h" path="FreeRTOS/Source/include/timers.h" type="1"/>
+    <File name="cmsis_boot/startup" path="" type="2"/>
     <File name="cmsis/core_cm4_simd.h" path="cmsis/core_cm4_simd.h" type="1"/>
     <File name="cmsis_boot/stm32f4xx.h" path="cmsis_boot/stm32f4xx.h" type="1"/>
-    <File name="cmsis_boot/startup" path="" type="2"/>
     <File name="mpc/elevator_and_aileron/elevAileMpcMatrices.h" path="mpc/elevator_and_aileron/elevAileMpcMatrices.h" type="1"/>
     <File name="cmsis/core_cmFunc.h" path="cmsis/core_cmFunc.h" type="1"/>
     <File name="cmsis/core_cm4.h" path="cmsis/core_cm4.h" type="1"/>
@@ -120,40 +120,40 @@
     <File name="StdPeriphDriver/misc.h" path="STM32F4xx_StdPeriph_Driver/inc/misc.h" type="1"/>
     <File name="CMatrixLib/CMatrixLib.c" path="../CMatrixLib/CMatrixLib/CMatrixLib.c" type="1"/>
     <File name="cmsis_boot/stm32f4xx_conf.h" path="cmsis_boot/stm32f4xx_conf.h" type="1"/>
-    <File name="mpc/mpc.h" path="mpc/mpc.h" type="1"/>
     <File name="cmsis_boot/system_stm32f4xx.h" path="cmsis_boot/system_stm32f4xx.h" type="1"/>
-    <File name="FreeRTOS/Port/port.c" path="FreeRTOS/Port/port.c" type="1"/>
+    <File name="mpc/mpc.h" path="mpc/mpc.h" type="1"/>
     <File name="FreeRTOS/Source/list.c" path="FreeRTOS/Source/list.c" type="1"/>
-    <File name="kalman/aileron/aileronKalman.h" path="kalman/aileron/aileronKalman.h" type="1"/>
+    <File name="FreeRTOS/Port/port.c" path="FreeRTOS/Port/port.c" type="1"/>
     <File name="system.h" path="system.h" type="1"/>
+    <File name="kalman/aileron/aileronKalman.h" path="kalman/aileron/aileronKalman.h" type="1"/>
     <File name="FreeRTOS/Source/timers.c" path="FreeRTOS/Source/timers.c" type="1"/>
     <File name="mpc/elevator/elevatorMpc.c" path="mpc/elevator/elevatorMpc.c" type="1"/>
-    <File name="cmsis_lib/include/stm32f4xx_rcc.h" path="cmsis_lib/include/stm32f4xx_rcc.h" type="1"/>
+    <File name="kalman/elevator" path="" type="2"/>
     <File name="FreeRTOS/Source/include" path="" type="2"/>
     <File name="FreeRTOS/Source" path="" type="2"/>
-    <File name="kalman/elevator" path="" type="2"/>
+    <File name="cmsis_lib/include/stm32f4xx_rcc.h" path="cmsis_lib/include/stm32f4xx_rcc.h" type="1"/>
     <File name="FreeRTOS/Port" path="" type="2"/>
     <File name="kalman/kalman.h" path="kalman/kalman.h" type="1"/>
     <File name="commTask.h" path="commTask.h" type="1"/>
-    <File name="FreeRTOS/Source/include/task.h" path="FreeRTOS/Source/include/task.h" type="1"/>
     <File name="mpc/aileron/aileronMpc.h" path="mpc/aileron/aileronMpc.h" type="1"/>
-    <File name="cmsis_boot/startup/startup_stm32f4xx.c" path="cmsis_boot/startup/startup_stm32f4xx.c" type="1"/>
+    <File name="FreeRTOS/Source/include/task.h" path="FreeRTOS/Source/include/task.h" type="1"/>
     <File name="CMatrixLib/CMatrixLib.h" path="../CMatrixLib/CMatrixLib/CMatrixLib.h" type="1"/>
+    <File name="cmsis_boot/startup/startup_stm32f4xx.c" path="cmsis_boot/startup/startup_stm32f4xx.c" type="1"/>
     <File name="kalman/elevator/elevatorKalman.c" path="kalman/elevator/elevatorKalman.c" type="1"/>
     <File name="cmsis_lib/source/stm32f4xx_rcc.c" path="cmsis_lib/source/stm32f4xx_rcc.c" type="1"/>
-    <File name="mpc/mpc.c" path="mpc/mpc.c" type="1"/>
     <File name="cmsis/core_cmInstr.h" path="cmsis/core_cmInstr.h" type="1"/>
+    <File name="mpc/mpc.c" path="mpc/mpc.c" type="1"/>
     <File name="uart_driver/uart_driver.c" path="uart_driver.c" type="1"/>
     <File name="FreeRTOS/Port/heap_2.c" path="FreeRTOS/Port/heap_2.c" type="1"/>
     <File name="kalman/elevator/elevatorKalman.h" path="kalman/elevator/elevatorKalman.h" type="1"/>
     <File name="kalman/aileron" path="" type="2"/>
     <File name="FreeRTOS/Source/include/queue.h" path="FreeRTOS/Source/include/queue.h" type="1"/>
-    <File name="kalman/kalman.c" path="kalman/kalman.c" type="1"/>
     <File name="mpcTask.c" path="mpcTask.c" type="1"/>
+    <File name="kalman/kalman.c" path="kalman/kalman.c" type="1"/>
     <File name="FreeRTOS/Source/include/semphr.h" path="FreeRTOS/Source/include/semphr.h" type="1"/>
     <File name="StdPeriphDriver/misc.c" path="STM32F4xx_StdPeriph_Driver/src/misc.c" type="1"/>
-    <File name="FreeRTOS/Source/include/list.h" path="FreeRTOS/Source/include/list.h" type="1"/>
     <File name="cmsis_boot/system_stm32f4xx.c" path="cmsis_boot/system_stm32f4xx.c" type="1"/>
+    <File name="FreeRTOS/Source/include/list.h" path="FreeRTOS/Source/include/list.h" type="1"/>
     <File name="kalmanTask.c" path="kalmanTask.c" type="1"/>
     <File name="StdPeriphDriver" path="" type="2"/>
     <File name="cmsis" path="" type="2"/>
@@ -164,10 +164,10 @@
     <File name="mpc/elevator" path="" type="2"/>
     <File name="uart_driver" path="" type="2"/>
     <File name="cmsis_lib/source/stm32f4xx_tim.c" path="cmsis_lib/source/stm32f4xx_tim.c" type="1"/>
-    <File name="FreeRTOS/Source/include/FreeRTOS.h" path="FreeRTOS/Source/include/FreeRTOS.h" type="1"/>
-    <File name="cmsis_lib/include/stm32f4xx_gpio.h" path="cmsis_lib/include/stm32f4xx_gpio.h" type="1"/>
-    <File name="mpc/elevator_and_aileron" path="" type="2"/>
     <File name="mpc/aileron/aileronMpc.c" path="mpc/aileron/aileronMpc.c" type="1"/>
+    <File name="FreeRTOS/Source/include/FreeRTOS.h" path="FreeRTOS/Source/include/FreeRTOS.h" type="1"/>
+    <File name="mpc/elevator_and_aileron" path="" type="2"/>
+    <File name="cmsis_lib/include/stm32f4xx_gpio.h" path="cmsis_lib/include/stm32f4xx_gpio.h" type="1"/>
     <File name="CMatrixLib" path="" type="2"/>
     <File name="FreeRTOS/Source/include/event_groups.h" path="FreeRTOS/Source/include/event_groups.h" type="1"/>
     <File name="syscalls" path="" type="2"/>

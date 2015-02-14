@@ -63,6 +63,8 @@ volatile int16_t hoursTimer;
 /* -------------------------------------------------------------------- */
 xQueueHandle main2commsQueue;
 
+volatile int8_t auxSetpointFlag = 0;
+
 /* -------------------------------------------------------------------- */
 /*	Basic initialization of the MCU, peripherals and i/o				*/
 /* -------------------------------------------------------------------- */
@@ -299,6 +301,8 @@ ISR(TCD0_CCA_vect) {
 /*	Interrupt for timing the RTC & mergeSignalsToOutput					*/
 /* -------------------------------------------------------------------- */
 ISR(TCC1_OVF_vect) {
+	
+	auxSetpointFlag = 1;
 	
 	if (milisecondsTimer++ == 1000) {
 		

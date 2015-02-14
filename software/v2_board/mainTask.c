@@ -58,9 +58,22 @@ void mainTask(void *p) {
 			AUX1_previous = 0;
 		}
 		
-		// filter the AUX2 value
-		aux2filtered = aux2filtered*0.97 + RCchannel[AUX2]*0.03;
-		
-		mpcSetpoints.elevatorSetpoint = 2.5*((aux2filtered - PPM_IN_MIDDLE_LENGTH)/((float) (PPM_IN_MAX_LENGTH - PPM_IN_MIN_LENGTH)));
+		if (auxSetpointFlag == 1) {
+			
+			aux2filtered = aux2filtered*0.99 + RCchannel[AUX2]*0.01;
+			
+			float filteredSetpoint = 5*((aux2filtered - PPM_IN_MIDDLE_LENGTH)/((float) (PPM_IN_MAX_LENGTH - PPM_IN_MIN_LENGTH)));
+			
+			float diference = filteredSetpoint - mpcSetpoints.elevatorSetpoint;
+			
+			if (diference > 0.00035)
+				diference = 0.00035;
+			else if (diference < -0.00035)
+				diference = -0.00035;
+				
+			mpcSetpoints.elevatorSetpoint = mpcSetpoints.elevatorSetpoint + diference;
+			
+			auxSetpointFlag = 0;
+		}
 	}
 }

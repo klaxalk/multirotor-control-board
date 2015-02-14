@@ -14,7 +14,7 @@ B = [0; 0; 0; 0.0045*dt; 0];
 
 %% Kovariancni matice mereni
 
-measurement_covariance = diag([0.0058, 0.04000, 0, 0, 0]);
+measurement_covariance = diag([0.0058, 0.08, 0, 0, 0]);
 
 % pocet stavu systemu 
 n_states = size(A, 1);
@@ -149,7 +149,7 @@ x_ref = zeros(simu_len+horizon_len, 1);
 % x_ref((simu_len+horizon_len)/2+1:end) = 1 + 0.2*sin(linspace(1, 20, (simu_len+horizon_len)/2))';
     
 % initial conditions
-x(:, 1) = [1; 0; 0; 0; 0.2];
+x(:, 1) = [0; 0; 0; 0; 0.3];
 
 % vektor akcnich zasahu
 u = zeros(horizon_len, u_size);
@@ -168,14 +168,14 @@ u_sat = 0;
 % kalman variables
 
 kalmanCovariance = eye(5);
-estimate(:, 1) = [2; 0; 0; 0; 0];
+estimate(:, 1) = [0; 0; 0; 0; 0];
 
 xd_pure_integration(1) = x(1, 1);
 
 %% support matrices
 
 % process noise
-R_kalman = diag([1, 1, 1, 1, 0.01]);
+R_kalman = diag([1, 1, 1, 1, 0.08]);
 
 % measurement noise
 Q_kalman = diag([120]);

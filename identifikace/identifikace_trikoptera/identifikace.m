@@ -35,7 +35,7 @@ position = integrate(data(plot_window, velocity), data(plot_window, dt));
 %% velocity
 
 % fituji rychlost polynomem
-velocity_pol = polyfit(time_plot', data(plot_window, velocity)', 80);
+velocity_pol = polyfit(time_plot', data(plot_window, velocity)', 200);
 velocity_fit = polyval(velocity_pol, time_identifikace);
 
 %% acceleration
