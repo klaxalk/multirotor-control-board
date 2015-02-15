@@ -11,7 +11,7 @@
 #include "system.h"
 
 #define STM_BUFFER_SIZE	256
-#define MPC_SATURATION	800
+#define MPC_SATURATION	1000
 
 /* -------------------------------------------------------------------- */
 /*	variables that supports MPC											*/

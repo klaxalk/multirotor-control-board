@@ -47,9 +47,6 @@ void logTask(void *p) {
 		sprintf(temp, "%2.3f, ", mpcSetpoints.aileronSetpoint);
 		usartBufferPutString(usart_buffer_log, temp, 10);
 		
-		sprintf(temp, "%2.3f, ", kalmanStates.aileron.position);
-		usartBufferPutString(usart_buffer_log, temp, 10);
-		
 		sprintf(temp, "%2.3f, ", elevatorSpeed);
 		usartBufferPutString(usart_buffer_log, temp, 10);
 		

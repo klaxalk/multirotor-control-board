@@ -66,10 +66,10 @@ void mainTask(void *p) {
 			
 			float diference = filteredSetpoint - mpcSetpoints.elevatorSetpoint;
 			
-			if (diference > 0.00035)
-				diference = 0.00035;
-			else if (diference < -0.00035)
-				diference = -0.00035;
+			if (diference > 0.00030)
+				diference = 0.00030;
+			else if (diference < -0.00030)
+				diference = -0.00030;
 				
 			mpcSetpoints.elevatorSetpoint = mpcSetpoints.elevatorSetpoint + diference;
 			
