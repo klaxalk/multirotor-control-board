@@ -239,15 +239,15 @@ ISR(PORTD_INT0_vect) {
 	}
 	
 	// if the PPM is longer then threshold => synchronizing pulse
-	if (PPM_in_length > PPM_IN_TRESHOLD) {
+	if (PPM_in_length > 10000) {
 		
 		PPM_in_current_channel = 0;
 		
 	// if it is within the boundaries of desired PPM pulse
-	} else if ((PPM_in_length >= PPM_IN_MIN_LENGTH) && (PPM_in_length <= PPM_IN_MAX_LENGTH)) {
+	} else if ((PPM_in_length >= 4000) && (PPM_in_length <= 8000)) {
 		
 		// stores the value into the RCchannel array
-		RCchannel[PPM_in_current_channel] = PPM_in_length;
+		RCchannel[PPM_in_current_channel] = PPM_in_length/2;
 		PPM_in_current_channel++;
 	} else {
 		
