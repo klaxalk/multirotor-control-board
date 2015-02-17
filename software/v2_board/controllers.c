@@ -345,7 +345,7 @@ void landingController(){
 			altitudeController(ALTITUDE_MINIMUM);
 			velocityController(0,0);
 			
-			if(fabs(throttleSetpoint - estimatedThrottlePos) < 0.1 && fabs(estimatedThrottleVel) < 0.1){
+			if(fabs(throttleSetpoint - estimatedThrottlePos) < 0.1 && fabs(estimatedThrottleVel) < 0.2){
 				landingCounter++;
 			}else{
 				landingCounter = 0;
