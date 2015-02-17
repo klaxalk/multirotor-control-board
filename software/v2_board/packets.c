@@ -244,7 +244,7 @@ void strInsert(unsigned char *str,unsigned char start,unsigned char *ins, unsign
 
 //create Transmit Request Packet 0x10
 void makeTRPacket(unsigned char *adr64,unsigned char *adr16,unsigned char options,unsigned char frameID,unsigned char *data, unsigned char dataLength){
-        unsigned char outPacket[60];
+        unsigned char outPacket[256];
         uint8_t i=0;
         //initial byte
         *outPacket=0x7E;

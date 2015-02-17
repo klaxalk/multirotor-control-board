@@ -35,7 +35,8 @@ unsigned char RxDataLen = 0;
 #define XBEE_BUFFER_SIZE 60
 unsigned char XBeeBuffer[XBEE_BUFFER_SIZE];	
 uint8_t packetIn=0;
-uint8_t packetLength=XBEE_BUFFER_SIZE-1;
+uint8_t packetLength=XBEE_BUFFER_SIZE-2;
+uint8_t checksum=0xFF;
 
 //	For calculating rate of MPC and Kalman							
 volatile int16_t mpcCounter = 0;
@@ -79,7 +80,6 @@ void Decode64(void) {
 
 void commTask(void *p) {	
 	unsigned char inChar;
-	int8_t i;
 	int16_t counter40Hz=500;
 	int16_t counter20Hz=0;
 	
@@ -108,49 +108,37 @@ void commTask(void *p) {
 			if(controllerActive!=0 && leadKopter[7]!=0x00){
 				kopterLeadDataSend(leadKopter,ADDRESS.UNKNOWN16,estimatedThrottlePos,elevatorPositionSetpoint - estimatedElevatorPos,aileronPositionSetpoint - estimatedAileronPos,0x00);				
 			}
-		}		
-		
-		
-		
+		}									
 		
 		// XBee
-		if (usartBufferGetByte(usart_buffer_xbee, &inChar, 0)) {					
-			 //packet received
-			 if (inChar == 0x7E){
-				 *XBeeBuffer=inChar;
-				 while(!usartBufferGetByte(usart_buffer_xbee, XBeeBuffer+1, 0));
-				 while(!usartBufferGetByte(usart_buffer_xbee, XBeeBuffer+2, 0));
-				 for (i=0;i<*(XBeeBuffer+2)+1;i++){
-					while(!usartBufferGetByte(usart_buffer_xbee, XBeeBuffer+3+i, 0));
-				 }
-				 packetHandler(XBeeBuffer);
-			 }
-		}
-		
-		// XBee
-		/*if (usartBufferGetByte(usart_buffer_xbee, &inChar, 0)) {
-			//packet received
-			if (inChar == 0x7E){
+		if (usartBufferGetByte(usart_buffer_xbee, &inChar, 0)) {
+			if (inChar == 0x7E && packetIn==0){
 				*XBeeBuffer=inChar;
 				packetIn=1;
+				checksum=0xFF;
 			}
+			
 			if(packetIn>0 && packetIn<=packetLength){
 				*(XBeeBuffer+packetIn)=inChar;		
+				
 				if(packetIn==2){
-					packetLength
-				}
+					packetLength=inChar+3;
+				}			
+				
+				if(packetIn>=3){
+					checksum-=inChar;
+				}				
 				packetIn++;
 			}
 			
-				while(!usartBufferGetByte(usart_buffer_xbee, XBeeBuffer+1, 0));
-				while(!usartBufferGetByte(usart_buffer_xbee, XBeeBuffer+2, 0));
-				for (i=0;i<*(XBeeBuffer+2)+1;i++){
-					while(!usartBufferGetByte(usart_buffer_xbee, XBeeBuffer+3+i, 0));
+			if(packetIn>packetLength){
+				packetIn=0;
+				packetLength=XBEE_BUFFER_SIZE-2;
+				if(checksum==0){
+					packetHandler(XBeeBuffer);
 				}
-				packetHandler(XBeeBuffer);
-			}
-		}	*/	
-		
+			}				
+		}			
 
 		//Gumstix
 		if (usartBufferGetByte(usart_buffer_4, &inChar, 0)) {
