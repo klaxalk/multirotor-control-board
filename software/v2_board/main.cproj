@@ -769,6 +769,12 @@
     <Compile Include="system.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="trajectories.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="trajectories.h">
+      <SubType>compile</SubType>
+    </Compile>
     <None Include="mavlink\mavlink_protobuf_manager.hpp">
       <SubType>compile</SubType>
     </None>

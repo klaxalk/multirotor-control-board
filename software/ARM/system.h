@@ -48,11 +48,19 @@ QueueHandle_t * usartTxQueue;
 /*	Messages types for communication between tasks						*/
 /* -------------------------------------------------------------------- */
 
+enum comm2mpcMessageType_t {START_SETPOINT, DUAL_SETPOINT, END_SETPOINT};
+
 // setpoint message
 typedef struct {
 
+	enum comm2mpcMessageType_t messageType;
+
 	float elevatorReference;
 	float aileronReference;
+
+	float elevatorEndReference;
+	float aileronEndReference;
+
 } comm2mpcMessage_t;
 
 // px4flow fresh data message

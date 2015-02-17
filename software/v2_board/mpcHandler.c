@@ -220,9 +220,9 @@ void stmSendMeasurement(float elevSpeed, float aileSpeed, int16_t elevInput, int
 }
 
 /* -------------------------------------------------------------------- */
-/*	Send point setpoints to STM											*/
+/*	Send point setpoint to STM											*/
 /* -------------------------------------------------------------------- */
-void stmSendSetpointsSimple() {
+void stmSendSetpointsStart(float elevatorSetpoint, float aileronSetpoint) {
 	
 	char crc = 0;
 	
@@ -232,8 +232,50 @@ void stmSendSetpointsSimple() {
 	sendChar(usart_buffer_stm, 's', &crc);		// id of the message
 	
 	// sends the payload
-	sendFloat(usart_buffer_stm, mpcSetpoints.elevatorSetpoint, &crc);
-	sendFloat(usart_buffer_stm, mpcSetpoints.aileronSetpoint, &crc);
+	sendFloat(usart_buffer_stm, elevatorSetpoint, &crc);
+	sendFloat(usart_buffer_stm, aileronSetpoint, &crc);
+	
+	// at last send the crc, ends the transmission
+	sendChar(usart_buffer_stm, crc, &crc);
+}
+
+/* -------------------------------------------------------------------- */
+/*	Send dual setpoints to STM (start and end of horizon)				*/
+/* -------------------------------------------------------------------- */
+void stmSendSetpointDual(float elevatorActual, float elevatorEnd, float aileronActual, float aileronEnd) {
+	
+	char crc = 0;
+	
+	sendChar(usart_buffer_stm, 'a', &crc);		// this character initiates the transmission
+	
+	sendChar(usart_buffer_stm, 1 + 4*4, &crc);	// this will be the size of the message
+	sendChar(usart_buffer_stm, 'd', &crc);		// id of the message
+	
+	// sends the payload
+	sendFloat(usart_buffer_stm, elevatorActual, &crc);
+	sendFloat(usart_buffer_stm, elevatorEnd, &crc);
+	sendFloat(usart_buffer_stm, aileronActual, &crc);
+	sendFloat(usart_buffer_stm, aileronEnd, &crc);
+	
+	// at last send the crc, ends the transmission
+	sendChar(usart_buffer_stm, crc, &crc);	
+}
+
+/* -------------------------------------------------------------------- */
+/*	Send setpoints to STM ()											*/
+/* -------------------------------------------------------------------- */
+void stmSendSetpointsEnd(float elevatorSetpoint, float aileronSetpoint) {
+	
+	char crc = 0;
+	
+	sendChar(usart_buffer_stm, 'a', &crc);		// this character initiates the transmission
+	
+	sendChar(usart_buffer_stm, 1 + 2*4, &crc);	// this will be the size of the message
+	sendChar(usart_buffer_stm, 'e', &crc);		// id of the message
+	
+	// sends the payload
+	sendFloat(usart_buffer_stm, elevatorSetpoint, &crc);
+	sendFloat(usart_buffer_stm, aileronSetpoint, &crc);
 	
 	// at last send the crc, ends the transmission
 	sendChar(usart_buffer_stm, crc, &crc);

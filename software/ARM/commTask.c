@@ -218,6 +218,8 @@ void commTask(void *p) {
 
 				comm2mpcMessage_t comm2mpcMessage;
 
+				comm2mpcMessage.messageType = START_SETPOINT;
+
 				tempFloat = readFloat(messageBuffer, &idx);
 				if (fabs(tempFloat) < 5)
 					comm2mpcMessage.elevatorReference = tempFloat;
@@ -225,6 +227,30 @@ void commTask(void *p) {
 				tempFloat = readFloat(messageBuffer, &idx);
 				if (fabs(tempFloat) < 5)
 					comm2mpcMessage.aileronReference = tempFloat;
+
+				xQueueOverwrite(comm2mpcQueue, &comm2mpcMessage);
+
+			} else if (messageId == 'd') {
+
+				comm2mpcMessage_t comm2mpcMessage;
+
+				comm2mpcMessage.messageType = DUAL_SETPOINT;
+
+				tempFloat = readFloat(messageBuffer, &idx);
+				if (fabs(tempFloat) < 5)
+					comm2mpcMessage.elevatorReference = tempFloat;
+
+				tempFloat = readFloat(messageBuffer, &idx);
+				if (fabs(tempFloat) < 5)
+					comm2mpcMessage.elevatorEndReference = tempFloat;
+
+				tempFloat = readFloat(messageBuffer, &idx);
+				if (fabs(tempFloat) < 5)
+					comm2mpcMessage.aileronReference = tempFloat;
+
+				tempFloat = readFloat(messageBuffer, &idx);
+				if (fabs(tempFloat) < 5)
+					comm2mpcMessage.aileronEndReference = tempFloat;
 
 				xQueueOverwrite(comm2mpcQueue, &comm2mpcMessage);
 			}

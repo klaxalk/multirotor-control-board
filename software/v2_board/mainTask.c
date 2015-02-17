@@ -10,9 +10,12 @@
 #include "controllers.h"
 #include "commTask.h"
 #include "mpcHandler.h"
+#include "trajectories.h"
 
 // for on-off by AUX3 channel
 int8_t AUX1_previous = 0;
+int8_t setpointChangeTrigger = 0;
+int16_t currentSetpointIdx = 0;
 
 void mainTask(void *p) {
 
@@ -58,6 +61,52 @@ void mainTask(void *p) {
 			AUX1_previous = 0;
 		}
 		
+		// aux stick for setting the setpoint
+		
+		aux2filtered = aux2filtered*0.99 + RCchannel[AUX2]*0.01;
+		
+		led_orange_off();
+		
+		if (aux2filtered > (PPM_IN_MIDDLE_LENGTH + 500)) {
+			
+			
+		} else if (aux2filtered < (PPM_IN_MIDDLE_LENGTH - 500)) {
+			
+			led_orange_on();
+			
+			if (auxSetpointFlag == 1) {
+						
+				if (setpointChangeTrigger++ == 11) {
+							
+					if (currentSetpointIdx++ >= TRAJECTORY_CIRCLE_LENGTH)
+						currentSetpointIdx = 0;
+						
+					int futureSetpointIdx = currentSetpointIdx + 200;
+					if (futureSetpointIdx >= TRAJECTORY_CIRCLE_LENGTH)
+						futureSetpointIdx = futureSetpointIdx - TRAJECTORY_CIRCLE_LENGTH;
+						
+					mpcSetpoints.elevatorSetpoint = pgm_read_float(&(elevatorCircle[currentSetpointIdx]));
+					mpcSetpoints.aileronSetpoint = pgm_read_float(&(aileronCircle[currentSetpointIdx]));
+					
+					mpcSetpoints.elevatorEndSetpoint = pgm_read_float(&(elevatorCircle[futureSetpointIdx]));
+					mpcSetpoints.aileronEndSetpoint = pgm_read_float(&(aileronCircle[futureSetpointIdx]));
+							
+					setpointChangeTrigger = 1;
+				}
+				
+				auxSetpointFlag = 0;
+			}
+		} else {
+			
+			mpcSetpoints.elevatorSetpoint = 0;
+			mpcSetpoints.aileronSetpoint = 0;
+			mpcSetpoints.elevatorEndSetpoint = 0;
+			mpcSetpoints.aileronEndSetpoint = 0;
+		}
+		
+		/* 
+		 * Manual setpoint changes 
+		 *
 		if (auxSetpointFlag == 1) {
 			
 			aux2filtered = aux2filtered*0.99 + RCchannel[AUX2]*0.01;
@@ -75,5 +124,6 @@ void mainTask(void *p) {
 			
 			auxSetpointFlag = 0;
 		}
+		*/
 	}
 }

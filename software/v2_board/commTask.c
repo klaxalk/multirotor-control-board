@@ -160,7 +160,7 @@ void commTask(void *p) {
 				led_yellow_toggle();
 					
 				stmSendMeasurement(elevatorSpeed, aileronSpeed, mpcElevatorOutput, mpcAileronOutput);
-				stmSendSetpointsSimple();
+				stmSendSetpointDual(mpcSetpoints.elevatorSetpoint, mpcSetpoints.elevatorEndSetpoint, mpcSetpoints.aileronSetpoint, mpcSetpoints.aileronEndSetpoint);
 			}
 		}
 		

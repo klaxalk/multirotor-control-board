@@ -29,6 +29,8 @@ typedef struct {
 	
 	float elevatorSetpoint;
 	float aileronSetpoint;
+	float elevatorEndSetpoint;
+	float aileronEndSetpoint;
 } mpcSetpoints_t;
 
 volatile int16_t mpcElevatorOutput;
@@ -123,9 +125,27 @@ void sendChar(UsartBuffer * usartBuffer, const char var, char * crc);
 void stmSendMeasurement(float elevSpeed, float aileSpeed, int16_t elevInput, int16_t aileInput);
 
 /**
- * @brief send basic point setpoints to MPC
+ * @brief send setpoints for the beginning of the optimized horizon
+ * @param elevatorSetpoint desired elevator position [m], + means forwards
+ * @param aileronSetpoint desired aileron position [m], + means leftwards
  */
-void stmSendSetpointsSimple();
+void stmSendSetpointsStart(float elevatorSetpoint, float aileronSetpoint);
+
+/**
+ * @brief send setpoints for the beginning and for the end of the optimized horizon (2.28s)
+ * @param elevatorActual actual desired elevator position
+ * @param elevatorEnd desired elevator position in 2.2s
+ * @param aileronActual actual desired aileron position
+ * @param aileronEnd desired aileron position in 2.2s
+ */
+void stmSendSetpointDual(float elevatorActual, float elevatorEnd, float aileronActual, float aileronEnd);
+
+/**
+ * @brief send setpoints for the end of the optimized horizon (2.28s)
+ * @param elevatorSetpoint desired elevator position [m], + means forwards
+ * @param aileronSetpoint desired aileron position [m], + means leftwards
+ */
+void stmSendSetpointsEnd(float elevatorSetpoint, float aileronSetpoint);
 
 /**
  * @brief initialize the LOCAL copy of kalman states to ZERO
