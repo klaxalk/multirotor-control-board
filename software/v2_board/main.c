@@ -33,7 +33,7 @@ int main(void)
 	/* -------------------------------------------------------------------- */
 	/*	Start the main task routine																					*/
 	/* -------------------------------------------------------------------- */
-	xTaskCreate(mainTask, (signed char*) "mainTask", 1024, NULL, 2, NULL);
+	xTaskCreate(mainTask, (signed char*) "mainTask", 256, NULL, 2, NULL);
 	
 	/* -------------------------------------------------------------------- */
 	/*	Start the main task routine																					*/

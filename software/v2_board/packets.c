@@ -9,9 +9,7 @@
 
 //Telemetry sending
 volatile unsigned char telemetryToCoordinatorArr[TELEMETRY_VARIABLES]={0};
-	
-//Blob Deflection timer
-volatile uint16_t leadFreshTimer;
+
 
 
 void makeTRPacket(unsigned char *adr64,unsigned char *adr16,unsigned char options,unsigned char frameID,unsigned char *data, unsigned char dataLength);

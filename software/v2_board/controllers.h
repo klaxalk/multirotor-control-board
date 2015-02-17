@@ -78,6 +78,9 @@ extern volatile float blobElevatorDeflection;
 extern volatile float blobAileronDeflection;
 extern volatile float lockOnBlobDistance;
 
+//Blob Deflection timer
+extern volatile uint16_t leadFreshTimer;
+
 //landing variables
 extern volatile unsigned char landingState;
 

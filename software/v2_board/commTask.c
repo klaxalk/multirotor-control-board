@@ -1,11 +1,10 @@
-#include <stdio.h>
+#include "system.h"
 #include "commTask.h"
-#include "usart_driver_RTOS.h"
 #include "communication.h"
 #include "controllers.h"
-#include "system.h"
 #include "packets.h"
 #include "commands.h"
+#include "mpcHandler.h"
 
 //in mm, must be positive! crops Gumstix values
 #define POSITION_MAXIMUM   2000 
@@ -37,6 +36,15 @@ unsigned char RxDataLen = 0;
 unsigned char XBeeBuffer[XBEE_BUFFER_SIZE];	
 uint8_t packetIn=0;
 uint8_t packetLength=XBEE_BUFFER_SIZE-1;
+
+//	For calculating rate of MPC and Kalman							
+volatile int16_t mpcCounter = 0;
+volatile int16_t mpcRate = 0;
+volatile int16_t kalmanCounter = 0;
+volatile int16_t kalmanRate = 0;
+
+//	The message handler for STM
+stmMessageHandler_t stmMessage;
 
 
 
@@ -77,6 +85,10 @@ void commTask(void *p) {
 	
 	//wait for XBee	
 	vTaskDelay(1000);
+	
+	initializeKalmanStates();	
+	mpcSetpoints.elevatorSetpoint = 0;
+	mpcSetpoints.aileronSetpoint = 0;
 		
 	while (1) {			
 		//Auto state reports	
@@ -84,6 +96,8 @@ void commTask(void *p) {
 		
 		//40Hz loop
 		if (counter40Hz++>1000){
+			stmSendMeasurement(elevatorSpeed, aileronSpeed, mpcElevatorOutput, mpcAileronOutput);
+			stmSendSetpointsSimple();
 			counter40Hz=0;
 		}
 		
@@ -95,6 +109,8 @@ void commTask(void *p) {
 				kopterLeadDataSend(leadKopter,ADDRESS.UNKNOWN16,estimatedThrottlePos,elevatorPositionSetpoint - estimatedElevatorPos,aileronPositionSetpoint - estimatedAileronPos,0x00);				
 			}
 		}		
+		
+		
 		
 		
 		// XBee
@@ -159,10 +175,10 @@ void commTask(void *p) {
 				if(zPosGumstixNew > +POSITION_MAXIMUM) zPosGumstixNew = +POSITION_MAXIMUM;
 				if(zPosGumstixNew < -POSITION_MAXIMUM) zPosGumstixNew = -POSITION_MAXIMUM;
 
-					//Camera pointing forward and being LANDSCAPE oriented
-					elevatorGumstix = + (float) xPosGumstixNew / 1000;
-					aileronGumstix  = + (float) yPosGumstixNew / 1000;
-					throttleGumstix = + (float) zPosGumstixNew / 1000;
+				//Camera pointing forward and being LANDSCAPE oriented
+				elevatorGumstix = xPosGumstixNew / 1000.0;
+				aileronGumstix  = yPosGumstixNew / 1000.0;
+				throttleGumstix = zPosGumstixNew / 1000.0;
 			}
 			gumstixDataFlag = 0;
 		}
@@ -180,9 +196,8 @@ void commTask(void *p) {
 			// +elevator = front
 			// +aileron  = left
 			// +throttle = up
-				elevatorSpeed = - opticalFlowData.flow_comp_m_x;
-				aileronSpeed  = + opticalFlowData.flow_comp_m_y;
-
+			elevatorSpeed = - opticalFlowData.flow_comp_m_x;
+			aileronSpeed  = + opticalFlowData.flow_comp_m_y;
 			
 			if (opticalFlowData.ground_distance < ALTITUDE_MAXIMUM 
 			&& opticalFlowData.ground_distance >= 0.2 ) {
@@ -191,7 +206,8 @@ void commTask(void *p) {
 			px4Confidence = opticalFlowData.quality;
 			opticalFlowDataFlag = 0;
 		}
-		
+
+		// receive data from MC control board		
 		if (usartBufferGetByte(usart_buffer_2, &inChar, 0)) {
 
 			static unsigned int crc;
@@ -247,7 +263,7 @@ void commTask(void *p) {
 			}
 		}
 		
-		// receive data from MC control board
+
 		if (DataReceived == 1) {
 	    
 			Decode64();
@@ -274,5 +290,63 @@ void commTask(void *p) {
 	    
 			DataReceived = 0;
 		}
+		
+		
+		//STM
+		if (usartBufferGetByte(usart_buffer_stm, &inChar, 0)) {
+
+			// parse it and handle the message if it is complete
+			if (stmParseChar(inChar, &stmMessage)) {
+				
+				// index for iterating the rxBuffer
+				int idx = 0;
+				
+				// messageId == '1'
+				// receive control actions computed by MPC
+				if (stmMessage.messageId == '1') {
+					
+					int16_t tempInt;
+					
+					portENTER_CRITICAL();
+					
+					// saturate the incoming elevator output
+					tempInt = readInt16(stmMessage.messageBuffer, &idx);
+					if (tempInt > MPC_SATURATION){
+						mpcElevatorOutput = MPC_SATURATION;
+					} else if (tempInt < -MPC_SATURATION) {
+						mpcElevatorOutput = -MPC_SATURATION;
+					} else {
+						mpcElevatorOutput = tempInt;
+					}
+					
+					// saturate the incoming aileron output
+					tempInt = readInt16(stmMessage.messageBuffer, &idx);
+					if (tempInt > MPC_SATURATION) {
+						mpcAileronOutput = MPC_SATURATION;
+					} else if (tempInt < -MPC_SATURATION) {
+						mpcAileronOutput = -MPC_SATURATION;
+					} else {
+						mpcAileronOutput = tempInt;
+					}									
+					portEXIT_CRITICAL();
+					
+					// messageId == '2'
+					// receive all states estimated by kalman filter
+					} else if (stmMessage.messageId == '2') {
+					
+					kalmanStates.elevator.position = readFloat(stmMessage.messageBuffer, &idx);
+					kalmanStates.elevator.velocity = readFloat(stmMessage.messageBuffer, &idx);
+					kalmanStates.elevator.acceleration = readFloat(stmMessage.messageBuffer, &idx);
+					kalmanStates.elevator.acceleration_input = readFloat(stmMessage.messageBuffer, &idx);
+					kalmanStates.elevator.acceleration_error = readFloat(stmMessage.messageBuffer, &idx);
+					
+					kalmanStates.aileron.position = readFloat(stmMessage.messageBuffer, &idx);
+					kalmanStates.aileron.velocity = readFloat(stmMessage.messageBuffer, &idx);
+					kalmanStates.aileron.acceleration = readFloat(stmMessage.messageBuffer, &idx);
+					kalmanStates.aileron.acceleration_input = readFloat(stmMessage.messageBuffer, &idx);
+					kalmanStates.aileron.acceleration_error = readFloat(stmMessage.messageBuffer, &idx);
+				}
+			}
+		}		
 	}	
 }

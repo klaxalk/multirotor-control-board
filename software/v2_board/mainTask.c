@@ -3,7 +3,6 @@
 #include "communication.h"
 #include "system.h"
 #include "packets.h"
-#include "commands.h"
 #include <stdio.h> // sprintf
 #include <stdlib.h> // abs
 

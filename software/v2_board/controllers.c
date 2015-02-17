@@ -1,8 +1,7 @@
 #include "controllers.h"
 #include "communication.h"
 
-#include "packets.h"
-#include "commands.h"
+#include "constants.h"
 
 // controllers output variables
 volatile int16_t controllerElevatorOutput=0;
@@ -42,14 +41,19 @@ volatile float throttleDesiredSetpoint = DEFAULT_THROTTLE_SETPOINT;
 volatile float elevatorDesiredVelocitySetpoint = DEFAULT_ELEVATOR_VELOCITY_SETPOINT;
 volatile float aileronDesiredVelocitySetpoint  = DEFAULT_AILERON_VELOCITY_SETPOINT;
 
-//Gumstix 
+//Blob 
 volatile unsigned char gumstixStable=0;
 volatile float blobElevatorDeflection=0;
 volatile float blobAileronDeflection=0;
 volatile float lockOnBlobDistance = -1; 
 
+//Blob Deflection timer
+volatile uint16_t leadFreshTimer;
+
 //landing variables
 volatile unsigned char landingState = 0x00;
+
+
 
 //trajectory variables
 volatile int8_t trajIndex = 0;
