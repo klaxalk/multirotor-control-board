@@ -96,9 +96,9 @@ void commTask(void *p) {
 		
 		//40Hz loop
 		if (counter40Hz++>1000){
-			stmSendMeasurement(elevatorSpeed, aileronSpeed, mpcElevatorOutput, mpcAileronOutput);
-			stmSendSetpointsSimple();
 			counter40Hz=0;
+			stmSendMeasurement(elevatorSpeed, aileronSpeed, mpcElevatorOutput, mpcAileronOutput);
+			stmSendSetpointsSimple();			
 		}
 		
 		//20Hz loop
@@ -111,15 +111,9 @@ void commTask(void *p) {
 		}									
 		
 		// XBee
-		if (usartBufferGetByte(usart_buffer_xbee, &inChar, 0)) {
-			if (inChar == 0x7E && packetIn==0){
-				*XBeeBuffer=inChar;
-				packetIn=1;
-				checksum=0xFF;
-			}
-			
-			if(packetIn>0 && packetIn<=packetLength){
-				*(XBeeBuffer+packetIn)=inChar;		
+		if (usartBufferGetByte(usart_buffer_xbee, &inChar, 0)) {						
+			if(packetIn>0){
+				*(XBeeBuffer+packetIn)=inChar;										
 				
 				if(packetIn==2){
 					packetLength=inChar+3;
@@ -131,12 +125,18 @@ void commTask(void *p) {
 				packetIn++;
 			}
 			
+			if (inChar == 0x7E && packetIn==0){
+				*XBeeBuffer=inChar;
+				packetIn=1;
+				checksum=0xFF;
+			}
+			
 			if(packetIn>packetLength){
 				packetIn=0;
-				packetLength=XBEE_BUFFER_SIZE-2;
+				packetLength=XBEE_BUFFER_SIZE-2;				
 				if(checksum==0){
-					packetHandler(XBeeBuffer);
-				}
+					packetHandler(XBeeBuffer);		
+				}		
 			}				
 		}			
 

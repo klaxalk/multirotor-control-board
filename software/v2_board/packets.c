@@ -33,6 +33,7 @@ void packetHandler(unsigned char *inPacket){
     unsigned char address64[8];
     unsigned char recieveOptions[5];
     unsigned char dataIN[25];
+
 	
 	float *f1;
 	float *f2;
@@ -45,12 +46,12 @@ void packetHandler(unsigned char *inPacket){
 	char ch3[4];
 	char ch4[4];	
 	unsigned char usc;
-
     switch ((int)*(inPacket+3)) {
     //Receive Packet
     case 0x90:
-            parReceivePacket(inPacket,address64,address16,recieveOptions,dataIN);
-            //*data is data length
+		    led_blue_toggle();
+            parReceivePacket(inPacket,address64,address16,recieveOptions,dataIN);			
+            //*data is data length				
             switch ((int)*(dataIN+1)){
                 //command
                 case 'c':
