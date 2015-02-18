@@ -42,13 +42,41 @@ void mpcTask(void *p) {
 
 			} else if (comm2mpcMessage.messageType == DUAL_SETPOINT) {
 
+#ifndef TRAJECTORY_INTERPOLATION
+#error TRAJECTORY_INTERPOLATION is not defined!
+#endif
+
+#if TRAJECTORY_INTERPOLATION == LINEAR
+
+				int i;
+				float step;
+
+				// set the elevator reference
+				vector_float_set(elevatorMpcHandler->position_reference, 1, comm2mpcMessage.elevatorReference);
+				step = (comm2mpcMessage.elevatorEndReference - comm2mpcMessage.elevatorReference)/elevatorMpcHandler->horizon_len;
+
+				for (i = 2; i <= elevatorMpcHandler->horizon_len; i++) {
+
+					vector_float_set(elevatorMpcHandler->position_reference, i, vector_float_get(elevatorMpcHandler->position_reference, i-1) + step);
+				}
+
+				vector_float_set(aileronMpcHandler->position_reference, 1, comm2mpcMessage.aileronReference);
+				step = (comm2mpcMessage.aileronEndReference - comm2mpcMessage.aileronReference)/aileronMpcHandler->horizon_len;
+
+				for (i = 2; i <= aileronMpcHandler->horizon_len; i++) {
+
+					vector_float_set(aileronMpcHandler->position_reference, i, vector_float_get(aileronMpcHandler->position_reference, i-1) + step);
+				}
+
+#elif TRAJECTORY_INTERPOLATION == LOGARITHMIC
+
 				// set the elevator reference
 				vector_float_set(elevatorMpcHandler->position_reference, 1, comm2mpcMessage.elevatorReference);
 
 				int i;
 				for (i = 2; i <= elevatorMpcHandler->horizon_len; i++) {
 
-					vector_float_set(elevatorMpcHandler->position_reference, i, vector_float_get(elevatorMpcHandler->position_reference, i-1)*0.95 + comm2mpcMessage.elevatorEndReference*0.05);
+					vector_float_set(elevatorMpcHandler->position_reference, i, vector_float_get(elevatorMpcHandler->position_reference, i-1)*0.99 + comm2mpcMessage.elevatorEndReference*0.01);
 				}
 
 				// set the aileron reference
@@ -56,8 +84,12 @@ void mpcTask(void *p) {
 
 				for (i = 2; i <= aileronMpcHandler->horizon_len; i++) {
 
-					vector_float_set(aileronMpcHandler->position_reference, i, vector_float_get(aileronMpcHandler->position_reference, i-1)*0.95 + comm2mpcMessage.aileronEndReference*0.05);
+					vector_float_set(aileronMpcHandler->position_reference, i, vector_float_get(aileronMpcHandler->position_reference, i-1)*0.99 + comm2mpcMessage.aileronEndReference*0.01);
 				}
+#else
+	#warning TRAJECTORY_INTERPOLATION is not set properly!
+#endif
+
 			}
 		}
 

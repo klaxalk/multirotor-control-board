@@ -89,7 +89,7 @@ B_roof = B_roof*U;
 %           ..., ..., Q,    0;
 %           0,   ..., ...,  S];
 
-Q = [1, 0, 0, 0, 0;
+Q = [1.075, 0, 0, 0, 0;
      0, 0, 0, 0, 0;
      0, 0, 0, 0, 0;
      0, 0, 0, 0, 0;
@@ -143,13 +143,20 @@ simu_len = 2000;
 
 time(1) = 0;
 
+elevator_vel = 0.25*cos(0:0.003:2*pi*20);
+aileron_vel = 0.25*sin(0:0.003:2*pi*20);
+
+elevator_pos = integrate(elevator_vel, dt);
+aileron_pos = integrate(aileron_vel, dt);
+aileron_pos = aileron_pos - mean(aileron_pos);
+
 % reference position
-x_ref = zeros(simu_len+horizon_len, 1);
+x_ref = elevator_pos;
 
 % x_ref((simu_len+horizon_len)/2+1:end) = 1 + 0.2*sin(linspace(1, 20, (simu_len+horizon_len)/2))';
     
 % initial conditions
-x(:, 1) = [0; 0; 0; 0; 0.3];
+x(:, 1) = [0; 0; 0; 0; 0];
 
 % vektor akcnich zasahu
 u = zeros(horizon_len, u_size);
@@ -175,7 +182,7 @@ xd_pure_integration(1) = x(1, 1);
 %% support matrices
 
 % process noise
-R_kalman = diag([1, 1, 1, 1, 0.08]);
+R_kalman = diag([1, 1, 1, 1, 0.02]);
 
 % measurement noise
 Q_kalman = diag([120]);
@@ -252,7 +259,7 @@ plot(time, estimate(1, 1:i), 'b');
 plot(linspace(i*dt, dt*(i+horizon_len), horizon_len), x_cf(1, :),'--r');
 title('Position in time');
 ylabel('Position [m]');
-axis([0, dt*simu_len, -0.25, 1.25]);
+% axis([0, dt*simu_len, -0.25, 1.25]);
 
 subplot(2, 2, 2);
 hold off

@@ -140,14 +140,22 @@ void commTask(void *p) {
 				mavlink_msg_optical_flow_decode(&mavlinkMessage, &opticalFlowData);
 					
 				// rotate px4flow data
-				elevatorSpeed = -opticalFlowData.flow_comp_m_x;
-				aileronSpeed  = +opticalFlowData.flow_comp_m_y;
+				
+				portENTER_CRITICAL();
+				
+				if (fabs(opticalFlowData.flow_comp_m_x) <= 0.6)
+					elevatorSpeed = -opticalFlowData.flow_comp_m_x;
+				
+				if (fabs(opticalFlowData.flow_comp_m_y) <= 0.6)
+					aileronSpeed  = +opticalFlowData.flow_comp_m_y;
 
 				// saturate the ground distance
 				if (opticalFlowData.ground_distance < ALTITUDE_MAXIMUM && opticalFlowData.ground_distance > 0.3) {
 
 					groundDistance = opticalFlowData.ground_distance;
 				}
+	
+				portEXIT_CRITICAL();
 
 				px4Confidence = opticalFlowData.quality;
 
@@ -161,6 +169,7 @@ void commTask(void *p) {
 					
 				stmSendMeasurement(elevatorSpeed, aileronSpeed, mpcElevatorOutput, mpcAileronOutput);
 				stmSendSetpointDual(mpcSetpoints.elevatorSetpoint, mpcSetpoints.elevatorEndSetpoint, mpcSetpoints.aileronSetpoint, mpcSetpoints.aileronEndSetpoint);
+				// stmSendSetpointsStart(mpcSetpoints.elevatorSetpoint, mpcSetpoints.aileronSetpoint);
 			}
 		}
 		

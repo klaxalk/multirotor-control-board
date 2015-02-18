@@ -13,9 +13,9 @@
 #include "trajectories.h"
 
 // for on-off by AUX3 channel
-int8_t AUX1_previous = 0;
-int8_t setpointChangeTrigger = 0;
-int16_t currentSetpointIdx = 0;
+volatile int8_t AUX1_previous = 0;
+volatile int8_t setpointChangeTrigger = 0;
+volatile int16_t currentSetpointIdx = 0;
 
 void mainTask(void *p) {
 
@@ -63,25 +63,31 @@ void mainTask(void *p) {
 		
 		// aux stick for setting the setpoint
 		
-		aux2filtered = aux2filtered*0.99 + RCchannel[AUX2]*0.01;
+		aux2filtered = aux2filtered*0.997 + RCchannel[AUX2]*0.003;
 		
 		led_orange_off();
 		
-		if (aux2filtered > (PPM_IN_MIDDLE_LENGTH + 500)) {
+		if (aux2filtered > (PPM_IN_MIDDLE_LENGTH + 300)) {
 			
+			mpcSetpoints.elevatorSetpoint = 2;
+			mpcSetpoints.aileronSetpoint = 0;
+			mpcSetpoints.elevatorEndSetpoint = 2;
+			mpcSetpoints.aileronEndSetpoint = 0;
 			
-		} else if (aux2filtered < (PPM_IN_MIDDLE_LENGTH - 500)) {
+		} else if (aux2filtered < (PPM_IN_MIDDLE_LENGTH - 300)) {
 			
 			led_orange_on();
 			
 			if (auxSetpointFlag == 1) {
 						
 				if (setpointChangeTrigger++ == 11) {
+						
+					currentSetpointIdx++;
 							
-					if (currentSetpointIdx++ >= TRAJECTORY_CIRCLE_LENGTH)
+					if (currentSetpointIdx >= TRAJECTORY_CIRCLE_LENGTH)
 						currentSetpointIdx = 0;
 						
-					int futureSetpointIdx = currentSetpointIdx + 200;
+					int16_t futureSetpointIdx = currentSetpointIdx + 200;
 					if (futureSetpointIdx >= TRAJECTORY_CIRCLE_LENGTH)
 						futureSetpointIdx = futureSetpointIdx - TRAJECTORY_CIRCLE_LENGTH;
 						

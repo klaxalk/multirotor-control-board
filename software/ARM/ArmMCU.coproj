@@ -99,9 +99,9 @@
     <File name="cmsis_lib/include/stm32f4xx_usart.h" path="cmsis_lib/include/stm32f4xx_usart.h" type="1"/>
     <File name="miscellaneous.c" path="miscellaneous.c" type="1"/>
     <File name="FreeRTOS/Source/include/timers.h" path="FreeRTOS/Source/include/timers.h" type="1"/>
-    <File name="cmsis/core_cm4_simd.h" path="cmsis/core_cm4_simd.h" type="1"/>
     <File name="cmsis_boot/startup" path="" type="2"/>
     <File name="cmsis_boot/stm32f4xx.h" path="cmsis_boot/stm32f4xx.h" type="1"/>
+    <File name="cmsis/core_cm4_simd.h" path="cmsis/core_cm4_simd.h" type="1"/>
     <File name="mpc/elevator_and_aileron/elevAileMpcMatrices.h" path="mpc/elevator_and_aileron/elevAileMpcMatrices.h" type="1"/>
     <File name="cmsis/core_cmFunc.h" path="cmsis/core_cmFunc.h" type="1"/>
     <File name="cmsis/core_cm4.h" path="cmsis/core_cm4.h" type="1"/>
@@ -164,10 +164,10 @@
     <File name="mpc/elevator" path="" type="2"/>
     <File name="uart_driver" path="" type="2"/>
     <File name="cmsis_lib/source/stm32f4xx_tim.c" path="cmsis_lib/source/stm32f4xx_tim.c" type="1"/>
-    <File name="FreeRTOS/Source/include/FreeRTOS.h" path="FreeRTOS/Source/include/FreeRTOS.h" type="1"/>
     <File name="cmsis_lib/include/stm32f4xx_gpio.h" path="cmsis_lib/include/stm32f4xx_gpio.h" type="1"/>
-    <File name="mpc/elevator_and_aileron" path="" type="2"/>
     <File name="mpc/aileron/aileronMpc.c" path="mpc/aileron/aileronMpc.c" type="1"/>
+    <File name="mpc/elevator_and_aileron" path="" type="2"/>
+    <File name="FreeRTOS/Source/include/FreeRTOS.h" path="FreeRTOS/Source/include/FreeRTOS.h" type="1"/>
     <File name="CMatrixLib" path="" type="2"/>
     <File name="FreeRTOS/Source/include/event_groups.h" path="FreeRTOS/Source/include/event_groups.h" type="1"/>
     <File name="syscalls" path="" type="2"/>

@@ -2,8 +2,8 @@
 
 dt = 0.0114;
 
-elevator_vel = 0.30*cos(0:0.005:2*pi);
-aileron_vel = 0.30*sin(0:0.005:2*pi);
+elevator_vel = 0.25*cos(0:0.003:2*pi);
+aileron_vel = 0.25*sin(0:0.003:2*pi);
 
 elevator_pos = integrate(elevator_vel, dt);
 aileron_pos = integrate(aileron_vel, dt);

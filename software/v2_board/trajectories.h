@@ -11,7 +11,7 @@
 
 #include "system.h"
 
-#define TRAJECTORY_CIRCLE_LENGTH 1257
+#define TRAJECTORY_CIRCLE_LENGTH 2095
 
 const float elevatorCircle[TRAJECTORY_CIRCLE_LENGTH] PROGMEM;
 const float aileronCircle[TRAJECTORY_CIRCLE_LENGTH] PROGMEM;

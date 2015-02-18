@@ -23,8 +23,8 @@ printMatrixM(fid, 'A', '%1.8f', A);
 printMatrixM(fid, 'B', '%1.8f', B);
 printMatrixM(fid, 'horizon_len', '%d', horizon_len);
 printMatrixM(fid, 'n_variables', '%d', n_variables);
-printMatrixM(fid, 'Q', '%1.1f', Q);
-printMatrixM(fid, 'S', '%1.1f', S);
+printMatrixM(fid, 'Q', '%1.3f', Q);
+printMatrixM(fid, 'S', '%1.3f', S);
 printMatrixM(fid, 'P', '%1.10f', P);
 
 fprintf(fid, '*/\n\n');

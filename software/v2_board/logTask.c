@@ -71,7 +71,10 @@ void logTask(void *p) {
 		sprintf(temp, "%d, ", altitudeControllerEnabled);
 		usartBufferPutString(usart_buffer_log, temp, 10);
 		
-		sprintf(temp, "%d", mpcControllerEnabled);
+		sprintf(temp, "%d, ", mpcControllerEnabled);
+		usartBufferPutString(usart_buffer_log, temp, 10);
+
+		sprintf(temp, "%d", opticalFlowData.quality);
 		usartBufferPutString(usart_buffer_log, temp, 10);
 		
 		usartBufferPutString(usart_buffer_log, "\n", 10);
