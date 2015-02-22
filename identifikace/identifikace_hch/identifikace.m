@@ -58,7 +58,7 @@ input_window = data(iden_window, input);
 dt_window = data(iden_window, dt);
 
 B = acceleration_fit(2:end);
-A = [acceleration_fit(1:end-1) input_window(2:end)];
+A = [acceleration_fit(1:end-1) input_window(1:end-1)];
 
 P = A\B;
 P0 = P(1)

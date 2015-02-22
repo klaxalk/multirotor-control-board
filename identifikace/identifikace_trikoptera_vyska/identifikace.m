@@ -50,14 +50,14 @@ acceleration_fit = polyval(acceleration_pol, time_identifikace);
 %% input
 
 % shift input of the offset
-action = data(plot_window, input) - mean(data(plot_window, input)) - 4;
+action = data(plot_window, input) - mean(data(plot_window, input)) - 5;
 action_pol = polyfit(time_plot', action, 250);
 action_fit = polyval(action_pol, time_identifikace);
 
 %% identify transfare input -> acceleration
 
 B = acceleration_fit(2:end);
-A = [acceleration_fit(1:end-1) action_fit(2:end)];
+A = [acceleration_fit(1:end-1) action_fit(1:end-1)];
 
 P = A\B;
 P0 = P(1)
