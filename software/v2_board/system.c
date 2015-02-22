@@ -174,7 +174,7 @@ void boardInit() {
 	/* -------------------------------------------------------------------- */
 	/*	Initialize queues													*/
 	/* -------------------------------------------------------------------- */
-	main2commsQueue = xQueueCreate(1, sizeof(main2commMessage_t));
+	main2commsQueue = xQueueCreate(10, sizeof(main2commMessage_t));
 }
 
 /* -------------------------------------------------------------------- */

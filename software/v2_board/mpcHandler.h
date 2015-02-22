@@ -24,13 +24,11 @@ typedef struct {
 	char * messageBuffer;
 } stmMessageHandler_t;
 
-// this structure hold setpoints for elevator and aileron position
+// this structure hold setpoints for elevator and aileron position, mainly for debugging
 typedef struct {
 	
-	float elevatorSetpoint;
-	float aileronSetpoint;
-	float elevatorEndSetpoint;
-	float aileronEndSetpoint;
+	float elevator;
+	float aileron;
 } mpcSetpoints_t;
 
 volatile int16_t mpcElevatorOutput;
@@ -125,27 +123,18 @@ void sendChar(UsartBuffer * usartBuffer, const char var, char * crc);
 void stmSendMeasurement(float elevSpeed, float aileSpeed, int16_t elevInput, int16_t aileInput);
 
 /**
- * @brief send setpoints for the beginning of the optimized horizon
+ * @brief send setpoint for the whole optimized horizon (constant setpoint)
  * @param elevatorSetpoint desired elevator position [m], + means forwards
  * @param aileronSetpoint desired aileron position [m], + means leftwards
  */
-void stmSendSetpointsStart(float elevatorSetpoint, float aileronSetpoint);
+void stmSendSetpoint(float elevatorSetpoint, float aileronSetpoint);
 
 /**
- * @brief send setpoints for the beginning and for the end of the optimized horizon (2.28s)
- * @param elevatorActual actual desired elevator position
- * @param elevatorEnd desired elevator position in 2.2s
- * @param aileronActual actual desired aileron position
- * @param aileronEnd desired aileron position in 2.2s
+ * @brief send trajectory (2.2s) by means of 5 points equally distributed from the start to the end of the optimization horizon
+ * @param elevatorTrajectory 5 points from the elevator trajectory
+ * @param aileronTrajectory 5 points from the aileron trajectory
  */
-void stmSendSetpointDual(float elevatorActual, float elevatorEnd, float aileronActual, float aileronEnd);
-
-/**
- * @brief send setpoints for the end of the optimized horizon (2.28s)
- * @param elevatorSetpoint desired elevator position [m], + means forwards
- * @param aileronSetpoint desired aileron position [m], + means leftwards
- */
-void stmSendSetpointsEnd(float elevatorSetpoint, float aileronSetpoint);
+void stmSendTrajectory(float elevatorTrajectory[5], float aileronTrajectory[5]);
 
 /**
  * @brief initialize the LOCAL copy of kalman states to ZERO

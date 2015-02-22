@@ -32,64 +32,46 @@ void mpcTask(void *p) {
 		/* -------------------------------------------------------------------- */
 		/*	If there is a message from commTask									*/
 		/* -------------------------------------------------------------------- */
-		if (xQueueReceive(comm2mpcQueue, &comm2mpcMessage, 0)) {
+		while (xQueueReceive(comm2mpcQueue, &comm2mpcMessage, 0)) {
 
-			if (comm2mpcMessage.messageType == START_SETPOINT) {
+			if (comm2mpcMessage.messageType == SETPOINT) {
 
 				// copy the incoming set point/s into the local vector
-				vector_float_set_to(elevatorMpcHandler->position_reference, comm2mpcMessage.elevatorReference);
-				vector_float_set_to(aileronMpcHandler->position_reference, comm2mpcMessage.aileronReference);
+				vector_float_set_to(elevatorMpcHandler->position_reference, comm2mpcMessage.elevatorReference[0]);
+				vector_float_set_to(aileronMpcHandler->position_reference, comm2mpcMessage.aileronReference[0]);
 
-			} else if (comm2mpcMessage.messageType == DUAL_SETPOINT) {
+			} else if (comm2mpcMessage.messageType == TRAJECTORY) {
 
-#ifndef TRAJECTORY_INTERPOLATION
-#error TRAJECTORY_INTERPOLATION is not defined!
-#endif
-
-#if TRAJECTORY_INTERPOLATION == LINEAR
-
-				int i;
+				int i, j;
 				float step;
 
-				// set the elevator reference
-				vector_float_set(elevatorMpcHandler->position_reference, 1, comm2mpcMessage.elevatorReference);
-				step = (comm2mpcMessage.elevatorEndReference - comm2mpcMessage.elevatorReference)/elevatorMpcHandler->horizon_len;
+				// for all key-point in the elevator reference
+				for (j = 0; j < 4; j++) {
 
-				for (i = 2; i <= elevatorMpcHandler->horizon_len; i++) {
+					// calculate the interpolation step
+					step = (comm2mpcMessage.elevatorReference[j+1] - comm2mpcMessage.elevatorReference[j])/50;
 
-					vector_float_set(elevatorMpcHandler->position_reference, i, vector_float_get(elevatorMpcHandler->position_reference, i-1) + step);
+					vector_float_set(elevatorMpcHandler->position_reference, j*50+1, comm2mpcMessage.elevatorReference[j]);
+
+					for (i = 1; i < 50; i++) {
+
+						vector_float_set(elevatorMpcHandler->position_reference, j*50+1+i, vector_float_get(elevatorMpcHandler->position_reference, j*50+i) + step);
+					}
 				}
 
-				vector_float_set(aileronMpcHandler->position_reference, 1, comm2mpcMessage.aileronReference);
-				step = (comm2mpcMessage.aileronEndReference - comm2mpcMessage.aileronReference)/aileronMpcHandler->horizon_len;
+				// for all key-point in the aileron reference
+				for (j = 0; j < 4; j++) {
 
-				for (i = 2; i <= aileronMpcHandler->horizon_len; i++) {
+					// calculate the interpolation step
+					step = (comm2mpcMessage.aileronReference[j+1] - comm2mpcMessage.aileronReference[j])/50;
 
-					vector_float_set(aileronMpcHandler->position_reference, i, vector_float_get(aileronMpcHandler->position_reference, i-1) + step);
+					vector_float_set(aileronMpcHandler->position_reference, j*50+1, comm2mpcMessage.aileronReference[j]);
+
+					for (i = 1; i < 50; i++) {
+
+						vector_float_set(aileronMpcHandler->position_reference, j*50+1+i, vector_float_get(aileronMpcHandler->position_reference, j*50+i) + step);
+					}
 				}
-
-#elif TRAJECTORY_INTERPOLATION == LOGARITHMIC
-
-				// set the elevator reference
-				vector_float_set(elevatorMpcHandler->position_reference, 1, comm2mpcMessage.elevatorReference);
-
-				int i;
-				for (i = 2; i <= elevatorMpcHandler->horizon_len; i++) {
-
-					vector_float_set(elevatorMpcHandler->position_reference, i, vector_float_get(elevatorMpcHandler->position_reference, i-1)*0.99 + comm2mpcMessage.elevatorEndReference*0.01);
-				}
-
-				// set the aileron reference
-				vector_float_set(aileronMpcHandler->position_reference, 1, comm2mpcMessage.aileronReference);
-
-				for (i = 2; i <= aileronMpcHandler->horizon_len; i++) {
-
-					vector_float_set(aileronMpcHandler->position_reference, i, vector_float_get(aileronMpcHandler->position_reference, i-1)*0.99 + comm2mpcMessage.aileronEndReference*0.01);
-				}
-#else
-	#warning TRAJECTORY_INTERPOLATION is not set properly!
-#endif
-
 			}
 		}
 
@@ -115,6 +97,10 @@ void mpcTask(void *p) {
 
 			// calculate the aileron MPC
 			mpc2commMessage.aileronOutput = calculateMPC(aileronMpcHandler);
+
+			// copy the current setpoint (main for debug)
+			mpc2commMessage.elevatorSetpoint = vector_float_get(elevatorMpcHandler->position_reference, 1);
+			mpc2commMessage.aileronSetpoint = vector_float_get(aileronMpcHandler->position_reference, 1);
 
 			// send outputs to commTask
 			xQueueOverwrite(mpc2commQueue, &mpc2commMessage);

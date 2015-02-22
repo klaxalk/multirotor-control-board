@@ -41,7 +41,7 @@ void boardInit() {
     kalman2commQueue = xQueueCreate(1, sizeof(kalman2commMessage_t));
 
     // create a queue from commTask to mpcTask
-    comm2mpcQueue = xQueueCreate(1, sizeof(comm2mpcMessage_t));
+    comm2mpcQueue = xQueueCreate(50, sizeof(comm2mpcMessage_t));
 
     // create a queue from commTask to mpcTask
     resetKalmanQueue = xQueueCreate(1, sizeof(resetKalmanMessage_t));

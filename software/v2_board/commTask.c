@@ -36,8 +36,8 @@ void commTask(void *p) {
 	
 	initializeKalmanStates();
 	
-	mpcSetpoints.elevatorSetpoint = 0;
-	mpcSetpoints.aileronSetpoint = 0;
+	mpcSetpoints.elevator = 0;
+	mpcSetpoints.aileron = 0;
 		
 	while (1) {
 				
@@ -82,6 +82,9 @@ void commTask(void *p) {
 					// copy the saturated values
 					controllerElevatorOutput = mpcElevatorOutput;
 					controllerAileronOutput = mpcAileronOutput;
+					
+					mpcSetpoints.elevator = readFloat(stmMessage.messageBuffer, &idx);
+					mpcSetpoints.aileron = readFloat(stmMessage.messageBuffer, &idx);
 				
 					portEXIT_CRITICAL();
 					
@@ -117,8 +120,8 @@ void commTask(void *p) {
 				sendFloat(usart_buffer_xbee, kalmanStates.elevator.position, &crc);
 				sendFloat(usart_buffer_xbee, kalmanStates.aileron.position, &crc);
 				
-				sendFloat(usart_buffer_xbee, mpcSetpoints.elevatorSetpoint, &crc);
-				sendFloat(usart_buffer_xbee, mpcSetpoints.aileronSetpoint, &crc);
+				sendFloat(usart_buffer_xbee, mpcSetpoints.elevator, &crc);
+				sendFloat(usart_buffer_xbee, mpcSetpoints.aileron, &crc);
 					
 				sendInt16(usart_buffer_xbee, mpcElevatorOutput, &crc);
 				sendInt16(usart_buffer_xbee, mpcAileronOutput, &crc);
@@ -168,8 +171,6 @@ void commTask(void *p) {
 				led_yellow_toggle();
 					
 				stmSendMeasurement(elevatorSpeed, aileronSpeed, mpcElevatorOutput, mpcAileronOutput);
-				stmSendSetpointDual(mpcSetpoints.elevatorSetpoint, mpcSetpoints.elevatorEndSetpoint, mpcSetpoints.aileronSetpoint, mpcSetpoints.aileronEndSetpoint);
-				// stmSendSetpointsStart(mpcSetpoints.elevatorSetpoint, mpcSetpoints.aileronSetpoint);
 			}
 		}
 		
@@ -181,7 +182,15 @@ void commTask(void *p) {
 			// send message to STM to reset its Kalman filter			
 			if (main2commMessage.messageType == CLEAR_STATES) {
 	
-				stmResetKalman(0, 0);
+				stmResetKalman(main2commMessage.data.simpleSetpoint.elevator, main2commMessage.data.simpleSetpoint.aileron);
+			
+			} else if (main2commMessage.messageType == SET_SETPOINT) {
+				
+				stmSendSetpoint(main2commMessage.data.simpleSetpoint.elevator, main2commMessage.data.simpleSetpoint.aileron);
+
+			} else if (main2commMessage.messageType == SET_TRAJECTORY) {
+				
+				stmSendTrajectory(main2commMessage.data.trajectory.elevatorTrajectory, main2commMessage.data.trajectory.aileronTrajectory);
 			}
 		}
 	}

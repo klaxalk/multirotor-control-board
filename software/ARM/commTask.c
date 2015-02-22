@@ -198,7 +198,7 @@ void commTask(void *p) {
 				if (abs(tempInt) < 300)
 					mes.aileronInput = (float) tempInt;
 
-				xQueueOverwrite(comm2kalmanQueue, &mes);
+				xQueueSend(comm2kalmanQueue, &mes, 0);
 
 			} else if (messageId == '2') {
 
@@ -212,47 +212,49 @@ void commTask(void *p) {
 				if (fabs(tempFloat) < 5)
 					mes.aileronPosition = tempFloat;
 
-				xQueueOverwrite(resetKalmanQueue, &mes);
+				xQueueSend(resetKalmanQueue, &mes, 0);
 
 			} else if (messageId == 's') {
 
 				comm2mpcMessage_t comm2mpcMessage;
 
-				comm2mpcMessage.messageType = START_SETPOINT;
+				comm2mpcMessage.messageType = SETPOINT;
 
 				tempFloat = readFloat(messageBuffer, &idx);
-				if (fabs(tempFloat) < 5)
-					comm2mpcMessage.elevatorReference = tempFloat;
+				if (fabs(tempFloat) < 25)
+					comm2mpcMessage.elevatorReference[0] = tempFloat;
 
 				tempFloat = readFloat(messageBuffer, &idx);
-				if (fabs(tempFloat) < 5)
-					comm2mpcMessage.aileronReference = tempFloat;
+				if (fabs(tempFloat) < 25)
+					comm2mpcMessage.aileronReference[0] = tempFloat;
 
-				xQueueOverwrite(comm2mpcQueue, &comm2mpcMessage);
+				xQueueSend(comm2mpcQueue, &comm2mpcMessage, 0);
 
-			} else if (messageId == 'd') {
+			} else if (messageId == 't') {
 
 				comm2mpcMessage_t comm2mpcMessage;
 
-				comm2mpcMessage.messageType = DUAL_SETPOINT;
+				comm2mpcMessage.messageType = TRAJECTORY;
 
-				tempFloat = readFloat(messageBuffer, &idx);
-				if (fabs(tempFloat) < 5)
-					comm2mpcMessage.elevatorReference = tempFloat;
+				// receive the elevator trajectory key-point
+				int i;
+				for (i = 0; i < 5; i++) {
 
-				tempFloat = readFloat(messageBuffer, &idx);
-				if (fabs(tempFloat) < 5)
-					comm2mpcMessage.elevatorEndReference = tempFloat;
+					tempFloat = readFloat(messageBuffer, &idx);
+					if (fabs(tempFloat) < 25)
+						comm2mpcMessage.elevatorReference[i] = tempFloat;
+				}
 
-				tempFloat = readFloat(messageBuffer, &idx);
-				if (fabs(tempFloat) < 5)
-					comm2mpcMessage.aileronReference = tempFloat;
+				// receive the aileron trajectory key-point
+				for (i = 0; i < 5; i++) {
 
-				tempFloat = readFloat(messageBuffer, &idx);
-				if (fabs(tempFloat) < 5)
-					comm2mpcMessage.aileronEndReference = tempFloat;
+					tempFloat = readFloat(messageBuffer, &idx);
+					if (fabs(tempFloat) < 25)
+						comm2mpcMessage.aileronReference[i] = tempFloat;
+				}
 
-				xQueueOverwrite(comm2mpcQueue, &comm2mpcMessage);
+				xQueueSend(comm2mpcQueue, &comm2mpcMessage, 0);
+
 			}
 
 			messageReceived = 0;
@@ -270,11 +272,14 @@ void commTask(void *p) {
 			// clear the crc
 			crcOut = 0;
 			sendChar('a', &crcOut);			// this character initiates the transmission
-			sendChar(1+4, &crcOut);			// this will be the size of the message
+			sendChar(1 + 4 + 2*4, &crcOut);			// this will be the size of the message
 
 			sendChar('1', &crcOut);			// id of the message
 			sendInt16((int16_t) mpcMessage.elevatorOutput, &crcOut);
 			sendInt16((int16_t) mpcMessage.aileronOutput, &crcOut);
+
+			sendFloat(mpcMessage.elevatorSetpoint, &crcOut);
+			sendFloat(mpcMessage.aileronSetpoint, &crcOut);
 
 			sendChar(crcOut, &crcOut);
 		}

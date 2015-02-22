@@ -48,18 +48,15 @@ QueueHandle_t * usartTxQueue;
 /*	Messages types for communication between tasks						*/
 /* -------------------------------------------------------------------- */
 
-enum comm2mpcMessageType_t {START_SETPOINT, DUAL_SETPOINT, END_SETPOINT};
+enum comm2mpcMessageType_t {SETPOINT, TRAJECTORY};
 
 // setpoint message
 typedef struct {
 
 	enum comm2mpcMessageType_t messageType;
 
-	float elevatorReference;
-	float aileronReference;
-
-	float elevatorEndReference;
-	float aileronEndReference;
+	float elevatorReference[5];
+	float aileronReference[5];
 
 } comm2mpcMessage_t;
 
@@ -77,6 +74,8 @@ typedef struct {
 
 	float elevatorOutput;
 	float aileronOutput;
+	float elevatorSetpoint;
+	float aileronSetpoint;
 } mpc2commMessage_t;
 
 // message to reset the kalman states

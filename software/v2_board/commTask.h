@@ -12,11 +12,30 @@
 /*	message from mainTask to commTask									*/
 /* -------------------------------------------------------------------- */
 
-enum main2commMessageType_t {CLEAR_STATES};
+enum main2commMessageType_t {CLEAR_STATES, SET_SETPOINT, SET_TRAJECTORY};
+
+typedef struct {
+	
+	float elevator;
+	float aileron;
+} simpleSetpoint_t;
+
+typedef struct {
+	
+	float elevatorTrajectory[5];
+	float aileronTrajectory[5];
+} trajectorySetpoint_t;
+
+typedef union {
+	
+	simpleSetpoint_t simpleSetpoint;
+	trajectorySetpoint_t trajectory;
+} main2commMessagePayload;
 
 typedef struct {
 	
 	enum main2commMessageType_t messageType;
+	main2commMessagePayload data;
 } main2commMessage_t;
 
 /* -------------------------------------------------------------------- */

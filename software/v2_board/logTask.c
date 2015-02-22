@@ -41,10 +41,10 @@ void logTask(void *p) {
 		sprintf(temp, "%2.3f, ", kalmanStates.aileron.acceleration_error);
 		usartBufferPutString(usart_buffer_log, temp, 10);
 		
-		sprintf(temp, "%2.3f, ", mpcSetpoints.elevatorSetpoint);
+		sprintf(temp, "%2.3f, ", mpcSetpoints.elevator);
 		usartBufferPutString(usart_buffer_log, temp, 10);
 		
-		sprintf(temp, "%2.3f, ", mpcSetpoints.aileronSetpoint);
+		sprintf(temp, "%2.3f, ", mpcSetpoints.aileron);
 		usartBufferPutString(usart_buffer_log, temp, 10);
 		
 		sprintf(temp, "%2.3f, ", elevatorSpeed);
@@ -77,7 +77,7 @@ void logTask(void *p) {
 		sprintf(temp, "%d", opticalFlowData.quality);
 		usartBufferPutString(usart_buffer_log, temp, 10);
 		
-		usartBufferPutString(usart_buffer_log, "\n", 10);
+		usartBufferPutByte(usart_buffer_log, '\n', 10);
 				
 		// makes the 50Hz loop
 		vTaskDelay(DELAY_MILISECONDS);

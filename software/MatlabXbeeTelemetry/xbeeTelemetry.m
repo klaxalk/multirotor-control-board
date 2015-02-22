@@ -49,8 +49,9 @@ while true
     hold off
     scatter(-in(pos, 2), in(pos, 1), 'filled');
     hold on
-    scatter(-in(pos, 4), in(pos, 3), 'filled', 'r');
-    axis([-1.5 1.5 -1.5 1.5]);
+%     scatter(-in(pos, 4), in(pos, 3), 'filled', 'r');
+    circle(-in(pos, 4), in(pos, 3), 0.1);
+    axis([-1.5 1.5 -1.5 1.5]*2);
     
     % plot the action
     subplot(2, 1, 2);
@@ -92,3 +93,4 @@ while true
     end
     
 end
+
