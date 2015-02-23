@@ -49,7 +49,6 @@ void packetHandler(unsigned char *inPacket){
     switch ((int)*(inPacket+3)) {
     //Receive Packet
     case 0x90:
-		    led_blue_toggle();
             parReceivePacket(inPacket,address64,address16,recieveOptions,dataIN);			
             //*data is data length				
             switch ((int)*(dataIN+1)){
@@ -297,7 +296,6 @@ void parReceivePacket(unsigned char *inPacket,unsigned char *address64,unsigned 
     for (i=0 ; i<*data ; i++){
         *(data+i+1)=*(inPacket+15+i);
     }
-
 }
 
 

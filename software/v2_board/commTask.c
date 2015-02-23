@@ -97,7 +97,7 @@ void commTask(void *p) {
 		//40Hz loop
 		if (counter40Hz++>1000){
 			counter40Hz=0;
-			stmSendMeasurement(elevatorSpeed, aileronSpeed, mpcElevatorOutput, mpcAileronOutput);
+			stmSendMeasurement(elevatorSpeed, aileronSpeed, controllerElevatorOutput, controllerAileronOutput);
 			stmSendSetpointsSimple();			
 		}
 		
@@ -106,7 +106,7 @@ void commTask(void *p) {
 			counter20Hz=0;
 			telemetryToCoordinatorSend();
 			if(controllerActive!=0 && leadKopter[7]!=0x00){
-				kopterLeadDataSend(leadKopter,ADDRESS.UNKNOWN16,estimatedThrottlePos,elevatorPositionSetpoint - estimatedElevatorPos,aileronPositionSetpoint - estimatedAileronPos,0x00);				
+				kopterLeadDataSend(leadKopter,ADDRESS.UNKNOWN16,position.altitude,positionSetpoint.elevator - position.elevator,positionSetpoint.aileron - position.aileron,0x00);				
 			}
 		}									
 		

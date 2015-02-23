@@ -15,9 +15,10 @@
 //constants for setpoints
 #define DEFAULT_AILERON_POSITION_SETPOINT 0
 #define DEFAULT_ELEVATOR_POSITION_SETPOINT 0
-#define DEFAULT_THROTTLE_SETPOINT 1
+#define DEFAULT_THROTTLE_POSITION_SETPOINT 1
 #define DEFAULT_AILERON_VELOCITY_SETPOINT 0
 #define DEFAULT_ELEVATOR_VELOCITY_SETPOINT 0
+#define DEFAULT_THROTTLE_VELOCITY_SETPOINT 0
 
 // constants for position and velocity controllers
 #define SPEED_MAX 0.4 // in m/s, must be positive!
@@ -36,6 +37,13 @@
 #define CONTROLLER_AILERON_SATURATION  100
 #define CONTROLLER_THROTTLE_SATURATION 300
 
+//Elevator Aileron struct
+typedef struct{
+	float elevator;
+	float aileron;
+	float altitude;
+}state_t;
+
 // controllers output variables
 extern volatile int16_t controllerElevatorOutput;
 extern volatile int16_t controllerAileronOutput;
@@ -46,31 +54,16 @@ extern volatile int16_t controllerThrottleOutput;
 volatile unsigned char controllerActive;
 
 //vars for estimators
-extern volatile float estimatedElevatorPos;
-extern volatile float estimatedAileronPos;
-extern volatile float estimatedThrottlePos;
-extern volatile float estimatedElevatorVel;
-extern volatile float estimatedAileronVel;
-extern volatile float estimatedThrottleVel;
-extern volatile float estimatedElevatorAcc;
-extern volatile float estimatedAileronAcc;
-
-extern volatile float estimatedBlobElevator;
-extern volatile float estimatedBlobAileron;
-extern volatile float estimatedBlobVertical;
+extern volatile state_t position;
+extern volatile state_t speed;
+extern volatile state_t acceleration;
+extern volatile state_t blob;
 
 //vars for controllers
-extern volatile float elevatorPositionSetpoint;
-extern volatile float aileronPositionSetpoint;
-extern volatile float throttleSetpoint;
-extern volatile float elevatorVelocitySetpoint;
-extern volatile float aileronVelocitySetpoint;
-
-extern volatile float elevatorDesiredPositionSetpoint;
-extern volatile float aileronDesiredPositionSetpoint;
-extern volatile float throttleDesiredSetpoint;
-extern volatile float elevatorDesiredVelocitySetpoint;
-extern volatile float aileronDesiredVelocitySetpoint;
+extern volatile state_t positionSetpoint;
+extern volatile state_t speedSetpoint;
+extern volatile state_t positionDesiredSetpoint;
+extern volatile state_t speedDesiredSetpoint;
 
 //Blob
 extern volatile unsigned char gumstixStable;

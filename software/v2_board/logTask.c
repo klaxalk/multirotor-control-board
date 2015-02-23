@@ -29,24 +29,24 @@ void logTaskReadable(void *p){
 	while(1){	
 		logValueStr((float) (pitchAngle/10.0));
 		logValueStr((float) (rollAngle/10.0));
-		logValueStr(estimatedThrottlePos); //altitude
-		logValueStr(estimatedThrottleVel);
-		logValueStr(estimatedElevatorPos); //elevator
-		logValueStr(estimatedElevatorVel);
-		logValueStr(estimatedElevatorAcc);
-		logValueStr(estimatedAileronPos); //aileron
-		logValueStr(estimatedAileronVel);
-		logValueStr(estimatedAileronAcc);
+		logValueStr(position.altitude); //altitude
+		logValueStr(speed.altitude);
+		logValueStr(position.elevator); //elevator
+		logValueStr(speed.elevator);
+		logValueStr(acceleration.elevator);
+		logValueStr(position.aileron); //aileron
+		logValueStr(speed.aileron);
+		logValueStr(acceleration.aileron);
 		logValueStr(validGumstix); //blob detector
-		logValueStr(estimatedBlobElevator);
-		logValueStr(estimatedBlobAileron);
-		logValueStr(estimatedBlobVertical); 
+		logValueStr(blob.elevator);
+		logValueStr(blob.aileron);
+		logValueStr(blob.altitude); 
 		logValueStr((float)controllerActive); //controller		
-		logValueStr(throttleSetpoint);  //setpoints
-		logValueStr(elevatorPositionSetpoint);
-		logValueStr(aileronPositionSetpoint);
-		logValueStr(elevatorVelocitySetpoint);
-		logValueStr(aileronVelocitySetpoint);
+		logValueStr(positionSetpoint.altitude);  //setpoints
+		logValueStr(positionSetpoint.elevator);
+		logValueStr(positionSetpoint.aileron);
+		logValueStr(speedSetpoint.elevator);
+		logValueStr(speedSetpoint.aileron);
 		logValueStr((float)outputThrottle); //outputs
 		logValueStr((float)outputElevator);
 		logValueStr((float)outputAileron);
@@ -72,24 +72,24 @@ void logTaskBinary(void *p){
 	while(1){			
 		logValueBin((float) (pitchAngle/10.0)); //angles
 		logValueBin((float) (rollAngle/10.0));
-		logValueBin(estimatedThrottlePos); //altitude
-		logValueBin(estimatedThrottleVel);
-		logValueBin(estimatedElevatorPos); //elevator
-		logValueBin(estimatedElevatorVel);
-		logValueBin(estimatedElevatorAcc);
-		logValueBin(estimatedAileronPos); //aileron
-		logValueBin(estimatedAileronVel);
-		logValueBin(estimatedAileronAcc);
+		logValueBin(position.altitude); //altitude
+		logValueBin(speed.altitude);
+		logValueBin(position.elevator); //elevator
+		logValueBin(speed.elevator);
+		logValueBin(acceleration.elevator);
+		logValueBin(position.aileron); //aileron
+		logValueBin(speed.aileron);
+		logValueBin(acceleration.aileron);
 		logValueBin(validGumstix); //blob detector
-		logValueBin(estimatedBlobElevator);
-		logValueBin(estimatedBlobAileron);
-		logValueBin(estimatedBlobVertical); 
+		logValueBin(blob.elevator);
+		logValueBin(blob.aileron);
+		logValueBin(blob.altitude); 
 		logValueBin((float)controllerActive); //controller		
-		logValueBin(throttleSetpoint); //setpoints
-		logValueBin(elevatorPositionSetpoint);
-		logValueBin(aileronPositionSetpoint);
-		logValueBin(elevatorVelocitySetpoint);
-		logValueBin(aileronVelocitySetpoint);
+		logValueBin(positionSetpoint.altitude); //setpoints
+		logValueBin(positionSetpoint.elevator);
+		logValueBin(positionSetpoint.aileron);
+		logValueBin(speedSetpoint.elevator);
+		logValueBin(speedSetpoint.aileron);
 		logValueBin((float)outputThrottle); //outputs
 		logValueBin((float)outputElevator);
 		logValueBin((float)outputAileron);

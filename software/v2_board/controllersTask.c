@@ -36,13 +36,13 @@ void controllersTask(void *p) {
 			if(landingState==LANDING.FLIGHT){	
 				//VELOCITY	
 				if(controllerActive==CONTROLLERS.VELOCITY){
-					velocityController(elevatorDesiredVelocitySetpoint,aileronDesiredVelocitySetpoint);
-					altitudeController(throttleDesiredSetpoint);	
+					velocityController(speedDesiredSetpoint.elevator,speedDesiredSetpoint.aileron);
+					altitudeController(positionDesiredSetpoint.altitude);	
 				}else
 				//POSITION
 				if(controllerActive==CONTROLLERS.POSITION){
-					positionController(elevatorDesiredPositionSetpoint,aileronDesiredPositionSetpoint);	
-					altitudeController(throttleDesiredSetpoint);	
+					positionController(positionDesiredSetpoint.elevator,positionDesiredSetpoint.aileron);	
+					altitudeController(positionDesiredSetpoint.altitude);	
 				}else
 				//PREDICTIVE
 				if(controllerActive==CONTROLLERS.MPC){
