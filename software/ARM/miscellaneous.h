@@ -9,7 +9,6 @@
 
 #include "system.h"
 #include "CMatrixLib.h"
-#include "system.h"
 
 // dynamically allocate the matrix using FreeRTOS pvPortMalloc
 matrix_float * matrix_float_alloc(const int16_t h, const int16_t w);

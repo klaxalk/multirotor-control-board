@@ -70,49 +70,92 @@ position_est = integrate(velocity_est, data(plot_window, dt));
 
 %% plot position
 
-figure(1);
+hFig = figure(1);
+
 subplot(2, 2, 1);
 hold off
-plot(time_plot, position, 'b');
+plot(time_plot, position, 'r--', 'LineWidth', 2);
 hold on
-plot(time_plot, position_est, 'g');
+plot(time_plot, position_est, 'b', 'LineWidth', 2);
 title('Position');
-legend('px4flow', 'estimated from input');
-xlabel('time [s]');
-ylabel('position [m]');
+legend('Integrated measurement', 'Estimated in open-loop');
+xlabel('Time [s]');
+ylabel('Position [m]');
+axis([0 time_plot(end) -1.2 2.5]);
 
 %% plot velocity
 
 subplot(2, 2, 2);
 hold off
-plot(time_plot, data(plot_window, velocity), 'b');
+plot(time_plot, data(plot_window, velocity), 'r--', 'LineWidth', 2);
 hold on
-plot(time_identifikace, velocity_fit, 'r');
-plot(time_plot, velocity_est, 'g');
+plot(time_plot, velocity_est, 'b', 'LineWidth', 2);
 title('Velocity');
-legend('px4flow', 'fitted polynome', 'estimated from input');
-xlabel('time [s]');
-ylabel('velocity [m/s]');
+legend('Measured velocity', 'Estimated in open-loop');
+xlabel('Time [s]');
+ylabel('Velocity [m/s]');
+axis([0 time_plot(end) -1 2]);
 
 %% plot acceleration
 
 subplot(2, 2, 3);
 hold off
-plot(time_identifikace, acceleration_fit, 'b');
+plot(time_identifikace, acceleration_fit, 'r--', 'LineWidth', 2);
 hold on
-plot(time_plot, acceleration_est, 'g');
+plot(time_plot, acceleration_est, 'b', 'LineWidth', 2);
 title('Acceleration');
-legend('estimate from px4flow', 'estimate from input');
-xlabel('time [s]');
-ylabel('acceleration [m/s^2]');
+legend('Derived velocity', 'Estimated in open-loop');
+xlabel('Time [s]');
+ylabel('Acceleration [m/s^2]');
+axis([0 time_plot(end) -1.2 2.1]);
 
 %% plot input
 
 subplot(2, 2, 4);
 hold off
-plot(time_plot, data(plot_window, input), 'b');
+plot(time_plot, data(plot_window, input), 'b', 'LineWidth', 2);
 hold on
 title('Input');
-legend('input');
-xlabel('time [s]');
-ylabel('input []');
+legend('Input, desired angle of attitude');
+xlabel('Time [s]');
+ylabel('Tnput []');
+axis([0 time_plot(end) -450 800]);  
+
+set(hFig, 'Units', 'centimeters');
+set(hFig, 'Position', [0 0 21 21*0.5625])
+
+tightfig(hFig);
+
+% matlab2tikz('iden2.tikz', 'height', '\figureheight', 'width', '\figurewidth');
+
+%% plotting for thesis
+
+hFig = figure(2);
+
+subplot(1, 2, 1);   
+hold off
+plot(time_plot, data(plot_window, velocity), 'g', 'LineWidth', 2);
+hold on
+plot(time_identifikace, velocity_fit, 'b', 'LineWidth', 2);
+title('Velocity');
+legend('Velocity [m/s]', 'Fitted polynomial [m/s]');
+xlabel('Time [s]');
+ylabel('velocity [m/s]');
+axis([0 time_plot(end) -1 2]);
+
+subplot(1, 2, 2);
+hold off
+plot(time_plot, data(plot_window, input), 'b', 'LineWidth', 2);
+hold on
+title('Input');
+legend('Input [m]');
+xlabel('Time [s]');
+ylabel('Input []');
+axis([0 time_plot(end) -450 800]);  
+
+set(hFig, 'Units', 'centimeters');
+set(hFig, 'Position', [0 0 21 21*0.5625/2])
+
+tightfig(hFig);
+
+% matlab2tikz('mysphere.tikz', 'height', '\figureheight', 'width', '\figurewidth');
