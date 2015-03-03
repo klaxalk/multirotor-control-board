@@ -74,9 +74,9 @@ hFig = figure(1);
 
 subplot(2, 2, 1);
 hold off
-plot(time_plot, position, 'r--', 'LineWidth', 2);
+plot(time_plot, position, 'r--', 'LineWidth', 1.5);
 hold on
-plot(time_plot, position_est, 'b', 'LineWidth', 2);
+plot(time_plot, position_est, 'b', 'LineWidth', 1.5);
 title('Position');
 legend('Integrated measurement', 'Estimated in open-loop');
 xlabel('Time [s]');
@@ -87,9 +87,9 @@ axis([0 time_plot(end) -1.2 2.5]);
 
 subplot(2, 2, 2);
 hold off
-plot(time_plot, data(plot_window, velocity), 'r--', 'LineWidth', 2);
+plot(time_plot, data(plot_window, velocity), 'r--', 'LineWidth', 1.5);
 hold on
-plot(time_plot, velocity_est, 'b', 'LineWidth', 2);
+plot(time_plot, velocity_est, 'b', 'LineWidth', 1.5);
 title('Velocity');
 legend('Measured velocity', 'Estimated in open-loop');
 xlabel('Time [s]');
@@ -100,9 +100,9 @@ axis([0 time_plot(end) -1 2]);
 
 subplot(2, 2, 3);
 hold off
-plot(time_identifikace, acceleration_fit, 'r--', 'LineWidth', 2);
+plot(time_identifikace, acceleration_fit, 'r--', 'LineWidth', 1.5);
 hold on
-plot(time_plot, acceleration_est, 'b', 'LineWidth', 2);
+plot(time_plot, acceleration_est, 'b', 'LineWidth', 1.5);
 title('Acceleration');
 legend('Derived velocity', 'Estimated in open-loop');
 xlabel('Time [s]');
@@ -113,7 +113,7 @@ axis([0 time_plot(end) -1.2 2.1]);
 
 subplot(2, 2, 4);
 hold off
-plot(time_plot, data(plot_window, input), 'b', 'LineWidth', 2);
+plot(time_plot, data(plot_window, input), 'b', 'LineWidth', 1.5);
 hold on
 title('Input');
 legend('Input, desired angle of attitude');
@@ -134,9 +134,9 @@ hFig = figure(2);
 
 subplot(1, 2, 1);   
 hold off
-plot(time_plot, data(plot_window, velocity), 'g', 'LineWidth', 2);
+plot(time_plot, data(plot_window, velocity), 'g', 'LineWidth', 1.5);
 hold on
-plot(time_identifikace, velocity_fit, 'b', 'LineWidth', 2);
+plot(time_identifikace, velocity_fit, 'b', 'LineWidth', 1.5);
 title('Velocity');
 legend('Velocity [m/s]', 'Fitted polynomial [m/s]');
 xlabel('Time [s]');
@@ -145,7 +145,7 @@ axis([0 time_plot(end) -1 2]);
 
 subplot(1, 2, 2);
 hold off
-plot(time_plot, data(plot_window, input), 'b', 'LineWidth', 2);
+plot(time_plot, data(plot_window, input), 'b', 'LineWidth', 1.5);
 hold on
 title('Input');
 legend('Input [m]');
