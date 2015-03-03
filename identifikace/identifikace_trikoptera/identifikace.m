@@ -118,7 +118,7 @@ hold on
 title('Input');
 legend('Input, desired angle of attitude');
 xlabel('Time [s]');
-ylabel('Tnput []');
+ylabel('Input [-]');
 axis([0 time_plot(end) -450 800]);  
 
 set(hFig, 'Units', 'centimeters');
@@ -150,7 +150,7 @@ hold on
 title('Input');
 legend('Input [m]');
 xlabel('Time [s]');
-ylabel('Input []');
+ylabel('Input [-]');
 axis([0 time_plot(end) -450 800]);  
 
 set(hFig, 'Units', 'centimeters');
