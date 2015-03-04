@@ -71,7 +71,7 @@ velocity_est = integrate(acceleration_est, ones(1, length(iden_window)).*dt);
 
 position_est = integrate(velocity_est, ones(1, length(iden_window)).*dt);
 
-% %% plot position
+%% plot the altitude
 
 hFig = figure(1);
 subplot(2, 2, 1);
@@ -125,5 +125,35 @@ axis([0 time_plot(end) -80 130]);
 
 set(hFig, 'Units', 'centimeters');
 set(hFig, 'Position', [0 0 21 21*0.5625])
+
+tightfig(hFig);
+
+%% plotting for thesis
+
+hFig = figure(2);
+
+subplot(1, 2, 1);   
+hold off
+plot(time_identifikace, filtr_extremnich_hodnot(data(iden_window, altitude)), 'g', 'LineWidth', 1.5);
+hold on
+plot(time_identifikace, position_fit+pos_offset, 'LineWidth', 1.5);
+title('Altitude');
+legend('Altitude [m]', 'Fitted polynomial [m/s]');
+xlabel('Time [s]');
+ylabel('Altitude [m/s]');
+axis([time_identifikace(1) time_identifikace(end) 0.68, 0.835]);
+
+subplot(1, 2, 2);
+hold off
+plot(time_plot, action, 'b', 'LineWidth', 1.5);
+hold on
+title('Input');
+legend('Input [m]');
+xlabel('Time [s]');
+ylabel('Input [-]');
+axis([0 time_plot(end) -80 130]);  
+
+set(hFig, 'Units', 'centimeters');
+set(hFig, 'Position', [0 0 21 21*0.5625/2])
 
 tightfig(hFig);

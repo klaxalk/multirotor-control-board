@@ -126,8 +126,6 @@ set(hFig, 'Position', [0 0 21 21*0.5625])
 
 tightfig(hFig);
 
-% matlab2tikz('iden2.tikz', 'height', '\figureheight', 'width', '\figurewidth');
-
 %% plotting for thesis
 
 hFig = figure(2);
@@ -140,7 +138,7 @@ plot(time_identifikace, velocity_fit, 'b', 'LineWidth', 1.5);
 title('Velocity');
 legend('Velocity [m/s]', 'Fitted polynomial [m/s]');
 xlabel('Time [s]');
-ylabel('velocity [m/s]');
+ylabel('Velocity [m/s]');
 axis([0 time_plot(end) -1 2]);
 
 subplot(1, 2, 2);
@@ -157,5 +155,3 @@ set(hFig, 'Units', 'centimeters');
 set(hFig, 'Position', [0 0 21 21*0.5625/2])
 
 tightfig(hFig);
-
-% matlab2tikz('mysphere.tikz', 'height', '\figureheight', 'width', '\figurewidth');
