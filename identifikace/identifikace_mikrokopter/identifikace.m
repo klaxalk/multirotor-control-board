@@ -14,7 +14,7 @@ data(:, dt) = 0.0114;
 
 % okrojení dat
 from = 3000;
-to = size(data)-100;
+to = size(data)-500;
 
 % od-do fitování
 plot_window = from:to;
@@ -24,7 +24,7 @@ margin = 200;
 iden_window = (from+margin):(to-margin); 
 
 data(:, velocity) = data(:, velocity) - mean(data(from:from+30, velocity));
-data(:, input) = data(:, input) -  mean(data(from:from+40, input));
+data(:, input) = data(:, input) -  mean(data(from:from+40, input)) + 22;
 
 %% integrate dt to time vector
 
