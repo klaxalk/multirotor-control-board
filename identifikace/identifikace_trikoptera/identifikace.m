@@ -132,7 +132,7 @@ hFig = figure(2);
 
 subplot(1, 2, 1);   
 hold off
-plot(time_plot, data(plot_window, velocity), 'g', 'LineWidth', 1.5);
+plot(time_plot, data(plot_window, velocity), 'r', 'LineWidth', 1.5);
 hold on
 plot(time_identifikace, velocity_fit, 'b', 'LineWidth', 1.5);
 title('Velocity');
