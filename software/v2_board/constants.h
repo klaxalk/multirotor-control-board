@@ -16,23 +16,23 @@ typedef struct
 
 typedef struct
 {
-	unsigned char GROUND_DISTANCE_ESTIMATED;
-	unsigned char GROUND_DISTANCE;
+	unsigned char ALTITUDE_ESTIMATED;
+	unsigned char ALTITUDE;
 	unsigned char ELEVATOR_SPEED;
 	unsigned char AILERON_SPEED;
 	unsigned char ELEVATOR_SPEED_ESTIMATED;
 	unsigned char AILERON_SPEED_ESTIMATED;
-	unsigned char ELEVATOR_POS_ESTIMATED;
-	unsigned char AILERON_POS_ESTIMATED;
-	unsigned char THROTTLE_CONTROLLER_OUTPUT;
-	unsigned char THROTTLE_SPEED;
+	unsigned char ELEVATOR_POSITION;
+	unsigned char AILERON_POSITION;
+	unsigned char ALTITUDE_CONTROLLER_OUTPUT;
+	unsigned char ALTITUDE_SPEED;
 	unsigned char AILERON_CONTROLLER_OUTPUT;
 	unsigned char ELEVATOR_CONTROLLER_OUTPUT;
-	unsigned char THROTTLE_SETPOINT;
+	unsigned char ALTITUDE_SETPOINT;
 	unsigned char ELEVATOR_POS_SETPOINT;
 	unsigned char AILERON_POS_SETPOINT;
-	unsigned char ELEVATOR_VEL_SETPOINT;
-	unsigned char AILERON_VEL_SETPOINT;
+	unsigned char ELEVATOR_SPEED_SETPOINT;
+	unsigned char AILERON_SPEED_SETPOINT;
 	unsigned char ELEVATOR_ACC;
 	unsigned char AILERON_ACC;
 	unsigned char VALID_GUMSTIX;
@@ -47,7 +47,7 @@ typedef struct
 	unsigned char ROLL_ANGLE;
 } TELEMETRIEST;
 
-#define TELEMETRY_VARIABLES 37
+#define TELEMETRY_VARIABLES 29
 
 
 typedef struct
@@ -55,21 +55,6 @@ typedef struct
 	unsigned char ON;
 	unsigned char OFF;
 } ONOFFT;
-
-typedef struct
-{
-	unsigned char THROTTLE_SP;
-	unsigned char ELEVATOR_POSITION;
-	unsigned char AILERON_POSITION;
-	unsigned char ELEVATOR_VELOCITY;
-	unsigned char AILERON_VELOCITY;
-} SETPOINTST;
-
-typedef struct
-{
-	unsigned char ABSOLUT;
-	unsigned char RELATIV;
-} POSITIONST;
 
 typedef struct
 {
@@ -90,10 +75,8 @@ typedef struct
 
 typedef struct
 {
-	unsigned char TELEMETRY;
 	unsigned char TELEMETRY_COORDINATOR;
 	unsigned char LANDING;
-	unsigned char SET_SETPOINTS;
 	unsigned char CONTROLLERS;
 	unsigned char TRAJECTORY_POINTS;
 	unsigned char LOCK_ON_BLOB;
@@ -106,8 +89,6 @@ extern unsigned char GET_STATUS;
 extern ADDRESST ADDRESS;
 extern TELEMETRIEST TELEMETRIES;
 extern ONOFFT ONOFF;
-extern SETPOINTST SETPOINTS;
-extern POSITIONST POSITIONS;
 extern CONTROLLERST CONTROLLERS;
 extern LANDINGT LANDING;
 extern COMMANDST COMMANDS;

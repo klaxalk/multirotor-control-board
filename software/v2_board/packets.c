@@ -54,12 +54,8 @@ void packetHandler(unsigned char *inPacket){
             switch ((int)*(dataIN+1)){
                 //command
                 case 'c':
-                        //TELEMETRY REQUESTS						
-                        if(*(dataIN+2)==COMMANDS.TELEMETRY){                            					            
-                            telemetrySend(address64,address16,*(dataIN+3),0x00);                            
-                        }else
 						//TELEMETRY TO COORDINATOR
-						 if(*(dataIN+2)==COMMANDS.TELEMETRY_COORDINATOR){  
+						if(*(dataIN+2)==COMMANDS.TELEMETRY_COORDINATOR){  
 							if(*(dataIN+3)==GET_STATUS){
 								telemetryToCoordinatorReport(address64,address16,*(dataIN+4),0x00);
 							}else{
@@ -89,20 +85,7 @@ void packetHandler(unsigned char *inPacket){
 								ch4[0]=*(dataIN+16); ch4[1]=*(dataIN+17); ch4[2]=*(dataIN+18); ch4[3]=*(dataIN+19); f4=(float *)ch4;
 								kopterTrajectoryAddPoint(address64,address16,*(dataIN+3),*ui32,*f2,*f3,*f4);																															
 							}
-						} else																		
-						//SETPOINTS REQUEST
-						if(*(dataIN+2)==COMMANDS.SET_SETPOINTS){
-							if(*(dataIN+3)==GET_STATUS){
-								kopterSetpointsReport(address64,address16,*(dataIN+4),0x00);
-							}else{
-								ch1[0]=*(dataIN+5);
-								ch1[1]=*(dataIN+6);
-								ch1[2]=*(dataIN+7);
-								ch1[3]=*(dataIN+8);
-								f1=(float *)ch1;
-								kopterSetpointsSet(address64,address64,*(dataIN+3),*(dataIN+4),*f1);
-							}
-						}else
+						} else																							
 						//CONTROLLERS
 						if(*(dataIN+2)==COMMANDS.CONTROLLERS){
 							if(*(dataIN+3)==GET_STATUS){
@@ -184,10 +167,6 @@ void packetHandler(unsigned char *inPacket){
 							ch1[3]=*(dataIN+7);
 							f1=(float *)ch1;  
 							kopterSetpointsReportReceived(address64,address16,*(dataIN+3),*f1);
-						 }else
-						 //CONTROLLERS STATUS
-						 if(*(dataIN+2)==COMMANDS.CONTROLLERS){
-							kopterControllersReportReceived(address64,address16,*(dataIN+3));
 						 }else
 						 //TIME STATUS
 						 if(*(dataIN+2)==COMMANDS.TIME){

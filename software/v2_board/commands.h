@@ -3,10 +3,6 @@
 
 float telemetryValue(unsigned char type);
 
-void telemetrySend(unsigned char *address64,unsigned char *address16,unsigned char type,unsigned char frameID);
-void telemetryRequest(unsigned char *address64,unsigned char *address16,unsigned char type, unsigned char frameID);
-void telemetryReceive(unsigned char *address64,unsigned char *address16,unsigned char type,float value);
-
 void telemetryToCoordinatorSend();
 void telemetryToCoordinatorSet(unsigned char *address64,unsigned char *address16,unsigned char type,unsigned char on, unsigned char frameID);
 void telemetryToCoordinator(unsigned char *address64,unsigned char *address16,unsigned char type,unsigned char on);
@@ -28,12 +24,6 @@ void kopterTrajectoryAddPoint(unsigned char *address64,unsigned char *address16,
 void kopterTrajectoryPointStatusRequest(unsigned char *address64,unsigned char *address16,unsigned char frameID);
 void kopterTrajectoryPointReport(unsigned char *address64,unsigned char *address16,unsigned char index,unsigned char frameID);
 void kopterTrajectoryPointReportReceived(unsigned char *address64,unsigned char *address16,unsigned char index,uint32_t time,float elevatorPos,float aileronPos,float throttlePos);
-
-void kopterSetpointsSetRequest(unsigned char *address64,unsigned char *address16,unsigned char type,unsigned char positionType,float value,unsigned char frameID);
-void kopterSetpointsSet(unsigned char *address64,unsigned char *address16,unsigned char type,unsigned char positionType,float value);
-void kopterSetpointStatusRequest(unsigned char *address64,unsigned char *address16,unsigned char type,unsigned char frameID);
-void kopterSetpointsReport(unsigned char *address64,unsigned char *address16,unsigned char type,unsigned char frameID);
-void kopterSetpointsReportReceived(unsigned char *address64,unsigned char *address16,unsigned char type,float value);
 
 void kopterControllersRequest(unsigned char *address64,unsigned char *address16,unsigned char option,unsigned char frameID);
 void kopterControllers(unsigned char *address64,unsigned char *address16,unsigned char option);
