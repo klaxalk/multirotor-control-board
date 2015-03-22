@@ -155,3 +155,51 @@ set(hFig, 'Units', 'centimeters');
 set(hFig, 'Position', [0 0 21 21*0.5625/2])
 
 tightfig(hFig);
+
+%% Kalman test
+
+covariance = eye(3);
+
+kalmanfrom = from+2800;
+kalmanto = kalmanfrom+1000;
+
+dt = 0.0114;
+
+kalmandata = data(kalmanfrom:kalmanto, :);
+timekalman = integrate(kalmandata(:, 1));
+
+states(:, 1) = [0; kalmandata(1, velocity); 0];
+
+A = [1 dt 0;
+     0 1 dt;
+     0 0 0.9799];
+ 
+B = [0; 0; 5.0719e-05];
+
+R = [1 0 0;
+     0 0.0000053333 0;
+     0 0 0.01];
+ 
+Q = diag([0.08]);
+
+C = [0, 1, 0];
+
+for i=2:size(kalmandata, 1)
+    [states(:, i) covariance] = kalman(states(:, i-1), covariance, kalmandata(i, velocity), kalmandata(i, input), A, B, R, Q, C);
+end
+
+hFig = figure(3);
+ 
+hold off
+plot(timekalman, kalmandata(:, velocity), 'r', 'LineWidth', 1.5);
+hold on
+plot(timekalman, states(2, :), 'b', 'LineWidth', 1.5);
+legend('Measured velocity', 'Filtered velocity');
+xlabel('Time [s]');
+ylabel('Velocity [m/s]');
+axis([0 timekalman(end) -0.9 1.1]);
+
+% set(hFig, 'Units', 'centimeters');
+% set(hFig, 'Position', [0 0 21 21*0.5625/2])
+
+% tightfig(hFig);
