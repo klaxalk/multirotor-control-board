@@ -136,7 +136,7 @@ plot(time_plot, data(plot_window, velocity), 'r', 'LineWidth', 1.5);
 hold on
 plot(time_identifikace, velocity_fit, 'b', 'LineWidth', 1.5);
 title('Velocity');
-legend('Velocity [m/s]', 'Fitted polynomial [m/s]');
+legend('Velocity', 'Fitted polynomial');
 xlabel('Time [s]');
 ylabel('Velocity [m/s]');
 axis([0 time_plot(end) -1 2]);
@@ -146,7 +146,7 @@ hold off
 plot(time_plot, data(plot_window, input), 'b', 'LineWidth', 1.5);
 hold on
 title('Input');
-legend('Input [m]');
+legend('Input, desired angle of attitude');
 xlabel('Time [s]');
 ylabel('Input [-]');
 axis([0 time_plot(end) -450 800]);  

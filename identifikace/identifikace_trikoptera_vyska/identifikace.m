@@ -162,9 +162,9 @@ plot(time_identifikace, filtr_extremnich_hodnot(data(iden_window, altitude)), 'r
 hold on
 plot(time_identifikace, position_fit+pos_offset, 'LineWidth', 1);
 title('Altitude');
-legend('Altitude [m]', 'Fitted polynomial [m/s]');
+legend('Altitude', 'Fitted polynomial');
 xlabel('Time [s]');
-ylabel('Altitude [m/s]');
+ylabel('Altitude [m]');
 axis([time_identifikace(1) time_identifikace(end) 0.75, 1.8]);
 
 subplot(1, 2, 2);
@@ -172,7 +172,7 @@ hold off
 plot(time_plot, action, 'b', 'LineWidth', 1.5);
 hold on
 title('Input');
-legend('Input [m]');
+legend('Input');
 xlabel('Time [s]');
 ylabel('Input [-]');
 axis([0 time_plot(end) -145 150]);  
