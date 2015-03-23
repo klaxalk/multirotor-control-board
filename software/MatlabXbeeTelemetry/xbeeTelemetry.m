@@ -41,6 +41,13 @@ while true
     in(pos, 5) = fread(s, 1, 'int16');
     in(pos, 6) = fread(s, 1, 'int16');
     
+    rpix = fread(s, 1, 'single');
+    rpiy = fread(s, 1, 'single');
+    rpiz = fread(s, 1, 'single');
+    groundDistance = fread(s, 1, 'single');
+    
+    groundDistance
+    
     % read line ending     
     fread(s, 1, 'int16');
     
@@ -50,7 +57,8 @@ while true
     scatter(-in(pos, 2), in(pos, 1), 'filled');
     hold on
 %     scatter(-in(pos, 4), in(pos, 3), 'filled', 'r');
-    circle(-in(pos, 4), in(pos, 3), 0.1);
+    scatter(-in(pos, 4), in(pos, 3),'r', 'filled');
+    circle(-in(pos, 2)-rpiy, in(pos, 1)+rpix, 0.1);
     axis([-1.5 1.5 -1.5 1.5]*2);
     
     % plot the action

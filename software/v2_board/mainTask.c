@@ -111,7 +111,7 @@ void mainTask(void *p) {
 					AUX2_previous = 2;
 					led_orange_on();
 
-				} else if ((abs(aux2filtered - PPM_IN_MIDDLE_LENGTH) <= 300) && AUX2_previous != 3) {
+				} else if ((abs(aux2filtered - PPM_IN_MIDDLE_LENGTH) <= 300)) {
 			
 					main2commMessage.messageType = SET_SETPOINT;
 					main2commMessage.data.simpleSetpoint.elevator = 0;

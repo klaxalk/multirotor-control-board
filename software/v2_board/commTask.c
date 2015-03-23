@@ -30,6 +30,18 @@ main2commMessage_t main2commMessage;
 /* -------------------------------------------------------------------- */
 stmMessageHandler_t stmMessage;
 
+/* -------------------------------------------------------------------- */
+/*	The message handler for raspberry									*/
+/* -------------------------------------------------------------------- */
+rpiMessageHandler_t rpiMessage;
+
+volatile float rpix = 1.5;
+volatile float rpiy = 0;
+volatile float rpiz = 0;
+volatile char rpiOk = 0;
+volatile float curSetX = 0;
+volatile float curSetY = 0;
+
 void commTask(void *p) {
 	
 	unsigned char inChar;
@@ -106,6 +118,39 @@ void commTask(void *p) {
 				}
 			}
 		}
+		/* -------------------------------------------------------------------- */
+		/*	A character received from raspberry									*/
+		/* -------------------------------------------------------------------- */
+		if (usartBufferGetByte(usart_buffer_2, &inChar, 0)) {
+
+			// parse it and handle the message if it is complete
+			if (rpiParseChar(inChar, &rpiMessage)) {
+				
+				// index for iterating the rxBuffer
+				int idx = 0;
+				
+				// messageId == '1'
+				// receive control actions computed by MPC
+				if (rpiMessage.messageId == 'p') {
+					
+					int16_t tempInt;
+					
+					// saturate the incoming elevator output
+					rpiy = -readFloat(rpiMessage.messageBuffer, &idx);
+					rpiz = readFloat(rpiMessage.messageBuffer, &idx);
+					rpix = readFloat(rpiMessage.messageBuffer, &idx);
+					rpiOk = 1;
+					led_green_on();
+					led_blob_on();
+					
+				} else if (rpiMessage.messageId == '0') {
+					
+					led_green_off();
+					led_blob_off();
+					rpiOk = 0;
+				}
+			}
+		}
 		
 		/* -------------------------------------------------------------------- */
 		/*	A character received from XBee										*/
@@ -125,6 +170,12 @@ void commTask(void *p) {
 					
 				sendInt16(usart_buffer_xbee, mpcElevatorOutput, &crc);
 				sendInt16(usart_buffer_xbee, mpcAileronOutput, &crc);
+				
+				sendFloat(usart_buffer_xbee, rpix, &crc);
+				sendFloat(usart_buffer_xbee, rpiy, &crc);
+				sendFloat(usart_buffer_xbee, rpiz, &crc);
+				
+				sendFloat(usart_buffer_xbee, opticalFlowData.ground_distance, &crc);
 
 				usartBufferPutString(usart_buffer_xbee, "\r\n", 10);
 			}
@@ -183,10 +234,21 @@ void commTask(void *p) {
 			if (main2commMessage.messageType == CLEAR_STATES) {
 	
 				stmResetKalman(main2commMessage.data.simpleSetpoint.elevator, main2commMessage.data.simpleSetpoint.aileron);
+				
+				curSetX = 0;
+				curSetY = 0;
+				rpix = 1.5;
+				rpiy = 0;
+				rpiOk = 0;
 			
 			} else if (main2commMessage.messageType == SET_SETPOINT) {
 				
-				stmSendSetpoint(main2commMessage.data.simpleSetpoint.elevator, main2commMessage.data.simpleSetpoint.aileron);
+				if (rpiOk) {
+					
+					curSetX = kalmanStates.elevator.position + rpix - 1.5;
+					curSetY = kalmanStates.aileron.position + rpiy;
+				}
+				stmSendSetpoint(curSetX, curSetY);
 
 			} else if (main2commMessage.messageType == SET_TRAJECTORY) {
 				

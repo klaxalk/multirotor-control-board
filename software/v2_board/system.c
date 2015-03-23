@@ -82,12 +82,14 @@ void boardInit() {
 	ioport_set_pin_dir(GREEN, IOPORT_DIR_OUTPUT);
 	ioport_set_pin_dir(YELLOW, IOPORT_DIR_OUTPUT);
 	ioport_set_pin_dir(OUT1, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_dir(BLOB_LED, IOPORT_DIR_OUTPUT);
 	
 	ioport_set_pin_level(RED, true);
 	ioport_set_pin_level(BLUE, true);
 	ioport_set_pin_level(ORANGE, true);
 	ioport_set_pin_level(GREEN, true);
 	ioport_set_pin_level(YELLOW, true);
+	ioport_set_pin_level(BLOB_LED, true);
 	
 	/* -------------------------------------------------------------------- */
 	/*	Enable system clock for all peripheral modules						*/

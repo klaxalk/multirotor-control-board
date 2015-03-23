@@ -28,6 +28,7 @@
 #define	GREEN	IOPORT_CREATE_PIN(PORTB, 6)
 #define	YELLOW	IOPORT_CREATE_PIN(PORTB, 7)
 #define	OUT1	IOPORT_CREATE_PIN(PORTD, 5)
+#define	BLOB_LED	IOPORT_CREATE_PIN(PORTA, 2)
 
 /* -------------------------------------------------------------------- */
 /*	LED macros															*/
@@ -47,6 +48,9 @@
 #define led_yellow_on()		ioport_set_pin_level(YELLOW, false)
 #define led_yellow_off()	ioport_set_pin_level(YELLOW, true)
 #define led_yellow_toggle()	ioport_toggle_pin_level(YELLOW)
+#define led_blob_on()		ioport_set_pin_level(BLOB_LED, true)
+#define led_blob_off()		ioport_set_pin_level(BLOB_LED, false)
+#define led_blob_toggle()	ioport_toggle_pin_level(BLOB_LED)
 
 /* -------------------------------------------------------------------- */
 /*	PPM output macro													*/
@@ -120,7 +124,7 @@ UsartBuffer * usart_buffer_4;
 #define USART_XBEE_BAUDRATE		BAUD115200
 #define USART_LOG_BAUDRATE		BAUD115200
 #define USART_1_BAUDRATE		BAUDPX4FLOW
-#define USART_2_BAUDRATE		BAUD19200
+#define USART_2_BAUDRATE		BAUD115200
 #define USART_3_BAUDRATE		BAUD19200
 #define USART_4_BAUDRATE		BAUD115200
 
