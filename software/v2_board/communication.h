@@ -4,7 +4,8 @@
 #include "mavlink/common/mavlink.h"
 
 	//XBee
-	extern volatile unsigned char leadKopter[8];
+	#define LEAD_KOPTERS 4
+	extern volatile unsigned char leadKopter[LEAD_KOPTERS][8];
 
 	// data from px4flow
 	extern volatile float groundDistance;

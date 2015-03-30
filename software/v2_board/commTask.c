@@ -78,7 +78,18 @@ void Decode64(void) {
 	RxDataLen = ptrOut - 3;  // kolik bylo dekodováno bytù?
 }
 
+int addressEqlCoord(unsigned char * addr){
+	int8_t i;
+	for(i=0;i<8;i++){
+		if(*(addr+i)!=0x00){
+			return 0;
+		}
+	}
+	return 1;
+}
+
 void commTask(void *p) {	
+	int8_t i = 0;
 	unsigned char inChar;
 	int16_t counter40Hz=500;
 	int16_t counter20Hz=0;
@@ -105,8 +116,12 @@ void commTask(void *p) {
 		if (counter20Hz++>2000){
 			counter20Hz=0;
 			telemetryToCoordinatorSend();
-			if(controllerActive!=0 && leadKopter[7]!=0x00){
-				kopterLeadDataSend(leadKopter,ADDRESS.UNKNOWN16,position.altitude,positionSetpoint.elevator - position.elevator,positionSetpoint.aileron - position.aileron,0x00);				
+			if(controllerActive!=0){
+				for(i=0;i<4;i++){
+					if(addressEqlCoord(leadKopter[i])==0){
+						kopterLeadDataSend(leadKopter[i],ADDRESS.UNKNOWN16,position.altitude,positionSetpoint.elevator - position.elevator,positionSetpoint.aileron - position.aileron,0x00);		
+					}					
+				}							
 			}
 		}									
 		

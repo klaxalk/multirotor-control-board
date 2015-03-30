@@ -99,7 +99,7 @@ void packetHandler(unsigned char *inPacket){
 							if(*(dataIN+3)==GET_STATUS){
 								kopterFollowerSetReport(address64,address16,0x00);
 							}else{
-								kopterFollowerSet(address64,address16,(dataIN+3));
+								kopterFollowerSet(address64,address16,(dataIN+4),*(dataIN+3));
 							}
 						}else
 						//TIME
@@ -158,16 +158,7 @@ void packetHandler(unsigned char *inPacket){
 							 ch3[0]=*(dataIN+12); ch3[1]=*(dataIN+13); ch3[2]=*(dataIN+14); ch3[3]=*(dataIN+15); f3=(float *)ch3;
 							 ch4[0]=*(dataIN+16); ch4[1]=*(dataIN+17); ch4[2]=*(dataIN+18); ch4[3]=*(dataIN+19); f4=(float *)ch4;
 							 kopterTrajectoryPointReportReceived(address64,address16,*(dataIN+3),*ui32,*f2,*f3,*f4);
-				         } else
-						 //SETPOINTS STATUS
-						 if(*(dataIN+2)==COMMANDS.SET_SETPOINTS){
-							ch1[0]=*(dataIN+4);
-							ch1[1]=*(dataIN+5);
-							ch1[2]=*(dataIN+6);
-							ch1[3]=*(dataIN+7);
-							f1=(float *)ch1;  
-							kopterSetpointsReportReceived(address64,address16,*(dataIN+3),*f1);
-						 }else
+				         } else						
 						 //TIME STATUS
 						 if(*(dataIN+2)==COMMANDS.TIME){
 							ch1[0]=*(dataIN+3);
@@ -185,7 +176,13 @@ void packetHandler(unsigned char *inPacket){
 							ch1[3]=*(dataIN+6);
 							f1=(float *)ch1;
 							kopterLockOnBlobReportRecieved(address64,address16,*f1);					
-						}				 
+						}else
+						//FOLLOWER SET
+						if(*(dataIN+2)==COMMANDS.FOLLOWER_SET){
+							for(i=0;i<LEAD_KOPTERS;i++){
+								kopterFollowerSetReportRecieved(address64,address16,dataIN+3+i*8);
+							}							
+						}			 												
                     break;
                 //warning
                 case 'w':

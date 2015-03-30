@@ -326,19 +326,22 @@ void kopterTrajectoryPointReportReceived(unsigned char *address64,unsigned char 
 }
 
 //FOLLOWER SET
-void kopterFollowerSetRequest(unsigned char *address64,unsigned char *address16,unsigned char *followerAddr,unsigned char frameID){
+void kopterFollowerSetRequest(unsigned char *address64,unsigned char *address16,unsigned char *followerAddr,unsigned char index,unsigned char frameID){
 	char i;
 	*(dataOUT)='c';
 	*(dataOUT+1)=COMMANDS.FOLLOWER_SET;
+	*(dataOUT+2)=index;
 	for (i=0;i<8;i++){
-		*(dataOUT+2+i)=*(followerAddr+i);
+		*(dataOUT+3+i)=*(followerAddr+i);
 	}
-	makeTRPacket(address64,address16,0x00,frameID,dataOUT,10);
+	makeTRPacket(address64,address16,0x00,frameID,dataOUT,11);
 }
-void kopterFollowerSet(unsigned char *address64,unsigned char *address16,unsigned char *followerAddr){
+void kopterFollowerSet(unsigned char *address64,unsigned char *address16,unsigned char *followerAddr, unsigned char index){
 	char i;
-	for(i=0;i<8;i++){
-	*(leadKopter+i)=*(followerAddr+i);
+	if(index>=0 && index<LEAD_KOPTERS){
+		for(i=0;i<8;i++){
+			*(*(leadKopter+index)+i)=*(followerAddr+i);
+		}
 	}
 }
 void kopterFollowerSetStatusRequest(unsigned char *address64,unsigned char *address16,unsigned char frameID){
@@ -348,13 +351,15 @@ void kopterFollowerSetStatusRequest(unsigned char *address64,unsigned char *addr
 	makeTRPacket(address64,address16,0x00,frameID,dataOUT,3);
 }
 void kopterFollowerSetReport(unsigned char *address64,unsigned char *address16,unsigned char frameID){
-	char i;
+	char i1,i2;
 	*(dataOUT)='r';
 	*(dataOUT+1)=COMMANDS.FOLLOWER_SET;
-	for (i=0;i<8;i++){
-		*(dataOUT+2+i)=*(leadKopter+i);
+	for(i1=0;i1<LEAD_KOPTERS;i1++){
+		for (i2=0;i2<8;i2++){
+			*(dataOUT+2+i2+i1*8)=*(*(leadKopter+i1)+i2);
+		}
 	}
-	makeTRPacket(address64,address16,0x00,frameID,dataOUT,10);
+	makeTRPacket(address64,address16,0x00,frameID,dataOUT,LEAD_KOPTERS*8+2);
 }
 void kopterFollowerSetReportRecieved(unsigned char *address64,unsigned char *address16,unsigned char *followerAddr){
 	

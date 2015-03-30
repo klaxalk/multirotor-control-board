@@ -7,7 +7,7 @@
 #include "commands.h"
 
 //XBee values
-volatile unsigned char leadKopter[8]={0x00};
+volatile unsigned char leadKopter[LEAD_KOPTERS][8]={{0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0}};
 
 //px4flow values
 volatile float groundDistance = 0;

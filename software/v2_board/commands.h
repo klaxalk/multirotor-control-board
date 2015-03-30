@@ -2,6 +2,7 @@
 #define COMMANDS_H
 
 float telemetryValue(unsigned char type);
+void telemetryReceive(unsigned char *address64,unsigned char *address16,unsigned char type,float value);
 
 void telemetryToCoordinatorSend();
 void telemetryToCoordinatorSet(unsigned char *address64,unsigned char *address16,unsigned char type,unsigned char on, unsigned char frameID);
@@ -31,8 +32,8 @@ void kopterControllersStatusRequest(unsigned char *address64,unsigned char *addr
 void kopterControllersReport(unsigned char *address64,unsigned char *address16,unsigned char frameID);
 void kopterControllersReportReceived(unsigned char *address64,unsigned char *address16,unsigned char status);
 
-void kopterFollowerSetRequest(unsigned char *address64,unsigned char *address16,unsigned char *followerAddr,unsigned char frameID);
-void kopterFollowerSet(unsigned char *address64,unsigned char *address16,unsigned char *followerAddr);
+void kopterFollowerSetRequest(unsigned char *address64,unsigned char *address16,unsigned char *followerAddr,unsigned char index,unsigned char frameID);
+void kopterFollowerSet(unsigned char *address64,unsigned char *address16,unsigned char *followerAddr, unsigned char index);
 void kopterFollowerSetStatusRequest(unsigned char *address64,unsigned char *address16,unsigned char frameID);
 void kopterFollowerSetReport(unsigned char *address64,unsigned char *address16,unsigned char frameID);
 void kopterFollowerSetReportRecieved(unsigned char *address64,unsigned char *address16,unsigned char *followerAddr);
