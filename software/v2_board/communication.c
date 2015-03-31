@@ -7,7 +7,7 @@
 #include "commands.h"
 
 //XBee values
-volatile unsigned char leadKopter[LEAD_KOPTERS][8]={{0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0}};
+volatile unsigned char posSlave[8]={0,0,0,0,0,0,0,0};
 
 //px4flow values
 volatile float groundDistance = 0;
@@ -35,6 +35,25 @@ volatile int8_t validGumstix = 0;
 volatile int8_t gumstixDataFlag = 0;
 volatile unsigned char gumstixParseCharCrc = 0;
 
+int addressEqlCoord(unsigned char * addr){
+	int8_t i;
+	for(i=0;i<8;i++){
+		if(*(addr+i)!=0x00){
+			return 0;
+		}
+	}
+	return 1;
+}
+
+//send position to position slave
+void positionSlaveSend(){
+	static uint32_t lastSendTime=0;
+	
+	if(gumstixStable==1 && (secondsTimer-lastSendTime)>2 && addressEqlCoord(posSlave)==0){
+			kopterPositionSetRequest(posSlave,ADDRESS.UNKNOWN16,position.elevator+blob.elevator,position.aileron+blob.aileron,0x00);
+			lastSendTime=secondsTimer;
+	}	
+}
 
 //send XBee packet
 void sendXBeePacket(unsigned char *packet){

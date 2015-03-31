@@ -58,7 +58,7 @@ void mainTask(void *p) {
 			}
 		}
 
-		// landing on/off, trajectory on/off
+		// landing on/off
 		if (RCchannel[AUX4] < (PPM_IN_MIDDLE_LENGTH - 400)) {
 			if(previous_AUX4!=0){				
 				enableLanding();	
@@ -76,15 +76,15 @@ void mainTask(void *p) {
 			}
 		}
 	
-		//leading enable
+
 		if(RCchannel[AUX5]<PPM_IN_MIDDLE_LENGTH){
 			if(previous_AUX5!=0){
-				adr64Setter2(leadKopter,ADDRESS.COORDINATOR);
+				
 				previous_AUX5=0;
 			}
 		}else{
 			if(previous_AUX5!=1){
-				adr64Setter2(leadKopter,ADDRESS.K1);
+
 				previous_AUX5=1;
 			}
 		}

@@ -48,8 +48,6 @@ volatile int16_t kalmanRate = 0;
 stmMessageHandler_t stmMessage;
 
 
-
-
 // decode the base64 encoded data
 void Decode64(void) {	
 	unsigned char a,b,c,d;
@@ -78,19 +76,8 @@ void Decode64(void) {
 	RxDataLen = ptrOut - 3;  // kolik bylo dekodováno bytù?
 }
 
-int addressEqlCoord(unsigned char * addr){
-	int8_t i;
-	for(i=0;i<8;i++){
-		if(*(addr+i)!=0x00){
-			return 0;
-		}
-	}
-	return 1;
-}
-
 void commTask(void *p) {	
 	unsigned char inChar;
-	int16_t counter40Hz=500;
 	int16_t counter20Hz=0;
 	
 	//wait for XBee	
@@ -101,21 +88,19 @@ void commTask(void *p) {
 	mpcSetpoints.aileronSetpoint = 0;
 		
 	while (1) {			
-		//Auto state reports	
+		//Auto state reports			
 		stateChecker();		
 		
-		//40Hz loop
-		if (counter40Hz++>1000){
-			counter40Hz=0;
-			stmSendMeasurement(elevatorSpeed, aileronSpeed, controllerElevatorOutput, controllerAileronOutput);
-			stmSendSetpointsSimple();			
-		}
-		
+		//send position to slave
+		positionSlaveSend()
+				
 		//20Hz loop
 		if (counter20Hz++>2000){
 			counter20Hz=0;
 			telemetryToCoordinatorSend();						
-		}									
+		}	
+		
+										
 		
 		// XBee
 		if (usartBufferGetByte(usart_buffer_xbee, &inChar, 0)) {						

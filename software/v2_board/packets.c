@@ -10,8 +10,6 @@
 //Telemetry sending
 volatile unsigned char telemetryToCoordinatorArr[TELEMETRY_VARIABLES]={0};
 
-
-
 void makeTRPacket(unsigned char *adr64,unsigned char *adr16,unsigned char options,unsigned char frameID,unsigned char *data, unsigned char dataLength);
 void parMSPacket(unsigned char *inPacket,unsigned char *status);
 void parTSPacket(unsigned char *inPacket,unsigned char *frameID,unsigned char *address16,unsigned char *TrRetryCount,unsigned char *deliveryStatus,unsigned char *discoveryStatus);
@@ -33,7 +31,6 @@ void packetHandler(unsigned char *inPacket){
     unsigned char address64[8];
     unsigned char recieveOptions[5];
     unsigned char dataIN[25];
-
 	
 	float *f1;
 	float *f2;
@@ -94,12 +91,12 @@ void packetHandler(unsigned char *inPacket){
 								kopterControllers(address64,address16,*(dataIN+3));
 							}															
 						}else
-						//FOLLOWER SET
-						if(*(dataIN+2)==COMMANDS.FOLLOWER_SET){
+						//POSITION SLAVE SET
+						if(*(dataIN+2)==COMMANDS.POSITION_SLAVE_SET){
 							if(*(dataIN+3)==GET_STATUS){
-								kopterFollowerSetReport(address64,address16,0x00);
+								kopterPositionSlaveSetReport(address64,address16,0x00);
 							}else{
-								kopterFollowerSet(address64,address16,(dataIN+4),*(dataIN+3));
+								kopterPositionSlaveSet(address64,address16,(dataIN+4));
 							}
 						}else
 						//TIME
@@ -173,11 +170,9 @@ void packetHandler(unsigned char *inPacket){
 							ui32=(uint32_t *)ch1;							 
 							kopterTimeReportReceived(address64,address16,*ui32);
 						}else
-						//FOLLOWER SET
-						if(*(dataIN+2)==COMMANDS.FOLLOWER_SET){
-							for(i=0;i<LEAD_KOPTERS;i++){
-								kopterFollowerSetReportRecieved(address64,address16,dataIN+3+i*8);
-							}							
+						//POSITION SLAVE
+						if(*(dataIN+2)==COMMANDS.POSITION_SLAVE_SET){							
+							kopterPositionSlaveSetReportRecieved(address64,address16,dataIN+3);														
 						}			 												
                     break;
                 //warning

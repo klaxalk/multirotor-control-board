@@ -18,22 +18,17 @@ volatile state_t speed = {.aileron=0 , .elevator=0 , .altitude=0};
 volatile state_t acceleration ={.aileron=0 , .elevator=0 , .altitude=0};
 volatile state_t blob = {.aileron=0 , .elevator=0 , .altitude=0};		
 
-
 //setpoints
 volatile state_t positionSetpoint = {.aileron=DEFAULT_AILERON_POSITION_SETPOINT , .elevator=DEFAULT_ELEVATOR_POSITION_SETPOINT , .altitude=DEFAULT_THROTTLE_POSITION_SETPOINT};
 volatile state_t speedSetpoint = {.aileron=DEFAULT_AILERON_VELOCITY_SETPOINT , .elevator=DEFAULT_ELEVATOR_VELOCITY_SETPOINT , .altitude=DEFAULT_THROTTLE_VELOCITY_SETPOINT};
 volatile state_t positionDesiredSetpoint = {.aileron=DEFAULT_AILERON_POSITION_SETPOINT , .elevator=DEFAULT_ELEVATOR_POSITION_SETPOINT , .altitude=DEFAULT_THROTTLE_POSITION_SETPOINT};
 volatile state_t speedDesiredSetpoint = {.aileron=DEFAULT_AILERON_VELOCITY_SETPOINT , .elevator=DEFAULT_ELEVATOR_VELOCITY_SETPOINT , .altitude=DEFAULT_THROTTLE_VELOCITY_SETPOINT};	
 
-
 //Blob 
 volatile unsigned char gumstixStable=0;
 
-
 //landing variables
 volatile unsigned char landingState = 0x00;
-
-
 
 //trajectory variables
 volatile int8_t trajIndex = 0;
@@ -140,9 +135,9 @@ void positionEstimator() {
 
 	if(gumstixStable==1){
 		//Blob detector
-		blob.elevator += (elevatorGumstix-blob.elevator) * (DT/GUMSTIX_FILTER_CONST);
-		blob.aileron += (aileronGumstix-blob.aileron) * (DT/GUMSTIX_FILTER_CONST);
-		blob.altitude += (throttleGumstix-blob.altitude) * (DT/GUMSTIX_FILTER_CONST);				
+		blob.elevator = elevatorGumstix;
+		blob.aileron = aileronGumstix;
+		blob.altitude = throttleGumstix;		
 	}
 	
 	//elevator velocity

@@ -79,7 +79,7 @@ typedef struct
 	unsigned char LANDING;
 	unsigned char CONTROLLERS;
 	unsigned char TRAJECTORY_POINTS;
-	unsigned char FOLLOWER_SET;
+	unsigned char POSITION_SLAVE_SET;
 	unsigned char TIME;
 	unsigned char POSITION_SET;
 }COMMANDST;
