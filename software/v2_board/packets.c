@@ -76,14 +76,14 @@ void packetHandler(unsigned char *inPacket){
 						if(*(dataIN+2)==COMMANDS.TRAJECTORY_POINTS){
 							if(*(dataIN+3)==GET_STATUS){																
 								for(i=0;i<=trajMaxIndex;i++){
-										kopterTrajectoryPointReport(address64,address16,i,0x00);
+										kopterTrajectorySetReport(address64,address16,i,0x00);
 								}								
 							}else{								
 								ch1[0]=*(dataIN+4); ch1[1]=*(dataIN+5); ch1[2]=*(dataIN+6); ch1[3]=*(dataIN+7); ui32=(uint32_t *)ch1;
 								ch2[0]=*(dataIN+8); ch2[1]=*(dataIN+9); ch2[2]=*(dataIN+10); ch2[3]=*(dataIN+11); f2=(float *)ch2;
 								ch3[0]=*(dataIN+12); ch3[1]=*(dataIN+13); ch3[2]=*(dataIN+14); ch3[3]=*(dataIN+15); f3=(float *)ch3;
 								ch4[0]=*(dataIN+16); ch4[1]=*(dataIN+17); ch4[2]=*(dataIN+18); ch4[3]=*(dataIN+19); f4=(float *)ch4;
-								kopterTrajectoryAddPoint(address64,address16,*(dataIN+3),*ui32,*f2,*f3,*f4);																															
+								kopterTrajectorySet(address64,address16,*(dataIN+3),*ui32,*f2,*f3,*f4);																															
 							}
 						} else																							
 						//CONTROLLERS
@@ -167,12 +167,15 @@ void packetHandler(unsigned char *inPacket){
 					         kopterLandReportRecieved(address64,address16,*(dataIN+3));
 				         } else
 						 //TRAJECTORY POINTS
-				         if(*(dataIN+2)==COMMANDS.TRAJECTORY_POINTS){							 
-							 ch1[0]=*(dataIN+4); ch1[1]=*(dataIN+5); ch1[2]=*(dataIN+6); ch1[3]=*(dataIN+7); ui32=(uint32_t *)ch1;
-							 ch2[0]=*(dataIN+8); ch2[1]=*(dataIN+9); ch2[2]=*(dataIN+10); ch2[3]=*(dataIN+11); f2=(float *)ch2;
-							 ch3[0]=*(dataIN+12); ch3[1]=*(dataIN+13); ch3[2]=*(dataIN+14); ch3[3]=*(dataIN+15); f3=(float *)ch3;
-							 ch4[0]=*(dataIN+16); ch4[1]=*(dataIN+17); ch4[2]=*(dataIN+18); ch4[3]=*(dataIN+19); f4=(float *)ch4;
-							 kopterTrajectoryPointReportReceived(address64,address16,*(dataIN+3),*ui32,*f2,*f3,*f4);
+				         if(*(dataIN+2)==COMMANDS.TRAJECTORY_POINTS){								 	
+							 for(i=0;i<*(dataIN+3);i++){	
+								 if(i>9) return;		 
+								 ch1[0]=*(dataIN+4+i*16); ch1[1]=*(dataIN+5+i*16); ch1[2]=*(dataIN+6+i*16); ch1[3]=*(dataIN+7+i*16); ui32=(uint32_t *)ch1;
+								 ch2[0]=*(dataIN+8+i*16); ch2[1]=*(dataIN+9+i*16); ch2[2]=*(dataIN+10+i*16); ch2[3]=*(dataIN+11+i*16); f2=(float *)ch2;
+								 ch3[0]=*(dataIN+12+i*16); ch3[1]=*(dataIN+13+i*16); ch3[2]=*(dataIN+14+i*16); ch3[3]=*(dataIN+15+i*16); f3=(float *)ch3;
+								 ch4[0]=*(dataIN+16+i*16); ch4[1]=*(dataIN+17+i*16); ch4[2]=*(dataIN+18+i*16); ch4[3]=*(dataIN+19+i*16); f4=(float *)ch4;
+								 kopterTrajectorySetReportReceived(address64,address16,i,*ui32,*f2,*f3,*f4);
+							 }
 				         } else						
 						 //TIME STATUS
 						 if(*(dataIN+2)==COMMANDS.TIME){
