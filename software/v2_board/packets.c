@@ -114,20 +114,7 @@ void packetHandler(unsigned char *inPacket){
 								ui32=(uint32_t *)ch1;
 								kopterTime(address64,address16,*ui32);
 							}
-						}else
-						//LOCK ON BLOB
-						if(*(dataIN+2)==COMMANDS.LOCK_ON_BLOB){
-							if(*(dataIN+3)==GET_STATUS){
-								kopterLockOnBlobReport(address64,address16,0x00);
-							}else{
-								ch1[0]=*(dataIN+3);
-								ch1[1]=*(dataIN+4);
-								ch1[2]=*(dataIN+5);
-								ch1[3]=*(dataIN+6);
-								f1=(float *)ch1;
-								kopterLockOnBlob(address64,address16,*f1);
-							}
-						}else
+						}else						
 						//POSITION SET	
 						if(*(dataIN+2)==COMMANDS.POSITION_SET){
 								ch1[0]=*(dataIN+3);
@@ -186,15 +173,6 @@ void packetHandler(unsigned char *inPacket){
 							ui32=(uint32_t *)ch1;							 
 							kopterTimeReportReceived(address64,address16,*ui32);
 						}else
-						//LOCK ON BLOB
-						if(*(dataIN+2)==COMMANDS.LOCK_ON_BLOB){						
-							ch1[0]=*(dataIN+3);
-							ch1[1]=*(dataIN+4);
-							ch1[2]=*(dataIN+5);
-							ch1[3]=*(dataIN+6);
-							f1=(float *)ch1;
-							kopterLockOnBlobReportRecieved(address64,address16,*f1);					
-						}else
 						//FOLLOWER SET
 						if(*(dataIN+2)==COMMANDS.FOLLOWER_SET){
 							for(i=0;i<LEAD_KOPTERS;i++){
@@ -207,15 +185,7 @@ void packetHandler(unsigned char *inPacket){
                     break;
                 //message
                 case 'm':                   
-                    break;	
-				//leading	
-				case 'l':
-						leadFreshTimer=0;
-						ch1[0]=*(dataIN+2); ch1[1]=*(dataIN+3); ch1[2]=*(dataIN+4); ch1[3]=*(dataIN+5); f1=(float *)ch1;
-						ch2[0]=*(dataIN+6); ch2[1]=*(dataIN+7); ch2[2]=*(dataIN+8); ch2[3]=*(dataIN+9); f2=(float *)ch2;
-						ch3[0]=*(dataIN+10); ch3[1]=*(dataIN+11); ch3[2]=*(dataIN+12); ch3[3]=*(dataIN+13); f3=(float *)ch3;
-						kopterLeadDataReceived(address64,address16,*f1,*f2,*f3);
-					break;								
+                    break;								
                 default:
                         dataTypeError(address64,address16,dataIN);
                     break;					

@@ -38,17 +38,8 @@ void kopterFollowerSetStatusRequest(unsigned char *address64,unsigned char *addr
 void kopterFollowerSetReport(unsigned char *address64,unsigned char *address16,unsigned char frameID);
 void kopterFollowerSetReportRecieved(unsigned char *address64,unsigned char *address16,unsigned char *followerAddr);
 
-void kopterLockOnBlobRequest(unsigned char *address64,unsigned char *address16,float distance,unsigned char frameID);
-void kopterLockOnBlob(unsigned char *address64,unsigned char *address16,float distance);
-void kopterLockOnBlobStatusRequest(unsigned char *address64,unsigned char *address16,unsigned char frameID);
-void kopterLockOnBlobReport(unsigned char *address64,unsigned char *address16,unsigned char frameID);
-void kopterLockOnBlobReportRecieved(unsigned char *address64,unsigned char *address16,float distance);
-
 void sendXBeeMessage(unsigned char *address64,unsigned char *address16,char *message,unsigned char frameID);
 void receiveXBeeMessage(unsigned char *address64,unsigned char *address16,char *message);
-
-void kopterLeadDataSend(unsigned char *address64,unsigned char *address16,volatile float altitude,volatile float elevatorError,volatile float aileronError,unsigned char frameID);
-void kopterLeadDataReceived(unsigned char *address64,unsigned char *address16,float altitude, float elevatorError, float aileronError);
 
 void kopterTimeRequest(unsigned char *address64,unsigned char *address16,uint32_t time,unsigned char frameID);
 void kopterTime(unsigned char *address64,unsigned char *address16,uint32_t time);

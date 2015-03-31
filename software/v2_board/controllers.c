@@ -28,12 +28,7 @@ volatile state_t speedDesiredSetpoint = {.aileron=DEFAULT_AILERON_VELOCITY_SETPO
 
 //Blob 
 volatile unsigned char gumstixStable=0;
-volatile float blobElevatorDeflection=0;
-volatile float blobAileronDeflection=0;
-volatile float lockOnBlobDistance = -1; 
 
-//Blob Deflection timer
-volatile uint16_t leadFreshTimer;
 
 //landing variables
 volatile unsigned char landingState = 0x00;
@@ -65,14 +60,6 @@ void disableLanding(){
 	if(landingState!=LANDING.FLIGHT){
 		landingState=LANDING.TAKE_OFF;
 	}
-}
-
-void enableLockOnBlob(float distance){
-	lockOnBlobDistance=distance;
-}
-
-void disableLockOnBlob(){
-	lockOnBlobDistance=-1;
 }
 
 void controllerSet(unsigned char controllerDesired){
@@ -348,17 +335,3 @@ void landingController(){
 		}
 }
 
-void lockOnBlob(float distance){	
-	float error;
-	float drift;
-	
-	if(gumstixStable){
-		error=position.elevator-positionSetpoint.elevator;
-		drift=blob.elevator-blobElevatorDeflection-distance+error;		
-		position.elevator+=(-drift)*(DT/GUMSTIX_FILTER_CONST);
-		
-		error=position.altitude-positionSetpoint.aileron;
-		drift=blob.aileron-blobAileronDeflection+error;
-		position.aileron+=(-drift)*(DT/GUMSTIX_FILTER_CONST);
-	}	
-}

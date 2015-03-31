@@ -79,7 +79,6 @@ typedef struct
 	unsigned char LANDING;
 	unsigned char CONTROLLERS;
 	unsigned char TRAJECTORY_POINTS;
-	unsigned char LOCK_ON_BLOB;
 	unsigned char FOLLOWER_SET;
 	unsigned char TIME;
 	unsigned char POSITION_SET;

@@ -7,24 +7,13 @@
 void controllersTask(void *p) {	
 	initTrajectory();
 	controllerSet(CONTROLLERS.OFF);
-	while (1) {	
-			
-		//Leading data check
-		if (leadFreshTimer>300){
-			blobAileronDeflection=0;
-			blobElevatorDeflection=0;
-		}		
+	while (1) {					
 		
 		//values calculation
 		positionEstimator();
 		altitudeEstimator();
 		setpointsCalculate();						
-		
-		//lock on blob with leading data improvement
-		if(lockOnBlobDistance>=0){
-			lockOnBlob(lockOnBlobDistance);
-		}		
-		
+				
 					
 		//MANUAL
 		if(controllerActive==CONTROLLERS.OFF){

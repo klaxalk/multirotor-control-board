@@ -89,7 +89,6 @@ int addressEqlCoord(unsigned char * addr){
 }
 
 void commTask(void *p) {	
-	int8_t i = 0;
 	unsigned char inChar;
 	int16_t counter40Hz=500;
 	int16_t counter20Hz=0;
@@ -115,15 +114,7 @@ void commTask(void *p) {
 		//20Hz loop
 		if (counter20Hz++>2000){
 			counter20Hz=0;
-			telemetryToCoordinatorSend();
-			
-			if(controllerActive!=0){
-				for(i=0;i<4;i++){
-					if(addressEqlCoord(leadKopter[i])==0){
-						kopterLeadDataSend(leadKopter[i],ADDRESS.UNKNOWN16,position.altitude,positionSetpoint.elevator - position.elevator,positionSetpoint.aileron - position.aileron,0x00);		
-					}					
-				}							
-			}
+			telemetryToCoordinatorSend();						
 		}									
 		
 		// XBee

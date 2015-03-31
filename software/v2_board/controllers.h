@@ -67,12 +67,6 @@ extern volatile state_t speedDesiredSetpoint;
 
 //Blob
 extern volatile unsigned char gumstixStable;
-extern volatile float blobElevatorDeflection;
-extern volatile float blobAileronDeflection;
-extern volatile float lockOnBlobDistance;
-
-//Blob Deflection timer
-extern volatile uint16_t leadFreshTimer;
 
 //landing variables
 extern volatile unsigned char landingState;
@@ -105,8 +99,6 @@ void enableLanding();
 void disableLanding();
 void enableTrajectoryFollow();
 void disableTrajectoryFollow();
-void enableLockOnBlob(float distance);
-void disableLockOnBlob();
 void controllerSet(unsigned char controllerDesired);
 
 //position estimator and controllers

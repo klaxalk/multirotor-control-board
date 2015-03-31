@@ -289,11 +289,7 @@ ISR(TCD0_CCA_vect) {
 /* -------------------------------------------------------------------- */
 /*	Interrupt for timing the RTC & mergeSignalsToOutput					*/
 /* -------------------------------------------------------------------- */
-ISR(TCC1_OVF_vect) {
-	if(leadFreshTimer<65000){
-		leadFreshTimer++;
-	}
-	
+ISR(TCC1_OVF_vect) {	
 	if (milisecondsTimer++ == 1000) {		
 		milisecondsTimer = 0;				
 		secondsTimer++;

@@ -367,35 +367,6 @@ void kopterFollowerSetReportRecieved(unsigned char *address64,unsigned char *add
 	
 }
 
-//LOCK ON BLOB
-void kopterLockOnBlobRequest(unsigned char *address64,unsigned char *address16,float distance,unsigned char frameID){
-	unsigned char *ch;
-	*(dataOUT)='c';
-	*(dataOUT+1)=COMMANDS.LOCK_ON_BLOB;
-	ch=(unsigned char *) &distance;
-	*(dataOUT+2)=*ch; *(dataOUT+3)=*(ch+1); *(dataOUT+4)=*(ch+2); *(dataOUT+5)=*(ch+3);
-	makeTRPacket(address64,address16,0x00,frameID,dataOUT,6);	
-}
-void kopterLockOnBlob(unsigned char *address64,unsigned char *address16,float distance){
-	lockOnBlobDistance=distance;
-}
-void kopterLockOnBlobStatusRequest(unsigned char *address64,unsigned char *address16,unsigned char frameID){
-	*dataOUT='c';
-	*(dataOUT+1)=COMMANDS.LOCK_ON_BLOB;
-	*(dataOUT+2)=GET_STATUS;
-	makeTRPacket(address64,address16,0x00,frameID,dataOUT,3);		
-}
-void kopterLockOnBlobReport(unsigned char *address64,unsigned char *address16,unsigned char frameID){
-	unsigned char *ch;	
-	*dataOUT='r';
-	*(dataOUT+1)=COMMANDS.LOCK_ON_BLOB;
-	ch=(unsigned char *) &lockOnBlobDistance;
-	*(dataOUT+2)=*ch; *(dataOUT+3)=*(ch+1); *(dataOUT+4)=*(ch+2); *(dataOUT+5)=*(ch+3);
-	makeTRPacket(address64,address16,0x00,frameID,dataOUT,6);
-}
-void kopterLockOnBlobReportRecieved(unsigned char *address64,unsigned char *address16,float distance){
-	
-}
 
 //MESSAGES
 void sendXBeeMessage(unsigned char *address64,unsigned char *address16,char *message,unsigned char frameID){
@@ -406,28 +377,6 @@ void sendXBeeMessage(unsigned char *address64,unsigned char *address16,char *mes
 }
 void receiveXBeeMessage(unsigned char *address64,unsigned char *address16,char *message){
 	
-}
-
-//LEADING
-void kopterLeadDataSend(unsigned char *address64,unsigned char *address16,volatile float altitude,volatile float elevatorError,volatile float aileronError,unsigned char frameID){
-	unsigned char *ch;	
-	*(dataOUT)='l';
-	
-	ch=(unsigned char *) &altitude;
-	*(dataOUT+1)=*ch; *(dataOUT+2)=*(ch+1); *(dataOUT+3)=*(ch+2); *(dataOUT+4)=*(ch+3);
-	
-	ch=(unsigned char *) &elevatorError;
-	*(dataOUT+5)=*ch; *(dataOUT+6)=*(ch+1); *(dataOUT+7)=*(ch+2); *(dataOUT+8)=*(ch+3);
-	
-	ch=(unsigned char *) &aileronError;
-	*(dataOUT+9)=*ch; *(dataOUT+10)=*(ch+1); *(dataOUT+11)=*(ch+2); *(dataOUT+12)=*(ch+3);		
-	
-	makeTRPacket(address64,address16,0x00,frameID,dataOUT,13);
-}
-void kopterLeadDataReceived(unsigned char *address64,unsigned char *address16,float altitude, float elevatorError, float aileronError){
-	positionDesiredSetpoint.altitude=altitude;
-	blobElevatorDeflection=elevatorError;
-	blobAileronDeflection=aileronError;
 }
 
 //TIME
