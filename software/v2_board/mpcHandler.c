@@ -287,3 +287,22 @@ void stmResetKalman(float initElevator, float initAileron) {
 	// at last send the crc, ends the transmission
 	sendChar(usart_buffer_stm, crc, &crc);
 }
+
+/* -------------------------------------------------------------------- */
+/*	Override the current kalman's integrated position					*/
+/* -------------------------------------------------------------------- */
+void stmSetKalmanPosition(float elevatorPos, float aileronPos) {
+	
+	char crc = 0;
+	
+	sendChar(usart_buffer_stm, 'a', &crc);		// this character initiates the transmission
+	sendChar(usart_buffer_stm, 1 + 2*4, &crc);		// this will be the size of the message
+	
+	sendChar(usart_buffer_stm, '3', &crc);		// id of the message
+	
+	sendFloat(usart_buffer_stm, elevatorPos, &crc);
+	sendFloat(usart_buffer_stm, aileronPos, &crc);
+
+	// at last send the crc, ends the transmission
+	sendChar(usart_buffer_stm, crc, &crc);
+}

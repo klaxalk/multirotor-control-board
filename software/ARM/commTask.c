@@ -204,15 +204,37 @@ void commTask(void *p) {
 
 				resetKalmanMessage_t mes;
 
+				mes.elevatorPosition = 0;
+
 				tempFloat = readFloat(messageBuffer, &idx);
 				if (fabs(tempFloat) < 5)
 					mes.elevatorPosition = tempFloat;
+
+				mes.aileronPosition = 0;
 
 				tempFloat = readFloat(messageBuffer, &idx);
 				if (fabs(tempFloat) < 5)
 					mes.aileronPosition = tempFloat;
 
 				xQueueSend(resetKalmanQueue, &mes, 0);
+
+			} else if (messageId == '3') {
+
+				resetKalmanMessage_t mes;
+
+				tempFloat = readFloat(messageBuffer, &idx);
+				if (fabs(tempFloat) < 200)
+					mes.elevatorPosition = tempFloat;
+				else
+					continue;
+
+				tempFloat = readFloat(messageBuffer, &idx);
+				if (fabs(tempFloat) < 200)
+					mes.aileronPosition = tempFloat;
+				else
+					continue;
+
+				xQueueSend(setKalmanQueue, &mes, 0);
 
 			} else if (messageId == 's') {
 

@@ -159,4 +159,12 @@ int8_t stmParseChar(char inChar, stmMessageHandler_t * messageHandler);
  */
 void stmResetKalman(float initElevator, float initAileron);
 
+/**
+ * @brief Set Kalman's integrated position to particular values
+ * 
+ * @param elevatorPos the value of ElevatorPosition
+ * @param aileronPos the value of AileronPosition
+ */
+void stmSetKalmanPosition(float elevatorPos, float aileronPos);
+
 #endif /* MPCHANDLER_H_ */

@@ -21,6 +21,7 @@ QueueHandle_t * kalman2mpcQueue;
 QueueHandle_t * kalman2commQueue;
 QueueHandle_t * comm2mpcQueue;
 QueueHandle_t * resetKalmanQueue;
+QueueHandle_t * setKalmanQueue;
 
 void boardInit() {
 
@@ -45,6 +46,9 @@ void boardInit() {
 
     // create a queue from commTask to mpcTask
     resetKalmanQueue = xQueueCreate(1, sizeof(resetKalmanMessage_t));
+
+    // queue for setting particular value of KF
+    setKalmanQueue = xQueueCreate(1, sizeof(resetKalmanMessage_t));
 
 	// set th clock and initialize the GPIO
 	gpioInit();

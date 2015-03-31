@@ -62,6 +62,17 @@ void kalmanTask(void *p) {
 			matrix_float_set_identity(aileronKalmanHandler->covariance);
 		}
 
+		if (xQueueReceive(setKalmanQueue, &resetKalmanMessage, 0)) {
+
+			// set the position
+			vector_float_set(elevatorKalmanHandler->states, 1, resetKalmanMessage.elevatorPosition);
+			vector_float_set(aileronKalmanHandler->states, 1, resetKalmanMessage.aileronPosition);
+
+			// reset the covariance of the postion
+			matrix_float_set(elevatorKalmanHandler->covariance, 1, 1, 1);
+			matrix_float_set(aileronKalmanHandler->covariance, 1, 1, 1);
+		}
+
 		if (xQueueReceive(comm2kalmanQueue, &comm2kalmanMessage, 0)) {
 
 			/* -------------------------------------------------------------------- */
