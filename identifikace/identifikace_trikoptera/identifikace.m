@@ -161,7 +161,7 @@ tightfig(hFig);
 covariance = eye(3);
 
 kalmanfrom = from+2800;
-kalmanto = kalmanfrom+1000;
+kalmanto = kalmanfrom+800;
 
 dt = 0.0114;
 
@@ -184,8 +184,12 @@ Q = diag([0.08]);
 
 C = [0, 1, 0];
 
+exp_filter(1) = kalmandata(1, velocity);
+exp_alpha = 0.90;
+
 for i=2:size(kalmandata, 1)
     [states(:, i) covariance] = kalman(states(:, i-1), covariance, kalmandata(i, velocity), kalmandata(i, input), A, B, R, Q, C);
+    exp_filter(i) = exp_alpha*exp_filter(i-1) + (1-exp_alpha)*kalmandata(i, velocity);
 end
 
 hFig = figure(3);
@@ -193,13 +197,14 @@ hFig = figure(3);
 hold off
 plot(timekalman, kalmandata(:, velocity), 'r', 'LineWidth', 1.5);
 hold on
+plot(timekalman, exp_filter, 'g', 'LineWidth', 1.5);
 plot(timekalman, states(2, :), 'b', 'LineWidth', 1.5);
-legend('Measured velocity', 'Filtered velocity');
+legend('Measured velocity', 'Exponential filter', 'Kalman filter');
 xlabel('Time [s]');
 ylabel('Velocity [m/s]');
 axis([0 timekalman(end) -0.9 1.1]);
 
-% set(hFig, 'Units', 'centimeters');
-% set(hFig, 'Position', [0 0 21 21*0.5625/2])
+set(hFig, 'Units', 'centimeters');
+set(hFig, 'Position', [0 0 21 21*0.5625/2])
 
 % tightfig(hFig);
