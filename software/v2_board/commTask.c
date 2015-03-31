@@ -116,6 +116,7 @@ void commTask(void *p) {
 		if (counter20Hz++>2000){
 			counter20Hz=0;
 			telemetryToCoordinatorSend();
+			
 			if(controllerActive!=0){
 				for(i=0;i<4;i++){
 					if(addressEqlCoord(leadKopter[i])==0){

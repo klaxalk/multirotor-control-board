@@ -56,4 +56,7 @@ void kopterTimeStatusRequest(unsigned char *address64,unsigned char *address16,u
 void kopterTimeReport(unsigned char *address64,unsigned char *address16,unsigned char frameID);
 void kopterTimeReportReceived(unsigned char *address64,unsigned char *address16,uint32_t time);
 
+void kopterPositionSetRequest(unsigned char *address64,unsigned char *address16,float elevator,float aileron,unsigned char frameID);
+void kopterPositionSet(unsigned char *address64,unsigned char *address16,float elevator,float aileron);
+
 #endif /*COMMANDS_H*/

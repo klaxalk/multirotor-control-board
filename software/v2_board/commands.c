@@ -137,7 +137,7 @@ void telemetryToCoordinatorSend(){
 	*dataOUT='t';
 	for(i=0;i<TELEMETRY_VARIABLES;i++){
 		if(telemetryToCoordinatorArr[i]==ONOFF.ON){			
-			type=i;			
+			type=i;						
 
 			f=telemetryValue(type);
 		
@@ -453,18 +453,43 @@ void kopterTimeStatusRequest(unsigned char *address64,unsigned char *address16,u
 	makeTRPacket(address64,address16,0x00,frameID,dataOUT,3);	
 }
 void kopterTimeReport(unsigned char *address64,unsigned char *address16,unsigned char frameID){
-			unsigned char *ch;
+	unsigned char *ch;
 			
-			*(dataOUT)='r';
-			*(dataOUT+1)=COMMANDS.TIME;
+	*(dataOUT)='r';
+	*(dataOUT+1)=COMMANDS.TIME;
 			
-			ch=(unsigned char *) &secondsTimer;
-			*(dataOUT+2)=*ch;
-			*(dataOUT+3)=*(ch+1);
-			*(dataOUT+4)=*(ch+2);
-			*(dataOUT+5)=*(ch+3);
-			makeTRPacket(address64,address16,0x00,frameID,dataOUT,6);	
+	ch=(unsigned char *) &secondsTimer;
+	*(dataOUT+2)=*ch;
+	*(dataOUT+3)=*(ch+1);
+	*(dataOUT+4)=*(ch+2);
+	*(dataOUT+5)=*(ch+3);
+	makeTRPacket(address64,address16,0x00,frameID,dataOUT,6);	
 }
 void kopterTimeReportReceived(unsigned char *address64,unsigned char *address16,uint32_t time){
 	
+}
+
+void kopterPositionSetRequest(unsigned char *address64,unsigned char *address16,float elevator,float aileron,unsigned char frameID){
+	unsigned char *ch;
+	
+	*(dataOUT)='c';
+	*(dataOUT+1)=COMMANDS.POSITION_SET;
+	
+	ch=(unsigned char *) &elevator;
+	*(dataOUT+2)=*ch;
+	*(dataOUT+3)=*(ch+1);
+	*(dataOUT+4)=*(ch+2);
+	*(dataOUT+5)=*(ch+3);
+
+	ch=(unsigned char *) &aileron;
+	*(dataOUT+6)=*ch;
+	*(dataOUT+7)=*(ch+1);
+	*(dataOUT+8)=*(ch+2);
+	*(dataOUT+9)=*(ch+3);	
+	
+	makeTRPacket(address64,address16,0x00,frameID,dataOUT,10);		
+}
+void kopterPositionSet(unsigned char *address64,unsigned char *address16,float elevator,float aileron){
+	position.elevator=elevator;
+	position.aileron=aileron;
 }

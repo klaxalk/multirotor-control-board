@@ -82,6 +82,7 @@ typedef struct
 	unsigned char LOCK_ON_BLOB;
 	unsigned char FOLLOWER_SET;
 	unsigned char TIME;
+	unsigned char POSITION_SET;
 }COMMANDST;
 
 extern unsigned char GET_STATUS;
