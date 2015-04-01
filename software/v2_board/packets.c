@@ -1,10 +1,8 @@
 #include <stdio.h>
 #include "packets.h"
-#include "defines.h"
 #include "commands.h"
 #include "communication.h"
 #include "controllers.h"
-#include "usart_driver_RTOS.h"
 #include "system.h"
 
 //Telemetry sending
@@ -59,7 +57,7 @@ void packetHandler(unsigned char *inPacket){
 								telemetryToCoordinator(address64,address16,*(dataIN+3),*(dataIN+4));
 							}
 						}else
-						//LANDING REQUEST
+						//LANDING
 						if(*(dataIN+2)==COMMANDS.LANDING){
 							if(		 *(dataIN+3)==ONOFF.ON){
 								kopterLand(address64,address16,1);								
@@ -69,18 +67,20 @@ void packetHandler(unsigned char *inPacket){
 								kopterLandReport(address64,address16,0x00);								
 							}
 						} else
-						//TRAJECTORY REQUEST
+						//TRAJECTORY SET
 						if(*(dataIN+2)==COMMANDS.TRAJECTORY_POINTS){
 							if(*(dataIN+3)==GET_STATUS){																
 								for(i=0;i<=trajMaxIndex;i++){
 										kopterTrajectorySetReport(address64,address16,i,0x00);
 								}								
-							}else{								
-								ch1[0]=*(dataIN+4); ch1[1]=*(dataIN+5); ch1[2]=*(dataIN+6); ch1[3]=*(dataIN+7); ui32=(uint32_t *)ch1;
-								ch2[0]=*(dataIN+8); ch2[1]=*(dataIN+9); ch2[2]=*(dataIN+10); ch2[3]=*(dataIN+11); f2=(float *)ch2;
-								ch3[0]=*(dataIN+12); ch3[1]=*(dataIN+13); ch3[2]=*(dataIN+14); ch3[3]=*(dataIN+15); f3=(float *)ch3;
-								ch4[0]=*(dataIN+16); ch4[1]=*(dataIN+17); ch4[2]=*(dataIN+18); ch4[3]=*(dataIN+19); f4=(float *)ch4;
-								kopterTrajectorySet(address64,address16,*(dataIN+3),*ui32,*f2,*f3,*f4);																															
+							}else{		
+								 for(i=0;i<*(dataIN+3);i++){
+									 ch1[0]=*(dataIN+4+i*16); ch1[1]=*(dataIN+5+i*16); ch1[2]=*(dataIN+6+i*16); ch1[3]=*(dataIN+7+i*16); ui32=(uint32_t *)ch1;
+									 ch2[0]=*(dataIN+8+i*16); ch2[1]=*(dataIN+9+i*16); ch2[2]=*(dataIN+10+i*16); ch2[3]=*(dataIN+11+i*16); f2=(float *)ch2;
+									 ch3[0]=*(dataIN+12+i*16); ch3[1]=*(dataIN+13+i*16); ch3[2]=*(dataIN+14+i*16); ch3[3]=*(dataIN+15+i*16); f3=(float *)ch3;
+									 ch4[0]=*(dataIN+16+i*16); ch4[1]=*(dataIN+17+i*16); ch4[2]=*(dataIN+18+i*16); ch4[3]=*(dataIN+19+i*16); f4=(float *)ch4;
+									 kopterTrajectorySet(address64,address16,i,*ui32,*f2,*f3,*f4);
+								 }																																											
 							}
 						} else																							
 						//CONTROLLERS
@@ -152,8 +152,7 @@ void packetHandler(unsigned char *inPacket){
 				         } else
 						 //TRAJECTORY POINTS
 				         if(*(dataIN+2)==COMMANDS.TRAJECTORY_POINTS){								 	
-							 for(i=0;i<*(dataIN+3);i++){	
-								 if(i>9) return;		 
+							 for(i=0;i<*(dataIN+3);i++){			 
 								 ch1[0]=*(dataIN+4+i*16); ch1[1]=*(dataIN+5+i*16); ch1[2]=*(dataIN+6+i*16); ch1[3]=*(dataIN+7+i*16); ui32=(uint32_t *)ch1;
 								 ch2[0]=*(dataIN+8+i*16); ch2[1]=*(dataIN+9+i*16); ch2[2]=*(dataIN+10+i*16); ch2[3]=*(dataIN+11+i*16); f2=(float *)ch2;
 								 ch3[0]=*(dataIN+12+i*16); ch3[1]=*(dataIN+13+i*16); ch3[2]=*(dataIN+14+i*16); ch3[3]=*(dataIN+15+i*16); f3=(float *)ch3;

@@ -31,8 +31,6 @@ typedef struct
 	unsigned char ALTITUDE_SETPOINT;
 	unsigned char ELEVATOR_POS_SETPOINT;
 	unsigned char AILERON_POS_SETPOINT;
-	unsigned char ELEVATOR_SPEED_SETPOINT;
-	unsigned char AILERON_SPEED_SETPOINT;
 	unsigned char ELEVATOR_ACC;
 	unsigned char AILERON_ACC;
 	unsigned char VALID_GUMSTIX;
@@ -47,7 +45,7 @@ typedef struct
 	unsigned char ROLL_ANGLE;
 } TELEMETRIEST;
 
-#define TELEMETRY_VARIABLES 29
+#define TELEMETRY_VARIABLES 27
 
 
 typedef struct

@@ -3,7 +3,6 @@
 #include "communication.h"
 #include "system.h"
 #include "packets.h"
-#include <stdio.h> // sprintf
 #include <stdlib.h> // abs
 
 
@@ -29,13 +28,11 @@ void mainTask(void *p) {
 		
 				
 		if(RCchannel[AUX2]<(PPM_IN_MIDDLE_LENGTH)){
-			if(previous_AUX2!=0){
-				
+			if(previous_AUX2!=0){				
 				previous_AUX2=0;
 			}
 		}else{
-			if(previous_AUX2!=1){
-						
+			if(previous_AUX2!=1){						
 				previous_AUX2=1;
 			}
 		}
@@ -78,13 +75,11 @@ void mainTask(void *p) {
 	
 
 		if(RCchannel[AUX5]<PPM_IN_MIDDLE_LENGTH){
-			if(previous_AUX5!=0){
-				
+			if(previous_AUX5!=0){				
 				previous_AUX5=0;
 			}
 		}else{
 			if(previous_AUX5!=1){
-
 				previous_AUX5=1;
 			}
 		}

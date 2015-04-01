@@ -82,17 +82,13 @@ void commTask(void *p) {
 	
 	//wait for XBee	
 	vTaskDelay(1000);
-	
-	initializeKalmanStates();	
-	mpcSetpoints.elevatorSetpoint = 0;
-	mpcSetpoints.aileronSetpoint = 0;
-		
+			
 	while (1) {			
 		//Auto state reports			
 		stateChecker();		
 		
 		//send position to slave
-		positionSlaveSend()
+		positionSlaveSend();
 				
 		//20Hz loop
 		if (counter20Hz++>2000){

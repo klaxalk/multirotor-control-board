@@ -45,8 +45,6 @@ void logTaskReadable(void *p){
 		logValueStr(positionSetpoint.altitude);  //setpoints
 		logValueStr(positionSetpoint.elevator);
 		logValueStr(positionSetpoint.aileron);
-		logValueStr(speedSetpoint.elevator);
-		logValueStr(speedSetpoint.aileron);
 		logValueStr((float)outputThrottle); //outputs
 		logValueStr((float)outputElevator);
 		logValueStr((float)outputAileron);
@@ -88,8 +86,6 @@ void logTaskBinary(void *p){
 		logValueBin(positionSetpoint.altitude); //setpoints
 		logValueBin(positionSetpoint.elevator);
 		logValueBin(positionSetpoint.aileron);
-		logValueBin(speedSetpoint.elevator);
-		logValueBin(speedSetpoint.aileron);
 		logValueBin((float)outputThrottle); //outputs
 		logValueBin((float)outputElevator);
 		logValueBin((float)outputAileron);

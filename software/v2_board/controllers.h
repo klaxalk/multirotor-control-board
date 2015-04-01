@@ -23,14 +23,10 @@
 // constants for position and velocity controllers
 #define SPEED_MAX 0.4 // in m/s, must be positive!
 
-
 // constants for altitude and landing controllers
 #define ALTITUDE_MAXIMUM  3.00 //used to crop values from PX4Flow
 #define ALTITUDE_MINIMUM  0.35 //used for landing (must be > 0.3)
 #define ALTITUDE_SPEED_MAX 0.8 //in m/s, must be positive!
-
-#define THROTTLE_SP_HIGH  2.5
-#define THROTTLE_SP_LOW   ALTITUDE_MINIMUM
 
 // controllers saturations
 #define CONTROLLER_ELEVATOR_SATURATION 100
@@ -61,9 +57,6 @@ extern volatile state_t blob;
 
 //vars for controllers
 extern volatile state_t positionSetpoint;
-extern volatile state_t speedSetpoint;
-extern volatile state_t positionDesiredSetpoint;
-extern volatile state_t speedDesiredSetpoint;
 
 //Blob
 extern volatile unsigned char gumstixStable;
@@ -90,28 +83,23 @@ trajectory[i].elevatorPos = e; \
 trajectory[i].aileronPos = a; \
 trajectory[i].throttlePos = th
 
-//trajectory Follow
+//Trajectory
 void initTrajectory();
 void setpointsCalculate();
 
 //enables - disables
 void enableLanding();
 void disableLanding();
-void enableTrajectoryFollow();
-void disableTrajectoryFollow();
 void controllerSet(unsigned char controllerDesired);
 
 //position estimator and controllers
 void positionEstimator();
-void velocityController(float elevatorSetpoint, float aileronSetpoint);
+void velocityController();
 void positionController(float elevatorSetpoint, float aileronSetpoint);
 
 //altitude estimator and controllers
 void altitudeEstimator();
 void altitudeController(float setpoint);
 void landingController();
-
-//Blob is origin of setpoint
-void lockOnBlob(float distance);
 
 #endif // _CONTROLLERS_H

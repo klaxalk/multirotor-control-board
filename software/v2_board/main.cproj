@@ -266,9 +266,6 @@
     <Compile Include="controllersTask.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="defines.h">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="FreeRTOS\FreeRTOSConfig.h">
       <SubType>compile</SubType>
     </Compile>

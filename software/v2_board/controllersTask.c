@@ -6,14 +6,12 @@
 
 void controllersTask(void *p) {	
 	initTrajectory();
-	controllerSet(CONTROLLERS.OFF);
 	while (1) {					
 		
 		//values calculation
 		positionEstimator();
 		altitudeEstimator();
-		setpointsCalculate();						
-				
+		setpointsCalculate();										
 					
 		//MANUAL
 		if(controllerActive==CONTROLLERS.OFF){
@@ -25,13 +23,13 @@ void controllersTask(void *p) {
 			if(landingState==LANDING.FLIGHT){	
 				//VELOCITY	
 				if(controllerActive==CONTROLLERS.VELOCITY){
-					velocityController(speedDesiredSetpoint.elevator,speedDesiredSetpoint.aileron);
-					altitudeController(positionDesiredSetpoint.altitude);	
+					velocityController();
+					altitudeController(positionSetpoint.altitude);	
 				}else
 				//POSITION
 				if(controllerActive==CONTROLLERS.POSITION){
-					positionController(positionDesiredSetpoint.elevator,positionDesiredSetpoint.aileron);	
-					altitudeController(positionDesiredSetpoint.altitude);	
+					positionController(positionSetpoint.elevator,positionSetpoint.aileron);	
+					altitudeController(positionSetpoint.altitude);	
 				}else
 				//PREDICTIVE
 				if(controllerActive==CONTROLLERS.MPC){

@@ -1,6 +1,5 @@
 #include "controllers.h"
 #include "communication.h"
-
 #include "constants.h"
 
 // controllers output variables
@@ -20,10 +19,7 @@ volatile state_t blob = {.aileron=0 , .elevator=0 , .altitude=0};
 
 //setpoints
 volatile state_t positionSetpoint = {.aileron=DEFAULT_AILERON_POSITION_SETPOINT , .elevator=DEFAULT_ELEVATOR_POSITION_SETPOINT , .altitude=DEFAULT_THROTTLE_POSITION_SETPOINT};
-volatile state_t speedSetpoint = {.aileron=DEFAULT_AILERON_VELOCITY_SETPOINT , .elevator=DEFAULT_ELEVATOR_VELOCITY_SETPOINT , .altitude=DEFAULT_THROTTLE_VELOCITY_SETPOINT};
-volatile state_t positionDesiredSetpoint = {.aileron=DEFAULT_AILERON_POSITION_SETPOINT , .elevator=DEFAULT_ELEVATOR_POSITION_SETPOINT , .altitude=DEFAULT_THROTTLE_POSITION_SETPOINT};
-volatile state_t speedDesiredSetpoint = {.aileron=DEFAULT_AILERON_VELOCITY_SETPOINT , .elevator=DEFAULT_ELEVATOR_VELOCITY_SETPOINT , .altitude=DEFAULT_THROTTLE_VELOCITY_SETPOINT};	
-
+	
 //Blob 
 volatile unsigned char gumstixStable=0;
 
@@ -87,29 +83,23 @@ void setpointsCalculate(){
 		
 	//end of trajectory	
 	if(secondsTimer>=trajectory[trajIndex].time){
-		positionDesiredSetpoint.elevator=trajectory[trajIndex].elevatorPos;	
-		positionDesiredSetpoint.aileron=trajectory[trajIndex].aileronPos;	
-			
-		speedDesiredSetpoint.elevator=0;
-		speedDesiredSetpoint.aileron=0;	
+		positionSetpoint.elevator=trajectory[trajIndex].elevatorPos;	
+		positionSetpoint.aileron=trajectory[trajIndex].aileronPos;	
 	}else{
 	//setpoints calculation			
 		timeLeft=(float)(trajectory[trajIndex].time-secondsTimer)-(milisecondsTimer/1000.0);	
 		//elevator
-		distLeft=trajectory[trajIndex].elevatorPos-positionDesiredSetpoint.elevator;		
+		distLeft=trajectory[trajIndex].elevatorPos-positionSetpoint.elevator;		
 		speed=distLeft/timeLeft;
-		positionDesiredSetpoint.elevator+=speed*DT;
-		speedDesiredSetpoint.elevator=speed;
+		positionSetpoint.elevator+=speed*DT;
 		//aileron
-		distLeft=trajectory[trajIndex].aileronPos-positionDesiredSetpoint.aileron;
+		distLeft=trajectory[trajIndex].aileronPos-positionSetpoint.aileron;
 		speed=distLeft/timeLeft;
-		positionDesiredSetpoint.aileron+=speed*DT;		
-		speedDesiredSetpoint.aileron=speed;	
+		positionSetpoint.aileron+=speed*DT;		
 		//throttle
-		distLeft=trajectory[trajIndex].throttlePos-positionDesiredSetpoint.altitude;
+		distLeft=trajectory[trajIndex].throttlePos-positionSetpoint.altitude;
 		speed=distLeft/timeLeft;
-		positionDesiredSetpoint.altitude+=speed*DT;	
-		speedDesiredSetpoint.altitude=speed;		
+		positionSetpoint.altitude+=speed*DT;		
 	}
 }
 
@@ -163,7 +153,7 @@ void positionEstimator() {
 	}
 }
 
-void velocityController(float elevatorSetpoint, float aileronSetpoint) {
+void velocityController() {
 	float error;
 	static const float KI=10, KV=25, KA=35;
 	static uint32_t time = 0;
@@ -174,23 +164,16 @@ void velocityController(float elevatorSetpoint, float aileronSetpoint) {
 	if((secondsTimer-time)>1){
 		elevatorIntegration=0;
 		aileronIntegration=0;
-		speedDesiredSetpoint.aileron = DEFAULT_AILERON_VELOCITY_SETPOINT;
-		speedDesiredSetpoint.elevator = DEFAULT_ELEVATOR_VELOCITY_SETPOINT;		
 	}
 	time=secondsTimer;	
-
-	//setpoint filter
-	speedSetpoint.elevator += (saturationFloat(elevatorSetpoint,SPEED_MAX)-speedSetpoint.elevator) * (DT/SETPOINT_FILTER_CONST);
-	speedSetpoint.aileron += (saturationFloat(aileronSetpoint,SPEED_MAX)-speedSetpoint.aileron) * (DT/SETPOINT_FILTER_CONST);	
 			
 	//elevator controller		
-	error = speedSetpoint.elevator - speed.elevator;
+	error = -speed.elevator;
 	elevatorIntegration = saturationFloat(elevatorIntegration+(KI * error * DT),CONTROLLER_ELEVATOR_SATURATION/3.0);
 	controllerElevatorOutput=saturationInt16((int16_t)((KV * error) + elevatorIntegration - (KA * acceleration.elevator)),CONTROLLER_ELEVATOR_SATURATION);
-
 		
 	//aileron controller
-	error = speedSetpoint.aileron - speed.aileron;	
+	error = -speed.aileron;	
 	aileronIntegration = saturationFloat(aileronIntegration+(KI * error * DT),CONTROLLER_AILERON_SATURATION/3.0);
 	controllerAileronOutput=saturationInt16((int16_t)((KV * error) + aileronIntegration - (KA * acceleration.aileron)),CONTROLLER_AILERON_SATURATION);
 }
@@ -207,28 +190,18 @@ void positionController(float elevatorSetpoint, float aileronSetpoint) {
 	//controller turned on	
 	if((secondsTimer-time)>1){
 		elevatorIntegration=0;
-		aileronIntegration=0;
-		positionSetpoint.elevator = DEFAULT_ELEVATOR_POSITION_SETPOINT;
-		positionSetpoint.aileron = DEFAULT_AILERON_POSITION_SETPOINT;
-		positionDesiredSetpoint.elevator = DEFAULT_ELEVATOR_POSITION_SETPOINT;
-		positionDesiredSetpoint.aileron = DEFAULT_AILERON_POSITION_SETPOINT;
-		position.elevator = positionSetpoint.elevator;
-		position.aileron  = positionSetpoint.aileron;		
+		aileronIntegration=0;	
 	}
 	time=secondsTimer;
 
-	//setpoints filter
-	positionSetpoint.elevator += (elevatorSetpoint-positionSetpoint.elevator) * (DT/SETPOINT_FILTER_CONST);
-	positionSetpoint.aileron += (aileronSetpoint-positionSetpoint.aileron) * (DT/SETPOINT_FILTER_CONST);
-
 	//elevator controller
-	error = positionSetpoint.elevator - position.elevator;
+	error = elevatorSetpoint - position.elevator;
 	speedDes = saturationFloat((KP/KV) * error,SPEED_MAX);
 	elevatorIntegration = saturationFloat(elevatorIntegration+(KI * error * DT),CONTROLLER_ELEVATOR_SATURATION/3.0);	
 	controllerElevatorOutput=saturationInt16((int16_t)(KV * (speedDes - speed.elevator) + elevatorIntegration - (KA * acceleration.elevator)),CONTROLLER_ELEVATOR_SATURATION);
 
 	//aileron controller
-	error = positionSetpoint.aileron - position.aileron;
+	error = aileronSetpoint - position.aileron;
 	speedDes = saturationFloat((KP/KV) * error,SPEED_MAX);
 	aileronIntegration = saturationFloat(aileronIntegration+(KI * error * DT),CONTROLLER_AILERON_SATURATION/3.0);	
 	controllerAileronOutput=saturationInt16((int16_t)(KV * (speedDes - speed.aileron) + aileronIntegration - (KA * acceleration.aileron)),CONTROLLER_AILERON_SATURATION);
@@ -270,18 +243,11 @@ void altitudeController(float setpoint) {
 	//controller turned on	
 	if((secondsTimer-time)>1){
 		throttleIntegration=0;
-		positionSetpoint.altitude=DEFAULT_THROTTLE_POSITION_SETPOINT;	
-		positionDesiredSetpoint.altitude=DEFAULT_THROTTLE_POSITION_SETPOINT;
 	}
-	time=secondsTimer;	
-	
-	//setpoint filter
-	if(setpoint<THROTTLE_SP_LOW){setpoint=THROTTLE_SP_LOW;}
-	if(setpoint>THROTTLE_SP_HIGH){setpoint=THROTTLE_SP_HIGH;}
-	positionSetpoint.altitude += (setpoint-positionSetpoint.altitude) * (DT/SETPOINT_FILTER_CONST);
+	time=secondsTimer;		
 		
 	//throttle controller
-	error =(positionSetpoint.altitude - position.altitude);
+	error =(setpoint - position.altitude);
 	throttleIntegration = saturationFloat(throttleIntegration+(KI * error * DT),CONTROLLER_THROTTLE_SATURATION*(1.8/3.0)) ;
 	controllerThrottleOutput=saturationInt16((int16_t)(KV * (saturationFloat(KX * error,ALTITUDE_SPEED_MAX) - speed.altitude) + throttleIntegration),CONTROLLER_THROTTLE_SATURATION);
 }
@@ -294,8 +260,8 @@ void landingController(){
 			controllerAileronOutput = 0;
 		}else
 		if(landingState==LANDING.TAKE_OFF){
-			altitudeController(positionDesiredSetpoint.altitude);
-			velocityController(0,0);				
+			altitudeController(positionSetpoint.altitude);
+			velocityController();				
 			//stabilize altitude for 0.5s
 			if(fabs(positionSetpoint.altitude - position.altitude) < 0.1 && fabs(speed.altitude) < 0.2){
 				landingCounter++;
@@ -310,7 +276,7 @@ void landingController(){
 		if(landingState==LANDING.STABILIZATION){
 			//stabilize altitude for 0.5s
 			altitudeController(ALTITUDE_MINIMUM);
-			velocityController(0,0);
+			velocityController();
 			
 			if(fabs(positionSetpoint.altitude - position.altitude) < 0.1 && fabs(speed.altitude) < 0.2){
 				landingCounter++;
