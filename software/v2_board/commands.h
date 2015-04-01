@@ -23,7 +23,7 @@ void kopterLandReportRecieved(unsigned char *address64,unsigned char *address16,
 void kopterTrajectorySetRequest(unsigned char *address64,unsigned char *address16,unsigned char size,uint32_t* time,float* elevatorPos,float* aileronPos,float* throttlePos,unsigned char frameID);
 void kopterTrajectorySet(unsigned char *address64,unsigned char *address16,unsigned char index,uint32_t time,float elevatorPos,float aileronPos,float throttlePos);
 void kopterTrajectorySetStatusRequest(unsigned char *address64,unsigned char *address16,unsigned char frameID);
-void kopterTrajectorySetReport(unsigned char *address64,unsigned char *address16,unsigned char index,unsigned char frameID);
+void kopterTrajectorySetReport(unsigned char *address64,unsigned char *address16,unsigned char frameID);
 void kopterTrajectorySetReportReceived(unsigned char *address64,unsigned char *address16,unsigned char index,uint32_t time,float elevatorPos,float aileronPos,float throttlePos);
 
 void kopterControllersRequest(unsigned char *address64,unsigned char *address16,unsigned char option,unsigned char frameID);

@@ -1,10 +1,3 @@
-/*
- * system.h
- *
- * Created: 10.9.2014 21:53:31
- *  Author: Tomas Baca
- */ 
-
 #ifndef SYSTEM_H_
 #define SYSTEM_H_
 
