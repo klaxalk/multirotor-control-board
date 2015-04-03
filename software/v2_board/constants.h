@@ -43,9 +43,11 @@ typedef struct
 	unsigned char BLOB_ALTITUDE;
 	unsigned char PITCH_ANGLE;
 	unsigned char ROLL_ANGLE;
+	unsigned char ELEVATOR_SHIFT;
+	unsigned char AILERON_SHIFT;
 } TELEMETRIEST;
 
-#define TELEMETRY_VARIABLES 27
+#define TELEMETRY_VARIABLES 29
 
 
 typedef struct

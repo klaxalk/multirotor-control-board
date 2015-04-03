@@ -70,9 +70,7 @@ void packetHandler(unsigned char *inPacket){
 						//TRAJECTORY SET
 						if(*(dataIN+2)==COMMANDS.TRAJECTORY_POINTS){
 							if(*(dataIN+3)==GET_STATUS){																
-								for(i=0;i<=trajMaxIndex;i++){
-										kopterTrajectorySetReport(address64,address16,i,0x00);
-								}								
+								kopterTrajectorySetReport(address64,address16,0x00);							
 							}else{		
 								 for(i=0;i<*(dataIN+3);i++){
 									 ch1[0]=*(dataIN+4+i*16); ch1[1]=*(dataIN+5+i*16); ch1[2]=*(dataIN+6+i*16); ch1[3]=*(dataIN+7+i*16); ui32=(uint32_t *)ch1;

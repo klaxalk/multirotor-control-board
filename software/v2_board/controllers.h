@@ -51,6 +51,7 @@ volatile unsigned char controllerActive;
 
 //vars for estimators
 extern volatile state_t position;
+extern volatile state_t positionShift;
 extern volatile state_t speed;
 extern volatile state_t acceleration;
 extern volatile state_t blob;

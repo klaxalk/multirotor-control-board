@@ -13,9 +13,16 @@ volatile unsigned char controllerActive = 0x01;
 
 //vars for estimators
 volatile state_t position = {.aileron=0 , .elevator=0 , .altitude=0};
+volatile state_t positionShift = {.aileron=0 , .elevator=0 , .altitude=0};
 volatile state_t speed = {.aileron=0 , .elevator=0 , .altitude=0};
 volatile state_t acceleration ={.aileron=0 , .elevator=0 , .altitude=0};
-volatile state_t blob = {.aileron=0 , .elevator=0 , .altitude=0};		
+volatile state_t blob = {.aileron=0 , .elevator=0 , .altitude=0};
+	
+/*
+Transformace z SS MAV a Global
+akt=kopt+shift
+kopt=akt-shift
+*/		
 
 //setpoints
 volatile state_t positionSetpoint = {.aileron=DEFAULT_AILERON_POSITION_SETPOINT , .elevator=DEFAULT_ELEVATOR_POSITION_SETPOINT , .altitude=DEFAULT_THROTTLE_POSITION_SETPOINT};
@@ -75,6 +82,7 @@ void controllerSet(unsigned char controllerDesired){
 
 void setpointsCalculate(){
 	float distLeft,speed,timeLeft;
+	static state_t setpoints = {.aileron=DEFAULT_AILERON_POSITION_SETPOINT , .elevator=DEFAULT_ELEVATOR_POSITION_SETPOINT , .altitude=DEFAULT_THROTTLE_POSITION_SETPOINT};
 	
 	//trajectory waypoint shift
 	while((secondsTimer>=trajectory[trajIndex].time) && (trajIndex<trajMaxIndex)){
@@ -83,24 +91,28 @@ void setpointsCalculate(){
 		
 	//end of trajectory	
 	if(secondsTimer>=trajectory[trajIndex].time){
-		positionSetpoint.elevator=trajectory[trajIndex].elevatorPos;	
-		positionSetpoint.aileron=trajectory[trajIndex].aileronPos;	
+		setpoints.elevator=trajectory[trajIndex].elevatorPos;	
+		setpoints.aileron=trajectory[trajIndex].aileronPos;	
 	}else{
 	//setpoints calculation			
 		timeLeft=(float)(trajectory[trajIndex].time-secondsTimer)-(milisecondsTimer/1000.0);	
 		//elevator
 		distLeft=trajectory[trajIndex].elevatorPos-positionSetpoint.elevator;		
 		speed=distLeft/timeLeft;
-		positionSetpoint.elevator+=speed*DT;
+		setpoints.elevator+=speed*DT;
 		//aileron
 		distLeft=trajectory[trajIndex].aileronPos-positionSetpoint.aileron;
 		speed=distLeft/timeLeft;
-		positionSetpoint.aileron+=speed*DT;		
+		setpoints.aileron+=speed*DT;		
 		//throttle
 		distLeft=trajectory[trajIndex].throttlePos-positionSetpoint.altitude;
 		speed=distLeft/timeLeft;
-		positionSetpoint.altitude+=speed*DT;		
+		setpoints.altitude+=speed*DT;		
 	}
+	
+	positionSetpoint.elevator=setpoints.elevator-positionShift.elevator;
+	positionSetpoint.aileron=setpoints.aileron-positionShift.aileron;
+	positionSetpoint.altitude=setpoints.altitude;
 }
 
 void positionEstimator() {
