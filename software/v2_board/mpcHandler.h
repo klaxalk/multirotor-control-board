@@ -24,11 +24,11 @@ typedef struct {
 	char * messageBuffer;
 } stmMessageHandler_t;
 
-// this structure hold setpoints for elevator and aileron position
+// this structure hold setpoints for elevator and aileron position, mainly for debugging
 typedef struct {
 	
-	float elevatorSetpoint;
-	float aileronSetpoint;
+	float elevator;
+	float aileron;
 } mpcSetpoints_t;
 
 volatile int16_t mpcElevatorOutput;
@@ -123,9 +123,18 @@ void sendChar(UsartBuffer * usartBuffer, const char var, char * crc);
 void stmSendMeasurement(float elevSpeed, float aileSpeed, int16_t elevInput, int16_t aileInput);
 
 /**
- * @brief send basic point setpoints to MPC
+ * @brief send setpoint for the whole optimized horizon (constant setpoint)
+ * @param elevatorSetpoint desired elevator position [m], + means forwards
+ * @param aileronSetpoint desired aileron position [m], + means leftwards
  */
-void stmSendSetpointsSimple();
+void stmSendSetpoint(float elevatorSetpoint, float aileronSetpoint);
+
+/**
+ * @brief send trajectory (2.2s) by means of 5 points equally distributed from the start to the end of the optimization horizon
+ * @param elevatorTrajectory 5 points from the elevator trajectory
+ * @param aileronTrajectory 5 points from the aileron trajectory
+ */
+void stmSendTrajectory(float elevatorTrajectory[5], float aileronTrajectory[5]);
 
 /**
  * @brief initialize the LOCAL copy of kalman states to ZERO
@@ -149,5 +158,13 @@ int8_t stmParseChar(char inChar, stmMessageHandler_t * messageHandler);
  * @param initAileron the value of AileronPosition after reset
  */
 void stmResetKalman(float initElevator, float initAileron);
+
+/**
+ * @brief Set Kalman's integrated position to particular values
+ * 
+ * @param elevatorPos the value of ElevatorPosition
+ * @param aileronPos the value of AileronPosition
+ */
+void stmSetKalmanPosition(float elevatorPos, float aileronPos);
 
 #endif /* MPCHANDLER_H_ */

@@ -80,6 +80,14 @@ void commTask(void *p) {
 	unsigned char inChar;
 	int16_t counter20Hz=0;
 	
+	//initialize Kalman filter and MPC
+	stmResetKalman(0,0);
+	stmSendSetpoint(0,0);
+	//stmSendTrajectory(main2commMessage.data.trajectory.elevatorTrajectory, main2commMessage.data.trajectory.aileronTrajectory);
+		
+
+	
+	
 	//wait for XBee	
 	vTaskDelay(1000);
 			
@@ -91,8 +99,9 @@ void commTask(void *p) {
 		positionSlaveSend();
 				
 		//20Hz loop
-		if (counter20Hz++>2000){
+		if (counter20Hz++>100){
 			counter20Hz=0;
+			led_blue_toggle();
 			telemetryToCoordinatorSend();						
 		}	
 		
@@ -181,6 +190,8 @@ void commTask(void *p) {
 			}
 			px4Confidence = opticalFlowData.quality;
 			opticalFlowDataFlag = 0;
+			
+			stmSendMeasurement(elevatorSpeed, aileronSpeed, controllerElevatorOutput, controllerAileronOutput);			
 		}
 
 		// receive data from MC control board		
@@ -268,61 +279,49 @@ void commTask(void *p) {
 		}
 		
 		
-		//STM
-		if (usartBufferGetByte(usart_buffer_stm, &inChar, 0)) {
+	/* -------------------------------------------------------------------- */
+	/*	A character received from STM										*/
+	/* -------------------------------------------------------------------- */
+	if (usartBufferGetByte(usart_buffer_stm, &inChar, 0)) {
 
-			// parse it and handle the message if it is complete
-			if (stmParseChar(inChar, &stmMessage)) {
+		// parse it and handle the message if it is complete
+		if (stmParseChar(inChar, &stmMessage)) {
+			
+			// index for iterating the rxBuffer
+			int idx = 0;
+			
+			// messageId == '1'
+			// receive control actions computed by MPC
+			if (stmMessage.messageId == '1') {				
 				
-				// index for iterating the rxBuffer
-				int idx = 0;
+				portENTER_CRITICAL();
 				
-				// messageId == '1'
-				// receive control actions computed by MPC
-				if (stmMessage.messageId == '1') {
-					
-					int16_t tempInt;
-					
-					portENTER_CRITICAL();
-					
-					// saturate the incoming elevator output
-					tempInt = readInt16(stmMessage.messageBuffer, &idx);
-					if (tempInt > MPC_SATURATION){
-						mpcElevatorOutput = MPC_SATURATION;
-					} else if (tempInt < -MPC_SATURATION) {
-						mpcElevatorOutput = -MPC_SATURATION;
-					} else {
-						mpcElevatorOutput = tempInt;
-					}
-					
-					// saturate the incoming aileron output
-					tempInt = readInt16(stmMessage.messageBuffer, &idx);
-					if (tempInt > MPC_SATURATION) {
-						mpcAileronOutput = MPC_SATURATION;
-					} else if (tempInt < -MPC_SATURATION) {
-						mpcAileronOutput = -MPC_SATURATION;
-					} else {
-						mpcAileronOutput = tempInt;
-					}									
-					portEXIT_CRITICAL();
-					
-					// messageId == '2'
-					// receive all states estimated by kalman filter
-					} else if (stmMessage.messageId == '2') {
-					
+				// incoming outputs
+				mpcElevatorOutput = readInt16(stmMessage.messageBuffer, &idx);
+				mpcAileronOutput = readInt16(stmMessage.messageBuffer, &idx);				
+				
+				mpcSetpoints.elevator = readFloat(stmMessage.messageBuffer, &idx);
+				mpcSetpoints.aileron = readFloat(stmMessage.messageBuffer, &idx);
+				
+				portEXIT_CRITICAL();
+				
+				// messageId == '2'
+				// receive all states estimated by kalman filter
+				} else if (stmMessage.messageId == '2') {
+				
 					kalmanStates.elevator.position = readFloat(stmMessage.messageBuffer, &idx);
 					kalmanStates.elevator.velocity = readFloat(stmMessage.messageBuffer, &idx);
 					kalmanStates.elevator.acceleration = readFloat(stmMessage.messageBuffer, &idx);
 					kalmanStates.elevator.acceleration_input = readFloat(stmMessage.messageBuffer, &idx);
 					kalmanStates.elevator.acceleration_error = readFloat(stmMessage.messageBuffer, &idx);
-					
+				
 					kalmanStates.aileron.position = readFloat(stmMessage.messageBuffer, &idx);
 					kalmanStates.aileron.velocity = readFloat(stmMessage.messageBuffer, &idx);
 					kalmanStates.aileron.acceleration = readFloat(stmMessage.messageBuffer, &idx);
 					kalmanStates.aileron.acceleration_input = readFloat(stmMessage.messageBuffer, &idx);
-					kalmanStates.aileron.acceleration_error = readFloat(stmMessage.messageBuffer, &idx);
+					kalmanStates.aileron.acceleration_error = readFloat(stmMessage.messageBuffer, &idx);	
 				}
 			}
-		}		
+		}	
 	}	
 }

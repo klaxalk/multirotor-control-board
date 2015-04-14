@@ -220,23 +220,53 @@ void stmSendMeasurement(float elevSpeed, float aileSpeed, int16_t elevInput, int
 }
 
 /* -------------------------------------------------------------------- */
-/*	Send point setpoints to STM											*/
+/*	Send point setpoint to STM											*/
 /* -------------------------------------------------------------------- */
-void stmSendSetpointsSimple() {
+void stmSendSetpoint(float elevatorSetpoint, float aileronSetpoint) {
 	
 	char crc = 0;
 	
 	sendChar(usart_buffer_stm, 'a', &crc);		// this character initiates the transmission
 	
-	sendChar(usart_buffer_stm, 1+8, &crc);		// this will be the size of the message
+	sendChar(usart_buffer_stm, 1 + 2*4, &crc);		// this will be the size of the message
 	sendChar(usart_buffer_stm, 's', &crc);		// id of the message
 	
 	// sends the payload
-	sendFloat(usart_buffer_stm, mpcSetpoints.elevatorSetpoint, &crc);
-	sendFloat(usart_buffer_stm, mpcSetpoints.aileronSetpoint, &crc);
+	sendFloat(usart_buffer_stm, elevatorSetpoint, &crc);
+	sendFloat(usart_buffer_stm, aileronSetpoint, &crc);
 	
 	// at last send the crc, ends the transmission
 	sendChar(usart_buffer_stm, crc, &crc);
+}
+
+/* -------------------------------------------------------------------- */
+/*	Send dual setpoints to STM (start and end of horizon)				*/
+/* -------------------------------------------------------------------- */
+void stmSendTrajectory(float elevatorTrajectory[5], float aileronTrajectory[5]) {
+	
+	char crc = 0;
+	
+	sendChar(usart_buffer_stm, 'a', &crc);		// this character initiates the transmission
+	
+	sendChar(usart_buffer_stm, 1 + 5*4 + 5*4, &crc);	// this will be the size of the message
+	sendChar(usart_buffer_stm, 't', &crc);		// id of the message
+	
+	int i;
+	
+	// send the elevator trajectory
+	for (i = 0; i < 5; i++) {
+		
+		sendFloat(usart_buffer_stm, elevatorTrajectory[i], &crc);	
+	}
+	
+	// send the aileron trajectory
+	for (i = 0; i < 5; i++) {
+		
+		sendFloat(usart_buffer_stm, aileronTrajectory[i], &crc);
+	}
+	
+	// at last send the crc, ends the transmission
+	sendChar(usart_buffer_stm, crc, &crc);	
 }
 
 /* -------------------------------------------------------------------- */
@@ -253,6 +283,25 @@ void stmResetKalman(float initElevator, float initAileron) {
 	
 	sendFloat(usart_buffer_stm, initElevator, &crc);
 	sendFloat(usart_buffer_stm, initAileron, &crc);
+
+	// at last send the crc, ends the transmission
+	sendChar(usart_buffer_stm, crc, &crc);
+}
+
+/* -------------------------------------------------------------------- */
+/*	Override the current kalman's integrated position					*/
+/* -------------------------------------------------------------------- */
+void stmSetKalmanPosition(float elevatorPos, float aileronPos) {
+	
+	char crc = 0;
+	
+	sendChar(usart_buffer_stm, 'a', &crc);		// this character initiates the transmission
+	sendChar(usart_buffer_stm, 1 + 2*4, &crc);		// this will be the size of the message
+	
+	sendChar(usart_buffer_stm, '3', &crc);		// id of the message
+	
+	sendFloat(usart_buffer_stm, elevatorPos, &crc);
+	sendFloat(usart_buffer_stm, aileronPos, &crc);
 
 	// at last send the crc, ends the transmission
 	sendChar(usart_buffer_stm, crc, &crc);

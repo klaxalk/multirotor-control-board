@@ -5,6 +5,7 @@
 #include "communication.h"
 #include "system.h"
 #include "commTask.h"
+#include "mpcHandler.h"
 
 char str[10];
 char *strBin;
@@ -29,14 +30,14 @@ void logTaskReadable(void *p){
 	while(1){	
 		logValueStr((float) (pitchAngle/10.0));
 		logValueStr((float) (rollAngle/10.0));
-		logValueStr(position.altitude); //altitude
-		logValueStr(speed.altitude);
-		logValueStr(position.elevator); //elevator
-		logValueStr(speed.elevator);
-		logValueStr(acceleration.elevator);
-		logValueStr(position.aileron); //aileron
-		logValueStr(speed.aileron);
-		logValueStr(acceleration.aileron);
+		logValueStr(altitude.position); //altitude
+		logValueStr(altitude.speed);
+		logValueStr(kalmanStates.elevator.position); //elevator
+		logValueStr(kalmanStates.elevator.velocity);
+		logValueStr(kalmanStates.elevator.acceleration);
+		logValueStr(kalmanStates.aileron.position); //aileron
+		logValueStr(kalmanStates.aileron.velocity);
+		logValueStr(kalmanStates.aileron.acceleration);
 		logValueStr(validGumstix); //blob detector
 		logValueStr(blob.elevator);
 		logValueStr(blob.aileron);
@@ -70,14 +71,14 @@ void logTaskBinary(void *p){
 	while(1){			
 		logValueBin((float) (pitchAngle/10.0)); //angles
 		logValueBin((float) (rollAngle/10.0));
-		logValueBin(position.altitude); //altitude
-		logValueBin(speed.altitude);
-		logValueBin(position.elevator); //elevator
-		logValueBin(speed.elevator);
-		logValueBin(acceleration.elevator);
-		logValueBin(position.aileron); //aileron
-		logValueBin(speed.aileron);
-		logValueBin(acceleration.aileron);
+		logValueBin(altitude.position); //altitude
+		logValueBin(altitude.speed);
+		logValueBin(kalmanStates.elevator.position); //elevator
+		logValueBin(kalmanStates.elevator.velocity);
+		logValueBin(kalmanStates.elevator.acceleration);
+		logValueBin(kalmanStates.aileron.position); //aileron
+		logValueBin(kalmanStates.aileron.velocity);
+		logValueBin(kalmanStates.aileron.acceleration);
 		logValueBin(validGumstix); //blob detector
 		logValueBin(blob.elevator);
 		logValueBin(blob.aileron);

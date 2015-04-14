@@ -2,6 +2,7 @@
 #include "controllers.h"
 #include "system.h"
 #include "constants.h"
+#include "mpcHandler.h"
 
 
 void controllersTask(void *p) {	
@@ -32,8 +33,10 @@ void controllersTask(void *p) {
 					altitudeController(positionSetpoint.altitude);	
 				}else
 				//PREDICTIVE
-				if(controllerActive==CONTROLLERS.MPC){
-			
+				if(controllerActive==CONTROLLERS.MPC){					
+					altitudeController(positionSetpoint.altitude);	
+					controllerElevatorOutput = saturationInt16(mpcElevatorOutput,CONTROLLER_ELEVATOR_SATURATION);
+					controllerAileronOutput = saturationInt16(mpcAileronOutput,CONTROLLER_AILERON_SATURATION);	
 				}
 			}else{
 				//LANDING

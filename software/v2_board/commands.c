@@ -5,6 +5,7 @@
 #include "controllers.h"
 #include "system.h"
 #include "commTask.h"
+#include "mpcHandler.h"
 
 
 
@@ -23,7 +24,7 @@ void packetTypeError(unsigned char *inPacket){
 float telemetryValue(unsigned char type){
 	float f=0.0;
 	if(type==TELEMETRIES.ALTITUDE_ESTIMATED){
-		f=position.altitude;
+		f=altitude.position;
 	}else if(type==TELEMETRIES.ALTITUDE){
 		f=groundDistance;
 	}else if(type==TELEMETRIES.ELEVATOR_SPEED){
@@ -31,17 +32,17 @@ float telemetryValue(unsigned char type){
 	}else if(type==TELEMETRIES.AILERON_SPEED){
 		f=aileronSpeed;
 	}else if(type==TELEMETRIES.ELEVATOR_SPEED_ESTIMATED){
-		f=speed.elevator;
+		f=kalmanStates.elevator.velocity;
 	}else if(type==TELEMETRIES.AILERON_SPEED_ESTIMATED){
-		f=speed.aileron;
+		f=kalmanStates.aileron.velocity;
 	}else if(type==TELEMETRIES.ELEVATOR_POSITION){
-		f=position.elevator+positionShift.elevator;
+		f=kalmanStates.elevator.position+positionShift.elevator;
 	}else if(type==TELEMETRIES.AILERON_POSITION){
-		f=position.aileron+positionShift.aileron;
+		f=kalmanStates.aileron.position+positionShift.aileron;
 	}else if(type==TELEMETRIES.ALTITUDE_CONTROLLER_OUTPUT){
 		f=controllerThrottleOutput;
 	}else if(type==TELEMETRIES.ALTITUDE_SPEED){
-		f=speed.altitude;
+		f=altitude.speed;
 	}else if(type==TELEMETRIES.AILERON_CONTROLLER_OUTPUT){
 		f=controllerAileronOutput;
 	}else if(type==TELEMETRIES.ELEVATOR_CONTROLLER_OUTPUT){
@@ -53,9 +54,9 @@ float telemetryValue(unsigned char type){
 	}else if(type==TELEMETRIES.AILERON_POS_SETPOINT){
 		f=positionSetpoint.aileron+positionShift.aileron;
 	}else if(type==TELEMETRIES.ELEVATOR_ACC){
-		f=acceleration.elevator;
+		f=kalmanStates.elevator.acceleration;
 	}else if(type==TELEMETRIES.AILERON_ACC){
-		f=acceleration.aileron;
+		f=kalmanStates.aileron.acceleration;
 	}else if(type==TELEMETRIES.VALID_GUMSTIX){
 		f=validGumstix;
     }else if(type==TELEMETRIES.OUTPUT_THROTTLE){
@@ -430,6 +431,6 @@ void kopterPositionSetRequest(unsigned char *address64,unsigned char *address16,
 	makeTRPacket(address64,address16,0x00,frameID,dataOUT,10);		
 }
 void kopterPositionSet(unsigned char *address64,unsigned char *address16,float elevator,float aileron){
-	positionShift.elevator=elevator-position.elevator;
-	positionShift.aileron=aileron-position.aileron;
+	positionShift.elevator=elevator-kalmanStates.elevator.position;
+	positionShift.aileron=aileron-kalmanStates.aileron.position;
 }

@@ -29,8 +29,8 @@
 #define ALTITUDE_SPEED_MAX 0.8 //in m/s, must be positive!
 
 // controllers saturations
-#define CONTROLLER_ELEVATOR_SATURATION 100
-#define CONTROLLER_AILERON_SATURATION  100
+#define CONTROLLER_ELEVATOR_SATURATION 300
+#define CONTROLLER_AILERON_SATURATION  300
 #define CONTROLLER_THROTTLE_SATURATION 300
 
 //Elevator Aileron struct
@@ -39,6 +39,12 @@ typedef struct{
 	float aileron;
 	float altitude;
 }state_t;
+
+typedef struct{
+	float position;
+	float speed;
+	float acceleration;
+}state2_t;
 
 // controllers output variables
 extern volatile int16_t controllerElevatorOutput;
@@ -50,11 +56,9 @@ extern volatile int16_t controllerThrottleOutput;
 volatile unsigned char controllerActive;
 
 //vars for estimators
-extern volatile state_t position;
 extern volatile state_t positionShift;
-extern volatile state_t speed;
-extern volatile state_t acceleration;
 extern volatile state_t blob;
+extern volatile state2_t altitude;
 
 //vars for controllers
 extern volatile state_t positionSetpoint;

@@ -45,7 +45,7 @@ void mainTask(void *p) {
 			}
 		} else if (RCchannel[AUX3] > (PPM_IN_MIDDLE_LENGTH + 400)) {
 			if (previous_AUX3 != 2) {			
-				controllerSet(CONTROLLERS.POSITION);					
+				controllerSet(CONTROLLERS.MPC);					
 				previous_AUX3 = 2;
 			}			
 		} else {

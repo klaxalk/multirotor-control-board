@@ -5,6 +5,7 @@
 #include "system.h"
 #include "packets.h"
 #include "commands.h"
+#include "mpcHandler.h"
 
 //XBee values
 volatile unsigned char posSlave[8]={0,0,0,0,0,0,0,0};
@@ -50,7 +51,7 @@ void positionSlaveSend(){
 	static uint32_t lastSendTime=0;
 	
 	if(gumstixStable==1 && (secondsTimer-lastSendTime)>2 && addressEqlCoord(posSlave)==0){
-			kopterPositionSetRequest(posSlave,ADDRESS.UNKNOWN16,position.elevator+blob.elevator,position.aileron+blob.aileron,0x00);
+			kopterPositionSetRequest(posSlave,ADDRESS.UNKNOWN16,kalmanStates.elevator.position+blob.elevator,kalmanStates.aileron.position+blob.aileron,0x00);
 			lastSendTime=secondsTimer;
 	}	
 }

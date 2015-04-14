@@ -1,6 +1,7 @@
 #include "controllers.h"
 #include "communication.h"
 #include "constants.h"
+#include "mpcHandler.h"
 
 // controllers output variables
 volatile int16_t controllerElevatorOutput=0;
@@ -12,11 +13,9 @@ volatile int16_t controllerThrottleOutput=0;
 volatile unsigned char controllerActive = 0x01;
 
 //vars for estimators
-volatile state_t position = {.aileron=0 , .elevator=0 , .altitude=0};
 volatile state_t positionShift = {.aileron=0 , .elevator=0 , .altitude=0};
-volatile state_t speed = {.aileron=0 , .elevator=0 , .altitude=0};
-volatile state_t acceleration ={.aileron=0 , .elevator=0 , .altitude=0};
 volatile state_t blob = {.aileron=0 , .elevator=0 , .altitude=0};
+volatile state2_t altitude = {.position=0, .speed=0, .acceleration=0};
 	
 /*
 Transformace z SS MAV a Global
@@ -75,7 +74,11 @@ void controllerSet(unsigned char controllerDesired){
 			controllerActive=CONTROLLERS.POSITION;			
 		}else
 		//MPC
-		if(controllerDesired==CONTROLLERS.MPC){				
+		if(controllerDesired==CONTROLLERS.MPC){	
+			controllerActive=CONTROLLERS.MPC;	
+			stmResetKalman(0,0);
+			stmResetKalman(0,0);
+			stmResetKalman(0,0);				
 		}		
 	}
 }
@@ -115,10 +118,7 @@ void setpointsCalculate(){
 	positionSetpoint.altitude=setpoints.altitude;
 }
 
-void positionEstimator() {
-	static state_t speedPrev = {.aileron = 0 , .elevator = 0 , .altitude = 0};
-	float accNew;
-	
+void positionEstimator() {	
 	//gustix valid delay - filters faulty values
 	static uint8_t gumstixCounter = 0;
 	const uint8_t gumstixDelay = 7;
@@ -132,36 +132,13 @@ void positionEstimator() {
 	} else {
 		gumstixCounter = 0;
 		gumstixStable=0;
-	}
-	
+	}	
 
 	if(gumstixStable==1){
 		//Blob detector
 		blob.elevator = elevatorGumstix;
 		blob.aileron = aileronGumstix;
 		blob.altitude = throttleGumstix;		
-	}
-	
-	//elevator velocity
-	speed.elevator += (elevatorSpeed-speed.elevator) * (DT/PX4FLOW_FILTER_CONST);	
-	//elevator acceleration
-	accNew = (speed.elevator - speedPrev.elevator) / DT;
-	speedPrev.elevator = speed.elevator;
-	acceleration.elevator += (accNew - acceleration.elevator) * (DT/PX4FLOW_FILTER_CONST);
-	//elevator position
-	if(position.altitude>ALTITUDE_MINIMUM){
-		position.elevator += speed.elevator * DT;	
-	}
-
-	//aileron velocity
-	speed.aileron += (aileronSpeed-speed.aileron) * (DT/PX4FLOW_FILTER_CONST);	
-	//aileron acceleration
-	accNew = (speed.aileron - speedPrev.aileron) / DT;
-	speedPrev.aileron = speed.aileron;
-	acceleration.aileron += (accNew - acceleration.aileron) * (DT/PX4FLOW_FILTER_CONST);
-	//aileron position
-	if(position.altitude>ALTITUDE_MINIMUM){
-		position.aileron += speed.aileron * DT;		
 	}
 }
 
@@ -180,14 +157,14 @@ void velocityController() {
 	time=secondsTimer;	
 			
 	//elevator controller		
-	error = -speed.elevator;
+	error = -kalmanStates.elevator.velocity;
 	elevatorIntegration = saturationFloat(elevatorIntegration+(KI * error * DT),CONTROLLER_ELEVATOR_SATURATION/3.0);
-	controllerElevatorOutput=saturationInt16((int16_t)((KV * error) + elevatorIntegration - (KA * acceleration.elevator)),CONTROLLER_ELEVATOR_SATURATION);
+	controllerElevatorOutput=saturationInt16((int16_t)((KV * error) + elevatorIntegration - (KA * kalmanStates.elevator.acceleration)),CONTROLLER_ELEVATOR_SATURATION);
 		
 	//aileron controller
-	error = -speed.aileron;	
+	error = -kalmanStates.aileron.velocity;
 	aileronIntegration = saturationFloat(aileronIntegration+(KI * error * DT),CONTROLLER_AILERON_SATURATION/3.0);
-	controllerAileronOutput=saturationInt16((int16_t)((KV * error) + aileronIntegration - (KA * acceleration.aileron)),CONTROLLER_AILERON_SATURATION);
+	controllerAileronOutput=saturationInt16((int16_t)((KV * error) + aileronIntegration - (KA * kalmanStates.aileron.acceleration)),CONTROLLER_AILERON_SATURATION);
 }
 
 void positionController(float elevatorSetpoint, float aileronSetpoint) {
@@ -207,16 +184,16 @@ void positionController(float elevatorSetpoint, float aileronSetpoint) {
 	time=secondsTimer;
 
 	//elevator controller
-	error = elevatorSetpoint - position.elevator;
+	error = elevatorSetpoint - kalmanStates.elevator.position;
 	speedDes = saturationFloat((KP/KV) * error,SPEED_MAX);
 	elevatorIntegration = saturationFloat(elevatorIntegration+(KI * error * DT),CONTROLLER_ELEVATOR_SATURATION/3.0);	
-	controllerElevatorOutput=saturationInt16((int16_t)(KV * (speedDes - speed.elevator) + elevatorIntegration - (KA * acceleration.elevator)),CONTROLLER_ELEVATOR_SATURATION);
+	controllerElevatorOutput=saturationInt16((int16_t)(KV * (speedDes - kalmanStates.elevator.velocity) + elevatorIntegration - (KA * kalmanStates.elevator.acceleration)),CONTROLLER_ELEVATOR_SATURATION);
 
 	//aileron controller
-	error = aileronSetpoint - position.aileron;
+	error = aileronSetpoint - kalmanStates.aileron.position;
 	speedDes = saturationFloat((KP/KV) * error,SPEED_MAX);
 	aileronIntegration = saturationFloat(aileronIntegration+(KI * error * DT),CONTROLLER_AILERON_SATURATION/3.0);	
-	controllerAileronOutput=saturationInt16((int16_t)(KV * (speedDes - speed.aileron) + aileronIntegration - (KA * acceleration.aileron)),CONTROLLER_AILERON_SATURATION);
+	controllerAileronOutput=saturationInt16((int16_t)(KV * (speedDes - kalmanStates.aileron.velocity) + aileronIntegration - (KA * kalmanStates.aileron.acceleration)),CONTROLLER_AILERON_SATURATION);
 }
 
 void altitudeEstimator() {
@@ -228,20 +205,20 @@ static float   estimatedThrottlePos_prev = 0;
         // extreme filter
         if(fabs(groundDistance - estimatedThrottlePos_prev) <= 0.5) {//limitation cca 3m/s
            // compute new values 
-           speed.altitude = (groundDistance - estimatedThrottlePos_prev) / (7*DT);
-           position.altitude = groundDistance;
+           altitude.speed = (groundDistance - estimatedThrottlePos_prev) / (7*DT);
+           altitude.position = groundDistance;
            estimatedThrottlePos_prev = groundDistance;
            estimator_cycle = 0;
 
         }
     } else {
         if (estimator_cycle >= 8) { //safety reset
-             speed.altitude = 0;
-             position.altitude = groundDistance;
+             altitude.speed = 0;
+             altitude.position = groundDistance;
              estimatedThrottlePos_prev = groundDistance;
              estimator_cycle = 0;
         } else { //estimate position
-            position.altitude += speed.altitude * DT;
+            altitude.position += altitude.speed * DT;
         }
     }
 }
@@ -259,9 +236,9 @@ void altitudeController(float setpoint) {
 	time=secondsTimer;		
 		
 	//throttle controller
-	error =(setpoint - position.altitude);
+	error =(setpoint - altitude.position);
 	throttleIntegration = saturationFloat(throttleIntegration+(KI * error * DT),CONTROLLER_THROTTLE_SATURATION*(1.8/3.0)) ;
-	controllerThrottleOutput=saturationInt16((int16_t)(KV * (saturationFloat(KX * error,ALTITUDE_SPEED_MAX) - speed.altitude) + throttleIntegration),CONTROLLER_THROTTLE_SATURATION);
+	controllerThrottleOutput=saturationInt16((int16_t)(KV * (saturationFloat(KX * error,ALTITUDE_SPEED_MAX) - altitude.speed) + throttleIntegration),CONTROLLER_THROTTLE_SATURATION);
 }
 
 void landingController(){
@@ -275,7 +252,7 @@ void landingController(){
 			altitudeController(positionSetpoint.altitude);
 			velocityController();				
 			//stabilize altitude for 0.5s
-			if(fabs(positionSetpoint.altitude - position.altitude) < 0.1 && fabs(speed.altitude) < 0.2){
+			if(fabs(positionSetpoint.altitude - altitude.position) < 0.1 && fabs(altitude.speed) < 0.2){
 				landingCounter++;
 			}else{
 				landingCounter = 0;
@@ -290,7 +267,7 @@ void landingController(){
 			altitudeController(ALTITUDE_MINIMUM);
 			velocityController();
 			
-			if(fabs(positionSetpoint.altitude - position.altitude) < 0.1 && fabs(speed.altitude) < 0.2){
+			if(fabs(positionSetpoint.altitude - altitude.position) < 0.1 && fabs(altitude.speed) < 0.2){
 				landingCounter++;
 			}else{
 				landingCounter = 0;
