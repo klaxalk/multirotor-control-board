@@ -68,15 +68,23 @@ float telemetryValue(unsigned char type){
     }else if(type==TELEMETRIES.OUTPUT_RUDDER){
 		f=(float)outputRudder;
     }else if(type==TELEMETRIES.BLOB_ELEVATOR){
-		f=blob.elevator;
+		f=elevatorGumstix;
     }else if(type==TELEMETRIES.BLOB_AILERON){
-		f=blob.aileron;
+		f=aileronGumstix;
     }else if(type==TELEMETRIES.BLOB_ALTITUDE){
-		f=blob.altitude;
+		f=throttleGumstix;
     }else if(type==TELEMETRIES.PITCH_ANGLE){
 		f=(float)pitchAngle/10.0;
     }else if(type==TELEMETRIES.ROLL_ANGLE){
 		f=(float)rollAngle/10.0;
+    }else if(type==TELEMETRIES.ELEVATOR_ACC_ERROR){
+		f=kalmanStates.elevator.acceleration_error;
+    }else if(type==TELEMETRIES.ELEVATOR_ACC_INPUT){
+		f=kalmanStates.elevator.acceleration_input;
+    }else if(type==TELEMETRIES.AILERON_ACC_ERROR){
+		f=kalmanStates.aileron.acceleration_error;
+    }else if(type==TELEMETRIES.AILERON_ACC_INPUT){
+		f=kalmanStates.aileron.acceleration_input;
     }
 	return f;
 }
@@ -285,7 +293,6 @@ void kopterTrajectorySetRequest(unsigned char *address64,unsigned char *address1
 void kopterTrajectorySet(unsigned char *address64,unsigned char *address16,unsigned char index,uint32_t time,float elevatorPos,float aileronPos,float throttlePos){
 	if(index<TRAJECTORY_LENGTH){
 		trajMaxIndex=index;
-		trajIndex=0;
 		TRAJ_POINT(index,time,elevatorPos,aileronPos,throttlePos);
 	}		
 }

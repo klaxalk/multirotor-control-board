@@ -38,15 +38,12 @@ uint8_t packetIn=0;
 uint8_t packetLength=XBEE_BUFFER_SIZE-2;
 uint8_t checksum=0xFF;
 
-//	For calculating rate of MPC and Kalman							
-volatile int16_t mpcCounter = 0;
-volatile int16_t mpcRate = 0;
-volatile int16_t kalmanCounter = 0;
-volatile int16_t kalmanRate = 0;
 
 //	The message handler for STM
 stmMessageHandler_t stmMessage;
 
+//gumstix timer
+uint32_t gTime = 0;
 
 // decode the base64 encoded data
 void Decode64(void) {	
@@ -82,12 +79,9 @@ void commTask(void *p) {
 	
 	//initialize Kalman filter and MPC
 	stmResetKalman(0,0);
-	stmSendSetpoint(0,0);
-	//stmSendTrajectory(main2commMessage.data.trajectory.elevatorTrajectory, main2commMessage.data.trajectory.aileronTrajectory);
+	stmSendSetpoint(0,0);	
 		
 
-	
-	
 	//wait for XBee	
 	vTaskDelay(1000);
 			
@@ -159,13 +153,22 @@ void commTask(void *p) {
 
 				if(zPosGumstixNew > +POSITION_MAXIMUM) zPosGumstixNew = +POSITION_MAXIMUM;
 				if(zPosGumstixNew < -POSITION_MAXIMUM) zPosGumstixNew = -POSITION_MAXIMUM;
-
-				//Camera pointing forward and being LANDSCAPE oriented
-				elevatorGumstix = xPosGumstixNew / 1000.0;
-				aileronGumstix  = yPosGumstixNew / 1000.0;
-				throttleGumstix = zPosGumstixNew / 1000.0;
+				
+				gTime=secondsTimer;
+			}else{
+				gTime=0;	
+				gumstixStable = 0;	
 			}
 			gumstixDataFlag = 0;
+		}
+		
+		if(gTime>0 && secondsTimer-gTime>0){
+			gumstixStable = 1;
+			
+			//Camera pointing forward and being LANDSCAPE oriented
+			elevatorGumstix = xPosGumstixNew / 1000.0;
+			aileronGumstix  = yPosGumstixNew / 1000.0;
+			throttleGumstix = zPosGumstixNew / 1000.0;		
 		}
 
 		//PX4Flow
@@ -250,31 +253,30 @@ void commTask(void *p) {
 			}
 		}
 		
+		//send trajectory to MPC
+		if(trajSend==1){
+			stmSendTrajectory(MPCElevatorTrajectory,MPCAileronTrajectory);
+			trajSend=0;			
+		}
+		
 
-		if (DataReceived == 1) {
-	    
-			Decode64();
-	    
+		if (DataReceived == 1) {	    
+			Decode64();	    
 			char* dummy;
 			int16_t tempAngle;
-	    
-			dummy = (char*) (&tempAngle);
-	    
+				    
+			dummy = (char*) (&tempAngle);	    
 			dummy[0] = pRxData[0];
 			dummy[1] = pRxData[1];
 	    
-			if (RxdBuffer[2] == 'X') {
-		    
+			if (RxdBuffer[2] == 'X') {		   
 				pitchBoardAngle = tempAngle;
-
-			} else if (RxdBuffer[2] == 'Y') {
-		    
+			} else if (RxdBuffer[2] == 'Y') {		    
 				rollBoardAngle = tempAngle;
 			}
 	    
 			pitchAngle = (pitchBoardAngle-rollBoardAngle)/2;
-			rollAngle = (pitchBoardAngle+rollBoardAngle)/2;    
-	    
+			rollAngle = (pitchBoardAngle+rollBoardAngle)/2;    	    
 			DataReceived = 0;
 		}
 		

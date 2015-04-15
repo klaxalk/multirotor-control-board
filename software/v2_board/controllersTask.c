@@ -10,7 +10,6 @@ void controllersTask(void *p) {
 	while (1) {					
 		
 		//values calculation
-		positionEstimator();
 		altitudeEstimator();
 		setpointsCalculate();										
 					

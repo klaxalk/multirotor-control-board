@@ -39,9 +39,9 @@ void logTaskReadable(void *p){
 		logValueStr(kalmanStates.aileron.velocity);
 		logValueStr(kalmanStates.aileron.acceleration);
 		logValueStr(validGumstix); //blob detector
-		logValueStr(blob.elevator);
-		logValueStr(blob.aileron);
-		logValueStr(blob.altitude); 
+		logValueStr(elevatorGumstix);
+		logValueStr(aileronGumstix);
+		logValueStr(throttleGumstix); 
 		logValueStr((float)controllerActive); //controller		
 		logValueStr(positionSetpoint.altitude);  //setpoints
 		logValueStr(positionSetpoint.elevator);
@@ -80,9 +80,9 @@ void logTaskBinary(void *p){
 		logValueBin(kalmanStates.aileron.velocity);
 		logValueBin(kalmanStates.aileron.acceleration);
 		logValueBin(validGumstix); //blob detector
-		logValueBin(blob.elevator);
-		logValueBin(blob.aileron);
-		logValueBin(blob.altitude); 
+		logValueBin(elevatorGumstix);
+		logValueBin(aileronGumstix);
+		logValueBin(throttleGumstix);
 		logValueBin((float)controllerActive); //controller		
 		logValueBin(positionSetpoint.altitude); //setpoints
 		logValueBin(positionSetpoint.elevator);

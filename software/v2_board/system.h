@@ -88,7 +88,7 @@
 /* -------------------------------------------------------------------- */
 /*	Realtime clock														*/
 /* -------------------------------------------------------------------- */
-extern volatile int16_t milisecondsTimer;
+extern volatile uint16_t milisecondsTimer;
 extern volatile uint32_t secondsTimer;
 
 /* -------------------------------------------------------------------- */

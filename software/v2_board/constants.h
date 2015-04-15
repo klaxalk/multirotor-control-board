@@ -45,9 +45,13 @@ typedef struct
 	unsigned char ROLL_ANGLE;
 	unsigned char ELEVATOR_SHIFT;
 	unsigned char AILERON_SHIFT;
+	unsigned char ELEVATOR_ACC_INPUT;
+	unsigned char ELEVATOR_ACC_ERROR;
+	unsigned char AILERON_ACC_INPUT;
+	unsigned char AILERON_ACC_ERROR;	
 } TELEMETRIEST;
 
-#define TELEMETRY_VARIABLES 29
+#define TELEMETRY_VARIABLES 33
 
 
 typedef struct

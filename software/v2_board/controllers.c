@@ -14,7 +14,6 @@ volatile unsigned char controllerActive = 0x01;
 
 //vars for estimators
 volatile state_t positionShift = {.aileron=0 , .elevator=0 , .altitude=0};
-volatile state_t blob = {.aileron=0 , .elevator=0 , .altitude=0};
 volatile state2_t altitude = {.position=0, .speed=0, .acceleration=0};
 	
 /*
@@ -26,16 +25,16 @@ kopt=akt-shift
 //setpoints
 volatile state_t positionSetpoint = {.aileron=DEFAULT_AILERON_POSITION_SETPOINT , .elevator=DEFAULT_ELEVATOR_POSITION_SETPOINT , .altitude=DEFAULT_THROTTLE_POSITION_SETPOINT};
 	
-//Blob 
-volatile unsigned char gumstixStable=0;
-
 //landing variables
 volatile unsigned char landingState = 0x00;
 
 //trajectory variables
-volatile int8_t trajIndex = 0;
 volatile int8_t trajMaxIndex = 0;
 volatile trajectoryPoint_t trajectory[TRAJECTORY_LENGTH];
+volatile float MPCElevatorTrajectory[5] = {0};
+volatile float MPCAileronTrajectory[5] = {0};
+volatile float altitudeTrajectory[5] = {1};
+volatile char trajSend = 0;
 
  
 void initTrajectory(){
@@ -83,64 +82,73 @@ void controllerSet(unsigned char controllerDesired){
 	}
 }
 
+
 void setpointsCalculate(){
+	//actual setpoint in kalman coordinate system
+	static state_t setpoints={.aileron=DEFAULT_AILERON_POSITION_SETPOINT, .elevator=DEFAULT_ELEVATOR_POSITION_SETPOINT, .altitude=DEFAULT_THROTTLE_POSITION_SETPOINT};
+	
+	uint32_t seconds = secondsTimer;
+	uint16_t miliseconds = milisecondsTimer;
+	int8_t i;
+	int8_t index = 0;
+	
 	float distLeft,speed,timeLeft;
-	static state_t setpoints = {.aileron=DEFAULT_AILERON_POSITION_SETPOINT , .elevator=DEFAULT_ELEVATOR_POSITION_SETPOINT , .altitude=DEFAULT_THROTTLE_POSITION_SETPOINT};
 	
-	//trajectory waypoint shift
-	while((secondsTimer>=trajectory[trajIndex].time) && (trajIndex<trajMaxIndex)){
-		trajIndex++;
-	}
-		
-	//end of trajectory	
-	if(secondsTimer>=trajectory[trajIndex].time){
-		setpoints.elevator=trajectory[trajIndex].elevatorPos;	
-		setpoints.aileron=trajectory[trajIndex].aileronPos;	
-	}else{
-	//setpoints calculation			
-		timeLeft=(float)(trajectory[trajIndex].time-secondsTimer)-(milisecondsTimer/1000.0);	
-		//elevator
-		distLeft=trajectory[trajIndex].elevatorPos-positionSetpoint.elevator;		
-		speed=distLeft/timeLeft;
-		setpoints.elevator+=speed*DT;
-		//aileron
-		distLeft=trajectory[trajIndex].aileronPos-positionSetpoint.aileron;
-		speed=distLeft/timeLeft;
-		setpoints.aileron+=speed*DT;		
-		//throttle
-		distLeft=trajectory[trajIndex].throttlePos-positionSetpoint.altitude;
-		speed=distLeft/timeLeft;
-		setpoints.altitude+=speed*DT;		
-	}
+	portENTER_CRITICAL();
+	//initialize actual setpoint
+	MPCElevatorTrajectory[0]=setpoints.elevator;
+	MPCAileronTrajectory[0]=setpoints.aileron;
+	altitudeTrajectory[0]=setpoints.altitude;	
 	
-	positionSetpoint.elevator=setpoints.elevator-positionShift.elevator;
-	positionSetpoint.aileron=setpoints.aileron-positionShift.aileron;
-	positionSetpoint.altitude=setpoints.altitude;
-}
-
-void positionEstimator() {	
-	//gustix valid delay - filters faulty values
-	static uint8_t gumstixCounter = 0;
-	const uint8_t gumstixDelay = 7;
-
-	if(validGumstix == 1) {
-		if(gumstixCounter < gumstixDelay){ 
-			gumstixCounter++;
-		}else{
-			gumstixStable=1;		
+	for(i=0;i<5;i++){
+		//trajectory waypoint shift
+		while((seconds>=trajectory[index].time) && (index<trajMaxIndex)){
+			index++;
 		}
-	} else {
-		gumstixCounter = 0;
-		gumstixStable=0;
-	}	
-
-	if(gumstixStable==1){
-		//Blob detector
-		blob.elevator = elevatorGumstix;
-		blob.aileron = aileronGumstix;
-		blob.altitude = throttleGumstix;		
+		
+		//end of trajectory
+		if(seconds>=trajectory[index].time){
+			MPCElevatorTrajectory[i]=trajectory[index].elevatorPos;
+			MPCAileronTrajectory[i]=trajectory[index].aileronPos;
+			altitudeTrajectory[i]=trajectory[index].throttlePos;
+		}else{
+			//setpoints calculation
+			timeLeft=(float)(trajectory[index].time-seconds)-(miliseconds/1000.0);
+			//elevator
+			distLeft=trajectory[index].elevatorPos-MPCElevatorTrajectory[i];
+			speed=distLeft/timeLeft;
+			if(i<4){MPCElevatorTrajectory[i+1]=MPCElevatorTrajectory[i]+speed*0.55;}
+			MPCElevatorTrajectory[i]+=speed*DT;
+			//aileron
+			distLeft=trajectory[index].aileronPos-MPCAileronTrajectory[i];
+			speed=distLeft/timeLeft;
+			if(i<4){MPCAileronTrajectory[i+1]=MPCAileronTrajectory[i]+speed*0.55;}			
+			MPCAileronTrajectory[i]+=speed*DT;
+			//throttle
+			distLeft=trajectory[index].throttlePos-altitudeTrajectory[i];
+			speed=distLeft/timeLeft;
+			if(i<4){altitudeTrajectory[i+1]=altitudeTrajectory[i]+speed*0.55;}			
+			altitudeTrajectory[i]+=speed*DT;			
+		}
+		
+		tstep=0.55;
+		miliseconds+=550;
+		if(miliseconds>1000){
+			miliseconds-=1000;
+			seconds++;
+		}				
 	}
+	setpoints.elevator=MPCElevatorTrajectory[0];
+	setpoints.aileron=MPCAileronTrajectory[0];
+	setpoints.altitude=altitudeTrajectory[0];	
+	
+	for(i=0;i<5;i++){
+		MPCElevatorTrajectory[i]-=positionShift.elevator;
+		MPCAileronTrajectory[i]-=positionShift.aileron;	
+	}	
+	portEXIT_CRITICAL();			
 }
+
 
 void velocityController() {
 	float error;

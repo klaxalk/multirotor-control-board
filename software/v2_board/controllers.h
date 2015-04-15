@@ -57,14 +57,10 @@ volatile unsigned char controllerActive;
 
 //vars for estimators
 extern volatile state_t positionShift;
-extern volatile state_t blob;
 extern volatile state2_t altitude;
 
 //vars for controllers
 extern volatile state_t positionSetpoint;
-
-//Blob
-extern volatile unsigned char gumstixStable;
 
 //landing variables
 extern volatile unsigned char landingState;
@@ -77,9 +73,12 @@ typedef struct {
 	float throttlePos; //position in m
 } trajectoryPoint_t;
 
-extern volatile int8_t trajIndex;
 extern volatile int8_t trajMaxIndex;
 extern volatile trajectoryPoint_t trajectory[];
+extern volatile float MPCElevatorTrajectory[];
+extern volatile float MPCAileronTrajectory[];
+extern volatile float altitudeTrajectory[];
+extern volatile char trajSend;
 
 #define TRAJECTORY_LENGTH	10
 #define TRAJ_POINT(i,t,e,a,th) \
@@ -97,8 +96,7 @@ void enableLanding();
 void disableLanding();
 void controllerSet(unsigned char controllerDesired);
 
-//position estimator and controllers
-void positionEstimator();
+//controllers
 void velocityController();
 void positionController(float elevatorSetpoint, float aileronSetpoint);
 

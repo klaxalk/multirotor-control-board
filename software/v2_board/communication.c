@@ -35,6 +35,7 @@ volatile float throttleGumstix = 0;
 volatile int8_t validGumstix = 0;
 volatile int8_t gumstixDataFlag = 0;
 volatile unsigned char gumstixParseCharCrc = 0;
+volatile int8_t gumstixStable = 0;
 
 int addressEqlCoord(unsigned char * addr){
 	int8_t i;
@@ -50,8 +51,8 @@ int addressEqlCoord(unsigned char * addr){
 void positionSlaveSend(){
 	static uint32_t lastSendTime=0;
 	
-	if(gumstixStable==1 && (secondsTimer-lastSendTime)>2 && addressEqlCoord(posSlave)==0){
-			kopterPositionSetRequest(posSlave,ADDRESS.UNKNOWN16,kalmanStates.elevator.position+blob.elevator,kalmanStates.aileron.position+blob.aileron,0x00);
+	if(gumstixStable==1 && (secondsTimer-lastSendTime)>1 && addressEqlCoord(posSlave)==0){
+			kopterPositionSetRequest(posSlave,ADDRESS.UNKNOWN16,kalmanStates.elevator.position+elevatorGumstix,kalmanStates.aileron.position+aileronGumstix,0x00);
 			lastSendTime=secondsTimer;
 	}	
 }

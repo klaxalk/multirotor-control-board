@@ -26,7 +26,8 @@
 	extern volatile int16_t yPosGumstixNew;
 	extern volatile int16_t zPosGumstixNew;	
 	extern volatile int8_t validGumstix;
-	extern volatile int8_t gumstixDataFlag;			
+	extern volatile int8_t gumstixDataFlag;
+	extern volatile int8_t gumstixStable;				
 
 void stateChecker();
 void positionSlaveSend();
