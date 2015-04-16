@@ -308,9 +308,9 @@ void kopterTrajectorySetReport(unsigned char *address64,unsigned char *address16
 	
 	*(dataOUT)='r';
 	*(dataOUT+1)=COMMANDS.TRAJECTORY_POINTS;
-	*(dataOUT+2)=trajMaxIndex;
+	*(dataOUT+2)=trajMaxIndex+1;
 	
-	for(i=0;i<trajMaxIndex;i++){	
+	for(i=0;i<trajMaxIndex+1;i++){	
 		ch=(unsigned char *) &trajectory[i].time;
 		*(dataOUT+3+i*16)=*ch; *(dataOUT+4+i*16)=*(ch+1); *(dataOUT+5+i*16)=*(ch+2); *(dataOUT+6+i*16)=*(ch+3);
 	
@@ -323,7 +323,7 @@ void kopterTrajectorySetReport(unsigned char *address64,unsigned char *address16
 		ch=(unsigned char *) &trajectory[i].throttlePos;
 		*(dataOUT+15+i*16)=*ch; *(dataOUT+16+i*16)=*(ch+1); *(dataOUT+17+i*16)=*(ch+2); *(dataOUT+18+i*16)=*(ch+3);
 	}
-	makeTRPacket(address64,address16,0x00,frameID,dataOUT,trajMaxIndex*16+3);
+	makeTRPacket(address64,address16,0x00,frameID,dataOUT,(trajMaxIndex+1)*16+3);
 }
 void kopterTrajectorySetReportReceived(unsigned char *address64,unsigned char *address16,unsigned char index,uint32_t time,float elevatorPos,float aileronPos,float throttlePos){
 	
