@@ -131,7 +131,6 @@ void setpointsCalculate(){
 			altitudeTrajectory[i]+=speed*DT;			
 		}
 		
-		tstep=0.55;
 		miliseconds+=550;
 		if(miliseconds>1000){
 			miliseconds-=1000;
@@ -146,6 +145,7 @@ void setpointsCalculate(){
 		MPCElevatorTrajectory[i]-=positionShift.elevator;
 		MPCAileronTrajectory[i]-=positionShift.aileron;	
 	}	
+	trajSend=1;
 	portEXIT_CRITICAL();			
 }
 
