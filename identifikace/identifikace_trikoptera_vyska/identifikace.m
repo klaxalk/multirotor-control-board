@@ -150,6 +150,8 @@ axis([0 time_plot(end) -145 150]);
 set(hFig, 'Units', 'centimeters');
 set(hFig, 'Position', [0 0 21 21*0.5625])
 
+pause(2);
+
 tightfig(hFig);
 
 %% plotting for thesis
@@ -179,5 +181,7 @@ axis([0 time_plot(end) -145 150]);
 
 set(hFig, 'Units', 'centimeters');
 set(hFig, 'Position', [0 0 21 21*0.5625/2])
+
+pause(2);
 
 tightfig(hFig);

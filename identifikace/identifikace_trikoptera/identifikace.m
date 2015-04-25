@@ -154,6 +154,10 @@ axis([0 time_plot(end) -450 800]);
 set(hFig, 'Units', 'centimeters');
 set(hFig, 'Position', [0 0 21 21*0.5625/2])
 
+drawnow;
+
+pause(2);
+
 tightfig(hFig);
 
 %% Kalman test
@@ -192,6 +196,8 @@ for i=2:size(kalmandata, 1)
     exp_filter(i) = exp_alpha*exp_filter(i-1) + (1-exp_alpha)*kalmandata(i, velocity);
 end
 
+%% 
+
 hFig = figure(3);
  
 hold off
@@ -207,4 +213,8 @@ axis([0 timekalman(end) -0.9 1.1]);
 set(hFig, 'Units', 'centimeters');
 set(hFig, 'Position', [0 0 21 21*0.5625/2])
 
-% tightfig(hFig);
+drawnow;
+
+pause(2);
+
+tightfig(hFig);
