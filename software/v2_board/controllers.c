@@ -22,9 +22,6 @@ akt=kopt+shift
 kopt=akt-shift
 */		
 
-//setpoints
-volatile state_t positionSetpoint = {.aileron=DEFAULT_AILERON_POSITION_SETPOINT , .elevator=DEFAULT_ELEVATOR_POSITION_SETPOINT , .altitude=DEFAULT_THROTTLE_POSITION_SETPOINT};
-	
 //landing variables
 volatile unsigned char landingState = 0x00;
 
@@ -41,9 +38,9 @@ void initTrajectory(){
 	uint32_t i=0;
 	// (i, time (s), x (+ forward), y (+ leftward), z (altitude))
 	for(i=0;i<TRAJECTORY_LENGTH;i++){
-		TRAJ_POINT(i,secondsTimer+1,0,0,1);
+		TRAJ_POINT(i,0,DEFAULT_ELEVATOR_POSITION_SETPOINT,DEFAULT_AILERON_POSITION_SETPOINT,DEFAULT_THROTTLE_POSITION_SETPOINT);
 	}
-	trajMaxIndex=-1;
+	trajMaxIndex=0;
 }
 
 void enableLanding(){	
@@ -257,10 +254,10 @@ void landingController(){
 			controllerAileronOutput = 0;
 		}else
 		if(landingState==LANDING.TAKE_OFF){
-			altitudeController(positionSetpoint.altitude);
+			altitudeController(altitudeTrajectory[0]);
 			velocityController();				
 			//stabilize altitude for 0.5s
-			if(fabs(positionSetpoint.altitude - altitude.position) < 0.1 && fabs(altitude.speed) < 0.2){
+			if(fabs(altitudeTrajectory[0] - altitude.position) < 0.1 && fabs(altitude.speed) < 0.2){
 				landingCounter++;
 			}else{
 				landingCounter = 0;
@@ -275,7 +272,7 @@ void landingController(){
 			altitudeController(ALTITUDE_MINIMUM);
 			velocityController();
 			
-			if(fabs(positionSetpoint.altitude - altitude.position) < 0.1 && fabs(altitude.speed) < 0.2){
+			if(fabs(altitudeTrajectory[0] - altitude.position) < 0.1 && fabs(altitude.speed) < 0.2){
 				landingCounter++;
 			}else{
 				landingCounter = 0;

@@ -38,12 +38,11 @@ uint8_t packetIn=0;
 uint8_t packetLength=XBEE_BUFFER_SIZE-2;
 uint8_t checksum=0xFF;
 
+float zeroTraj[5]={0,0,0,0,0};
+
 
 //	The message handler for STM
 stmMessageHandler_t stmMessage;
-
-//gumstix timer
-uint32_t gTime = 0;
 
 // decode the base64 encoded data
 void Decode64(void) {	
@@ -75,7 +74,7 @@ void Decode64(void) {
 
 void commTask(void *p) {	
 	unsigned char inChar;
-	int16_t counter20Hz=0;
+	int16_t counter20Hz = 0;	
 	
 	//initialize Kalman filter and MPC
 	stmResetKalman(0,0);
@@ -95,7 +94,6 @@ void commTask(void *p) {
 		//20Hz loop
 		if (counter20Hz++>100){
 			counter20Hz=0;
-			led_blue_toggle();
 			telemetryToCoordinatorSend();						
 		}	
 		
@@ -152,19 +150,12 @@ void commTask(void *p) {
 				if(yPosGumstixNew < -POSITION_MAXIMUM) yPosGumstixNew = -POSITION_MAXIMUM;
 
 				if(zPosGumstixNew > +POSITION_MAXIMUM) zPosGumstixNew = +POSITION_MAXIMUM;
-				if(zPosGumstixNew < -POSITION_MAXIMUM) zPosGumstixNew = -POSITION_MAXIMUM;
-				
-				gTime=secondsTimer;
-			}else{
-				gTime=0;	
-				gumstixStable = 0;	
+				if(zPosGumstixNew < -POSITION_MAXIMUM) zPosGumstixNew = -POSITION_MAXIMUM;						
 			}
 			gumstixDataFlag = 0;
 		}
 		
-		if(gTime>0 && secondsTimer-gTime>0){
-			gumstixStable = 1;
-			
+		if(gumstixStable){
 			//Camera pointing forward and being LANDSCAPE oriented
 			elevatorGumstix = xPosGumstixNew / 1000.0;
 			aileronGumstix  = yPosGumstixNew / 1000.0;
@@ -253,12 +244,6 @@ void commTask(void *p) {
 			}
 		}
 		
-		//send trajectory to MPC
-		if(trajSend==1){
-			stmSendTrajectory(MPCElevatorTrajectory,MPCAileronTrajectory);
-			trajSend=0;			
-		}
-		
 
 		if (DataReceived == 1) {	    
 			Decode64();	    
@@ -280,6 +265,12 @@ void commTask(void *p) {
 			DataReceived = 0;
 		}
 		
+		
+	//send trajectory to MPC
+		/*if(trajSend==1){
+			stmSendTrajectory(zeroTraj,zeroTraj);						
+			trajSend=0;			
+		}*/	
 		
 	/* -------------------------------------------------------------------- */
 	/*	A character received from STM										*/

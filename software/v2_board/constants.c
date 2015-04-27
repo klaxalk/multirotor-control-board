@@ -78,8 +78,5 @@ void constInit(){
 	
 	GET_STATUS=0x95;
 	
-	telemetryToCoordinatorArr[TELEMETRIES.ELEVATOR_POSITION]=1;	
-	telemetryToCoordinatorArr[TELEMETRIES.AILERON_POSITION]=1;	
-	telemetryToCoordinatorArr[TELEMETRIES.ALTITUDE_ESTIMATED]=1;	
-	telemetryToCoordinatorArr[TELEMETRIES.ALTITUDE_SETPOINT]=1;	
+	//telemetryToCoordinatorArr[TELEMETRIES.VALID_GUMSTIX]=1;	
 }

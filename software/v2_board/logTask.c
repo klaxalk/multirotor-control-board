@@ -43,9 +43,9 @@ void logTaskReadable(void *p){
 		logValueStr(aileronGumstix);
 		logValueStr(throttleGumstix); 
 		logValueStr((float)controllerActive); //controller		
-		logValueStr(positionSetpoint.altitude);  //setpoints
-		logValueStr(positionSetpoint.elevator);
-		logValueStr(positionSetpoint.aileron);
+		logValueStr(altitudeTrajectory[0]);  //setpoints
+		logValueStr(MPCElevatorTrajectory[0]+positionShift.elevator);
+		logValueStr(MPCAileronTrajectory[0]+positionShift.aileron);
 		logValueStr((float)outputThrottle); //outputs
 		logValueStr((float)outputElevator);
 		logValueStr((float)outputAileron);
@@ -84,9 +84,9 @@ void logTaskBinary(void *p){
 		logValueBin(aileronGumstix);
 		logValueBin(throttleGumstix);
 		logValueBin((float)controllerActive); //controller		
-		logValueBin(positionSetpoint.altitude); //setpoints
-		logValueBin(positionSetpoint.elevator);
-		logValueBin(positionSetpoint.aileron);
+		logValueBin(altitudeTrajectory[0]);  //setpoints
+		logValueBin(MPCElevatorTrajectory[0]+positionShift.elevator);
+		logValueBin(MPCAileronTrajectory[0]+positionShift.aileron);
 		logValueBin((float)outputThrottle); //outputs
 		logValueBin((float)outputElevator);
 		logValueBin((float)outputAileron);

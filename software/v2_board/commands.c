@@ -8,7 +8,6 @@
 #include "mpcHandler.h"
 
 
-
 //XBee data payload
 unsigned char dataOUT[200];
 
@@ -48,17 +47,17 @@ float telemetryValue(unsigned char type){
 	}else if(type==TELEMETRIES.ELEVATOR_CONTROLLER_OUTPUT){
 		f=controllerElevatorOutput;
 	}else if(type==TELEMETRIES.ALTITUDE_SETPOINT){
-		f=positionSetpoint.altitude;
+		f=altitudeTrajectory[0];
 	}else if(type==TELEMETRIES.ELEVATOR_POS_SETPOINT){
-		f=positionSetpoint.elevator+positionShift.elevator;
+		f=MPCElevatorTrajectory[0]+positionShift.elevator;
 	}else if(type==TELEMETRIES.AILERON_POS_SETPOINT){
-		f=positionSetpoint.aileron+positionShift.aileron;
+		f=MPCAileronTrajectory[0]+positionShift.aileron;
 	}else if(type==TELEMETRIES.ELEVATOR_ACC){
 		f=kalmanStates.elevator.acceleration;
 	}else if(type==TELEMETRIES.AILERON_ACC){
 		f=kalmanStates.aileron.acceleration;
 	}else if(type==TELEMETRIES.VALID_GUMSTIX){
-		f=validGumstix;
+		f=gumstixStable;
     }else if(type==TELEMETRIES.OUTPUT_THROTTLE){
 		f=(float)outputThrottle;
     }else if(type==TELEMETRIES.OUTPUT_ELEVATOR){
@@ -234,9 +233,9 @@ void kopterControllers(unsigned char *address64,unsigned char *address16,unsigne
 	if(		 option==CONTROLLERS.OFF){
 		controllerSet(CONTROLLERS.OFF);	
 	}else if(option==CONTROLLERS.POSITION){
-		controllerSet(CONTROLLERS.POSITION);	
+		controllerSet(CONTROLLERS.POSITION);
 	}else if(option==CONTROLLERS.VELOCITY){
-		controllerSet(CONTROLLERS.VELOCITY);	
+		controllerSet(CONTROLLERS.VELOCITY);
 	}else if(option==CONTROLLERS.MPC){
 		controllerSet(CONTROLLERS.MPC);	
 	}
@@ -322,6 +321,10 @@ void kopterTrajectorySetReport(unsigned char *address64,unsigned char *address16
 	
 		ch=(unsigned char *) &trajectory[i].throttlePos;
 		*(dataOUT+15+i*16)=*ch; *(dataOUT+16+i*16)=*(ch+1); *(dataOUT+17+i*16)=*(ch+2); *(dataOUT+18+i*16)=*(ch+3);
+		usartBufferPutByte(usart_buffer_3,(uint8_t)(trajectory[i].elevatorPos), 10);
+		usartBufferPutByte(usart_buffer_3,(uint8_t)(trajectory[i].aileronPos), 10);
+		usartBufferPutByte(usart_buffer_3,(uint8_t)(trajectory[i].throttlePos), 10);
+		usartBufferPutByte(usart_buffer_3,0xFF, 10);		
 	}
 	makeTRPacket(address64,address16,0x00,frameID,dataOUT,(trajMaxIndex+1)*16+3);
 }

@@ -59,9 +59,6 @@ volatile unsigned char controllerActive;
 extern volatile state_t positionShift;
 extern volatile state2_t altitude;
 
-//vars for controllers
-extern volatile state_t positionSetpoint;
-
 //landing variables
 extern volatile unsigned char landingState;
 

@@ -50,9 +50,10 @@ int addressEqlCoord(unsigned char * addr){
 //send position to position slave
 void positionSlaveSend(){
 	static uint32_t lastSendTime=0;
+
 	if(gumstixStable==1 && (secondsTimer-lastSendTime)>1 && addressEqlCoord(posSlave)==0){
-			kopterPositionSetRequest(posSlave,ADDRESS.UNKNOWN16,kalmanStates.elevator.position+elevatorGumstix+positionShift.elevator,kalmanStates.aileron.position+aileronGumstix+positionShift.aileron,0x00);
-			lastSendTime=secondsTimer;
+			kopterPositionSetRequest(posSlave,ADDRESS.UNKNOWN16,kalmanStates.elevator.position+elevatorGumstix+positionShift.elevator,kalmanStates.aileron.position+aileronGumstix+positionShift.aileron,0x00);			
+			lastSendTime=secondsTimer;		
 	}	
 }
 
@@ -80,6 +81,7 @@ int8_t px4flowParseChar(uint8_t incomingChar) {
 }
 
 void gumstixParseChar(unsigned char incomingChar) {
+	static uint8_t blobCounter = 0;
 	if (gumstixParseCharByte == 2) {
 		gumstixParseCharByte++;
 	} else {
@@ -126,9 +128,16 @@ void gumstixParseChar(unsigned char incomingChar) {
 		case 4:
 			validGumstix = gumstixParseTempInt;
 			if (validGumstix == 1) {
-				gumstixDataFlag = 1;
-				led_blue_on();
+				gumstixDataFlag = 1;				
+				if(blobCounter<5){
+					blobCounter++;
+					}else{
+					gumstixStable=1;
+				}	
+				led_blue_on();			
 			}else{
+				blobCounter=0;
+				gumstixStable = 0;
 				led_blue_off();
 			}
 			break;

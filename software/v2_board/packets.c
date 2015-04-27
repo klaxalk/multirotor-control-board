@@ -28,7 +28,7 @@ void packetHandler(unsigned char *inPacket){
     unsigned char address16[2];
     unsigned char address64[8];
     unsigned char recieveOptions[5];
-    unsigned char dataIN[25];
+    unsigned char dataIN[80];
 	
 	float *f1;
 	float *f2;
@@ -70,15 +70,16 @@ void packetHandler(unsigned char *inPacket){
 						//TRAJECTORY SET
 						if(*(dataIN+2)==COMMANDS.TRAJECTORY_POINTS){
 							if(*(dataIN+3)==GET_STATUS){																
-								kopterTrajectorySetReport(address64,address16,0x00);							
-							}else{		
+								kopterTrajectorySetReport(address64,address16,0x00);																									
+							}else{				
 								 for(i=0;i<*(dataIN+3);i++){
 									 ch1[0]=*(dataIN+4+i*16); ch1[1]=*(dataIN+5+i*16); ch1[2]=*(dataIN+6+i*16); ch1[3]=*(dataIN+7+i*16); ui32=(uint32_t *)ch1;
 									 ch2[0]=*(dataIN+8+i*16); ch2[1]=*(dataIN+9+i*16); ch2[2]=*(dataIN+10+i*16); ch2[3]=*(dataIN+11+i*16); f2=(float *)ch2;
 									 ch3[0]=*(dataIN+12+i*16); ch3[1]=*(dataIN+13+i*16); ch3[2]=*(dataIN+14+i*16); ch3[3]=*(dataIN+15+i*16); f3=(float *)ch3;
 									 ch4[0]=*(dataIN+16+i*16); ch4[1]=*(dataIN+17+i*16); ch4[2]=*(dataIN+18+i*16); ch4[3]=*(dataIN+19+i*16); f4=(float *)ch4;
 									 kopterTrajectorySet(address64,address16,i,*ui32,*f2,*f3,*f4);
-								 }																																											
+								 }		
+								 kopterTrajectorySetReport(address64,address16,0x00);																																									
 							}
 						} else																							
 						//CONTROLLERS
@@ -86,7 +87,7 @@ void packetHandler(unsigned char *inPacket){
 							if(*(dataIN+3)==GET_STATUS){
 								kopterControllersReport(address64,address16,0x00);
 							}else{
-								kopterControllers(address64,address16,*(dataIN+3));
+								kopterControllers(address64,address16,*(dataIN+3));								
 							}															
 						}else
 						//POSITION SLAVE SET
@@ -94,7 +95,7 @@ void packetHandler(unsigned char *inPacket){
 							if(*(dataIN+3)==GET_STATUS){
 								kopterPositionSlaveSetReport(address64,address16,0x00);
 							}else{
-								kopterPositionSlaveSet(address64,address16,(dataIN+4));
+								kopterPositionSlaveSet(address64,address16,dataIN+3);
 							}
 						}else
 						//TIME
