@@ -49,9 +49,11 @@ float telemetryValue(unsigned char type){
 	}else if(type==TELEMETRIES.ALTITUDE_SETPOINT){
 		f=altitudeTrajectory[0];
 	}else if(type==TELEMETRIES.ELEVATOR_POS_SETPOINT){
-		f=MPCElevatorTrajectory[0]+positionShift.elevator;
+		//f=MPCElevatorTrajectory[0]+positionShift.elevator;
+		f=mpcSetpoints.elevator+positionShift.elevator;
 	}else if(type==TELEMETRIES.AILERON_POS_SETPOINT){
-		f=MPCAileronTrajectory[0]+positionShift.aileron;
+	    //f=MPCAileronTrajectory[0]+positionShift.aileron;
+		f=mpcSetpoints.aileron+positionShift.aileron;
 	}else if(type==TELEMETRIES.ELEVATOR_ACC){
 		f=kalmanStates.elevator.acceleration;
 	}else if(type==TELEMETRIES.AILERON_ACC){

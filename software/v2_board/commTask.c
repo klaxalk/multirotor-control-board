@@ -38,8 +38,6 @@ uint8_t packetIn=0;
 uint8_t packetLength=XBEE_BUFFER_SIZE-2;
 uint8_t checksum=0xFF;
 
-float zeroTraj[5]={0,0,0,0,0};
-
 
 //	The message handler for STM
 stmMessageHandler_t stmMessage;
@@ -86,8 +84,7 @@ void commTask(void *p) {
 			
 	while (1) {			
 		//Auto state reports			
-		stateChecker();		
-		
+		stateChecker();				
 		//send position to slave
 		positionSlaveSend();
 				
@@ -97,8 +94,20 @@ void commTask(void *p) {
 			telemetryToCoordinatorSend();						
 		}	
 		
-										
+		if(timer40hz>=25){
+			timer40hz-=25;
+			stmSendSetpoint(0-positionShift.elevator,0-positionShift.aileron);	
+		}
 		
+			//send trajectory to MPC
+		/*if(trajSend==1){
+			stmSendTrajectory(zeroTraj,zeroTraj);						
+			trajSend=0;			
+		}*/	
+		
+		
+		
+										
 		// XBee
 		if (usartBufferGetByte(usart_buffer_xbee, &inChar, 0)) {						
 			if(packetIn>0){
@@ -266,11 +275,6 @@ void commTask(void *p) {
 		}
 		
 		
-	//send trajectory to MPC
-		/*if(trajSend==1){
-			stmSendTrajectory(zeroTraj,zeroTraj);						
-			trajSend=0;			
-		}*/	
 		
 	/* -------------------------------------------------------------------- */
 	/*	A character received from STM										*/

@@ -57,6 +57,8 @@ int16_t outputRudder = PULSE_OUT_MIDDLE/2;
 volatile uint16_t milisecondsTimer;
 volatile uint32_t secondsTimer;
 
+volatile uint8_t timer40hz = 0;
+
 
 /* -------------------------------------------------------------------- */
 /*	Basic initialization of the MCU, peripherals and i/o				*/
@@ -294,4 +296,6 @@ ISR(TCC1_OVF_vect) {
 		milisecondsTimer = 0;				
 		secondsTimer++;
 	}
+	
+	timer40hz++;
 }

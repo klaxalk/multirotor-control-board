@@ -75,11 +75,15 @@ void mainTask(void *p) {
 	
 
 		if(RCchannel[AUX5]<PPM_IN_MIDDLE_LENGTH){
-			if(previous_AUX5!=0){				
+			if(previous_AUX5!=0){
+				kopterPositionSlaveSet(ADDRESS.COORDINATOR,ADDRESS.UNKNOWN16,ADDRESS.COORDINATOR);	
+				led_orange_off();			
 				previous_AUX5=0;
 			}
 		}else{
 			if(previous_AUX5!=1){
+				kopterPositionSlaveSet(ADDRESS.COORDINATOR,ADDRESS.UNKNOWN16,ADDRESS.K3);		
+				led_orange_on();
 				previous_AUX5=1;
 			}
 		}

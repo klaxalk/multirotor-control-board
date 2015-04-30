@@ -90,6 +90,7 @@
 /* -------------------------------------------------------------------- */
 extern volatile uint16_t milisecondsTimer;
 extern volatile uint32_t secondsTimer;
+extern volatile uint8_t timer40hz;
 
 /* -------------------------------------------------------------------- */
 /*	Contains signals from RC receiver									*/
