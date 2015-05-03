@@ -54,7 +54,7 @@ void packetHandler(unsigned char *inPacket){
 							if(*(dataIN+3)==GET_STATUS){
 								telemetryToCoordinatorReport(address64,address16,*(dataIN+4),0x00);
 							}else{
-								telemetryToCoordinator(address64,address16,*(dataIN+3),*(dataIN+4));
+								telemetryToCoordinator(address64,address16,*(dataIN+4),*(dataIN+3));
 							}
 						}else
 						//LANDING

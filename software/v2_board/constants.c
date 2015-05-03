@@ -76,7 +76,7 @@ void constInit(){
 	COMMANDS.TIME=0x06;
 	COMMANDS.POSITION_SET=0x07;
 	
-	GET_STATUS=0x95;
+	GET_STATUS=0xFF;
 	
 	//telemetryToCoordinatorArr[TELEMETRIES.VALID_GUMSTIX]=1;	
 }

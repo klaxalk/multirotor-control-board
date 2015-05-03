@@ -157,8 +157,8 @@ void telemetryToCoordinatorSend(){
 void telemetryToCoordinatorSet(unsigned char *address64,unsigned char *address16,unsigned char type,unsigned char on, unsigned char frameID){
 	*dataOUT='c';
 	*(dataOUT+1)=COMMANDS.TELEMETRY_COORDINATOR;
-	*(dataOUT+2)=type;
-	*(dataOUT+3)=on;
+	*(dataOUT+2)=on;
+	*(dataOUT+3)=type;
 	makeTRPacket(address64,address16,0x00,frameID,dataOUT,4);
 }
 void telemetryToCoordinator(unsigned char *address64,unsigned char *address16,unsigned char type,unsigned char on){
