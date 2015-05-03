@@ -143,7 +143,7 @@ void packetHandler(unsigned char *inPacket){
                 case 'r':
 						 //TELEMETRY TO COORDINATOR STATUS
 						 if(*(dataIN+2)==COMMANDS.TELEMETRY_COORDINATOR){
-							 telemetryToCoordinatorReportRecieved(address64,address16,*(dataIN+3),*(dataIN+4));
+							 telemetryToCoordinatorReportRecieved(address64,address16,*(dataIN+4),*(dataIN+3));
 						 } else				
 						 //LANDING STATUS	
 				         if(*(dataIN+2)==COMMANDS.LANDING){

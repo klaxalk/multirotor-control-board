@@ -174,8 +174,9 @@ void telemetryToCoordinatorStatusRequest(unsigned char *address64,unsigned char 
 void telemetryToCoordinatorReport(unsigned char *address64,unsigned char *address16,unsigned char type,unsigned char frameID){
 	*dataOUT='r';
 	*(dataOUT+1)=COMMANDS.TELEMETRY_COORDINATOR;
-	*(dataOUT+2)=type;
-	*(dataOUT+3)=telemetryToCoordinatorArr[type];
+	*(dataOUT+2)=telemetryToCoordinatorArr[type];
+	*(dataOUT+3)=type;
+	
 	makeTRPacket(address64,address16,0x00,frameID,dataOUT,4);
 }
 void telemetryToCoordinatorReportRecieved(unsigned char *address64,unsigned char *address16,unsigned char type,unsigned char status){
