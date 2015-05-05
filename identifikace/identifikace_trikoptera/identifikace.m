@@ -90,10 +90,10 @@ hold off
 plot(time_plot, data(plot_window, velocity), 'r--', 'LineWidth', 1.5);
 hold on
 plot(time_plot, velocity_est, 'b', 'LineWidth', 1.5);
-title('Velocity');
-legend('Measured velocity', 'Estimated in open-loop');
+title('Speed');
+legend('Measured speed', 'Estimated in open-loop');
 xlabel('Time [s]');
-ylabel('Velocity [m/s]');
+ylabel('Speed [m/s]');
 axis([0 time_plot(end) -1 2]);
 
 %% plot acceleration
@@ -124,6 +124,10 @@ axis([0 time_plot(end) -450 800]);
 set(hFig, 'Units', 'centimeters');
 set(hFig, 'Position', [0 0 21 21*0.5625])
 
+drawnow;
+
+pause(2);
+
 tightfig(hFig);
 
 %% plotting for thesis
@@ -135,10 +139,10 @@ hold off
 plot(time_plot, data(plot_window, velocity), 'r', 'LineWidth', 1.5);
 hold on
 plot(time_identifikace, velocity_fit, 'b', 'LineWidth', 1.5);
-title('Velocity');
-legend('Velocity', 'Fitted polynomial');
+title('Speed');
+legend('Speed', 'Fitted polynomial');
 xlabel('Time [s]');
-ylabel('Velocity [m/s]');
+ylabel('Speed [m/s]');
 axis([0 time_plot(end) -1 2]);
 
 subplot(1, 2, 2);
@@ -198,16 +202,16 @@ end
 
 %% 
 
-hFig = figure(3);
+hFig = figure(4);
  
 hold off
 plot(timekalman, kalmandata(:, velocity), 'r', 'LineWidth', 1.5);
 hold on
 plot(timekalman, exp_filter, 'g', 'LineWidth', 1.5);
 plot(timekalman, states(2, :), 'b', 'LineWidth', 1.5);
-legend('Measured velocity', 'Exponential filter', 'Kalman filter');
+legend('Measured speed', 'Exponential filter', 'Kalman filter');
 xlabel('Time [s]');
-ylabel('Velocity [m/s]');
+ylabel('Speed [m/s]');
 axis([0 timekalman(end) -0.9 1.1]);
 
 set(hFig, 'Units', 'centimeters');
