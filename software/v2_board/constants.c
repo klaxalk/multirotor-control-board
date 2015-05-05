@@ -78,5 +78,5 @@ void constInit(){
 	
 	GET_STATUS=0xFF;
 	
-	//telemetryToCoordinatorArr[TELEMETRIES.VALID_GUMSTIX]=1;	
+	telemetryToCoordinatorArr[TELEMETRIES.VALID_GUMSTIX]=1;	
 }

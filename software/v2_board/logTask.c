@@ -32,12 +32,14 @@ void logTaskReadable(void *p){
 		logValueStr((float) (rollAngle/10.0));
 		logValueStr(altitude.position); //altitude
 		logValueStr(altitude.speed);
-		logValueStr(kalmanStates.elevator.position); //elevator
+		logValueStr(kalmanStates.elevator.position+positionShift.elevator); //elevator
 		logValueStr(kalmanStates.elevator.velocity);
 		logValueStr(kalmanStates.elevator.acceleration);
-		logValueStr(kalmanStates.aileron.position); //aileron
+		logValueStr(positionShift.elevator);		
+		logValueStr(kalmanStates.aileron.position+positionShift.aileron); //aileron
 		logValueStr(kalmanStates.aileron.velocity);
 		logValueStr(kalmanStates.aileron.acceleration);
+		logValueStr(positionShift.aileron);
 		logValueStr(validGumstix); //blob detector
 		logValueStr(elevatorGumstix);
 		logValueStr(aileronGumstix);

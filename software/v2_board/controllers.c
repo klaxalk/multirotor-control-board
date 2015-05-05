@@ -165,11 +165,13 @@ void velocityController() {
 	error = -kalmanStates.elevator.velocity;
 	elevatorIntegration = saturationFloat(elevatorIntegration+(KI * error * DT),CONTROLLER_ELEVATOR_SATURATION/3.0);
 	controllerElevatorOutput=saturationInt16((int16_t)((KV * error) + elevatorIntegration - (KA * kalmanStates.elevator.acceleration)),CONTROLLER_ELEVATOR_SATURATION);
+	controllerElevatorOutput*=3;
 		
 	//aileron controller
 	error = -kalmanStates.aileron.velocity;
 	aileronIntegration = saturationFloat(aileronIntegration+(KI * error * DT),CONTROLLER_AILERON_SATURATION/3.0);
 	controllerAileronOutput=saturationInt16((int16_t)((KV * error) + aileronIntegration - (KA * kalmanStates.aileron.acceleration)),CONTROLLER_AILERON_SATURATION);
+	controllerAileronOutput*=3;
 }
 
 void positionController(float elevatorSetpoint, float aileronSetpoint) {
@@ -193,12 +195,14 @@ void positionController(float elevatorSetpoint, float aileronSetpoint) {
 	speedDes = saturationFloat((KP/KV) * error,SPEED_MAX);
 	elevatorIntegration = saturationFloat(elevatorIntegration+(KI * error * DT),CONTROLLER_ELEVATOR_SATURATION/3.0);	
 	controllerElevatorOutput=saturationInt16((int16_t)(KV * (speedDes - kalmanStates.elevator.velocity) + elevatorIntegration - (KA * kalmanStates.elevator.acceleration)),CONTROLLER_ELEVATOR_SATURATION);
+	controllerElevatorOutput*=3;
 
 	//aileron controller
 	error = aileronSetpoint - kalmanStates.aileron.position;
 	speedDes = saturationFloat((KP/KV) * error,SPEED_MAX);
 	aileronIntegration = saturationFloat(aileronIntegration+(KI * error * DT),CONTROLLER_AILERON_SATURATION/3.0);	
 	controllerAileronOutput=saturationInt16((int16_t)(KV * (speedDes - kalmanStates.aileron.velocity) + aileronIntegration - (KA * kalmanStates.aileron.acceleration)),CONTROLLER_AILERON_SATURATION);
+	controllerAileronOutput*=3;
 }
 
 void altitudeEstimator() {

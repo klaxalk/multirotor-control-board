@@ -86,6 +86,10 @@ float telemetryValue(unsigned char type){
 		f=kalmanStates.aileron.acceleration_error;
     }else if(type==TELEMETRIES.AILERON_ACC_INPUT){
 		f=kalmanStates.aileron.acceleration_input;
+    }else if(type==TELEMETRIES.ELEVATOR_SHIFT){
+		f=positionShift.elevator;
+    }else if(type==TELEMETRIES.AILERON_SHIFT){
+		f=positionShift.aileron;
     }
 	return f;
 }

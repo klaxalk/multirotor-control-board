@@ -73,6 +73,7 @@ void Decode64(void) {
 void commTask(void *p) {	
 	unsigned char inChar;
 	int16_t counter20Hz = 0;	
+	uint8_t i=0;
 	
 	//initialize Kalman filter and MPC
 	stmResetKalman(0,0);
@@ -97,6 +98,11 @@ void commTask(void *p) {
 		if(timer40hz>=25){
 			timer40hz-=25;
 			stmSendSetpoint(0-positionShift.elevator,0-positionShift.aileron);	
+			for(i=0;i<5;i++){
+				MPCElevatorTrajectory[i]=0-positionShift.elevator;
+				MPCAileronTrajectory[i]=0-positionShift.aileron;
+			}
+					
 		}
 		
 			//send trajectory to MPC

@@ -3,6 +3,7 @@
 #include "communication.h"
 #include "system.h"
 #include "packets.h"
+#include "commands.h"
 #include <stdlib.h> // abs
 
 
@@ -28,11 +29,17 @@ void mainTask(void *p) {
 		
 				
 		if(RCchannel[AUX2]<(PPM_IN_MIDDLE_LENGTH)){
-			if(previous_AUX2!=0){				
+			if(previous_AUX2!=0){	
+				led_orange_off();	
+				positionShift.elevator=0;
+				positionShift.aileron=0;		
 				previous_AUX2=0;
 			}
 		}else{
-			if(previous_AUX2!=1){						
+			if(previous_AUX2!=1){
+				led_orange_on();
+				positionShift.elevator=0;
+				positionShift.aileron=-1;						
 				previous_AUX2=1;
 			}
 		}
@@ -76,14 +83,12 @@ void mainTask(void *p) {
 
 		if(RCchannel[AUX5]<PPM_IN_MIDDLE_LENGTH){
 			if(previous_AUX5!=0){
-				kopterPositionSlaveSet(ADDRESS.COORDINATOR,ADDRESS.UNKNOWN16,ADDRESS.COORDINATOR);	
-				led_orange_off();			
+				kopterPositionSlaveSet(ADDRESS.COORDINATOR,ADDRESS.UNKNOWN16,ADDRESS.COORDINATOR);								
 				previous_AUX5=0;
 			}
 		}else{
 			if(previous_AUX5!=1){
-				kopterPositionSlaveSet(ADDRESS.COORDINATOR,ADDRESS.UNKNOWN16,ADDRESS.K3);		
-				led_orange_on();
+				kopterPositionSlaveSet(ADDRESS.COORDINATOR,ADDRESS.UNKNOWN16,ADDRESS.K3);						
 				previous_AUX5=1;
 			}
 		}

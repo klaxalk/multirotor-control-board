@@ -12,7 +12,7 @@ void controllersTask(void *p) {
 
 		//values calculation
 		altitudeEstimator();
-		setpointsCalculate();										
+		///setpointsCalculate();										
 					
 		//MANUAL
 		if(controllerActive==CONTROLLERS.OFF){
