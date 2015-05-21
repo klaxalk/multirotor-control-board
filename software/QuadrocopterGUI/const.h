@@ -57,9 +57,14 @@ typedef struct
 	unsigned char OUTPUT_ELEVATOR;
 	unsigned char OUTPUT_AILERON;
 	unsigned char OUTPUT_RUDDER;
+    unsigned char BLOB_DISTANCE;
+    unsigned char BLOB_HORIZONTAL;
+    unsigned char BLOB_VERTICAL;
+    unsigned char PITCH_ANGLE;
+    unsigned char ROLL_ANGLE;
 } TELEMETRIEST;
 
-#define TELEMETRY_VARIABLES 32
+#define TELEMETRY_VARIABLES 37
 typedef struct
 {
 	unsigned char ON;

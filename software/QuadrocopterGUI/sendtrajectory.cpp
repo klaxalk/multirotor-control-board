@@ -2,7 +2,6 @@
 #include "ui_sendtrajectory.h"
 #include "send.h"
 
-static unsigned char kopterTr;
 
 sendTrajectory::sendTrajectory(QWidget *parent) :
     QDialog(parent),

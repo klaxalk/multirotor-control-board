@@ -50,6 +50,14 @@ void commTask(void *p) {
 				 packetHandler(packet);
 			 }
 		}
+		if (usartBufferGetByte(usart_buffer_log,&inChar,0))
+		{
+			usartBufferPutByte(usart_buffer_4,inChar,0);
+		}
+		if (usartBufferGetByte(usart_buffer_4,&inChar,0))
+		{
+			usartBufferPutByte(usart_buffer_log,inChar,0);
+		}
 		
 
 		//Gumstix

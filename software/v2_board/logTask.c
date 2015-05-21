@@ -19,8 +19,9 @@ void logTask(void *p) {
 	startLogging("fileLog.txt");		
 	
 	while (1) {
+		led_blue_toggle();
 		loggingData();
-		vTaskDelay(16);
+		vTaskDelay(32);
 		//delay 2+ ---- 16=62,5Hz
 	}
 }

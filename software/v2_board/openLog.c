@@ -74,7 +74,7 @@ void openLogReceive(unsigned char *address64,unsigned char *address16,unsigned c
 void stopLogging(){
 	usartBufferPutString(usart_buffer_log,"$$$",0);						//$$$ - characters for stop logging
 	//
-	vTaskDelay(200);
+	vTaskDelay(400);
 }
 
 void startLogging(char * newFileName){
@@ -92,13 +92,37 @@ void loggingData(){
 	i++;
 	char str[256];
 	// string of variables
-	sprintf(str, "%d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%d,%d,%d,%d\n",
-	i,estimatedThrottlePos,groundDistance,elevatorSpeed,aileronSpeed,estimatedElevatorVel,estimatedAileronVel,estimatedElevatorPos,estimatedAileronPos,
-	controllerThrottleOutput,estimatedThrottleVel,velocityControllerAileronOutput,velocityControllerElevatorOutput,positionControllerAileronOutput,positionControllerElevatorOutput,
-	throttleSetpoint,elevatorPositionSetpoint,aileronPositionSetpoint,elevatorVelocitySetpoint,aileronVelocitySetpoint,estimatedElevatorVel2,estimatedAileronVel2,estimatedElevatorAcc,
-	estimatedAileronAcc,validGumstix,elevatorDesiredSpeedPosController,aileronDesiredSpeedPosController,elevatorDesiredSpeedPosControllerLeader,aileronDesiredSpeedPosControllerLeader,
+	/*sprintf(str, "%d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%d,%d,%d,%d\n",
+	i,estimatedThrottlePos,groundDistance,elevatorSpeed,aileronSpeed,//estimatedElevatorVel,estimatedAileronVel,estimatedElevatorPos,estimatedAileronPos,
+	controllerThrottleOutput,estimatedThrottleVel,velocityControllerAileronOutput,velocityControllerElevatorOutput,//positionControllerAileronOutput,positionControllerElevatorOutput,
+	throttleSetpoint,elevatorPositionSetpoint,//aileronPositionSetpoint,elevatorVelocitySetpoint,aileronVelocitySetpoint,estimatedElevatorVel2,//estimatedAileronVel2,estimatedElevatorAcc,
+	estimatedAileronAcc,validGumstix,//elevatorDesiredSpeedPosController,aileronDesiredSpeedPosController,elevatorDesiredSpeedPosControllerLeader,aileronDesiredSpeedPosControllerLeader,
 	outputThrottle,outputElevator,outputAileron,outputRudder);
+	usartBufferPutString(usart_buffer_log,str,0);*/
+	sprintf(str, "%d,%f,%f,%f,%f,",
+	i,estimatedThrottlePos,groundDistance,elevatorSpeed,aileronSpeed);
 	usartBufferPutString(usart_buffer_log,str,0);
+	sprintf(str, "%f,%f,%f,%f,",
+	estimatedElevatorVel,estimatedAileronVel,estimatedElevatorPos,estimatedAileronPos);
+	usartBufferPutString(usart_buffer_log,str,0);
+	sprintf(str, "%f,%f,%f,%f,\n",
+	controllerThrottleOutput,estimatedThrottleVel,velocityControllerAileronOutput,velocityControllerElevatorOutput);
+	usartBufferPutString(usart_buffer_log,str,0);
+	/*sprintf(str, "%f,%f,%f,%f,\n",
+	positionControllerAileronOutput,positionControllerElevatorOutput,throttleSetpoint,elevatorPositionSetpoint);
+	usartBufferPutString(usart_buffer_log,str,0);// vtask-64
+	/*sprintf(str, "%f,%f,%f,%f,",
+	aileronPositionSetpoint,elevatorVelocitySetpoint,aileronVelocitySetpoint,estimatedElevatorVel2);
+	usartBufferPutString(usart_buffer_log,str,0);
+	/*sprintf(str, "%f,%f,%f,%f,\n",
+	estimatedAileronVel2,estimatedElevatorAcc,estimatedAileronAcc,validGumstix);
+	usartBufferPutString(usart_buffer_log,str,0);
+	sprintf(str, "%f,%f,%f,%f,",
+	elevatorDesiredSpeedPosController,aileronDesiredSpeedPosController,elevatorDesiredSpeedPosControllerLeader,aileronDesiredSpeedPosControllerLeader);
+	usartBufferPutString(usart_buffer_log,str,0);//ne
+	sprintf(str, "%d,%d,%d,%d\n",
+	outputThrottle,outputElevator,outputAileron,outputRudder);
+	usartBufferPutString(usart_buffer_log,str,0);*/
 }
 
 void setTelemetry(){
