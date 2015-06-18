@@ -59,7 +59,7 @@ void logTask(void *p) {
 		sprintf(temp, "%d, ", controllerAileronOutput);
 		usartBufferPutString(usart_buffer_log, temp, 10);
 		
-		sprintf(temp, "%2.3f, ", opticalFlowData.ground_distance);
+		sprintf(temp, "%2.3f, ", groundDistance);
 		usartBufferPutString(usart_buffer_log, temp, 10);
 		
 		sprintf(temp, "%d, ", RCchannel[THROTTLE]);

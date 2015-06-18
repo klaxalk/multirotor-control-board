@@ -1,6 +1,6 @@
 clear all;
 
-data = load('LOG00006.TXT');
+data = load('LOG00010.TXT');
 
 %% data labels
 
@@ -12,8 +12,8 @@ input = 4;
 %% data margins
 
 % okrojení dat
-from = 500;
-to = from+800;
+from = 1300;
+to = size(data, 1)-300;
 
 % od-do fitování
 plot_window = from:to;
@@ -35,7 +35,7 @@ position = integrate(data(plot_window, velocity), data(plot_window, dt));
 %% velocity
 
 % fituji rychlost polynomem
-velocity_pol = polyfit(time_plot', data(plot_window, velocity)', 50);
+velocity_pol = polyfit(time_plot', data(plot_window, velocity)', 200);
 velocity_fit = polyval(velocity_pol, time_identifikace);
 
 %% acceleration
@@ -47,7 +47,7 @@ acceleration_fit = polyval(acceleration_pol, time_identifikace);
 %% input
 
 % shift input of the offset
-data(:, input) = data(:, input) - mean(data(plot_window(1:50), input))*0.960;
+data(:, input) = data(:, input) - mean(data(plot_window(1:10), input))*1.14;
 
 %% identify transfare input -> acceleration
 input_window = data(iden_window, input);
