@@ -75,9 +75,9 @@ float telemetryValue(unsigned char type){
     }else if(type==TELEMETRIES.BLOB_ALTITUDE){
 		f=throttleGumstix;
     }else if(type==TELEMETRIES.PITCH_ANGLE){
-		f=(float)pitchAngle/10.0;
+		f=0.0;
     }else if(type==TELEMETRIES.ROLL_ANGLE){
-		f=(float)rollAngle/10.0;
+		f=0.0;
     }else if(type==TELEMETRIES.ELEVATOR_ACC_ERROR){
 		f=kalmanStates.elevator.acceleration_error;
     }else if(type==TELEMETRIES.ELEVATOR_ACC_INPUT){
@@ -94,43 +94,6 @@ float telemetryValue(unsigned char type){
 	return f;
 }
 void telemetryReceive(unsigned char *address64,unsigned char *address16,unsigned char type,float value){
-	if(type==TELEMETRIES.ALTITUDE_ESTIMATED){
-		
-		}else if(type==TELEMETRIES.ALTITUDE){
-		
-		}else if(type==TELEMETRIES.ELEVATOR_SPEED){
-		
-		}else if(type==TELEMETRIES.AILERON_SPEED){
-		
-		}else if(type==TELEMETRIES.ELEVATOR_SPEED_ESTIMATED){
-		
-		}else if(type==TELEMETRIES.AILERON_SPEED_ESTIMATED){
-		
-		}else if(type==TELEMETRIES.ELEVATOR_POSITION){
-		
-		}else if(type==TELEMETRIES.AILERON_POSITION){
-		
-		}else if(type==TELEMETRIES.ALTITUDE_CONTROLLER_OUTPUT){
-		
-		}else if(type==TELEMETRIES.ALTITUDE_SPEED){
-		
-		}else if(type==TELEMETRIES.AILERON_CONTROLLER_OUTPUT){
-		
-		}else if(type==TELEMETRIES.ELEVATOR_CONTROLLER_OUTPUT){
-		
-		}else if(type==TELEMETRIES.ALTITUDE_SETPOINT){
-		
-		}else if(type==TELEMETRIES.ELEVATOR_POS_SETPOINT){
-
-		}else if(type==TELEMETRIES.AILERON_POS_SETPOINT){
-
-		}else if(type==TELEMETRIES.ELEVATOR_ACC){
-		
-		}else if(type==TELEMETRIES.AILERON_ACC){
-		
-		}else if(type==TELEMETRIES.VALID_GUMSTIX){
-				
-		}
 }
 
 void telemetryToCoordinatorSend(){

@@ -19,8 +19,6 @@ void logTaskReadable(void *p){
 	vTaskDelay(100);	
 	
 	while(1){	
-		logValueStr((float) (pitchAngle/10.0));                                  //1
-		logValueStr((float) (rollAngle/10.0));									//2	
 		logValueStr(altitude.position); //altitude								3
 		logValueStr(altitude.speed);												//4
 		logValueStr(kalmanStates.elevator.position+positionShift.elevator); //elevator 5

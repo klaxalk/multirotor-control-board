@@ -8,9 +8,6 @@
 #ifndef COMMTASK_H_
 #define COMMTASK_H_
 
-volatile int16_t pitchAngle;
-volatile int16_t rollAngle;
-
 // the communication task
 void commTask(void *p);
 

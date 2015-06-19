@@ -9,27 +9,6 @@
 //in mm, must be positive! crops Gumstix values
 #define POSITION_MAXIMUM   2000 
 
-// serial1 RX and TX
-#define MAX_SENDE_BUFF     170
-#define MAX_EMPFANGS_BUFF  170
-
-signed volatile char SioTmp = 0;
-unsigned volatile char DataReceived = 0;
-unsigned volatile char CntCrcError = 0;
-unsigned volatile char BytesReceiving = 0;
-signed volatile char TxdBuffer[MAX_SENDE_BUFF];
-signed volatile char RxdBuffer[MAX_EMPFANGS_BUFF];
-unsigned volatile char transfereUart1done = 1;
-unsigned char interval = 1;
-volatile int flightCtrlDataReceived = 0;
-
-volatile int16_t rollBoardAngle = 0;
-volatile int16_t pitchBoardAngle = 0;
-volatile int16_t pitchAngle = 0;
-volatile int16_t rollAngle = 0;
-
-signed char *pRxData = 0;
-unsigned char RxDataLen = 0;
 
 //XBee
 #define XBEE_BUFFER_SIZE 60
@@ -42,33 +21,6 @@ uint8_t checksum=0xFF;
 //	The message handler for STM
 stmMessageHandler_t stmMessage;
 
-// decode the base64 encoded data
-void Decode64(void) {	
-	unsigned char a,b,c,d;
-	unsigned char x,y,z;
-	unsigned char ptrIn = 3; // start at begin of data block
-	unsigned char ptrOut = 3;
-	unsigned char len = BytesReceiving - 6;
-
-	while(len) {
-		
-		a = RxdBuffer[ptrIn++] - '=';
-		b = RxdBuffer[ptrIn++] - '=';
-		c = RxdBuffer[ptrIn++] - '=';
-		d = RxdBuffer[ptrIn++] - '=';
-		
-		x = (a << 2) | (b >> 4);
-		y = ((b & 0x0f) << 4) | (c >> 2);
-		z = ((c & 0x03) << 6) | d;
-		
-		if(len--) RxdBuffer[ptrOut++] = x; else break;
-		if(len--) RxdBuffer[ptrOut++] = y; else break;
-		if(len--) RxdBuffer[ptrOut++] = z;	else break;
-	}
-	
-	pRxData = (signed char*) &RxdBuffer[3]; // dekodování zaèíná 4. bytem
-	RxDataLen = ptrOut - 3;  // kolik bylo dekodováno bytù?
-}
 
 void commTask(void *p) {	
 	unsigned char inChar;
@@ -189,85 +141,7 @@ void commTask(void *p) {
 			stmSendMeasurement(elevatorSpeed, aileronSpeed, controllerElevatorOutput, controllerAileronOutput);			
 		}
 
-		// receive data from MC control board		
-		if (usartBufferGetByte(usart_buffer_2, &inChar, 0)) {
 
-			static unsigned int crc;
-			static unsigned char crc1,crc2,buf_ptr;
-			static unsigned char UartState = 0;
-			unsigned char CrcOkay = 0;
-
-			SioTmp = inChar;
-
-			if(buf_ptr >= MAX_SENDE_BUFF)
-			UartState = 0;
-
-			if(SioTmp == '\r' && UartState == 2) {
-				UartState = 0;
-				crc -= RxdBuffer[buf_ptr-2];
-				crc -= RxdBuffer[buf_ptr-1];
-				crc %= 4096;
-				crc1 = '=' + crc / 64;
-				crc2 = '=' + crc % 64;
-				CrcOkay = 0;
-				if((crc1 == RxdBuffer[buf_ptr-2]) && (crc2 == RxdBuffer[buf_ptr-1])) CrcOkay = 1; else { CrcOkay = 0; CntCrcError++;};
-				if(!DataReceived && CrcOkay) // Celá správa pøijata
-				{
-					DataReceived = 1;
-					flightCtrlDataReceived = 0;
-					BytesReceiving = buf_ptr + 1;
-					RxdBuffer[buf_ptr] = '\r';
-				}
-			}
-			else
-			switch(UartState)
-			{
-				case 0:
-				if(SioTmp == '#' && !DataReceived) UartState = 1;  // Start char
-				buf_ptr = 0;
-				RxdBuffer[buf_ptr++] = SioTmp;
-				crc = SioTmp;
-				break;
-				case 1: // Vyhonocení adresy
-				UartState++;
-				RxdBuffer[buf_ptr++] = SioTmp;
-				crc += SioTmp;
-				break;
-				case 2: //  Bere data
-				RxdBuffer[buf_ptr] = SioTmp;
-				if(buf_ptr < MAX_EMPFANGS_BUFF) buf_ptr++;
-				else UartState = 0;
-				crc += SioTmp;
-				break;
-				default:
-				UartState = 0;
-				break;
-			}
-		}
-		
-
-		if (DataReceived == 1) {	    
-			Decode64();	    
-			char* dummy;
-			int16_t tempAngle;
-				    
-			dummy = (char*) (&tempAngle);	    
-			dummy[0] = pRxData[0];
-			dummy[1] = pRxData[1];
-	    
-			if (RxdBuffer[2] == 'X') {		   
-				pitchBoardAngle = tempAngle;
-			} else if (RxdBuffer[2] == 'Y') {		    
-				rollBoardAngle = tempAngle;
-			}
-	    
-			pitchAngle = (pitchBoardAngle-rollBoardAngle)/2;
-			rollAngle = (pitchBoardAngle+rollBoardAngle)/2;    	    
-			DataReceived = 0;
-		}
-		
-		
-		
 	/* -------------------------------------------------------------------- */
 	/*	A character received from STM										*/
 	/* -------------------------------------------------------------------- */
