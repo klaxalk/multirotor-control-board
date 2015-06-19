@@ -18,28 +18,22 @@ void mainTask(void *p) {
 	while (1) {		
 		
 		if(RCchannel[AUX1]<PPM_IN_MIDDLE_LENGTH){
-			if(previous_AUX1!=0){
+			if(previous_AUX1!=0){				
 				previous_AUX1=0;
 			}
 		}else{
-			if(previous_AUX1!=1){
+			if(previous_AUX1!=1){							
 				previous_AUX1=1;
 			}
 		}
 		
 				
 		if(RCchannel[AUX2]<(PPM_IN_MIDDLE_LENGTH)){
-			if(previous_AUX2!=0){	
-				led_orange_off();	
-				positionShift.elevator=0;
-				positionShift.aileron=0;		
+			if(previous_AUX2!=0){			
 				previous_AUX2=0;
 			}
 		}else{
-			if(previous_AUX2!=1){
-				led_orange_on();
-				positionShift.elevator=0;
-				positionShift.aileron=-1;						
+			if(previous_AUX2!=1){				
 				previous_AUX2=1;
 			}
 		}
@@ -52,43 +46,38 @@ void mainTask(void *p) {
 			}
 		} else if (RCchannel[AUX3] > (PPM_IN_MIDDLE_LENGTH + 400)) {
 			if (previous_AUX3 != 2) {			
-				controllerSet(CONTROLLERS.MPC);					
+				TRAJ_POINT(0,0,2,0,1);
+				trajMaxIndex=0;				
 				previous_AUX3 = 2;
 			}			
 		} else {
 			if (previous_AUX3 != 0) {			
-				controllerSet(CONTROLLERS.VELOCITY);	
+				controllerSet(CONTROLLERS.MPC);	
+				TRAJ_POINT(0,0,0,0,1);
+				trajMaxIndex=0;	
 				previous_AUX3 = 0;
 			}
 		}
 
-		// landing on/off
-		if (RCchannel[AUX4] < (PPM_IN_MIDDLE_LENGTH - 400)) {
-			if(previous_AUX4!=0){				
-				enableLanding();	
-				previous_AUX4 = 0;
+		if(RCchannel[AUX4]<PPM_IN_MIDDLE_LENGTH){
+			if(previous_AUX4!=0){
+				previous_AUX4=0;
 			}
-		} else if(RCchannel[AUX4] > (PPM_IN_MIDDLE_LENGTH + 400)) {
+			}else{
 			if(previous_AUX4!=1){
-				disableLanding();				
 				previous_AUX4=1;
-			}
-		}else{
-			if(previous_AUX4!=2){
-				disableLanding();			
-				previous_AUX4=2;
 			}
 		}
 	
 
 		if(RCchannel[AUX5]<PPM_IN_MIDDLE_LENGTH){
 			if(previous_AUX5!=0){
-				kopterPositionSlaveSet(ADDRESS.COORDINATOR,ADDRESS.UNKNOWN16,ADDRESS.COORDINATOR);								
+				//kopterPositionSlaveSet(ADDRESS.COORDINATOR,ADDRESS.UNKNOWN16,ADDRESS.COORDINATOR);					
 				previous_AUX5=0;
 			}
 		}else{
 			if(previous_AUX5!=1){
-				kopterPositionSlaveSet(ADDRESS.COORDINATOR,ADDRESS.UNKNOWN16,ADDRESS.K3);						
+				//kopterPositionSlaveSet(ADDRESS.COORDINATOR,ADDRESS.UNKNOWN16,ADDRESS.K3);			
 				previous_AUX5=1;
 			}
 		}

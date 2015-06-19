@@ -78,5 +78,6 @@ void constInit(){
 	
 	GET_STATUS=0xFF;
 	
-	telemetryToCoordinatorArr[TELEMETRIES.VALID_GUMSTIX]=1;	
+	telemetryToCoordinatorArr[TELEMETRIES.ELEVATOR_SHIFT]=1;	
+	telemetryToCoordinatorArr[TELEMETRIES.AILERON_SHIFT]=1;	
 }

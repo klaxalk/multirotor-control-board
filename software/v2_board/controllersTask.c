@@ -12,7 +12,7 @@ void controllersTask(void *p) {
 
 		//values calculation
 		altitudeEstimator();
-		///setpointsCalculate();										
+		setpointsCalculate();										
 					
 		//MANUAL
 		if(controllerActive==CONTROLLERS.OFF){
@@ -25,16 +25,16 @@ void controllersTask(void *p) {
 				//VELOCITY	
 				if(controllerActive==CONTROLLERS.VELOCITY){
 					velocityController();
-					altitudeController(altitudeTrajectory[0]);	
+					altitudeController(setpoints.altitude);	
 				}else
 				//POSITION
 				if(controllerActive==CONTROLLERS.POSITION){
-					positionController(MPCElevatorTrajectory[0],MPCAileronTrajectory[0]);	
-					altitudeController(altitudeTrajectory[0]);	
+					positionController(setpoints.elevator-positionShift.elevator,setpoints.aileron-positionShift.aileron);	
+					altitudeController(setpoints.altitude);	
 				}else
 				//PREDICTIVE
 				if(controllerActive==CONTROLLERS.MPC){					
-					altitudeController(altitudeTrajectory[0]);	
+					altitudeController(setpoints.altitude);	
 					controllerElevatorOutput = saturationInt16(mpcElevatorOutput,CONTROLLER_ELEVATOR_SATURATION);
 					controllerAileronOutput = saturationInt16(mpcAileronOutput,CONTROLLER_AILERON_SATURATION);	
 				}

@@ -72,9 +72,7 @@ typedef struct {
 
 extern volatile int8_t trajMaxIndex;
 extern volatile trajectoryPoint_t trajectory[];
-extern volatile float MPCElevatorTrajectory[];
-extern volatile float MPCAileronTrajectory[];
-extern volatile float altitudeTrajectory[];
+extern volatile state_t setpoints;
 extern volatile char trajSend;
 
 #define TRAJECTORY_LENGTH	10

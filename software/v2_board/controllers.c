@@ -23,14 +23,12 @@ kopt=akt-shift
 */		
 
 //landing variables
-volatile unsigned char landingState = 0x00;
+volatile unsigned char landingState = 0x04;
 
 //trajectory variables
 volatile int8_t trajMaxIndex = 0;
 volatile trajectoryPoint_t trajectory[TRAJECTORY_LENGTH];
-volatile float MPCElevatorTrajectory[5] = {0};
-volatile float MPCAileronTrajectory[5] = {0};
-volatile float altitudeTrajectory[5] = {1};
+volatile state_t setpoints={.aileron=DEFAULT_AILERON_POSITION_SETPOINT, .elevator=DEFAULT_ELEVATOR_POSITION_SETPOINT, .altitude=DEFAULT_THROTTLE_POSITION_SETPOINT};
 volatile char trajSend = 0;
 
  
@@ -74,7 +72,9 @@ void controllerSet(unsigned char controllerDesired){
 			controllerActive=CONTROLLERS.MPC;	
 			stmResetKalman(0,0);
 			stmResetKalman(0,0);
-			stmResetKalman(0,0);				
+			stmResetKalman(0,0);		
+			positionShift.elevator=0;
+			positionShift.aileron=0;		
 		}		
 	}
 }
@@ -82,68 +82,37 @@ void controllerSet(unsigned char controllerDesired){
 
 void setpointsCalculate(){
 	//actual setpoint in kalman coordinate system
-	static state_t setpoints={.aileron=DEFAULT_AILERON_POSITION_SETPOINT, .elevator=DEFAULT_ELEVATOR_POSITION_SETPOINT, .altitude=DEFAULT_THROTTLE_POSITION_SETPOINT};
-	
-	uint32_t seconds = secondsTimer;
-	uint16_t miliseconds = milisecondsTimer;
-	int8_t i;
 	int8_t index = 0;
 	
 	float distLeft,speed,timeLeft;
 	
-	portENTER_CRITICAL();
-	//initialize actual setpoint
-	MPCElevatorTrajectory[0]=setpoints.elevator;
-	MPCAileronTrajectory[0]=setpoints.aileron;
-	altitudeTrajectory[0]=setpoints.altitude;	
-	
-	for(i=0;i<5;i++){
 		//trajectory waypoint shift
-		while((seconds>=trajectory[index].time) && (index<trajMaxIndex)){
+		while((secondsTimer>=trajectory[index].time) && (index<trajMaxIndex)){
 			index++;
 		}
 		
 		//end of trajectory
-		if(seconds>=trajectory[index].time){
-			MPCElevatorTrajectory[i]=trajectory[index].elevatorPos;
-			MPCAileronTrajectory[i]=trajectory[index].aileronPos;
-			altitudeTrajectory[i]=trajectory[index].throttlePos;
+		if(secondsTimer>=trajectory[index].time){
+			setpoints.elevator=trajectory[index].elevatorPos;
+			setpoints.aileron=trajectory[index].aileronPos;
+			setpoints.altitude=trajectory[index].throttlePos;
 		}else{
 			//setpoints calculation
-			timeLeft=(float)(trajectory[index].time-seconds)-(miliseconds/1000.0);
+			timeLeft=(float)(trajectory[index].time-secondsTimer)-(milisecondsTimer/1000.0);
 			//elevator
-			distLeft=trajectory[index].elevatorPos-MPCElevatorTrajectory[i];
+			distLeft=trajectory[index].elevatorPos-setpoints.elevator;
 			speed=distLeft/timeLeft;
-			if(i<4){MPCElevatorTrajectory[i+1]=MPCElevatorTrajectory[i]+speed*0.55;}
-			MPCElevatorTrajectory[i]+=speed*DT;
+			setpoints.elevator+=speed*DT;
 			//aileron
-			distLeft=trajectory[index].aileronPos-MPCAileronTrajectory[i];
-			speed=distLeft/timeLeft;
-			if(i<4){MPCAileronTrajectory[i+1]=MPCAileronTrajectory[i]+speed*0.55;}			
-			MPCAileronTrajectory[i]+=speed*DT;
+			distLeft=trajectory[index].aileronPos-setpoints.aileron;
+			speed=distLeft/timeLeft;		
+			setpoints.aileron+=speed*DT;
 			//throttle
-			distLeft=trajectory[index].throttlePos-altitudeTrajectory[i];
-			speed=distLeft/timeLeft;
-			if(i<4){altitudeTrajectory[i+1]=altitudeTrajectory[i]+speed*0.55;}			
-			altitudeTrajectory[i]+=speed*DT;			
-		}
-		
-		miliseconds+=550;
-		if(miliseconds>1000){
-			miliseconds-=1000;
-			seconds++;
-		}				
-	}
-	setpoints.elevator=MPCElevatorTrajectory[0];
-	setpoints.aileron=MPCAileronTrajectory[0];
-	setpoints.altitude=altitudeTrajectory[0];	
-	
-	for(i=0;i<5;i++){
-		MPCElevatorTrajectory[i]-=positionShift.elevator;
-		MPCAileronTrajectory[i]-=positionShift.aileron;	
-	}	
-	trajSend=1;
-	portEXIT_CRITICAL();			
+			distLeft=trajectory[index].throttlePos-setpoints.altitude;
+			speed=distLeft/timeLeft;						
+			setpoints.altitude+=speed*DT;			
+		}						
+	trajSend=1;		
 }
 
 
@@ -258,10 +227,10 @@ void landingController(){
 			controllerAileronOutput = 0;
 		}else
 		if(landingState==LANDING.TAKE_OFF){
-			altitudeController(altitudeTrajectory[0]);
+			altitudeController(setpoints.altitude);
 			velocityController();				
 			//stabilize altitude for 0.5s
-			if(fabs(altitudeTrajectory[0] - altitude.position) < 0.1 && fabs(altitude.speed) < 0.2){
+			if(fabs(setpoints.altitude - altitude.position) < 0.1 && fabs(altitude.speed) < 0.2){
 				landingCounter++;
 			}else{
 				landingCounter = 0;
@@ -276,7 +245,7 @@ void landingController(){
 			altitudeController(ALTITUDE_MINIMUM);
 			velocityController();
 			
-			if(fabs(altitudeTrajectory[0] - altitude.position) < 0.1 && fabs(altitude.speed) < 0.2){
+			if(fabs(setpoints.altitude - altitude.position) < 0.1 && fabs(altitude.speed) < 0.2){
 				landingCounter++;
 			}else{
 				landingCounter = 0;

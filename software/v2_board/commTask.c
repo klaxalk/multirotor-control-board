@@ -72,8 +72,6 @@ void Decode64(void) {
 
 void commTask(void *p) {	
 	unsigned char inChar;
-	int16_t counter20Hz = 0;	
-	uint8_t i=0;
 	
 	//initialize Kalman filter and MPC
 	stmResetKalman(0,0);
@@ -89,29 +87,17 @@ void commTask(void *p) {
 		//send position to slave
 		positionSlaveSend();
 				
-		//20Hz loop
-		if (counter20Hz++>100){
-			counter20Hz=0;
-			telemetryToCoordinatorSend();						
-		}	
 		
-		if(timer40hz>=25){
-			timer40hz-=25;
-			stmSendSetpoint(0-positionShift.elevator,0-positionShift.aileron);	
-			for(i=0;i<5;i++){
-				MPCElevatorTrajectory[i]=0-positionShift.elevator;
-				MPCAileronTrajectory[i]=0-positionShift.aileron;
-			}
-					
+		if(timer20hz>=50){
+			timer20hz-=50;
+			telemetryToCoordinatorSend();					
 		}
 		
-			//send trajectory to MPC
-		/*if(trajSend==1){
-			stmSendTrajectory(zeroTraj,zeroTraj);						
+		//send trajectory to MPC
+		if(trajSend==1){
+			stmSendSetpoint(setpoints.elevator-positionShift.elevator,setpoints.aileron-positionShift.aileron);				
 			trajSend=0;			
-		}*/	
-		
-		
+		}	
 		
 										
 		// XBee

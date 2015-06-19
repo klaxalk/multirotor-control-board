@@ -38,7 +38,7 @@ UsartBuffer * usart_buffer_4;
 /*	USART baud rates													*/
 /* -------------------------------------------------------------------- */
 #define USART_STM_BAUDRATE		BAUD115200
-#define USART_XBEE_BAUDRATE		BAUD19200
+#define USART_XBEE_BAUDRATE		BAUD115200
 #define USART_LOG_BAUDRATE		BAUD115200
 #define USART_1_BAUDRATE		BAUDPX4FLOW
 #define USART_2_BAUDRATE		BAUD57600
@@ -57,7 +57,7 @@ int16_t outputRudder = PULSE_OUT_MIDDLE/2;
 volatile uint16_t milisecondsTimer;
 volatile uint32_t secondsTimer;
 
-volatile uint8_t timer40hz = 0;
+volatile uint8_t timer20hz = 0;
 
 
 /* -------------------------------------------------------------------- */
@@ -297,5 +297,5 @@ ISR(TCC1_OVF_vect) {
 		secondsTimer++;
 	}
 	
-	timer40hz++;
+	timer20hz++;
 }
