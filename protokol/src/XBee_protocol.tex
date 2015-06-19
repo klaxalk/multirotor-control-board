@@ -1,0 +1,509 @@
+\section{MAV communication protocol}
+\label{sec:MCP}
+The protocol is designed for communication between MAVs and between the MAV and the ground station using XBee modules. The ground station operator is able to monitor MAV telemetry. The MAV can be controlled by commands. API frames must be used for communication with XBee. MAV communication protocol (MCP) packets are transferred as a payload of the \textit{ZigBee Transmit Request API frame} and \textit{ZigBee Receive Packet API frame}. The size of the MCP packet is calculated from the head of the XBee API frames. 
+
+Several packet types are available. Packet types have tree-like architecture. Packets are divided into packet categories by the value of the first byte (category identifier). Packet categories are shown in table \ref{tab:packetCategories}.
+
+\begin{table}[H]
+\begin{center}
+\begin{tabular}{c c c}
+\toprule
+\rowcolor[HTML]{FFFC9E} 
+\textbf{Packet category} & \textbf{Identifier} & \textbf{Description} \\ \midrule
+Command 		 & 0x63 (c)   & Packets for MAV control  		\\  [1ex] 
+Telemetry        & 0x74 (t)   & Periodically send telemetry     \\ [1ex] 
+Report           & 0x72 (r)   & Packets with MAV states         \\ [1ex] 
+Message 		 & 0x6D (m)   & Text messages    		    	\\ [1ex] 
+ \bottomrule
+\end{tabular}
+\end{center}
+\caption{Packet categories}
+\label{tab:packetCategories}
+\end{table}
+
+
+
+\subsection{Command Packets}
+\label{sec:commandsPackets}
+\textit{Command packets} are designed for MAV control. 
+\textit{Command packets} start with the command category identifier (0x63 - c). Command type identifier is the second byte of the packet. Command types are shown in table \ref{tab:commandTypes}. \textit{Report packets} can be obtained by \textit{status request commands}. Each command type have its own \textit{status request command}. Each \textit{status request command} has Get Status identifier (0xFF) on the third byte of the packet.
+
+\begin{table}[H]
+\begin{center}
+\begin{tabular}{c c c}
+\toprule
+\rowcolor[HTML]{FFFC9E} 
+\textbf{Command type} & \textbf{Identifier} & \textbf{Description} \\ \midrule
+Telemetry to coordinator  & 0x01   & Choose telemetry, which should be monitored  \\  [1ex] 
+Landing       			  & 0x02   & Enable and disable landing                   \\ [1ex] 
+Controllers               & 0x03   & Turn on and off controllers         		  \\ [1ex] 
+Trajectory set 			  & 0x04   & Set trajectory way-points				      \\ [1ex] 
+Position slave set  	  & 0x05   & Set the slave MAV for coordinate system distribution   \\ [1ex] 
+Time  					  & 0x06   & Set time          						      \\ [1ex] 
+Position set   			  & 0x07   & Set new position of the MAV  	   	          \\ [1ex] 
+ \bottomrule
+\end{tabular}
+\end{center}
+\caption{Command types}
+\label{tab:commandTypes}
+\end{table}
+
+\subsubsection{Telemetry to Coordinator}
+\label{sec:TelemetryToCoordinatorCommand}
+\textit{Telemetry to coordinator command} is used to set which telemetry types are send to the ground station for online monitoring. Each telemetry type has specific identifier. MCP supports up to 256 different telemetry types. Identifiers are shown in table \ref{tab:telemetryIdentifiers}. \textit{Telemetry to coordinator command packet} consists of four bytes. The structure of the \textit{telemetry to coordinator command packet} is shown in table \ref{tab:telemetryToCoordinatorCommandPacket}.
+\begin{table}[h]
+\begin{center}
+\begin{tabular}{c c c c}
+\toprule
+\rowcolor[HTML]{FFFC9E} 
+\textbf{Packet Fields} & \textbf{Byte} & \textbf{Value} & \textbf{Description}          \\ \midrule
+Packet category        & 1             & 0x63                & Command category              \\  [1ex] 
+Command type           & 2             & 0x01                & Telemetry to coordinator type \\ [1ex] 
+On/Off                 & 3             & 0x01/0x00           & Turn sending on or off        \\ 
+[1ex] 
+Telemetry identifier   & 4             & 0x00-0xFF           & Identifier of telemetry data  \\ 
+[1ex]  \bottomrule
+\end{tabular}
+\end{center}
+\caption{Telemetry to coordinator command packet}
+\label{tab:telemetryToCoordinatorCommandPacket}
+\end{table}
+
+\textit{Telemetry to coordinator status request command} is used to obtain \textit{telemetry to coordinator report packet} (section \ref{sec:telemetryToCoordinatorReport}).  The \textit{Telemetry to coordinator status request command packet} consists of four bytes. The structure of the \textit{telemetry to coordinator status request command packet} is shown in table \ref{tab:telemetryToCoordinatorStatusRequestPacket}.
+\begin{table}[h]
+\begin{center}
+\begin{tabular}{c c c c}
+\toprule
+\rowcolor[HTML]{FFFC9E} 
+\textbf{Packet Fields} & \textbf{Byte} & \textbf{Value} & \textbf{Description}          \\ \midrule
+Packet category        & 1             & 0x63                & Command category              \\ [1ex]
+Command type           & 2             & 0x01                & Telemetry to coordinator type \\ [1ex]
+Get Status identifier  & 3             & 0xFF                &                               \\ [1ex]
+Telemetry identifier   & 4             & 0x00-0xFF           & Identifier of telemetry data  \\ [1ex] \bottomrule
+\end{tabular}
+\end{center}
+\caption{Telemetry to coordinator status request command packet}
+\label{tab:telemetryToCoordinatorStatusRequestPacket}
+\end{table}
+
+
+\subsubsection{Landing}
+\label{sec:landingCommand}
+\textit{Landing request command} is used to turn on and off autonomous landing. \textit{Landing request command packet} consists of three bytes. The structure of the \textit{landing request command packet} is shown in table \ref{tab:landingRequestCommandPacket}.
+\begin{table}[h]
+\begin{center}
+\begin{tabular}{c c c c}
+\toprule
+\rowcolor[HTML]{FFFC9E} 
+\textbf{Packet Fields} & \textbf{Byte} & \textbf{Value} & \textbf{Description}   \\ \midrule
+Packet category        & 1             & 0x63                & Command category       \\ [1ex]
+Command type           & 2             & 0x02                & Landing type           \\ [1ex]
+On/Off                 & 3             & 0x01/0x00           & Turn landing on or off \\ [1ex]
+\bottomrule
+\end{tabular}
+\end{center}
+\caption{Landing request command packet}
+\label{tab:landingRequestCommandPacket}
+\end{table}
+
+
+\textit{Landing status request command} is used to obtain \textit{landing report packet} (section \ref{sec:landingReport}). \textit{Landing status request command packet} consists of three bytes. The structure of the \textit{landing status request command packet} is shown in table \ref{tab:landingStatusRequestCommandPacket}.
+\begin{table}[h]
+\begin{center}
+\begin{tabular}{c c c c}
+\toprule
+\rowcolor[HTML]{FFFC9E} 
+\textbf{Packet Fields} & \textbf{Byte} & \textbf{Value} & \textbf{Description}   \\ \midrule
+Packet category        & 1             & 0x63                & Command category       \\ [1ex]
+Command type           & 2             & 0x02                & Landing type           \\ [1ex]
+Get Status identifier  & 3             & 0xFF                &                        \\ [1ex]\bottomrule
+\end{tabular}
+\end{center}
+\caption{Landing status request command packet}
+\label{tab:landingStatusRequestCommandPacket}
+\end{table}
+
+\subsubsection{Controllers}
+\label{sec:controllersCommand}
+\textit{Controllers request command} is used to switch between active controller. Each of controller has its own identifier. Controller identifiers are shown in table \ref{tab:controllerIdentifiers}. MCP supports up to 255 controllers. \textit{Controllers request command packet} consists of three bytes. The structure of the \textit{controllers request command packet} is shown in table \ref{tab:controllersReuqestCommandPacket}.
+\begin{table}[h]
+\begin{center}
+\begin{tabular}{c c c c}
+\toprule
+\rowcolor[HTML]{FFFC9E} 
+\textbf{Packet Fields} & \textbf{Byte} & \textbf{Value} & \textbf{Description}   \\ \midrule
+Packet category        & 1             & 0x63                & Command category       \\ [1ex]
+Command type           & 2             & 0x03                & Controllers type       \\ [1ex]
+Controller identifier  & 3             & 0x00-0xFE           & Identifier of desired controller \\ [1ex] \bottomrule
+\end{tabular}
+\end{center}
+\caption{Controllers request command packet}
+\label{tab:controllersReuqestCommandPacket}
+\end{table}
+
+\textit{Controllers status request command} is used to obtain \textit{controllers report packet} (section \ref{sec:ControllersReport}). \textit{Controllers status request command packet} consists of three bytes. The structure of the \textit{controllers status request command packet} is shown in table \ref{tab:controllersStatusReuqestCommandPacket}.
+\begin{table}[h]
+\begin{center}
+\begin{tabular}{c c c c}
+\toprule
+\rowcolor[HTML]{FFFC9E} 
+\textbf{Packet Fields} & \textbf{Byte} & \textbf{Value} & \textbf{Description}   \\ \midrule
+Packet category        & 1             & 0x63                & Command category       \\ [1ex]
+Command type           & 2             & 0x03                & Controllers type       \\ [1ex]
+Get Status identifier  & 3             & 0xFF                &                        \\ [1ex] \bottomrule
+\end{tabular}
+\end{center}
+\caption{Controllers status request command packet}
+\label{tab:controllersStatusReuqestCommandPacket}
+\end{table}
+
+
+\subsubsection{Trajectory set}
+\label{sec:TrajectorySetCommand}
+\textit{Trajectory set request command} is used to set trajectory waypoints. To set more than one waypoint, repeat time, elevator position, aileron position and altitude in packet multiple times. \textit{Trajectory set request command packet} consists of $3+16k$ bytes, where $k$ is number of trajectory waypoints.  The structure of the \textit{trajectory set request command packet} is shown in table \ref{tab:trajectorySetRequestCommandPacket}.
+\begin{table}[H]
+\begin{center}
+\begin{tabular}{c c c c}
+\toprule
+\rowcolor[HTML]{FFFC9E} 
+\textbf{Packet Fields} & \textbf{Byte} & \textbf{Value} & \textbf{Description}                     \\ \midrule
+Packet category        & 1             & 0x63           & Command category                         \\ [1ex] 
+Command type           & 2             & 0x04           & Telemetry set type                       \\ [1ex] 
+Size                   & 3             & 0x00-0xFE      & Number of trajectory waypoints in packet \\ [1ex] 
+Time                   & 4-7           & uint32         & Unsigned 4-byte integer in binary form    \\ [1ex] 
+Elevator position      & 8-11          & float          & 4-byte float in binary form               \\ [1ex] 
+Aileron positon        & 12-15         & float          & 4-byte float in binary form               \\ [1ex] 
+Altitude               & 16-19         & float          & 4-byte float in binary form               \\ [1ex] 
+Time                   & 20-23         & uint32         & Unsigned 4-byte integer in binary form    \\ [1ex] 
+Elevator position      & 24-27         & float          & 4-byte float in binary form               \\ [1ex] 
+Aileron positon        & 28-31         & float          & 4-byte float in binary form               \\ [1ex] 
+Altitude               & 32-35         & float          & 4-byte float in binary form               \\ [1ex] 
+...                    & ...           & ...            & ...      
+\\  [1ex]  \bottomrule                               
+\end{tabular}
+\end{center}
+\caption{Trajectory set request command packet}
+\label{tab:trajectorySetRequestCommandPacket}
+\end{table}
+
+
+\textit{Trajectory set status request command} is used to obtain \textit{trajectory set report packet} (section \ref{sec:TrajectorySetReport}).
+\textit{Trajectory set status request command  packet} consists of three bytes. The structure of the \textit{trajectory set status request command packet} is shown in table \ref{tab:trajectorySetStatusRequestCommandPacket}.
+\begin{table}[h]
+\begin{center}
+\begin{tabular}{c c c c}
+\toprule
+\rowcolor[HTML]{FFFC9E} 
+\textbf{Packet Fields} & \textbf{Byte} & \textbf{Value} & \textbf{Description}                     \\ \midrule
+Packet category        & 1             & 0x63           & Command category                         \\ [1ex]
+Command type           & 2             & 0x04           & Telemetry set type                       \\ [1ex]
+Get Status identifier  & 3             & 0xFF           &     \\ [1ex] \bottomrule
+\end{tabular}
+\end{center}
+\caption{Trajectory set status request command packet}
+\label{tab:trajectorySetStatusRequestCommandPacket}
+\end{table}
+
+\subsubsection{Position slave set}
+\label{sec:positionSlaveSetCommand}
+\textit{Position slave set request command} is used to set the slave MAV address for coordinate system distribution.  \textit{Position slave set request command packet} consists of ten bytes. The structure of the \textit{position slave set request command packet} is shown in table \ref{tab:positionSlaveSetRequestCommandPacket}.
+\begin{table}[H]
+\begin{center}
+\begin{tabular}{c c c c}
+\toprule
+\rowcolor[HTML]{FFFC9E} 
+\textbf{Packet Fields} & \textbf{Byte} & \textbf{Value}     & \textbf{Description}                     \\ \midrule
+Packet category        & 1             & 0x63               & Command category                         \\ [1ex]
+Command type           & 2             & 0x05               & Position slave set type                  \\ [1ex]
+Slave address          & 3-10          & 0xXXXXXXXXXXXXXXXX &  8-byte slave MAV address  \\ [1ex] \bottomrule
+\end{tabular}
+\end{center}
+\caption{Position slave set request command packet}
+\label{tab:positionSlaveSetRequestCommandPacket}
+\end{table}
+
+
+\textit{Position slave set status request command} is used to obtain \textit{position slave set report packet} (section \ref{sec:PositionSlaveSetReport}). \textit{Position slave set status request command packet} consists of three bytes. The structure of the \textit{position slave set status request command} is shown in table \ref{tab:positionSlaveSetStatusRequestCommandPacket}.
+\begin{table}[H]
+\begin{center}
+\begin{tabular}{c c c c}
+\toprule
+\rowcolor[HTML]{FFFC9E} 
+\textbf{Packet Fields} & \textbf{Byte} & \textbf{Value}     & \textbf{Description}                     \\ \midrule
+Packet category        & 1             & 0x63               & Command category                         \\ [1ex]
+Command type           & 2             & 0x05               & Position slave set type                  \\ [1ex]
+Get Status identifier  & 3             & 0xFF           &     \\ [1ex] \bottomrule
+\end{tabular}
+\end{center}
+\caption{Position slave set status request command packet}
+\label{tab:positionSlaveSetStatusRequestCommandPacket}
+\end{table}
+
+\subsubsection{Time}
+\label{sec:TimeCommand}
+\textit{Time request command} is used to set time on the MAV. Time is set in seconds in POSIX format (Unix time). 
+\textit{Time request command packet} consists of six bytes. The structure of the \textit{time request command packet} is shown in table \ref{tab:timeRequestCommandPacket}.
+\begin{table}[H]
+\begin{center}
+\begin{tabular}{c c c c}
+\toprule
+\rowcolor[HTML]{FFFC9E} 
+\textbf{Packet Fields} & \textbf{Byte} & \textbf{Value} & \textbf{Description}           \\ \midrule
+Packet category        & 1             & 0x63           & Command category               \\ [1ex]
+Command type           & 2             & 0x06           & Time type                      \\ [1ex]
+Current time           & 3-6           & uint32         & Unsigned 4-byte integer in binary form   \\ [1ex] \bottomrule
+\end{tabular}
+\end{center}
+\caption{Time request command packet}
+\label{tab:timeRequestCommandPacket}
+\end{table}
+
+\textit{Time status request command} is used to obtain \textit{time report packet} (section \ref{sec:timeReport}).
+\textit{Time status request command packet} consists of three bytes. The structure of the \textit{time status request command packet} is described in table \ref{tab:timeStatusRequestCommandPacket}.
+\begin{table}[H]
+\begin{center}
+\begin{tabular}{c c c c}
+\toprule
+\rowcolor[HTML]{FFFC9E} 
+\textbf{Packet Fields} & \textbf{Byte} & \textbf{Value} & \textbf{Description}           \\ \midrule
+Packet category        & 1             & 0x63           & Command category               \\ [1ex]
+Command type           & 2             & 0x06           & Time type                      \\ [1ex]
+Get Status identifier  & 3             & 0xFF           &     \\ [1ex] \bottomrule
+\end{tabular}
+\end{center}
+\caption{Time status request command packet}
+\label{tab:timeStatusRequestCommandPacket}
+\end{table}
+
+\subsubsection{Position set}
+\label{sec:positionSetCommand}
+\textit{Position set request command} is used to set position of the MAV in the new coordinate system. \textit{Position set request command packet} consists of ten bytes. The structure of the \textit{position set request command packet} is shown in table \ref{tab:positionSetRequestCommandPacket}.
+\begin{table}[H]
+\begin{center}
+\begin{tabular}{c c c c}
+\toprule
+\rowcolor[HTML]{FFFC9E} 
+\textbf{Packet Fields} & \textbf{Byte} & \textbf{Value} & \textbf{Description}        \\ \midrule
+Packet category        & 1             & 0x63           & Command category            \\[1ex]
+Command type           & 2             & 0x07           & Position set type           \\[1ex]
+New elevator position  & 3-6           & float          & 4-byte float in binary form \\[1ex]
+New aileron positon    & 7-10          & float          & 4-byte float in binary form \\ [1ex] \bottomrule
+\end{tabular}
+\end{center}
+\caption{Position set request command packet}
+\label{tab:positionSetRequestCommandPacket}
+\end{table}
+Position set type does not have status request command, because position of the MAV is one of the telemetry data.
+
+
+\subsection{Telemetry packets}
+\label{sec:telemeteryPackets}
+\textit{Telemetry packets} are used to transfer telemetry from MAV to the ground station. These packets are sent by MAV periodically and consume most of the XBee transfer capacity. \textit{Telemetry packets} start with telemetry category identifier ( 0x74 - t ). \textit{Telemetry packet} consists of $1+5k$ bytes, where $k$ is number of transferred telemetry data. The structure of the \textit{telemetry packet} is shown in table \ref{tab:telemetryPacket}. Telemetry identifier and telemetry data are repeated in packet. Telemetry identifiers are shown in table \ref{tab:telemetryIdentifiers}.
+\begin{table}[H]
+\begin{center}
+\begin{tabular}{c c c c}
+\toprule
+\rowcolor[HTML]{FFFC9E} 
+\textbf{Packet Fields} & \textbf{Byte} & \textbf{Value} & \textbf{Description}         \\ \midrule
+Packet category        & 1             & 0x74           & Telemetry category           \\ [1ex]
+Telemetry identifier   & 2             & 0x00-0xFF      & Identifier of telemetry data \\ [1ex]
+Telemetry data         & 3-6           & float          & 4-byte float in binary form  \\ [1ex]
+Telemetry identifier   & 7             & 0x00-0xFF      & Identifier of telemetry data \\ [1ex]
+Telemetry data         & 8-11          & float          & 4-byte float in binary form  \\ [1ex]
+...                    & ...           & ...            & ...          				   \\ [1ex] \bottomrule              
+\end{tabular}
+\end{center}
+\caption{Telemetry packet}
+\label{tab:telemetryPacket}
+\end{table}
+
+
+
+\subsection{Report packets}
+\label{sec:reportPackets}
+\textit{Report packets} are used to transfer MAV states.  \textit{Report packets} start with report category identifier ( 0x72 - r ). Report type identifier is the second byte of the packet. The report type identifiers correspond with command type identifiers shown in table \ref{tab:commandTypes}. The report types are shown in table \ref{tab:reportTypes}.
+
+\begin{table}[H]
+\begin{center}
+\begin{tabular}{c c c}
+\toprule
+\rowcolor[HTML]{FFFC9E} 
+\textbf{Report type} & \textbf{Identifier} & \textbf{Description}      		   \\ \midrule
+Telemetry to Coordinator     & 0x01             & Monitored telemetry types    \\ [1ex]
+Landing           			 & 0x02             & Current landing state        \\ [1ex]
+Controllers                  & 0x03             & Currently active controller  \\ [1ex]
+Trajectory set    		     & 0x04             & Trajectory way-points        \\ [1ex]
+Position slave set	         & 0x05             & Current slave address    	   \\ [1ex]
+Time     				     & 0x06             & Current MAV time      	   \\ [1ex]
+\bottomrule
+\end{tabular}
+\end{center}
+\caption{Report types}
+\label{tab:reportTypes}
+\end{table}
+
+
+
+\subsubsection{Telemetry to Coordinator}
+\label{sec:telemetryToCoordinatorReport}
+\textit{Telemetry to coordinator report} is used to check whether chosen telemetry type is send to the ground station.
+\textit{Telemetry to coordinator report packet} consists of four bytes. The structure of the \textit{telemetry to coordinator report packet} is shown in table \ref{tab:telemetryToCoordinatorReport}. Each telemetry type has specific identifier.  Identifiers are shown in table \ref{tab:telemetryIdentifiers}.
+\begin{table}[H]
+\begin{center}
+\begin{tabular}{c c c c}
+\toprule
+\rowcolor[HTML]{FFFC9E} 
+\textbf{Packet Fields} & \textbf{Byte} & \textbf{Value} & \textbf{Description}          \\ \midrule
+Packet category        & 1             & 0x72           & Report category               \\ [1ex]
+Report type            & 2             & 0x01           & Telemetry to coordinator type \\ [1ex]
+On/Off                 & 3             & 0x00/0x01      & If telemetry data are send     \\ [1ex]
+Telemetry type         & 4             & 0x00-0xFF      & Identifier of telemetry data  \\ [1ex]
+\bottomrule
+\end{tabular}
+\end{center}
+\caption{Telemetry to coordinator report packet}
+\label{tab:telemetryToCoordinatorReport}
+\end{table}
+
+\subsubsection{Landing}
+\label{sec:landingReport}
+\textit{Landing report} is used to monitor current landing state. Each landing state has specific identifier. Landing state identifiers are shown in table \ref{tab:landingStatesIdentifiers}.
+\textit{Landing report packet} consists of three bytes. The structure of the \textit{landing report packet} is shown in table \ref{tab:landingReport}.
+\begin{table}[H]
+\begin{center}
+\begin{tabular}{c c c c}
+\toprule
+\rowcolor[HTML]{FFFC9E} 
+\textbf{Packet Fields}   & \textbf{Byte} & \textbf{Value} & \textbf{Description}  \\ \midrule
+Packet category          & 1             & 0x72           & Report category       \\
+Report type              & 2             & 0x02           & Landing type          \\
+Landing state identifier & 3             & 0x00-0x04      & Current landing state
+\end{tabular}
+\end{center}
+\caption{Landing report packet}
+\label{tab:landingReport}
+\end{table}
+
+
+
+\subsubsection{Controllers}
+\label{sec:ControllersReport}
+\textit{Controllers report} is used to check which controller is currently active. \textit{Controllers report packet} consists of three bytes. The structure of the \textit{controllers report packet} is shown in table \ref{tab:controllersReport}. Each controller has specific identifier. Controller identifiers are shown in table \ref{tab:controllerIdentifiers}.
+\begin{table}[H]
+\begin{center}
+\begin{tabular}{c c c c}
+\toprule
+\rowcolor[HTML]{FFFC9E} 
+\textbf{Packet Fields} & \textbf{Byte} & \textbf{Value} & \textbf{Description}        \\ \midrule
+Packet category        & 1             & 0x72           & Report category             \\
+Report type            & 2             & 0x03           & Controllers type            \\
+Controller identifier  & 3             & 0x00-0xFE      & Currently active controller
+\end{tabular}
+\end{center}
+\caption{Controllers report packet}
+\label{tab:controllersReport}
+\end{table}
+
+
+\subsubsection{Trajectory set}
+\label{sec:TrajectorySetReport}
+\textit{Trajectory set report} is used to monitor current trajectory waypoints. 
+\textit{Trajectory set report packet} consists of $3+16k$ bytes, where $k$ is number of trajectory waypoints. The structure of the \textit{trajectory set report packet} is shown in table \ref{tab:trajectorySetReport}.
+\begin{table}[H]
+\begin{center}
+\begin{tabular}{c c c c}
+\toprule
+\rowcolor[HTML]{FFFC9E} 
+\textbf{Packet Fields} & \textbf{Byte} & \textbf{Value} & \textbf{Description}                     \\ \midrule
+Packet category        & 1             & 0x72           & Report category                          \\ [1ex] 
+Command type           & 2             & 0x04           & Telemetry set type                       \\ [1ex] 
+Size                   & 3             & 0x00-0xFE      & Number of trajectory waypoints in packet \\ [1ex] 
+Time                   & 4-7           & uint32         & Unsigned 4-byte integer in binary form    \\ [1ex] 
+Elevator position      & 8-11          & float          & 4-byte float in binary form               \\ [1ex] 
+Aileron positon        & 12-15         & float          & 4-byte float in binary form               \\ [1ex] 
+Altitude               & 16-19         & float          & 4-byte float in binary form               \\ [1ex] 
+Time                   & 20-23         & uint32         & Unsigned 4-byte integer in binary form    \\ [1ex] 
+Elevator position      & 24-27         & float          & 4-byte float in binary form               \\ [1ex] 
+Aileron positon        & 28-31         & float          & 4-byte float in binary form               \\ [1ex] 
+Altitude               & 32-35         & float          & 4-byte float in binary form               \\ [1ex] 
+...                    & ...           & ...            & ...      
+\\  [1ex]  \bottomrule                               
+\end{tabular}
+\end{center}
+\caption{Trajectory set report packet}
+\label{tab:trajectorySetReport}
+\end{table}
+
+\subsubsection{Position slave set}
+\label{sec:PositionSlaveSetReport}
+\textit{Position slave set report} is used to monitor current address of the slave MAV. 
+\textit{Position slave set report packet} consists of ten bytes. The structure of the \textit{position slave set report packet} is shown in table \ref{tab:positionSlaveSetReport}.
+\begin{table}[H]
+\begin{center}
+\begin{tabular}{c c c c}
+\toprule
+\rowcolor[HTML]{FFFC9E} 
+\textbf{Packet Fields} & \textbf{Byte} & \textbf{Value}     & \textbf{Description}                     \\ \midrule
+Packet category        & 1             & 0x72               & Report category                          \\ [1ex]
+Command type           & 2             & 0x05               & Position slave set type                  \\ [1ex]
+Current slave address  & 3-10          & 0xXXXXXXXXXXXXXXXX &  8-byte slave MAV address  \\ [1ex] \bottomrule
+\end{tabular}
+\end{center}
+\caption{Position slave set report packet}
+\label{tab:positionSlaveSetReport}
+\end{table}
+
+
+\subsubsection{Time}
+\label{sec:timeReport}
+\textit{Time report} is used to monitor time on the MAV. 
+\textit{Time report packet} consists of six bytes. The structure of the \textit{time report packet} is shown in table \ref{tab:timeReport}.
+\begin{table}[H]
+\begin{center}
+\begin{tabular}{c c c c}
+\toprule
+\rowcolor[HTML]{FFFC9E} 
+\textbf{Packet Fields} & \textbf{Byte} & \textbf{Value} & \textbf{Description}           \\ \midrule
+Packet category        & 1             & 0x72           & Report category               \\ [1ex]
+Command type           & 2             & 0x06           & Time type                      \\ [1ex]
+MAV time               & 3-6           & uint32         & Unsigned 4-byte integer in binary form   \\ [1ex] \bottomrule
+\end{tabular}
+\end{center}
+\caption{Time report packet}
+\label{tab:timeReport}
+\end{table}
+
+
+\subsection{Message Packets}
+\label{sec:messagesPackets}
+\textit{Message packets} are used to send string messages. \textit{Message packets} start message with the message category identifier  (0x6D - m). Size of the message packet is $1+k$, where $k$ is length of the message. Chars in message are coded in 8-bit ascii. Example of a \textit{message packet} is shown in table \ref{tab:messagePacket}.
+
+\begin{table}[H]
+\begin{center}
+\begin{tabular}{c c c c}
+\toprule
+\rowcolor[HTML]{FFFC9E} 
+\textbf{Packet Fields} & \textbf{Byte} & \textbf{Value} & \textbf{Description}    \\ \midrule
+Packet category        & 1             & 0x6D           & Message category        \\ [1ex]
+Char 1                 & 2             & 0x48          & H                        \\ [1ex]
+Char 2                 & 3             & 0x65          & e                        \\ [1ex]
+Char 3                 & 4             & 0x6C          & l                        \\ [1ex]
+Char 4                 & 5             & 0x6C          & l                        \\ [1ex]
+Char 5                 & 6             & 0x6F          & o                        \\ [1ex]
+Char 6                 & 7             & 0x20          & space                    \\ [1ex]
+Char 7                 & 8             & 0x77          & w                        \\ [1ex]
+Char 8                 & 9             & 0x6F          & o                        \\ [1ex]
+Char 9                 & 2             & 0x72          & r                        \\ [1ex]
+Char 10                & 3             & 0x6C          & l                        \\ [1ex]
+Char 11                & 2             & 0x64          & d                        \\ [1ex]
+
+ \bottomrule
+\end{tabular}
+\end{center}
+\caption{Example of a message packet}
+\label{tab:messagePacket}
+\end{table}
+
+
+
+

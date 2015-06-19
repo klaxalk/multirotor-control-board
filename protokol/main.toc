@@ -1,0 +1,20 @@
+\select@language {english}
+\contentsline {section}{\numberline {1}MAV communication protocol}{1}{section.2}
+\contentsline {subsection}{\numberline {1.1}Command Packets}{1}{subsection.4}
+\contentsline {subsubsection}{\numberline {1.1.1}Telemetry to Coordinator}{2}{subsubsection.6}
+\contentsline {subsubsection}{\numberline {1.1.2}Landing}{3}{subsubsection.9}
+\contentsline {subsubsection}{\numberline {1.1.3}Controllers}{4}{subsubsection.12}
+\contentsline {subsubsection}{\numberline {1.1.4}Trajectory set}{4}{subsubsection.15}
+\contentsline {subsubsection}{\numberline {1.1.5}Position slave set}{5}{subsubsection.18}
+\contentsline {subsubsection}{\numberline {1.1.6}Time}{6}{subsubsection.21}
+\contentsline {subsubsection}{\numberline {1.1.7}Position set}{7}{subsubsection.24}
+\contentsline {subsection}{\numberline {1.2}Telemetry packets}{7}{subsection.26}
+\contentsline {subsection}{\numberline {1.3}Report packets}{8}{subsection.28}
+\contentsline {subsubsection}{\numberline {1.3.1}Telemetry to Coordinator}{9}{subsubsection.30}
+\contentsline {subsubsection}{\numberline {1.3.2}Landing}{9}{subsubsection.32}
+\contentsline {subsubsection}{\numberline {1.3.3}Controllers}{9}{subsubsection.34}
+\contentsline {subsubsection}{\numberline {1.3.4}Trajectory set}{10}{subsubsection.36}
+\contentsline {subsubsection}{\numberline {1.3.5}Position slave set}{10}{subsubsection.38}
+\contentsline {subsubsection}{\numberline {1.3.6}Time}{11}{subsubsection.40}
+\contentsline {subsection}{\numberline {1.4}Message Packets}{11}{subsection.42}
+\contentsline {section}{\numberline {2}Protocol Identifiers}{13}{section.44}

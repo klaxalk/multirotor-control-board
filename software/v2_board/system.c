@@ -256,26 +256,19 @@ ISR(TCD0_OVF_vect) {
 	// starts the output PPM pulse
 	ppm_out_on();
 
-	if (currentChannelOut < NUMBER_OF_CHANNELS_OUT) {
-		
-		TC_SetPeriod(&TCD0, outputChannels[currentChannelOut]);
-		
-		currentChannelOut++;
-
+	if (currentChannelOut < NUMBER_OF_CHANNELS_OUT) {		
+			TC_SetPeriod(&TCD0, outputChannels[currentChannelOut]);		
+			currentChannelOut++;
 		} else {
-
-		int i = 0;
-		int outputSum = 0;
-		
-		for (i = 0; i < NUMBER_OF_CHANNELS_OUT; i++) {
-			outputSum += outputChannels[i];
-		}
-		
-		currentChannelOut = 0;
-
-		// if the next space is the sync space, calculates it's length
-		uint32_t finalOutLen = PPM_FRAME_LENGTH - outputSum;
-		TC_SetPeriod(&TCD0, (uint16_t) finalOutLen);
+			int i = 0;
+			int outputSum = 0;
+			for (i = 0; i < NUMBER_OF_CHANNELS_OUT; i++) {
+				outputSum += outputChannels[i];
+			}
+			currentChannelOut = 0;
+			// if the next space is the sync space, calculates it's length
+			uint32_t finalOutLen = PPM_FRAME_LENGTH - outputSum;
+			TC_SetPeriod(&TCD0, (uint16_t) finalOutLen);
 	}
 }
 

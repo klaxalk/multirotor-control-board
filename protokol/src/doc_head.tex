@@ -1,0 +1,73 @@
+\pdfoutput=1
+\documentclass[a4paper,12pt,titlepage, twoside]{article}
+
+
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amssymb,amsmath}
+\usepackage{algorithm,algpseudocode}
+\usepackage[title,titletoc]{appendix}
+\usepackage{latexsym}
+\usepackage{a4wide}
+\usepackage{color} 
+\usepackage{indentfirst}
+\usepackage{graphicx}       %%% graphics for dvips
+\usepackage{fancyhdr}
+\usepackage{longtable}
+\usepackage{pifont}
+\usepackage{makeidx}
+\usepackage{lastpage}
+\usepackage{multirow}
+\usepackage{dcolumn} 
+\usepackage{epstopdf}
+\usepackage{url}
+\usepackage{listings}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{relsize}
+\usepackage{pdfpages}
+\usepackage{rotating}
+\usepackage{natbib}
+\usepackage{cite}
+\usepackage{booktabs}
+\usepackage[table,xcdraw]{xcolor}
+
+\newcommand{\Author}{Jiří Fiedler}
+\newcommand{\Title}{MAV communication protocol}
+\newcommand{\Acronym}{Acronym}
+\newcommand{\WorkPackage}{WorkPackage}
+\newcommand{\DocName}{MAV communication protocol}
+\newcommand{\Subject}{\WorkPackage - \DocName}
+\newcommand{\Keywords}{mobile robotics}
+\newcommand{\Date}{11/05/2015}
+\newcommand{\DOCVersion}{1.0}
+
+% European layout (no extra space after `.')
+\frenchspacing
+
+% nastavení výstupu
+\def\nothtml{}  					%%% \nothtml is defined if not processed with latex2html
+\usepackage[                		%%% hyper-references for ps2pdf
+bookmarks=true,%                   	%%% generate bookmarks ...
+breaklinks=true,%                  	%%% breaks lines, but links are very small
+hypertexnames=false,%              	%%% needed for correct links to figures
+colorlinks=false,%
+urlcolor=blue
+]{hyperref}           				%%% blue instead of cyan URLS
+\hypersetup{
+pdfcreator  = {LaTeX with hyperref package},
+pdfproducer = {dvips + ps2pdf},
+colorlinks=false,
+pdfborder={0 0 0},
+}
+
+\hypersetup{  
+pdfauthor={\Author},
+pdftitle={\Title - \Acronym},
+pdfsubject={\Subject},
+pdfkeywords={\Keywords}}
+
+% úpravy vzhledu stránek
+\setlength{\headheight}{18pt}			%%% drobně odsadí hlavičku
+\renewcommand{\footrulewidth}{0.4pt}  	%%% horizontal line in footer
+\fancyhead[R]{} 						%%% umaže pravou stranu hlavičky

@@ -1,0 +1,129 @@
+\section{Protocol Identifiers}
+
+\begin{table}[h]
+\begin{center}
+ \begin{tabular}{c c } 
+\toprule
+\rowcolor[HTML]{FFFC9E} 
+\textbf{ Packet category} & \textbf{Identifier} 
+\\ \midrule
+ Command & 0x63 (c)\\  [1ex] 
+
+ Telemetry & 0x74 (t)\\ [1ex] 
+
+ Report & 0x72 (r)   \\ [1ex] 
+
+ Message & 0x6D (m)\\ [1ex] 
+
+ Warning & 0x77 (w) \\  [1ex]  
+ \bottomrule  
+\end{tabular}
+\end{center}
+\caption{Packet category identifiers}
+\label{tab:packetCategoryIdentifiers}
+\end{table}
+
+\begin{table}[h]
+\begin{center}
+ \begin{tabular}{c c } 
+\toprule
+\rowcolor[HTML]{FFFC9E} 
+\textbf{ Command type } & \textbf{Identifier} 
+\\ \midrule
+ Telemetry to coordinator & 0x01 \\ [1ex]
+ Landing & 0x02\\[1ex]
+ Controllers & 0x03  \\[1ex]
+ Trajectory set & 0x04  \\[1ex]
+ Position slave set & 0x05  \\ [1ex]
+ Time & 0x06\\[1ex]
+ Position set & 0x07  \\ [1ex]
+ \bottomrule 
+\end{tabular}
+\end{center}
+\caption{Command type identifiers}
+\label{tab:commandTypesIdentifiers}
+\end{table}
+
+\begin{table}[h]
+\begin{center}
+ \begin{tabular}{c c} 
+\toprule
+\rowcolor[HTML]{FFFC9E} 
+ \textbf{Landing state} & \textbf{Identifier}
+\\ \midrule
+ On ground  &0x00 \\  [1ex] 
+  Landing  &0x01 \\  [1ex] 
+  Stabilization  &0x02 \\  [1ex] 
+  Take off  &0x03 \\  [1ex] 
+  Flight  &0x04 \\  [1ex] 
+ \bottomrule
+\end{tabular}
+\end{center}
+\caption{Landing state indetifiers}
+\label{tab:landingStatesIdentifiers}
+\end{table}
+
+\begin{table}[h]
+\begin{center}
+ \begin{tabular}{c c} 
+\toprule
+\rowcolor[HTML]{FFFC9E} 
+ \textbf{Controller} & \textbf{Identifier}
+\\ \midrule
+ Manual control &0x01 \\  [1ex]
+  Altitude controller  &0x02 \\  [1ex]
+  MPC controller &0x03 \\  [1ex]
+ \bottomrule
+\end{tabular}
+\end{center}
+\caption{Controllers identifiers}
+\label{tab:controllerIdentifiers}
+\end{table}
+
+
+\begin{table}[h]
+\begin{center}
+ \begin{tabular}{c c} 
+\toprule
+\rowcolor[HTML]{FFFC9E} 
+ \textbf{Telemetry} & \textbf{Identifier}
+\\ \midrule
+ Estimated altitude &  0x00\\  [0.5ex] 
+ Altitude & 0x01\\ [0.5ex] 
+ Elevator speed & 0x02\\ [0.5ex] 
+ Aileron speed & 0x03 \\  [0.5ex]  
+ Estimated elevator speed & 0x04 \\ [0.5ex]  
+ Estimated aileron speed & 0x05 \\  [0.5ex] 
+ Elevator position & 0x06 \\  [0.5ex]  
+ Aileron position & 0x07 \\  [0.5ex] 
+ Altitude controller output & 0x08 \\  [0.5ex] 
+ Altitude speed & 0x09  \\ [0.5ex] 
+ Aileron controller output & 0x0A\\ [0.5ex]  
+ Elevator controller output & 0x0B \\ [0.5ex]  
+ Altitude setpoint & 0x0C \\  [0.5ex] 
+ Elevator position setpoint & 0x0D \\  [0.5ex]  
+ Aileron position setpoint & 0x0E\\ [0.5ex] 
+ Elevator acceleration & 0x0F \\ [0.5ex] 
+ Aileron acceleration & 0x10\\  [0.5ex] 
+ Valid Blob & 0x11\\  [0.5ex] 
+ Output throttle & 0x12\\  [0.5ex]  
+ Output elevator & 0x13 \\  [0.5ex]  
+ Output aileron & 0x14\\  [0.5ex] 
+ Output rudder & 0x15\\  [0.5ex]  
+ Blob elevator & 0x16 \\  [0.5ex]  
+ Blob aileron & 0x17 \\  [0.5ex]  
+ Blob altitude & 0x18\\  [0.5ex]  
+ Pitch angle & 0x19\\  [0.5ex] 
+ Roll angle & 0x1A\\  [0.5ex] 
+ Elevator shift & 0x1B\\   [0.5ex]  
+ Aileron shift & 0x1C\\  [0.5ex] 
+ Elevator acceleration input & 0x1D\\ [0.5ex] 
+ Elevator acceleration error & 0x1E \\  [0.5ex]  
+ Aileron acceleration input & 0x1F\\    [0.5ex]  
+ Aileron acceleration error & 0x20\\  [0.5ex] 
+  \bottomrule
+\end{tabular}
+\end{center}
+\caption{Telemetry identifiers}
+\label{tab:telemetryIdentifiers}
+\end{table}

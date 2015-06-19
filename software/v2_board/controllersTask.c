@@ -21,15 +21,9 @@ void controllersTask(void *p) {
 			controllerThrottleOutput=0;
 		}else{		
 			//FLIGHT
-			if(landingState==LANDING.FLIGHT){	
-				//VELOCITY	
-				if(controllerActive==CONTROLLERS.VELOCITY){
-					velocityController();
-					altitudeController(setpoints.altitude);	
-				}else
+			if(landingState==LANDING.FLIGHT){				
 				//POSITION
-				if(controllerActive==CONTROLLERS.POSITION){
-					positionController(setpoints.elevator-positionShift.elevator,setpoints.aileron-positionShift.aileron);	
+				if(controllerActive==CONTROLLERS.ALTITUDE){
 					altitudeController(setpoints.altitude);	
 				}else
 				//PREDICTIVE

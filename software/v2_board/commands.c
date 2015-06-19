@@ -239,10 +239,8 @@ void kopterControllers(unsigned char *address64,unsigned char *address16,unsigne
 	portENTER_CRITICAL();
 	if(		 option==CONTROLLERS.OFF){
 		controllerSet(CONTROLLERS.OFF);	
-	}else if(option==CONTROLLERS.POSITION){
-		controllerSet(CONTROLLERS.POSITION);
-	}else if(option==CONTROLLERS.VELOCITY){
-		controllerSet(CONTROLLERS.VELOCITY);
+	}else if(option==CONTROLLERS.ALTITUDE){
+		controllerSet(CONTROLLERS.ALTITUDE);
 	}else if(option==CONTROLLERS.MPC){
 		controllerSet(CONTROLLERS.MPC);	
 	}
@@ -261,11 +259,9 @@ void kopterControllersReport(unsigned char *address64,unsigned char *address16,u
 	makeTRPacket(address64,address16,0x00,frameID,dataOUT,3);
 }
 void kopterControllersReportReceived(unsigned char *address64,unsigned char *address16,unsigned char status){
-	if(		 status==CONTROLLERS.OFF){
-		
-	}else if(status==CONTROLLERS.POSITION){
+	if(		 status==CONTROLLERS.OFF){		
 	
-	}else if(status==CONTROLLERS.VELOCITY){
+	}else if(status==CONTROLLERS.ALTITUDE){
 
 	}else if(status==CONTROLLERS.MPC){
 		

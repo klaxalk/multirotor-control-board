@@ -59,13 +59,9 @@ void controllerSet(unsigned char controllerDesired){
 		if(controllerDesired==CONTROLLERS.OFF){
 			controllerActive=CONTROLLERS.OFF;			
 		}else
-		//VELOCITY
-		if(controllerDesired==CONTROLLERS.VELOCITY){
-			controllerActive=CONTROLLERS.VELOCITY;					
-		}else
-		//POSITION
-		if(controllerDesired==CONTROLLERS.POSITION){		
-			controllerActive=CONTROLLERS.POSITION;			
+		//ALTITUDE
+		if(controllerDesired==CONTROLLERS.ALTITUDE){		
+			controllerActive=CONTROLLERS.ALTITUDE;			
 		}else
 		//MPC
 		if(controllerDesired==CONTROLLERS.MPC){	
@@ -116,64 +112,6 @@ void setpointsCalculate(){
 }
 
 
-void velocityController() {
-	float error;
-	static const float KI=10, KV=25, KA=35;
-	static uint32_t time = 0;
-	static float elevatorIntegration = 0;
-	static float aileronIntegration = 0;
-	
-	//controller turned on
-	if((secondsTimer-time)>1){
-		elevatorIntegration=0;
-		aileronIntegration=0;
-	}
-	time=secondsTimer;	
-			
-	//elevator controller		
-	error = -kalmanStates.elevator.velocity;
-	elevatorIntegration = saturationFloat(elevatorIntegration+(KI * error * DT),CONTROLLER_ELEVATOR_SATURATION/3.0);
-	controllerElevatorOutput=saturationInt16((int16_t)((KV * error) + elevatorIntegration - (KA * kalmanStates.elevator.acceleration)),CONTROLLER_ELEVATOR_SATURATION);
-	controllerElevatorOutput*=3;
-		
-	//aileron controller
-	error = -kalmanStates.aileron.velocity;
-	aileronIntegration = saturationFloat(aileronIntegration+(KI * error * DT),CONTROLLER_AILERON_SATURATION/3.0);
-	controllerAileronOutput=saturationInt16((int16_t)((KV * error) + aileronIntegration - (KA * kalmanStates.aileron.acceleration)),CONTROLLER_AILERON_SATURATION);
-	controllerAileronOutput*=3;
-}
-
-void positionController(float elevatorSetpoint, float aileronSetpoint) {
-	static const float KI=5, KP=85, KV=180, KA=9;
-    float speedDes;
-	float error;
-	
-	static uint32_t time = 0;
-	static float elevatorIntegration = 0;
-	static float aileronIntegration = 0;
-	
-	//controller turned on	
-	if((secondsTimer-time)>1){
-		elevatorIntegration=0;
-		aileronIntegration=0;	
-	}
-	time=secondsTimer;
-
-	//elevator controller
-	error = elevatorSetpoint - kalmanStates.elevator.position;
-	speedDes = saturationFloat((KP/KV) * error,SPEED_MAX);
-	elevatorIntegration = saturationFloat(elevatorIntegration+(KI * error * DT),CONTROLLER_ELEVATOR_SATURATION/3.0);	
-	controllerElevatorOutput=saturationInt16((int16_t)(KV * (speedDes - kalmanStates.elevator.velocity) + elevatorIntegration - (KA * kalmanStates.elevator.acceleration)),CONTROLLER_ELEVATOR_SATURATION);
-	controllerElevatorOutput*=3;
-
-	//aileron controller
-	error = aileronSetpoint - kalmanStates.aileron.position;
-	speedDes = saturationFloat((KP/KV) * error,SPEED_MAX);
-	aileronIntegration = saturationFloat(aileronIntegration+(KI * error * DT),CONTROLLER_AILERON_SATURATION/3.0);	
-	controllerAileronOutput=saturationInt16((int16_t)(KV * (speedDes - kalmanStates.aileron.velocity) + aileronIntegration - (KA * kalmanStates.aileron.acceleration)),CONTROLLER_AILERON_SATURATION);
-	controllerAileronOutput*=3;
-}
-
 void altitudeEstimator() {
 static uint8_t estimator_cycle = 0;
 static float   estimatedThrottlePos_prev = 0;	
@@ -220,6 +158,7 @@ void altitudeController(float setpoint) {
 }
 
 void landingController(){
+	/*
 	static int8_t landingCounter=0;
 		if(landingState==LANDING.ON_GROUND){
 			controllerThrottleOutput = -CONTROLLER_THROTTLE_SATURATION;
@@ -260,6 +199,6 @@ void landingController(){
 			if(controllerThrottleOutput <= -CONTROLLER_THROTTLE_SATURATION){
 				landingState = LANDING.ON_GROUND;
 			}			
-		}
+		}*/
 }
 

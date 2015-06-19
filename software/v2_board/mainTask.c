@@ -40,22 +40,21 @@ void mainTask(void *p) {
 					
 		// controllers on/off
 		if (RCchannel[AUX3] < (PPM_IN_MIDDLE_LENGTH - 400)) {
-			if (previous_AUX3 != 1) {			
+			if (previous_AUX3 != 0) {			
 				controllerSet(CONTROLLERS.OFF);						
-				previous_AUX3 = 1;
+				previous_AUX3 = 0;
 			}
 		} else if (RCchannel[AUX3] > (PPM_IN_MIDDLE_LENGTH + 400)) {
 			if (previous_AUX3 != 2) {			
-				TRAJ_POINT(0,0,2,0,1);
-				trajMaxIndex=0;				
+				controllerSet(CONTROLLERS.MPC);
+				TRAJ_POINT(0,0,0,0,1);
+				trajMaxIndex=0;		
 				previous_AUX3 = 2;
 			}			
 		} else {
-			if (previous_AUX3 != 0) {			
-				controllerSet(CONTROLLERS.MPC);	
-				TRAJ_POINT(0,0,0,0,1);
-				trajMaxIndex=0;	
-				previous_AUX3 = 0;
+			if (previous_AUX3 != 1) {			
+				controllerSet(CONTROLLERS.ALTITUDE);
+				previous_AUX3 = 1;
 			}
 		}
 
@@ -72,12 +71,10 @@ void mainTask(void *p) {
 
 		if(RCchannel[AUX5]<PPM_IN_MIDDLE_LENGTH){
 			if(previous_AUX5!=0){
-				//kopterPositionSlaveSet(ADDRESS.COORDINATOR,ADDRESS.UNKNOWN16,ADDRESS.COORDINATOR);					
 				previous_AUX5=0;
 			}
 		}else{
 			if(previous_AUX5!=1){
-				//kopterPositionSlaveSet(ADDRESS.COORDINATOR,ADDRESS.UNKNOWN16,ADDRESS.K3);			
 				previous_AUX5=1;
 			}
 		}

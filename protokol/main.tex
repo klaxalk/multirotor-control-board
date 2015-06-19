@@ -1,0 +1,36 @@
+ \input{src/doc_head}
+
+\begin{document}
+
+
+% Titulní stránka
+\input{src/title}
+\clearpage
+
+% Zapni fancy style pro Obsah a úvodní stránky...
+\pagestyle{fancy}
+\pagenumbering{roman}
+\cfoot{\thepage}
+
+\lhead{}	
+\fancyhead[LE,RO]{\emph{\leftmark}}
+
+% Obsah
+\tableofcontents
+\clearpage
+
+% Zapni fancy style na klasické stránky
+\pagestyle{fancy}
+\pagenumbering{arabic}
+\cfoot{}								
+\fancyfoot[LE,RO]{\thepage} 			
+\setlength{\parskip}{0.35cm}
+
+% MCP protocol
+\input{src/XBee_protocol}
+\clearpage
+
+\input{src/Identificators}
+\clearpage
+
+\end{document}
