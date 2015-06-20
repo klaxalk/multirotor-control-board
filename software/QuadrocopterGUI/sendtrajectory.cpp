@@ -1,7 +1,15 @@
 #include "sendtrajectory.h"
 #include "ui_sendtrajectory.h"
 #include "send.h"
+#include "commands.h"
+#include "time.h"
 
+unsigned char sizeTr;// 1=1 bod, 2=2 body
+int* timeTraj;
+float* elevatorPos;
+float* aileronPos;
+float* throttlePos;
+double now;
 
 sendTrajectory::sendTrajectory(QWidget *parent) :
     QDialog(parent),
@@ -100,22 +108,111 @@ void sendTrajectory::setTextOfLine(){
     ui->throttle8->setValidator( new QDoubleValidator(-100, 100, 2, this));
     ui->throttle9->setText("0");
     ui->throttle9->setValidator( new QDoubleValidator(-100, 100, 2, this));
-
 }
 void sendTrajectory::setKopter(unsigned char KOPTERS){
     kopterTr=KOPTERS;
 }
 
 void sendTrajectory::on_pushButton_clicked()
-{   trajectoryAddPoint(kopterTr,0,ui->time0->text().toFloat(),ui->elevator0->text().toFloat(),ui->aileron0->text().toFloat(),ui->throttle0->text().toFloat());
-    trajectoryAddPoint(kopterTr,1,ui->time1->text().toFloat(),ui->elevator1->text().toFloat(),ui->aileron1->text().toFloat(),ui->throttle1->text().toFloat());
-    trajectoryAddPoint(kopterTr,2,ui->time2->text().toFloat(),ui->elevator2->text().toFloat(),ui->aileron2->text().toFloat(),ui->throttle2->text().toFloat());
-    trajectoryAddPoint(kopterTr,3,ui->time3->text().toFloat(),ui->elevator3->text().toFloat(),ui->aileron3->text().toFloat(),ui->throttle3->text().toFloat());
-    trajectoryAddPoint(kopterTr,4,ui->time4->text().toFloat(),ui->elevator4->text().toFloat(),ui->aileron4->text().toFloat(),ui->throttle4->text().toFloat());
-    trajectoryAddPoint(kopterTr,5,ui->time5->text().toFloat(),ui->elevator5->text().toFloat(),ui->aileron5->text().toFloat(),ui->throttle5->text().toFloat());
-    trajectoryAddPoint(kopterTr,6,ui->time6->text().toFloat(),ui->elevator6->text().toFloat(),ui->aileron6->text().toFloat(),ui->throttle6->text().toFloat());
-    trajectoryAddPoint(kopterTr,7,ui->time7->text().toFloat(),ui->elevator7->text().toFloat(),ui->aileron7->text().toFloat(),ui->throttle7->text().toFloat());
-    trajectoryAddPoint(kopterTr,8,ui->time8->text().toFloat(),ui->elevator8->text().toFloat(),ui->aileron8->text().toFloat(),ui->throttle8->text().toFloat());
-    trajectoryAddPoint(kopterTr,9,ui->time9->text().toFloat(),ui->elevator9->text().toFloat(),ui->aileron9->text().toFloat(),ui->throttle9->text().toFloat());
+{
+     now = time (NULL);
+    int count=0;
+    if(ui->time0->text().toFloat()!=0)
+    {
+        *(timeTraj+count)=(int)(now+ui->time0->text().toFloat());
+        *(elevatorPos+count)=ui->elevator0->text().toFloat();
+        *(aileronPos+count)=ui->aileron0->text().toFloat();
+        *(throttlePos+count)=ui->throttle0->text().toFloat();
+        count++;
+    }
+    if(ui->time1->text().toFloat()!=0)
+    {
+        *(timeTraj+count)=(int)(now+ui->time1->text().toFloat());
+        *(elevatorPos+count)=ui->elevator1->text().toFloat();
+        *(aileronPos+count)=ui->aileron1->text().toFloat();
+        *(throttlePos+count)=ui->throttle1->text().toFloat();
+        count++;
+    }
+    if(ui->time2->text().toFloat()!=0)
+    {
+        *(timeTraj+count)=(int)(now+ui->time2->text().toFloat());
+        *(elevatorPos+count)=ui->elevator2->text().toFloat();
+        *(aileronPos+count)=ui->aileron2->text().toFloat();
+        *(throttlePos+count)=ui->throttle2->text().toFloat();
+        count++;
+    }
+    if(ui->time3->text().toFloat()!=0)
+    {
+        *(timeTraj+count)=(int)(now+ui->time3->text().toFloat());
+        *(elevatorPos+count)=ui->elevator3->text().toFloat();
+        *(aileronPos+count)=ui->aileron3->text().toFloat();
+        *(throttlePos+count)=ui->throttle3->text().toFloat();
+        count++;
+    }
+    if(ui->time4->text().toFloat()!=0)
+    {
+        *(timeTraj+count)=(int)(now+ui->time4->text().toFloat());
+        *(elevatorPos+count)=ui->elevator4->text().toFloat();
+        *(aileronPos+count)=ui->aileron4->text().toFloat();
+        *(throttlePos+count)=ui->throttle4->text().toFloat();
+        count++;
+    }
+    if(ui->time5->text().toFloat()!=0)
+    {
+        *(timeTraj+count)=(int)(now+ui->time5->text().toFloat());
+        *(elevatorPos+count)=ui->elevator5->text().toFloat();
+        *(aileronPos+count)=ui->aileron5->text().toFloat();
+        *(throttlePos+count)=ui->throttle5->text().toFloat();
+        count++;
+    }
+    if(ui->time6->text().toFloat()!=0)
+    {
+        *(timeTraj+count)=(int)(now+ui->time6->text().toFloat());
+        *(elevatorPos+count)=ui->elevator6->text().toFloat();
+        *(aileronPos+count)=ui->aileron6->text().toFloat();
+        *(throttlePos+count)=ui->throttle6->text().toFloat();
+        count++;
+    }
+    if(ui->time7->text().toFloat()!=0)
+    {
+        *(timeTraj+count)=(int)(now+ui->time7->text().toFloat());
+        *(elevatorPos+count)=ui->elevator7->text().toFloat();
+        *(aileronPos+count)=ui->aileron7->text().toFloat();
+        *(throttlePos+count)=ui->throttle7->text().toFloat();
+        count++;
+    }
+    if(ui->time8->text().toFloat()!=0)
+    {
+        *(timeTraj+count)=(int)(now+ui->time8->text().toFloat());
+        *(elevatorPos+count)=ui->elevator8->text().toFloat();
+        *(aileronPos+count)=ui->aileron8->text().toFloat();
+        *(throttlePos+count)=ui->throttle8->text().toFloat();
+        count++;
+    }
+    if(ui->time9->text().toFloat()!=0)
+    {
+        *(timeTraj+count)=(int)(now+ui->time9->text().toFloat());
+        *(elevatorPos+count)=ui->elevator9->text().toFloat();
+        *(aileronPos+count)=ui->aileron9->text().toFloat();
+        *(throttlePos+count)=ui->throttle9->text().toFloat();
+        count++;
+    }
+
+    if(count>0)
+    {
+        if(kopterTr==KOPTERS.K1){
+            kopterTimeRequest(ADDRESS.K1,ADDRESS.UNKNOWN16,(int) now,0x00);
+        }else if(kopterTr==KOPTERS.K2){
+            kopterTimeRequest(ADDRESS.K2,ADDRESS.UNKNOWN16,(int) now,0x00);
+        }else if(kopterTr==KOPTERS.K3){
+            kopterTimeRequest(ADDRESS.K3,ADDRESS.UNKNOWN16,(int) now,0x00);
+        }else if(kopterTr==KOPTERS.KC1){
+            kopterTimeRequest(ADDRESS.KC1,ADDRESS.UNKNOWN16,(int) now,0x00);
+        }
+
+        sizeTr=(unsigned char)count;
+        trajectoryAddPoint(kopterTr,sizeTr,timeTraj,elevatorPos,aileronPos,throttlePos);
+    }
+
     this->close();
 }

@@ -20,9 +20,19 @@ void getAddress(unsigned char addr[8],unsigned char kopter){
 
 void telemetryGet(unsigned char kopter,unsigned char type,unsigned char on){
     unsigned char addr[8]={0};
+
     getAddress(addr,kopter);
+         telemetryToCoordinatorSet(ADDRESS.K3,ADDRESS.UNKNOWN16,type,on,0x00);
     if(addr!=NULL){
-        telemetryToCoordinatorSet(addr,ADDRESS.UNKNOWN16,type,on,0x00);
+        if(kopter==KOPTERS.K1){
+            telemetryToCoordinatorSet(ADDRESS.K1,ADDRESS.UNKNOWN16,type,on,0x00);
+        }else if(kopter==KOPTERS.K2){
+            telemetryToCoordinatorSet(ADDRESS.K2,ADDRESS.UNKNOWN16,type,on,0x00);
+        }else if(kopter==KOPTERS.K3){
+            telemetryToCoordinatorSet(ADDRESS.K3,ADDRESS.UNKNOWN16,type,on,0x00);
+        }else if(kopter==KOPTERS.KC1){
+            telemetryToCoordinatorSet(ADDRESS.KC1,ADDRESS.UNKNOWN16,type,on,0x00);
+        }
     }
 }
 
@@ -30,8 +40,15 @@ void telemetryStatus(unsigned char kopter,unsigned char type){
     unsigned char addr[8]={0};
     getAddress(addr,kopter);
     if(addr!=NULL){
-        telemetryToCoordinatorStatusRequest(addr,ADDRESS.UNKNOWN16,type,0x00);
-    }
+        if(kopter==KOPTERS.K1){
+            telemetryToCoordinatorStatusRequest(ADDRESS.K1,ADDRESS.UNKNOWN16,type,0x00);
+        }else if(kopter==KOPTERS.K2){
+            telemetryToCoordinatorStatusRequest(ADDRESS.K2,ADDRESS.UNKNOWN16,type,0x00);
+        }else if(kopter==KOPTERS.K3){
+            telemetryToCoordinatorStatusRequest(ADDRESS.K3,ADDRESS.UNKNOWN16,type,0x00);
+        }else if(kopter==KOPTERS.KC1){
+            telemetryToCoordinatorStatusRequest(ADDRESS.KC1,ADDRESS.UNKNOWN16,type,0x00);
+        }}
 }
 
 void land(unsigned char kopter,unsigned char on){
@@ -66,11 +83,19 @@ void trajectoryFollowStatus(unsigned char kopter){
     }
 }
 
-void trajectoryAddPoint(unsigned char kopter,unsigned char index,float time,float elevatorPos,float aileronPos,float throttlePos){
+void trajectoryAddPoint(unsigned char kopter,unsigned char size,int* time,float* elevatorPos,float* aileronPos,float* throttlePos){
     unsigned char addr[8]={0};
     getAddress(addr,kopter);
     if(addr!=NULL){
-        kopterTrajectoryAddPointRequest(addr,ADDRESS.UNKNOWN16,index,time,elevatorPos,aileronPos,throttlePos,0x00);
+        if(kopter==KOPTERS.K1){
+            kopterTrajectorySetRequest(ADDRESS.K1,ADDRESS.UNKNOWN16,size,time,elevatorPos,aileronPos,throttlePos,0x00);
+        }else if(kopter==KOPTERS.K2){
+            kopterTrajectorySetRequest(ADDRESS.K2,ADDRESS.UNKNOWN16,size,time,elevatorPos,aileronPos,throttlePos,0x00);
+        }else if(kopter==KOPTERS.K3){
+            kopterTrajectorySetRequest(ADDRESS.K3,ADDRESS.UNKNOWN16,size,time,elevatorPos,aileronPos,throttlePos,0x00);
+        }else if(kopter==KOPTERS.KC1){
+            kopterTrajectorySetRequest(ADDRESS.KC1,ADDRESS.UNKNOWN16,size,time,elevatorPos,aileronPos,throttlePos,0x00);
+        }
     }
 }
 

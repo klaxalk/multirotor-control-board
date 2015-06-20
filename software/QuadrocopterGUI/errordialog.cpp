@@ -18,18 +18,30 @@ errorDialog::~errorDialog()
 void errorDialog::writeErrors()
 {
     errorDetected=false;
-    for(int i;i<10;i++)
+    for(int i;i<3;i++)
     {
-        //if(m_failure->getErrors(i)!=0)
-       // {
-       //     errorDetected=true;
-            //call switch
-       // }
+        if(m_failure->getErrors(i)!=0)
+        {
+            errorDetected=true;
+            switch ( i ) {
+
+            case 0 :
+                ui->textBrowser->append("Evelator error");
+                break;
+
+            case 1 :
+                ui->textBrowser->append("Aileron error");
+                break;
+            case 2 :
+                ui->textBrowser->append("Altitude error");
+                break;
+            default :
+                ui->textBrowser->append("necum");
+
+            }
+        }
     }
     if(errorDetected==false) ui->textBrowser->append("No errors");
-    ui->textBrowser->append("tady budou error texty");
-    ui->textBrowser->append("jednou urcite");
-    ui->textBrowser->append("prisaham");
 }
 
 void errorDialog::setFailure(failuredetection *fail)

@@ -9,12 +9,12 @@ unsigned char *inPacket=packet;
 
 void startSerial(int com)
 {
-        constInit();
-        openXBeeComm(com);
+    constInit();
+    openXBeeComm(com);
 
 }
 void checkSerial()
 {
-        inPacket=readPacket();
-      if(*inPacket==0x7E){packetHandler(inPacket);}
+    inPacket=readPacket();
+    if(*inPacket==0x7E){packetHandler(inPacket);}
 }

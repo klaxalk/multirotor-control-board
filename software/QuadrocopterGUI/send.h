@@ -16,7 +16,7 @@ void trajectoryFollow(unsigned char kopter,unsigned char on);
 //if trajectory following is on or off
 void trajectoryFollowStatus(unsigned char kopter);
 //add waypoint to trajectory
-void trajectoryAddPoint(unsigned char kopter,unsigned char index,float time,float elevatorPos,float aileronPos,float throttlePos);
+void trajectoryAddPoint(unsigned char kopter,unsigned char size,int* time,float* elevatorPos,float* aileronPos,float* throttlePos);
 //ask drone for waypoints
 void trajectoryPointStatus(unsigned char kopter);
 //set drones desired setpoint  (type SETPOINTS.XXX incType POSITIONS.RELATIVE/ABSOLUTE)

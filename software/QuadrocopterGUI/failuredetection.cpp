@@ -45,19 +45,17 @@ void failuredetection:: run(){
     SumDifferenceElevator=0;
     SumDifferenceAileron=0;
     SumDifferenceHeight=0;
-    PositionEnabled=true;
-    HeightEnabled=true;
+    PositionEnabled=false;
+    HeightEnabled=false;
     // inicializace matic modelu a regulatoru
     // pozicni system
-//    mpcHandler_t * elevatorMpcHandler = initializeElevatorMPC();
-//    mpcHandler_t * aileronMpcHandler = initializeAileronMPC();
     float dt =0.0114;
     MatrixA=MatrixXf(5,5);
     MatrixA <<  1,dt,0,0,0,
-                0,1,dt,0,0,
-                0,0,0,1,1,
-                0,0,0,0.9796,0,
-                0,0,0,0,1;
+            0,1,dt,0,0,
+            0,0,0,1,1,
+            0,0,0,0.9796,0,
+            0,0,0,0,1;
 
     MatrixB=MatrixXf(5,1);
     MatrixB <<  0,0,0,0.0000513,0;
@@ -95,7 +93,7 @@ void failuredetection:: run(){
     MatrixBHeight=MatrixXf(4,2);
     MatrixBHeight <<  0,0,
             0,0,
-            0,-g,
+            0,0,
             P2,0;
 
     MatrixXHeight=MatrixXf(4,1);
@@ -106,147 +104,242 @@ void failuredetection:: run(){
 
     MatrixXPrevHeight=MatrixXf(4,1);
     MatrixXPrevHeight <<0,0,0,0;
-
+    sprintf(buffer,"FailLog_Oprava3.txt%c",kopter);
     while(!m_abort)
     {
-  /*      dataValues[0] = getTelemetry(kopter,TELEMETRIES.GROUND_DISTANCE_ESTIMATED);
-        dataValues[1] = getTelemetry(kopter,TELEMETRIES.GROUND_DISTANCE);
-        dataValues[2] = getTelemetry(kopter,TELEMETRIES.ELEVATOR_SPEED);
-        dataValues[3] = getTelemetry(kopter,TELEMETRIES.AILERON_SPEED);
-        dataValues[4] = getTelemetry(kopter,TELEMETRIES.ELEVATOR_SPEED_ESTIMATED);
-        dataValues[5] = getTelemetry(kopter,TELEMETRIES.AILERON_SPEED_ESTIMATED);
-        dataValues[6] = getTelemetry(kopter,TELEMETRIES.ELEVATOR_POS_ESTIMATED);
-        dataValues[7] = getTelemetry(kopter,TELEMETRIES.AILERON_POS_ESTIMATED);
-        dataValues[8] = getTelemetry(kopter,TELEMETRIES.THROTTLE_CONTROLLER_OUTPUT);
-        dataValues[9] = getTelemetry(kopter,TELEMETRIES.THROTTLE_SPEED);
-        dataValues[10] = getTelemetry(kopter,TELEMETRIES.AILERON_VEL_CONTROLLER_OUTPUT);
-        dataValues[11] = getTelemetry(kopter,TELEMETRIES.ELEVATOR_VEL_CONTROLLER_OUTPUT);
-        dataValues[12] = getTelemetry(kopter,TELEMETRIES.AILERON_POS_CONTROLLER_OUTPUT);
-        dataValues[13] = getTelemetry(kopter,TELEMETRIES.ELEVATOR_POS_CONTROLLER_OUTPUT);
-        dataValues[14] = getTelemetry(kopter,TELEMETRIES.THROTTLE_SETPOINT);
-        dataValues[15] = getTelemetry(kopter,TELEMETRIES.ELEVATOR_POS_SETPOINT);
-        dataValues[16] = getTelemetry(kopter,TELEMETRIES.AILERON_POS_SETPOINT);
-        dataValues[17] = getTelemetry(kopter,TELEMETRIES.ELEVATOR_VEL_SETPOINT);
-        dataValues[18] = getTelemetry(kopter,TELEMETRIES.AILERON_VEL_SETPOINT);
-        dataValues[19] = getTelemetry(kopter,TELEMETRIES.ELEVATOR_SPEED_ESTIMATED2);
-        dataValues[20] = getTelemetry(kopter,TELEMETRIES.AILERON_SPEED_ESTIMATED2);
-        dataValues[21] = getTelemetry(kopter,TELEMETRIES.ELEVATOR_ACC);
-        dataValues[22] = getTelemetry(kopter,TELEMETRIES.AILERON_ACC);
-        dataValues[23] = getTelemetry(kopter,TELEMETRIES.VALID_GUMSTIX);
-        dataValues[24] = getTelemetry(kopter,TELEMETRIES.ELEVATOR_DESIRED_SPEED_POS_CONT);
-        dataValues[25] = getTelemetry(kopter,TELEMETRIES.AILERON_DESIRED_SPEED_POS_CONT);
-        dataValues[26] = getTelemetry(kopter,TELEMETRIES.ELE_DES_SPEED_POS_CONT_LEADER);
-        dataValues[27] = getTelemetry(kopter,TELEMETRIES.AIL_DES_SPEED_POS_CONT_LEADER);
-        dataValues[28] = getTelemetry(kopter,TELEMETRIES.OUTPUT_THROTTLE);
-        dataValues[29] = getTelemetry(kopter,TELEMETRIES.OUTPUT_ELEVATOR);
-        dataValues[30] = getTelemetry(kopter,TELEMETRIES.OUTPUT_AILERON);
-        dataValues[31] = getTelemetry(kopter,TELEMETRIES.OUTPUT_RUDDER);
-        dataValues[32] = getTelemetry(kopter,TELEMETRIES.BLOB_DISTANCE);
-        dataValues[33] = getTelemetry(kopter,TELEMETRIES.BLOB_HORIZONTAL);
-        dataValues[34] = getTelemetry(kopter,TELEMETRIES.BLOB_VERTICAL);
-        dataValues[35] = getTelemetry(kopter,TELEMETRIES.PITCH_ANGLE);
-        dataValues[36] = getTelemetry(kopter,TELEMETRIES.ROLL_ANGLE);
 
         sprintf(buffer,"testVlakna_%c",kopter);
 
-        ofstream outputFile(buffer,ios::out | ios::app);
-        outputFile << samples;
-        outputFile << ",";
-        for(int i=0;i<37;i++){
-            outputFile << dataValues[i];
-            outputFile << ",";
-        }
+        ofstream outputFile("AZ3.txt",ios::out | ios::app);
+        outputFile << getTelemetry(kopter,TELEMETRIES.ELEVATOR_CONTROLLER_OUTPUT);
         outputFile << "\n";
         outputFile.close();
-        samples++;*/
 
         // naplneni matic X podle dat z quad !!!!!!!!!!!!!!!!!!!
         // pro pozici zasumime rychlost a pro vysku zasumime mereni vysky !!!
         // nezapomenout na vstup-u, nestaci jen krmit data z X
 
         // pozicni
-       // if(PositionEnabled){
-        MatrixUElevator(0,0)=getData(15);
-        MatrixXElevator=MatrixA*MatrixXPrevElevator+MatrixB*MatrixUElevator;
-        MatrixXPrevElevator=MatrixXElevator;
-        for(int i=0;i<5;i++)
+        float FieldForTest[300];
+        float TMP;
+        float median;
+        float pkpk,max,min,min2,max2,pkpk2;
+        if(PositionEnabled)
         {
-        setData(MatrixXElevator(i,0),(i+20));
-        }
+            MatrixUElevator(0,0)=getTelemetry(kopter,TELEMETRIES.ELEVATOR_CONTROLLER_OUTPUT);
+            MatrixXPrevElevator(4,0)=getTelemetry(kopter,TELEMETRIES.ELEVATOR_ACC_ERROR);
+            MatrixXElevator=MatrixA*MatrixXPrevElevator+MatrixB*MatrixUElevator;
+            MatrixXPrevElevator=MatrixXElevator;
+            for(int i=0;i<5;i++)
+            {
+                setData(MatrixXElevator(i,0),(i+20));
+            }
 
 
-            MatrixUAileron(0,0)=getData(16);
+            MatrixUAileron(0,0)=getTelemetry(kopter,TELEMETRIES.AILERON_CONTROLLER_OUTPUT);
+            MatrixXPrevAileron(4,0)=getTelemetry(kopter,TELEMETRIES.AILERON_ACC_ERROR);
             MatrixXAileron=MatrixA*MatrixXPrevAileron+MatrixB*MatrixUAileron;
             MatrixXPrevAileron=MatrixXAileron;
             for(int i=0;i<5;i++)
             {
-            setData(MatrixXAileron(i,0),(i+25));
+                setData(MatrixXAileron(i,0),(i+25));
             }
 
-            differenceOfDataElevator[pointerToPosition]=fabs(getData(1)-MatrixXElevator(1,0));
-            SumDifferenceElevator=0;
+            differenceOfDataElevator[pointerToPosition]=fabs(getTelemetry(kopter,TELEMETRIES.ELEVATOR_POSITION)-MatrixXElevator(0,0));
+            differenceOfDataAileron[pointerToPosition]=getTelemetry(kopter,TELEMETRIES.ELEVATOR_ACC_ERROR);
+            /*SumDifferenceElevator=0;
             for(int i=0;i<300;i++)
             {
                 SumDifferenceElevator+=differenceOfDataElevator[i];
+                FieldForTest[i]=differenceOfDataElevator[i];
             }
-            differenceOfDataAileron[pointerToPosition]=fabs(getData(6)-MatrixXAileron(1,0));
-            SumDifferenceAileron=0;
+
+
+            /*for (int i = 1; i < 300; i++) {
+                for (int bubble = 300 - 1; bubble >= i; bubble--) {
+                    if (FieldForTest[bubble - 1] > FieldForTest[bubble]) {
+                        TMP = FieldForTest[bubble - 1];
+                        FieldForTest[bubble - 1] = FieldForTest[bubble];
+                        FieldForTest[bubble] = TMP;
+                    }
+                }
+            }
+            median=((FieldForTest[149]+FieldForTest[150])/2);*/
+            max2=min2=max=min=0;
+            for(int i=0;i<300; i++){
+
+                if (max < differenceOfDataElevator[i]){
+                    max = differenceOfDataElevator[i];}
+                if (min > differenceOfDataElevator[i]){
+                    min = differenceOfDataElevator[i];}
+                if (max2 < differenceOfDataAileron[i]){
+                    max2 = differenceOfDataAileron[i];}
+                if (min2 > differenceOfDataAileron[i]){
+                    min2 = differenceOfDataAileron[i];}
+            }
+            pkpk=max-min;
+            pkpk2=max2-min2;
+            //setData(SumDifferenceElevator,40);
+            //setData(median,41);
+            setData(pkpk,42);
+            if(pkpk>0.35)
+            {
+                fieldOfError[0]=1;}
+            else if(pkpk2>0.25) {fieldOfError[0]=1;
+            }else fieldOfError[0]=0;
+
+            differenceOfDataAileron[pointerToPosition]=fabs(getTelemetry(kopter,TELEMETRIES.AILERON_POSITION)-MatrixXAileron(0,0));
+            /*SumDifferenceAileron=0;
             for(int i=0;i<300;i++)
             {
                 SumDifferenceAileron+=differenceOfDataAileron[i];
-            }
+            }*/
             pointerToPosition++;
-            setData(SumDifferenceElevator,35);
-            setData(SumDifferenceAileron,36);
 
+            pkpk=max=min=0;
+            for(int i=0;i<300; i++){
+                if (max < differenceOfDataAileron[i]){
+                    max = differenceOfDataAileron[i];}
+                if (min > differenceOfDataAileron[i]){
+                    min = differenceOfDataAileron[i];}
+            }
+            pkpk=max-min;
+            setData(pkpk,43);
+            if(pkpk>0.35)
+            {
+                 //fieldOfError[1]=1;
+            }
+            else fieldOfError[1]=0;
 
-     //  }
-
+        }
 
         // vyskovy
-     //   if(HeightEnabled)
-     //  {
-            MatrixUHeight(0,0)=getData(17);
+        if(HeightEnabled)
+        {
+            //for(int i=0;i<8;i++)printf("%i ",*(kopter+i);
+            MatrixUHeight(0,0)=(getTelemetry(kopter,TELEMETRIES.ALTITUDE_CONTROLLER_OUTPUT)-getTelemetry(kopter,TELEMETRIES.ALTITUDE_INTEGRATED_COMPONENT));
+
+            //printf("%f ",getTelemetry(kopter,TELEMETRIES.ALTITUDE_CONTROLLER_OUTPUT));
+            setData((getTelemetry(kopter,TELEMETRIES.ALTITUDE_CONTROLLER_OUTPUT)-getTelemetry(kopter,TELEMETRIES.ALTITUDE_INTEGRATED_COMPONENT)),49);
             MatrixXHeight=MatrixAHeight*MatrixXPrevHeight+MatrixBHeight*MatrixUHeight;
             MatrixXPrevHeight=MatrixXHeight;
             for(int i=0;i<4;i++)
             {
-            setData(MatrixXHeight(i,0),(i+30));
+                setData(MatrixXHeight(i,0),(i+30));
             }
-            differenceOfDataHeight[pointerToHeight]=fabs(getData(10)-MatrixXHeight(0,0));
-                    pointerToHeight++;
-                    SumDifferenceHeight=0;
+
+            differenceOfDataHeight[pointerToHeight]=fabs(getTelemetry(kopter,TELEMETRIES.ALTITUDE)-MatrixXHeight(0,0));
+            pointerToHeight++;
+            /*        SumDifferenceHeight=0;
             for(int i=0;i<300;i++)
             {
                 SumDifferenceHeight+=differenceOfDataHeight[i];
+                FieldForTest[i]=differenceOfDataHeight[i];
             }
             setData(SumDifferenceHeight,37);
-       // }
 
+
+            for (int i = 1; i < 300; i++) {
+                for (int bubble = 300 - 1; bubble >= i; bubble--) {
+                    if (FieldForTest[bubble - 1] > FieldForTest[bubble]) {
+                        TMP = FieldForTest[bubble - 1];
+                        FieldForTest[bubble - 1] = FieldForTest[bubble];
+                        FieldForTest[bubble] = TMP;
+                    }
+                }
+            }
+            median=((FieldForTest[149]+FieldForTest[150])/2);*/
+            max=min=0;
+            for(int i=0;i<300; i++){
+
+                if (max < differenceOfDataHeight[i]){
+                    max = differenceOfDataHeight[i];}
+                if (min > differenceOfDataHeight[i]){
+                    min = differenceOfDataHeight[i];}
+            }
+            pkpk=max-min;
+            //setData(SumDifferenceHeight,43);
+            //setData(median,44);
+            setData(pkpk,44);
+
+            if(pkpk>1 && kopter==KOPTERS.K1)
+            {
+              //    fieldOfError[2]=1;
+            }
+            else if(pkpk>1.2 && kopter==KOPTERS.K3)
+            {
+               //   fieldOfError[2]=1;
+            }
+            else fieldOfError[2]=0;
+
+            ofstream outputFile("video2.txt",ios::out | ios::app);
+            outputFile << samples;
+            outputFile << ",";
+            for(int i=0;i<50;i++){
+                outputFile << getData(i);
+                outputFile << ",";
+            }
+            //outputFile << "\n";
+            //outputFile.close();
+            samples++;
+
+            outputFile << ",";
+            outputFile << getTelemetry(kopter,TELEMETRIES.ELEVATOR_POSITION);
+            outputFile << ",";
+            outputFile << getTelemetry(kopter,TELEMETRIES.ELEVATOR_SPEED);
+            outputFile << ",";
+            outputFile <<getTelemetry(kopter,TELEMETRIES.AILERON_POSITION);
+            outputFile << ",";
+            outputFile <<getTelemetry(kopter,TELEMETRIES.AILERON_SPEED);
+            outputFile << ",";
+            outputFile <<getTelemetry(kopter,TELEMETRIES.ALTITUDE);
+            outputFile << ",";
+            outputFile << getTelemetry(kopter,TELEMETRIES.ALTITUDE_SPEED);
+            outputFile << ",";
+            outputFile << "\n";
+            outputFile.close();
+        }
         // sleep
-            if(pointerToHeight==300){
-                pointerToHeight=0;
-                MatrixXPrevHeight(0,0)=getData(10);
-                MatrixXPrevHeight(1,0)=getData(11);
-                MatrixXPrevHeight(2,0)=getData(12);
-                MatrixXPrevHeight(3,0)=getData(13);
-            }
-            if(pointerToPosition==300){
-                pointerToPosition=0;
-                MatrixXPrevElevator(0,0)=getData(0);
-                MatrixXPrevElevator(1,0)=getData(1);
-                MatrixXPrevElevator(2,0)=getData(2);
-                MatrixXPrevElevator(3,0)=getData(3);
-                MatrixXPrevElevator(4,0)=getData(4);
+        if(pointerToHeight==150){
+            pointerToHeight=0;
+            MatrixXPrevHeight(0,0)=getTelemetry(kopter,TELEMETRIES.ALTITUDE);//getData(10);//TELEMETRIES.ALTITUDE);
+            MatrixXPrevHeight(1,0)=getTelemetry(kopter,TELEMETRIES.ALTITUDE_SPEED);//getData(11);//TELEMETRIES.ALTITUDE_SPEED); rychlost
+            MatrixXPrevHeight(2,0)=0;//getData(12);// skutecna zrychleni-gravitace+zrychleni-0
+            MatrixXPrevHeight(3,0)=0;//9.8;//getData(13);// -zrychleni z AZ-0
+            /*
+                MatrixXPrevHeight(0,0)=getData(10);//TELEMETRIES.ALTITUDE);
+                MatrixXPrevHeight(1,0)=getData(11);//TELEMETRIES.ALTITUDE_SPEED); rychlost
+                MatrixXPrevHeight(2,0)=getData(12);// skutecna zrychleni-gravitace+zrychleni-0
+                MatrixXPrevHeight(3,0)=getData(13);// -zrychleni z AZ-0*/
+        }
+        if(pointerToPosition==150){
+            pointerToPosition=0;
+            MatrixXPrevElevator(0,0)=getTelemetry(kopter,TELEMETRIES.ELEVATOR_POSITION);//getData(0);//ELEVATOR_POSITION
+            MatrixXPrevElevator(1,0)=getTelemetry(kopter,TELEMETRIES.ELEVATOR_SPEED_ESTIMATED);//getData(1);//ELEVATOR_SPEED
+            MatrixXPrevElevator(2,0)=getTelemetry(kopter,TELEMETRIES.ELEVATOR_ACC);//getData(2);//ELEVATOR_ACC
+            MatrixXPrevElevator(3,0)=getTelemetry(kopter,TELEMETRIES.ELEVATOR_ACC_INPUT);//getData(3);// ELEVATOR_ACC_INPUT
+            MatrixXPrevElevator(4,0)=getTelemetry(kopter,TELEMETRIES.ELEVATOR_ACC_ERROR);//getData(4);//ELEVATOR_ACC_ERROR
 
-                MatrixXPrevAileron(0,0)=getData(5);
-                MatrixXPrevAileron(1,0)=getData(6);
-                MatrixXPrevAileron(2,0)=getData(7);
-                MatrixXPrevAileron(3,0)=getData(8);
-                MatrixXPrevAileron(4,0)=getData(9);
+            MatrixXPrevAileron(0,0)=getTelemetry(kopter,TELEMETRIES.AILERON_POSITION);//getData(5);//AILERON_POSITION
+            MatrixXPrevAileron(1,0)=getTelemetry(kopter,TELEMETRIES.AILERON_SPEED_ESTIMATED);//getData(6);//AILERON_SPEED
+            MatrixXPrevAileron(2,0)=getTelemetry(kopter,TELEMETRIES.AILERON_ACC);//getData(7);//AILERON_ACC-skutecne zrychleni
+            MatrixXPrevAileron(3,0)=getTelemetry(kopter,TELEMETRIES.AILERON_ACC_INPUT);//getData(8);//AILERON_ACC_INPUT
+            MatrixXPrevAileron(4,0)=getTelemetry(kopter,TELEMETRIES.AILERON_ACC_ERROR);//getData(9);//AILERON_ACC_ERROR
+            /*
+                MatrixXPrevElevator(0,0)=getData(0);//ELEVATOR_POSITION
+                MatrixXPrevElevator(1,0)=getData(1);//ELEVATOR_SPEED
+                MatrixXPrevElevator(2,0)=getData(2);//ELEVATOR_ACC
+                MatrixXPrevElevator(3,0)=getData(3);// ELEVATOR_ACC_INPUT
+                MatrixXPrevElevator(4,0)=getData(4);//ELEVATOR_ACC_ERROR
 
-            }
-        this->msleep(14);
+                MatrixXPrevAileron(0,0)=getData(5);//AILERON_POSITION
+                MatrixXPrevAileron(1,0)=getData(6);//AILERON_SPEED
+                MatrixXPrevAileron(2,0)=getData(7);//AILERON_ACC-skutecne zrychleni
+                MatrixXPrevAileron(3,0)=getData(8);//AILERON_ACC_INPUT
+                MatrixXPrevAileron(4,0)=getData(9);//AILERON_ACC_ERROR*/
+
+        }
+        this->msleep(10);
     }
 }
 
@@ -255,26 +348,41 @@ void failuredetection:: setKopter(unsigned char kpt){
 }
 
 int failuredetection:: getErrors(int index){
-  return fieldOfError[index];
+    return fieldOfError[index];
 }
 
 void failuredetection::setPositionEnable(bool value)
 {
     if(PositionEnabled==false&&value==true)
-        {
-    PositionEnabled=true;
-    // synchronizace dat - elevator,aileron TODO
+    {
+        PositionEnabled=true;
+        pointerToPosition=0;
+        MatrixXPrevElevator(0,0)=getTelemetry(kopter,TELEMETRIES.ELEVATOR_POSITION);//getData(0);//ELEVATOR_POSITION
+        MatrixXPrevElevator(1,0)=getTelemetry(kopter,TELEMETRIES.ELEVATOR_SPEED);//getData(1);//ELEVATOR_SPEED
+        MatrixXPrevElevator(2,0)=getTelemetry(kopter,TELEMETRIES.ELEVATOR_ACC);//getData(2);//ELEVATOR_ACC
+        MatrixXPrevElevator(3,0)=getTelemetry(kopter,TELEMETRIES.ELEVATOR_ACC_INPUT);//getData(3);// ELEVATOR_ACC_INPUT
+        MatrixXPrevElevator(4,0)=getTelemetry(kopter,TELEMETRIES.ELEVATOR_ACC_ERROR);//getData(4);//ELEVATOR_ACC_ERROR
+
+        MatrixXPrevAileron(0,0)=getTelemetry(kopter,TELEMETRIES.AILERON_POSITION);//getData(5);//AILERON_POSITION
+        MatrixXPrevAileron(1,0)=getTelemetry(kopter,TELEMETRIES.AILERON_SPEED);//getData(6);//AILERON_SPEED
+        MatrixXPrevAileron(2,0)=getTelemetry(kopter,TELEMETRIES.AILERON_ACC);//getData(7);//AILERON_ACC-skutecne zrychleni
+        MatrixXPrevAileron(3,0)=getTelemetry(kopter,TELEMETRIES.AILERON_ACC_INPUT);//getData(8);//AILERON_ACC_INPUT
+        MatrixXPrevAileron(4,0)=getTelemetry(kopter,TELEMETRIES.AILERON_ACC_ERROR);//getData(9);//AILERON_ACC_ERROR
+
 
     }else if(PositionEnabled==true&&value==false)PositionEnabled=false;
 }
 
 void failuredetection::setHeightEnable(bool value)
 {
-    //synchronizace dat - height    TODO
     if(HeightEnabled==false&&value==true)
-        {
+    {
         HeightEnabled=true;
-        //synchronizace dat - height    TODO
+
+        MatrixXPrevHeight(0,0)=getTelemetry(kopter,TELEMETRIES.ALTITUDE);//getData(10);//TELEMETRIES.ALTITUDE);
+        MatrixXPrevHeight(1,0)=getTelemetry(kopter,TELEMETRIES.ALTITUDE_SPEED);//getData(11);//TELEMETRIES.ALTITUDE_SPEED); rychlost
+        MatrixXPrevHeight(2,0)=0;//getData(12);// skutecna zrychleni-gravitace+zrychleni-0
+        MatrixXPrevHeight(3,0)=0;//9.8;//getData(13);// -zrychleni z AZ-0
 
     }else if(HeightEnabled==true&&value==false)HeightEnabled=false;
 }

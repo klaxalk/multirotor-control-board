@@ -22,7 +22,7 @@ quadro::quadro(QWidget *parent) :
 {
     ui->setupUi(this);
     failureDetectionBool=false;
-    //failureDetectionThread = new failuredetection;
+    failureDetectionThread = new failuredetection;
     currentDateTime();
     createScrollCheckBox();
     createLegend();
@@ -163,20 +163,6 @@ void quadro::graph_1(QCustomPlot *graph1)
     graph1->graph(31)->setPen(QPen(QColor(180,180,180)));//stříbrná
     graph1->graph(31)->setName("Signal 32");
     graph1->addGraph();
-    graph1->graph(32)->setPen(QPen(Qt::red));//
-    graph1->graph(32)->setName("Signal 33");
-    graph1->addGraph();
-    graph1->graph(33)->setPen(QPen(Qt::blue));//
-    graph1->graph(33)->setName("Signal 34");
-    graph1->addGraph();
-    graph1->graph(34)->setPen(QPen(Qt::green));//
-    graph1->graph(34)->setName("Signal 35");
-    graph1->addGraph();
-    graph1->graph(35)->setPen(QPen(Qt::magenta));//
-    graph1->graph(35)->setName("Signal 36");
-    graph1->addGraph();
-    graph1->graph(36)->setPen(QPen(Qt::gray));//
-    graph1->graph(36)->setName("Signal 37");
 
     graph1->xAxis->setTickLabelType(QCPAxis::ltDateTime);       // pro casovou osu
     graph1->xAxis->setDateTimeFormat("hh:mm:ss");
@@ -206,43 +192,38 @@ void quadro::realtimeDataSlotGraph1()
     if (key1-lastPointKey1 > 0.01) // at most add point every 10 ms
     {
 
-        dataValues[0] = getTelemetry(kopter,TELEMETRIES.GROUND_DISTANCE_ESTIMATED);
-        dataValues[1] = getTelemetry(kopter,TELEMETRIES.GROUND_DISTANCE);
+        dataValues[0] = getTelemetry(kopter,TELEMETRIES.ALTITUDE_ESTIMATED);
+        dataValues[1] = getTelemetry(kopter,TELEMETRIES.ALTITUDE);
         dataValues[2] = getTelemetry(kopter,TELEMETRIES.ELEVATOR_SPEED);
         dataValues[3] = getTelemetry(kopter,TELEMETRIES.AILERON_SPEED);
         dataValues[4] = getTelemetry(kopter,TELEMETRIES.ELEVATOR_SPEED_ESTIMATED);
         dataValues[5] = getTelemetry(kopter,TELEMETRIES.AILERON_SPEED_ESTIMATED);
-        dataValues[6] = getTelemetry(kopter,TELEMETRIES.ELEVATOR_POS_ESTIMATED);
-        dataValues[7] = getTelemetry(kopter,TELEMETRIES.AILERON_POS_ESTIMATED);
-        dataValues[8] = getTelemetry(kopter,TELEMETRIES.THROTTLE_CONTROLLER_OUTPUT);
-        dataValues[9] = getTelemetry(kopter,TELEMETRIES.THROTTLE_SPEED);
-        dataValues[10] = getTelemetry(kopter,TELEMETRIES.AILERON_VEL_CONTROLLER_OUTPUT);
-        dataValues[11] = getTelemetry(kopter,TELEMETRIES.ELEVATOR_VEL_CONTROLLER_OUTPUT);
-        dataValues[12] = getTelemetry(kopter,TELEMETRIES.AILERON_POS_CONTROLLER_OUTPUT);
-        dataValues[13] = getTelemetry(kopter,TELEMETRIES.ELEVATOR_POS_CONTROLLER_OUTPUT);
-        dataValues[14] = getTelemetry(kopter,TELEMETRIES.THROTTLE_SETPOINT);
-        dataValues[15] = getTelemetry(kopter,TELEMETRIES.ELEVATOR_POS_SETPOINT);
-        dataValues[16] = getTelemetry(kopter,TELEMETRIES.AILERON_POS_SETPOINT);
-        dataValues[17] = getTelemetry(kopter,TELEMETRIES.ELEVATOR_VEL_SETPOINT);
-        dataValues[18] = getTelemetry(kopter,TELEMETRIES.AILERON_VEL_SETPOINT);
-        dataValues[19] = getTelemetry(kopter,TELEMETRIES.ELEVATOR_SPEED_ESTIMATED2);
-        dataValues[20] = getTelemetry(kopter,TELEMETRIES.AILERON_SPEED_ESTIMATED2);
-        dataValues[21] = getTelemetry(kopter,TELEMETRIES.ELEVATOR_ACC);
-        dataValues[22] = getTelemetry(kopter,TELEMETRIES.AILERON_ACC);
-        dataValues[23] = getTelemetry(kopter,TELEMETRIES.VALID_GUMSTIX);
-        dataValues[24] = getTelemetry(kopter,TELEMETRIES.ELEVATOR_DESIRED_SPEED_POS_CONT);
-        dataValues[25] = getTelemetry(kopter,TELEMETRIES.AILERON_DESIRED_SPEED_POS_CONT);
-        dataValues[26] = getTelemetry(kopter,TELEMETRIES.ELE_DES_SPEED_POS_CONT_LEADER);
-        dataValues[27] = getTelemetry(kopter,TELEMETRIES.AIL_DES_SPEED_POS_CONT_LEADER);
-        dataValues[28] = getTelemetry(kopter,TELEMETRIES.OUTPUT_THROTTLE);
-        dataValues[29] = getTelemetry(kopter,TELEMETRIES.OUTPUT_ELEVATOR);
-        dataValues[30] = getTelemetry(kopter,TELEMETRIES.OUTPUT_AILERON);
-        dataValues[31] = getTelemetry(kopter,TELEMETRIES.OUTPUT_RUDDER);
-        dataValues[32] = getTelemetry(kopter,TELEMETRIES.BLOB_DISTANCE);
-        dataValues[33] = getTelemetry(kopter,TELEMETRIES.BLOB_HORIZONTAL);
-        dataValues[34] = getTelemetry(kopter,TELEMETRIES.BLOB_VERTICAL);
-        dataValues[35] = getTelemetry(kopter,TELEMETRIES.PITCH_ANGLE);
-        dataValues[36] = getTelemetry(kopter,TELEMETRIES.ROLL_ANGLE);
+        dataValues[6] = getTelemetry(kopter,TELEMETRIES.ELEVATOR_POSITION);
+        dataValues[7] = getTelemetry(kopter,TELEMETRIES.AILERON_POSITION);
+        dataValues[8] = getTelemetry(kopter,TELEMETRIES.ALTITUDE_CONTROLLER_OUTPUT);
+        dataValues[9] = getTelemetry(kopter,TELEMETRIES.ALTITUDE_SPEED);
+        dataValues[10] = getTelemetry(kopter,TELEMETRIES.AILERON_CONTROLLER_OUTPUT);
+        dataValues[11] = getTelemetry(kopter,TELEMETRIES.ELEVATOR_CONTROLLER_OUTPUT);
+        dataValues[12] = getTelemetry(kopter,TELEMETRIES.ALTITUDE_SETPOINT);
+        dataValues[13] = getTelemetry(kopter,TELEMETRIES.ELEVATOR_POS_SETPOINT);
+        dataValues[14] = getTelemetry(kopter,TELEMETRIES.AILERON_POS_SETPOINT);
+        dataValues[15] = getTelemetry(kopter,TELEMETRIES.ELEVATOR_ACC);
+        dataValues[16] = getTelemetry(kopter,TELEMETRIES.AILERON_ACC);
+        dataValues[17] = getTelemetry(kopter,TELEMETRIES.VALID_GUMSTIX);
+        dataValues[18] = getTelemetry(kopter,TELEMETRIES.OUTPUT_THROTTLE);
+        dataValues[19] = getTelemetry(kopter,TELEMETRIES.OUTPUT_ELEVATOR);
+        dataValues[20] = getTelemetry(kopter,TELEMETRIES.OUTPUT_AILERON);
+        dataValues[21] = getTelemetry(kopter,TELEMETRIES.OUTPUT_RUDDER);
+        dataValues[22] = getTelemetry(kopter,TELEMETRIES.BLOB_ELEVATOR);
+        dataValues[23] = getTelemetry(kopter,TELEMETRIES.BLOB_AILERON);
+        dataValues[24] = getTelemetry(kopter,TELEMETRIES.BLOB_ALTITUDE);
+        dataValues[25] = getTelemetry(kopter,TELEMETRIES.PITCH_ANGLE);
+        dataValues[26] = getTelemetry(kopter,TELEMETRIES.ROLL_ANGLE);
+        dataValues[27] = getTelemetry(kopter,TELEMETRIES.ELEVATOR_ACC_ERROR);
+        dataValues[28] = getTelemetry(kopter,TELEMETRIES.ELEVATOR_ACC_INPUT);
+        dataValues[29] = getTelemetry(kopter,TELEMETRIES.AILERON_ACC_ERROR);
+        dataValues[30] = getTelemetry(kopter,TELEMETRIES.AILERON_ACC_INPUT);
+        dataValues[31] = getTelemetry(kopter,TELEMETRIES.ALTITUDE_INTEGRATED_COMPONENT);
 
         time_t     now = time(0);
         struct tm  tstruct;
@@ -252,7 +233,7 @@ void quadro::realtimeDataSlotGraph1()
         ofstream outputFile(myTime,ios::out | ios::app);
         outputFile << TMP;
         outputFile << ",";
-        for(int i=0;i<37;i++){
+        for(int i=0;i<32;i++){
             outputFile << dataValues[i];
             outputFile << ",";
         }
@@ -265,17 +246,16 @@ void quadro::realtimeDataSlotGraph1()
                 || Plot1Signals[15]->isChecked() || Plot1Signals[16]->isChecked() || Plot1Signals[17]->isChecked() || Plot1Signals[18]->isChecked() || Plot1Signals[19]->isChecked()
                 || Plot1Signals[20]->isChecked() || Plot1Signals[21]->isChecked() || Plot1Signals[22]->isChecked() || Plot1Signals[23]->isChecked() || Plot1Signals[24]->isChecked()
                 || Plot1Signals[25]->isChecked() || Plot1Signals[26]->isChecked() || Plot1Signals[27]->isChecked() || Plot1Signals[28]->isChecked() || Plot1Signals[29]->isChecked()
-                || Plot1Signals[30]->isChecked() || Plot1Signals[31]->isChecked() || Plot1Signals[32]->isChecked() || Plot1Signals[33]->isChecked() || Plot1Signals[34]->isChecked()
-                || Plot1Signals[35]->isChecked() || Plot1Signals[36]->isChecked()){
+                || Plot1Signals[30]->isChecked() || Plot1Signals[31]->isChecked()){
 
-            for(int i=0;i<37;i++){
+            for(int i=0;i<32;i++){
                 if(Plot1Signals[i]->isChecked()){
                     ui->graph1->graph(i)->addData(key1, dataValues[i]);
                     ui->graph1->graph(i)->rescaleValueAxis();
                 }
             }
             // remove data of lines that's outside visible range:
-            for(int i=0;i<37;i++){
+            for(int i=0;i<32;i++){
                 ui->graph1->graph(i)->removeDataBefore(key1-10);
             }
         }
@@ -415,26 +395,6 @@ void quadro::graph_2(QCustomPlot *graph2)
     graph2->graph(31)->setName("Signal 32");
 
     graph2->addGraph();
-    graph2->graph(32)->setPen(QPen(Qt::red));//
-    graph2->graph(32)->setName("Signal 33");
-    graph2->addGraph();
-    graph2->graph(33)->setPen(QPen(Qt::blue));//
-    graph2->graph(33)->setName("Signal 34");
-    graph2->addGraph();
-    graph2->graph(34)->setPen(QPen(Qt::green));//
-    graph2->graph(34)->setName("Signal 35");
-    graph2->addGraph();
-    graph2->graph(35)->setPen(QPen(Qt::magenta));//
-    graph2->graph(35)->setName("Signal 36");
-    graph2->addGraph();
-    graph2->graph(36)->setPen(QPen(Qt::gray));//
-    graph2->graph(36)->setName("Signal 37");
-    // pro osu se vzorkama
-    graph2->xAxis->setAutoTickStep(false);
-    graph2->xAxis->setTickLabelType(QCPAxis::ltDateTime);
-    graph2->xAxis->setDateTimeFormat("hh:mm:ss");
-    graph2->xAxis->setAutoTickStep(false);
-    graph2->xAxis->setTickStep(2);
     graph2->axisRect()->setupFullAxesBox();
 
     // make left and bottom axes transfer their ranges to right and top axes:
@@ -462,17 +422,16 @@ void quadro::realtimeDataSlotGraph2()
                 || Plot2Signals[15]->isChecked() || Plot2Signals[16]->isChecked() || Plot2Signals[17]->isChecked() || Plot2Signals[18]->isChecked() || Plot2Signals[19]->isChecked()
                 || Plot2Signals[20]->isChecked() || Plot2Signals[21]->isChecked() || Plot2Signals[22]->isChecked() || Plot2Signals[23]->isChecked() || Plot2Signals[24]->isChecked()
                 || Plot2Signals[25]->isChecked() || Plot2Signals[26]->isChecked() || Plot2Signals[27]->isChecked() || Plot2Signals[28]->isChecked() || Plot2Signals[29]->isChecked()
-                || Plot2Signals[30]->isChecked() || Plot2Signals[31]->isChecked() || Plot2Signals[32]->isChecked() || Plot2Signals[33]->isChecked() || Plot2Signals[34]->isChecked()
-                || Plot2Signals[35]->isChecked() || Plot2Signals[36]->isChecked()){
+                || Plot2Signals[30]->isChecked() || Plot2Signals[31]->isChecked()){
 
-            for(int i=0;i<37;i++){
+            for(int i=0;i<32;i++){
                 if(Plot2Signals[i]->isChecked()){
                     ui->graph2->graph(i)->addData(key2, dataValues[i]);
                     ui->graph2->graph(i)->rescaleValueAxis();
                 }
             }
 
-            for(int i=0;i<37;i++){
+            for(int i=0;i<32;i++){
                 ui->graph2->graph(i)->removeDataBefore(key2-10);
             }
 
@@ -594,20 +553,6 @@ void quadro::graph_3(QCustomPlot *graph3)
     graph3->graph(31)->setName("Signal 32");
 
     graph3->addGraph();
-    graph3->graph(32)->setPen(QPen(Qt::red));//
-    graph3->graph(32)->setName("Signal 33");
-    graph3->addGraph();
-    graph3->graph(33)->setPen(QPen(Qt::blue));//
-    graph3->graph(33)->setName("Signal 34");
-    graph3->addGraph();
-    graph3->graph(34)->setPen(QPen(Qt::green));//
-    graph3->graph(34)->setName("Signal 35");
-    graph3->addGraph();
-    graph3->graph(35)->setPen(QPen(Qt::magenta));//
-    graph3->graph(35)->setName("Signal 36");
-    graph3->addGraph();
-    graph3->graph(36)->setPen(QPen(Qt::gray));//
-    graph3->graph(36)->setName("Signal 37");
 
     graph3->xAxis->setTickLabelType(QCPAxis::ltDateTime);       // pro casovou osu
     graph3->xAxis->setDateTimeFormat("hh:mm:ss");
@@ -641,17 +586,16 @@ void quadro::realtimeDataSlotGraph3()
                 || Plot3Signals[15]->isChecked() || Plot3Signals[16]->isChecked() || Plot3Signals[17]->isChecked() || Plot3Signals[18]->isChecked() || Plot3Signals[19]->isChecked()
                 || Plot3Signals[20]->isChecked() || Plot3Signals[21]->isChecked() || Plot3Signals[22]->isChecked() || Plot3Signals[23]->isChecked() || Plot3Signals[24]->isChecked()
                 || Plot3Signals[25]->isChecked() || Plot3Signals[26]->isChecked() || Plot3Signals[27]->isChecked() || Plot3Signals[28]->isChecked() || Plot3Signals[29]->isChecked()
-                || Plot3Signals[30]->isChecked() || Plot3Signals[31]->isChecked() || Plot3Signals[32]->isChecked() || Plot3Signals[33]->isChecked() || Plot3Signals[34]->isChecked()
-                || Plot3Signals[35]->isChecked() || Plot3Signals[36]->isChecked()){
+                || Plot3Signals[30]->isChecked() || Plot3Signals[31]->isChecked()){
 
-            for(int i=0;i<37;i++){
+            for(int i=0;i<32;i++){
                 if(Plot3Signals[i]->isChecked()){
                     ui->graph3->graph(i)->addData(key3, dataValues[i]);
                     ui->graph3->graph(i)->rescaleValueAxis();
                 }
             }
             // remove data of lines that's outside visible range:
-            for(int i=0;i<37;i++){
+            for(int i=0;i<32;i++){
                 ui->graph3->graph(i)->removeDataBefore(key3-10);
             }
             // make key axis range scroll with the data (at a constant range size of 8):
@@ -771,20 +715,6 @@ void quadro::graph_4(QCustomPlot *graph4)
     graph4->graph(31)->setName("Signal 32");
 
     graph4->addGraph();
-    graph4->graph(32)->setPen(QPen(Qt::red));//
-    graph4->graph(32)->setName("Signal 33");
-    graph4->addGraph();
-    graph4->graph(33)->setPen(QPen(Qt::blue));//
-    graph4->graph(33)->setName("Signal 34");
-    graph4->addGraph();
-    graph4->graph(34)->setPen(QPen(Qt::green));//
-    graph4->graph(34)->setName("Signal 35");
-    graph4->addGraph();
-    graph4->graph(35)->setPen(QPen(Qt::magenta));//
-    graph4->graph(35)->setName("Signal 36");
-    graph4->addGraph();
-    graph4->graph(36)->setPen(QPen(Qt::gray));//
-    graph4->graph(36)->setName("Signal 37");
 
     graph4->xAxis->setTickLabelType(QCPAxis::ltDateTime);       // pro casovou osu
     graph4->xAxis->setDateTimeFormat("hh:mm:ss");
@@ -818,17 +748,16 @@ void quadro::realtimeDataSlotGraph4()
                 || Plot4Signals[15]->isChecked() || Plot4Signals[16]->isChecked() || Plot4Signals[17]->isChecked() || Plot4Signals[18]->isChecked() || Plot4Signals[19]->isChecked()
                 || Plot4Signals[20]->isChecked() || Plot4Signals[21]->isChecked() || Plot4Signals[22]->isChecked() || Plot4Signals[23]->isChecked() || Plot4Signals[24]->isChecked()
                 || Plot4Signals[25]->isChecked() || Plot4Signals[26]->isChecked() || Plot4Signals[27]->isChecked() || Plot4Signals[28]->isChecked() || Plot4Signals[29]->isChecked()
-                || Plot4Signals[30]->isChecked() || Plot4Signals[31]->isChecked() || Plot4Signals[32]->isChecked() || Plot4Signals[33]->isChecked() || Plot4Signals[34]->isChecked()
-                || Plot4Signals[35]->isChecked() || Plot4Signals[36]->isChecked()){
+                || Plot4Signals[30]->isChecked() || Plot4Signals[31]->isChecked()){
 
-            for(int i=0;i<37;i++){
+            for(int i=0;i<32;i++){
                 if(Plot4Signals[i]->isChecked()){
                     ui->graph4->graph(i)->addData(key4, dataValues[i]);
                     ui->graph4->graph(i)->rescaleValueAxis();
                 }
             }
             // remove data of lines that's outside visible range:
-            for(int i=0;i<37;i++){
+            for(int i=0;i<32;i++){
                 ui->graph4->graph(i)->removeDataBefore(key4-10);
             }
             // make key axis range scroll with the data (at a constant range size of 8):
@@ -854,70 +783,60 @@ void quadro::createScrollCheckBox()
     connect(Plot1Signals[4],SIGNAL(clicked()),this,SLOT(Plot1Signals_clicked()));
     Plot1Signals[5] = new QCheckBox("Aileron speed estimated");
     connect(Plot1Signals[5],SIGNAL(clicked()),this,SLOT(Plot1Signals_clicked()));
-    Plot1Signals[6] = new QCheckBox("Elevator position estimated");
+    Plot1Signals[6] = new QCheckBox("Elevator position");
     connect(Plot1Signals[6],SIGNAL(clicked()),this,SLOT(Plot1Signals_clicked()));
-    Plot1Signals[7] = new QCheckBox("Aileron position estimated");
+    Plot1Signals[7] = new QCheckBox("Aileron position");
     connect(Plot1Signals[7],SIGNAL(clicked()),this,SLOT(Plot1Signals_clicked()));
-    Plot1Signals[8] = new QCheckBox("Throttle controller output");
+    Plot1Signals[8] = new QCheckBox("Altitude controller output");
     connect(Plot1Signals[8],SIGNAL(clicked()),this,SLOT(Plot1Signals_clicked()));
-    Plot1Signals[9] = new QCheckBox("Throttle speed");
+    Plot1Signals[9] = new QCheckBox("Altitude speed");
     connect(Plot1Signals[9],SIGNAL(clicked()),this,SLOT(Plot1Signals_clicked()));
-    Plot1Signals[10] = new QCheckBox("Aileron velocity controller output");
+    Plot1Signals[10] = new QCheckBox("Aileron controller output");
     connect(Plot1Signals[10],SIGNAL(clicked()),this,SLOT(Plot1Signals_clicked()));
-    Plot1Signals[11] = new QCheckBox("Elevator velocity controller output");
+    Plot1Signals[11] = new QCheckBox("Elevator controller output");
     connect(Plot1Signals[11],SIGNAL(clicked()),this,SLOT(Plot1Signals_clicked()));
-    Plot1Signals[12] = new QCheckBox("Aileron position controller output");
+    Plot1Signals[12] = new QCheckBox("Aileron position setpoint");
     connect(Plot1Signals[12],SIGNAL(clicked()),this,SLOT(Plot1Signals_clicked()));
-    Plot1Signals[13] = new QCheckBox("Elevator position controller output");
+    Plot1Signals[13] = new QCheckBox("Elevator position setpoint");
     connect(Plot1Signals[13],SIGNAL(clicked()),this,SLOT(Plot1Signals_clicked()));
-    Plot1Signals[14] = new QCheckBox("Throttle setpoint");
+    Plot1Signals[14] = new QCheckBox("Aileron position setpoint");
     connect(Plot1Signals[14],SIGNAL(clicked()),this,SLOT(Plot1Signals_clicked()));
-    Plot1Signals[15] = new QCheckBox("Elevator position setpoint");
+    Plot1Signals[15] = new QCheckBox("Elevator acceleration");
     connect(Plot1Signals[15],SIGNAL(clicked()),this,SLOT(Plot1Signals_clicked()));
-    Plot1Signals[16] = new QCheckBox("Aileron position setpoint");
+    Plot1Signals[16] = new QCheckBox("Aileron acceleration");
     connect(Plot1Signals[16],SIGNAL(clicked()),this,SLOT(Plot1Signals_clicked()));
-    Plot1Signals[17] = new QCheckBox("Elevator velocity setpoint");
+    Plot1Signals[17] = new QCheckBox("Valid gumstix");
     connect(Plot1Signals[17],SIGNAL(clicked()),this,SLOT(Plot1Signals_clicked()));
-    Plot1Signals[18] = new QCheckBox("Aileron velocity setpoint");
+    Plot1Signals[18] = new QCheckBox("Throttle output");
     connect(Plot1Signals[18],SIGNAL(clicked()),this,SLOT(Plot1Signals_clicked()));
-    Plot1Signals[19] = new QCheckBox("Elevator speed estimated 2");
+    Plot1Signals[19] = new QCheckBox("Elevator output");
     connect(Plot1Signals[19],SIGNAL(clicked()),this,SLOT(Plot1Signals_clicked()));
-    Plot1Signals[20] = new QCheckBox("Aileron speed estimated 2");
+    Plot1Signals[20] = new QCheckBox("Aileron output");
     connect(Plot1Signals[20],SIGNAL(clicked()),this,SLOT(Plot1Signals_clicked()));
-    Plot1Signals[21] = new QCheckBox("Elevator ACC");
+    Plot1Signals[21] = new QCheckBox("Rudder output");
     connect(Plot1Signals[21],SIGNAL(clicked()),this,SLOT(Plot1Signals_clicked()));
-    Plot1Signals[22] = new QCheckBox("Aileron ACC");
+    Plot1Signals[22] = new QCheckBox("Blob elevator");
     connect(Plot1Signals[22],SIGNAL(clicked()),this,SLOT(Plot1Signals_clicked()));
-    Plot1Signals[23] = new QCheckBox("Valid gumstix");
+    Plot1Signals[23] = new QCheckBox("Blob aileron");
     connect(Plot1Signals[23],SIGNAL(clicked()),this,SLOT(Plot1Signals_clicked()));
-    Plot1Signals[24] = new QCheckBox("Elevator desired speed position cont");
+    Plot1Signals[24] = new QCheckBox("Blob altitude");
     connect(Plot1Signals[24],SIGNAL(clicked()),this,SLOT(Plot1Signals_clicked()));
-    Plot1Signals[25] = new QCheckBox("Aileron desired speed position cont");
+    Plot1Signals[25] = new QCheckBox("Pitch angle");
     connect(Plot1Signals[25],SIGNAL(clicked()),this,SLOT(Plot1Signals_clicked()));
-    Plot1Signals[26] = new QCheckBox("Elevator desired speed pos cont leader");
+    Plot1Signals[26] = new QCheckBox("Roll angle");
     connect(Plot1Signals[26],SIGNAL(clicked()),this,SLOT(Plot1Signals_clicked()));
-    Plot1Signals[27] = new QCheckBox("Aileron desired speed pos cont leader");
+    Plot1Signals[27] = new QCheckBox("Elevator acceleration error");
     connect(Plot1Signals[27],SIGNAL(clicked()),this,SLOT(Plot1Signals_clicked()));
-    Plot1Signals[28] = new QCheckBox("Output throttle");
+    Plot1Signals[28] = new QCheckBox("Elevator acceleration input");
     connect(Plot1Signals[28],SIGNAL(clicked()),this,SLOT(Plot1Signals_clicked()));
-    Plot1Signals[29] = new QCheckBox("Output elevator");
+    Plot1Signals[29] = new QCheckBox("Aileron acceleration error");
     connect(Plot1Signals[29],SIGNAL(clicked()),this,SLOT(Plot1Signals_clicked()));
-    Plot1Signals[30] = new QCheckBox("Output aileron");
+    Plot1Signals[30] = new QCheckBox("Aileron acceleration input");
     connect(Plot1Signals[30],SIGNAL(clicked()),this,SLOT(Plot1Signals_clicked()));
-    Plot1Signals[31] = new QCheckBox("Output rudder");
+    Plot1Signals[31] = new QCheckBox("Altitude integrated component");
     connect(Plot1Signals[31],SIGNAL(clicked()),this,SLOT(Plot1Signals_clicked()));
-    Plot1Signals[32] = new QCheckBox("Blob Distance");
+    Plot1Signals[32] = new QCheckBox("All signals");
     connect(Plot1Signals[32],SIGNAL(clicked()),this,SLOT(Plot1Signals_clicked()));
-    Plot1Signals[33] = new QCheckBox("Blob Horizontal");
-    connect(Plot1Signals[33],SIGNAL(clicked()),this,SLOT(Plot1Signals_clicked()));
-    Plot1Signals[34] = new QCheckBox("Blob Vertical");
-    connect(Plot1Signals[34],SIGNAL(clicked()),this,SLOT(Plot1Signals_clicked()));
-    Plot1Signals[35] = new QCheckBox("Pitch Angle");
-    connect(Plot1Signals[35],SIGNAL(clicked()),this,SLOT(Plot1Signals_clicked()));
-    Plot1Signals[36] = new QCheckBox("Roll Angle");
-    connect(Plot1Signals[36],SIGNAL(clicked()),this,SLOT(Plot1Signals_clicked()));
-    Plot1Signals[37] = new QCheckBox("All signals");
-    connect(Plot1Signals[37],SIGNAL(clicked()),this,SLOT(Plot1SignalAll_clicked()));
 
     Plot2Signals[0] = new QCheckBox("Ground distance estimated");
     connect(Plot2Signals[0],SIGNAL(clicked()),this,SLOT(Plot2Signals_clicked()));
@@ -931,70 +850,60 @@ void quadro::createScrollCheckBox()
     connect(Plot2Signals[4],SIGNAL(clicked()),this,SLOT(Plot2Signals_clicked()));
     Plot2Signals[5] = new QCheckBox("Aileron speed estimated");
     connect(Plot2Signals[5],SIGNAL(clicked()),this,SLOT(Plot2Signals_clicked()));
-    Plot2Signals[6] = new QCheckBox("Elevator position estimated");
+    Plot2Signals[6] = new QCheckBox("Elevator position");
     connect(Plot2Signals[6],SIGNAL(clicked()),this,SLOT(Plot2Signals_clicked()));
-    Plot2Signals[7] = new QCheckBox("Aileron position estimated");
+    Plot2Signals[7] = new QCheckBox("Aileron position");
     connect(Plot2Signals[7],SIGNAL(clicked()),this,SLOT(Plot2Signals_clicked()));
-    Plot2Signals[8] = new QCheckBox("Throttle controller output");
+    Plot2Signals[8] = new QCheckBox("Altitude controller output");
     connect(Plot2Signals[8],SIGNAL(clicked()),this,SLOT(Plot2Signals_clicked()));
-    Plot2Signals[9] = new QCheckBox("Throttle speed");
+    Plot2Signals[9] = new QCheckBox("Altitude speed");
     connect(Plot2Signals[9],SIGNAL(clicked()),this,SLOT(Plot2Signals_clicked()));
-    Plot2Signals[10] = new QCheckBox("Aileron velocity controller output");
+    Plot2Signals[10] = new QCheckBox("Aileron controller output");
     connect(Plot2Signals[10],SIGNAL(clicked()),this,SLOT(Plot2Signals_clicked()));
-    Plot2Signals[11] = new QCheckBox("Elevator velocity controller output");
+    Plot2Signals[11] = new QCheckBox("Elevator controller output");
     connect(Plot2Signals[11],SIGNAL(clicked()),this,SLOT(Plot2Signals_clicked()));
-    Plot2Signals[12] = new QCheckBox("Aileron position controller output");
+    Plot2Signals[12] = new QCheckBox("Aileron position setpoint");
     connect(Plot2Signals[12],SIGNAL(clicked()),this,SLOT(Plot2Signals_clicked()));
-    Plot2Signals[13] = new QCheckBox("Elevator position controller output");
+    Plot2Signals[13] = new QCheckBox("Elevator position setpoint");
     connect(Plot2Signals[13],SIGNAL(clicked()),this,SLOT(Plot2Signals_clicked()));
-    Plot2Signals[14] = new QCheckBox("Throttle setpoint");
+    Plot2Signals[14] = new QCheckBox("Aileron position setpoint");
     connect(Plot2Signals[14],SIGNAL(clicked()),this,SLOT(Plot2Signals_clicked()));
-    Plot2Signals[15] = new QCheckBox("Elevator position setpoint");
+    Plot2Signals[15] = new QCheckBox("Elevator acceleration");
     connect(Plot2Signals[15],SIGNAL(clicked()),this,SLOT(Plot2Signals_clicked()));
-    Plot2Signals[16] = new QCheckBox("Aileron position setpoint");
+    Plot2Signals[16] = new QCheckBox("Aileron acceleration");
     connect(Plot2Signals[16],SIGNAL(clicked()),this,SLOT(Plot2Signals_clicked()));
-    Plot2Signals[17] = new QCheckBox("Elevator velocity setpoint");
+    Plot2Signals[17] = new QCheckBox("Valid gumstix");
     connect(Plot2Signals[17],SIGNAL(clicked()),this,SLOT(Plot2Signals_clicked()));
-    Plot2Signals[18] = new QCheckBox("Aileron velocity setpoint");
+    Plot2Signals[18] = new QCheckBox("Throttle output");
     connect(Plot2Signals[18],SIGNAL(clicked()),this,SLOT(Plot2Signals_clicked()));
-    Plot2Signals[19] = new QCheckBox("Elevator speed estimated 2");
+    Plot2Signals[19] = new QCheckBox("Elevator output");
     connect(Plot2Signals[19],SIGNAL(clicked()),this,SLOT(Plot2Signals_clicked()));
-    Plot2Signals[20] = new QCheckBox("Aileron speed estimated 2");
+    Plot2Signals[20] = new QCheckBox("Aileron output");
     connect(Plot2Signals[20],SIGNAL(clicked()),this,SLOT(Plot2Signals_clicked()));
-    Plot2Signals[21] = new QCheckBox("Elevator ACC");
+    Plot2Signals[21] = new QCheckBox("Rudder output");
     connect(Plot2Signals[21],SIGNAL(clicked()),this,SLOT(Plot2Signals_clicked()));
-    Plot2Signals[22] = new QCheckBox("Aileron ACC");
+    Plot2Signals[22] = new QCheckBox("Blob elevator");
     connect(Plot2Signals[22],SIGNAL(clicked()),this,SLOT(Plot2Signals_clicked()));
-    Plot2Signals[23] = new QCheckBox("Valid gumstix");
+    Plot2Signals[23] = new QCheckBox("Blob aileron");
     connect(Plot2Signals[23],SIGNAL(clicked()),this,SLOT(Plot2Signals_clicked()));
-    Plot2Signals[24] = new QCheckBox("Elevator desired speed position cont");
+    Plot2Signals[24] = new QCheckBox("Blob altitude");
     connect(Plot2Signals[24],SIGNAL(clicked()),this,SLOT(Plot2Signals_clicked()));
-    Plot2Signals[25] = new QCheckBox("Aileron desired speed position cont");
+    Plot2Signals[25] = new QCheckBox("Pitch angle");
     connect(Plot2Signals[25],SIGNAL(clicked()),this,SLOT(Plot2Signals_clicked()));
-    Plot2Signals[26] = new QCheckBox("Elevator desired speed pos cont leader");
+    Plot2Signals[26] = new QCheckBox("Roll angle");
     connect(Plot2Signals[26],SIGNAL(clicked()),this,SLOT(Plot2Signals_clicked()));
-    Plot2Signals[27] = new QCheckBox("Aileron desired speed pos cont leader");
+    Plot2Signals[27] = new QCheckBox("Elevator acceleration error");
     connect(Plot2Signals[27],SIGNAL(clicked()),this,SLOT(Plot2Signals_clicked()));
-    Plot2Signals[28] = new QCheckBox("Output throttle");
+    Plot2Signals[28] = new QCheckBox("Elevator acceleration input");
     connect(Plot2Signals[28],SIGNAL(clicked()),this,SLOT(Plot2Signals_clicked()));
-    Plot2Signals[29] = new QCheckBox("Output elevator");
+    Plot2Signals[29] = new QCheckBox("Aileron acceleration error");
     connect(Plot2Signals[29],SIGNAL(clicked()),this,SLOT(Plot2Signals_clicked()));
-    Plot2Signals[30] = new QCheckBox("Output aileron");
+    Plot2Signals[30] = new QCheckBox("Aileron acceleration input");
     connect(Plot2Signals[30],SIGNAL(clicked()),this,SLOT(Plot2Signals_clicked()));
-    Plot2Signals[31] = new QCheckBox("Output rudder");
+    Plot2Signals[31] = new QCheckBox("Altitude integrated component");
     connect(Plot2Signals[31],SIGNAL(clicked()),this,SLOT(Plot2Signals_clicked()));
-    Plot2Signals[32] = new QCheckBox("Blob Distance");
+    Plot2Signals[32] = new QCheckBox("All signals");
     connect(Plot2Signals[32],SIGNAL(clicked()),this,SLOT(Plot2Signals_clicked()));
-    Plot2Signals[33] = new QCheckBox("Blob Horizontal");
-    connect(Plot2Signals[33],SIGNAL(clicked()),this,SLOT(Plot2Signals_clicked()));
-    Plot2Signals[34] = new QCheckBox("Blob Vertical");
-    connect(Plot2Signals[34],SIGNAL(clicked()),this,SLOT(Plot2Signals_clicked()));
-    Plot2Signals[35] = new QCheckBox("Pitch Angle");
-    connect(Plot2Signals[35],SIGNAL(clicked()),this,SLOT(Plot2Signals_clicked()));
-    Plot2Signals[36] = new QCheckBox("Roll Angle");
-    connect(Plot2Signals[36],SIGNAL(clicked()),this,SLOT(Plot2Signals_clicked()));
-    Plot2Signals[37] = new QCheckBox("All signals");
-    connect(Plot2Signals[37],SIGNAL(clicked()),this,SLOT(Plot2SignalAll_clicked()));
 
     Plot3Signals[0] = new QCheckBox("Ground distance estimated");
     connect(Plot3Signals[0],SIGNAL(clicked()),this,SLOT(Plot3Signals_clicked()));
@@ -1008,70 +917,60 @@ void quadro::createScrollCheckBox()
     connect(Plot3Signals[4],SIGNAL(clicked()),this,SLOT(Plot3Signals_clicked()));
     Plot3Signals[5] = new QCheckBox("Aileron speed estimated");
     connect(Plot3Signals[5],SIGNAL(clicked()),this,SLOT(Plot3Signals_clicked()));
-    Plot3Signals[6] = new QCheckBox("Elevator position estimated");
+    Plot3Signals[6] = new QCheckBox("Elevator position");
     connect(Plot3Signals[6],SIGNAL(clicked()),this,SLOT(Plot3Signals_clicked()));
-    Plot3Signals[7] = new QCheckBox("Aileron position estimated");
+    Plot3Signals[7] = new QCheckBox("Aileron position");
     connect(Plot3Signals[7],SIGNAL(clicked()),this,SLOT(Plot3Signals_clicked()));
-    Plot3Signals[8] = new QCheckBox("Throttle controller output");
+    Plot3Signals[8] = new QCheckBox("Altitude controller output");
     connect(Plot3Signals[8],SIGNAL(clicked()),this,SLOT(Plot3Signals_clicked()));
-    Plot3Signals[9] = new QCheckBox("Throttle speed");
+    Plot3Signals[9] = new QCheckBox("Altitude speed");
     connect(Plot3Signals[9],SIGNAL(clicked()),this,SLOT(Plot3Signals_clicked()));
-    Plot3Signals[10] = new QCheckBox("Aileron velocity controller output");
+    Plot3Signals[10] = new QCheckBox("Aileron controller output");
     connect(Plot3Signals[10],SIGNAL(clicked()),this,SLOT(Plot3Signals_clicked()));
-    Plot3Signals[11] = new QCheckBox("Elevator velocity controller output");
+    Plot3Signals[11] = new QCheckBox("Elevator controller output");
     connect(Plot3Signals[11],SIGNAL(clicked()),this,SLOT(Plot3Signals_clicked()));
-    Plot3Signals[12] = new QCheckBox("Aileron position controller output");
+    Plot3Signals[12] = new QCheckBox("Aileron position setpoint");
     connect(Plot3Signals[12],SIGNAL(clicked()),this,SLOT(Plot3Signals_clicked()));
-    Plot3Signals[13] = new QCheckBox("Elevator position controller output");
+    Plot3Signals[13] = new QCheckBox("Elevator position setpoint");
     connect(Plot3Signals[13],SIGNAL(clicked()),this,SLOT(Plot3Signals_clicked()));
-    Plot3Signals[14] = new QCheckBox("Throttle setpoint");
+    Plot3Signals[14] = new QCheckBox("Aileron position setpoint");
     connect(Plot3Signals[14],SIGNAL(clicked()),this,SLOT(Plot3Signals_clicked()));
-    Plot3Signals[15] = new QCheckBox("Elevator position setpoint");
+    Plot3Signals[15] = new QCheckBox("Elevator acceleration");
     connect(Plot3Signals[15],SIGNAL(clicked()),this,SLOT(Plot3Signals_clicked()));
-    Plot3Signals[16] = new QCheckBox("Aileron position setpoint");
+    Plot3Signals[16] = new QCheckBox("Aileron acceleration");
     connect(Plot3Signals[16],SIGNAL(clicked()),this,SLOT(Plot3Signals_clicked()));
-    Plot3Signals[17] = new QCheckBox("Elevator velocity setpoint");
+    Plot3Signals[17] = new QCheckBox("Valid gumstix");
     connect(Plot3Signals[17],SIGNAL(clicked()),this,SLOT(Plot3Signals_clicked()));
-    Plot3Signals[18] = new QCheckBox("Aileron velocity setpoint");
+    Plot3Signals[18] = new QCheckBox("Throttle output");
     connect(Plot3Signals[18],SIGNAL(clicked()),this,SLOT(Plot3Signals_clicked()));
-    Plot3Signals[19] = new QCheckBox("Elevator speed estimated 2");
+    Plot3Signals[19] = new QCheckBox("Elevator output");
     connect(Plot3Signals[19],SIGNAL(clicked()),this,SLOT(Plot3Signals_clicked()));
-    Plot3Signals[20] = new QCheckBox("Aileron speed estimated 2");
+    Plot3Signals[20] = new QCheckBox("Aileron output");
     connect(Plot3Signals[20],SIGNAL(clicked()),this,SLOT(Plot3Signals_clicked()));
-    Plot3Signals[21] = new QCheckBox("Elevator ACC");
+    Plot3Signals[21] = new QCheckBox("Rudder output");
     connect(Plot3Signals[21],SIGNAL(clicked()),this,SLOT(Plot3Signals_clicked()));
-    Plot3Signals[22] = new QCheckBox("Aileron ACC");
+    Plot3Signals[22] = new QCheckBox("Blob elevator");
     connect(Plot3Signals[22],SIGNAL(clicked()),this,SLOT(Plot3Signals_clicked()));
-    Plot3Signals[23] = new QCheckBox("Valid gumstix");
+    Plot3Signals[23] = new QCheckBox("Blob aileron");
     connect(Plot3Signals[23],SIGNAL(clicked()),this,SLOT(Plot3Signals_clicked()));
-    Plot3Signals[24] = new QCheckBox("Elevator desired speed position cont");
+    Plot3Signals[24] = new QCheckBox("Blob altitude");
     connect(Plot3Signals[24],SIGNAL(clicked()),this,SLOT(Plot3Signals_clicked()));
-    Plot3Signals[25] = new QCheckBox("Aileron desired speed position cont");
+    Plot3Signals[25] = new QCheckBox("Pitch angle");
     connect(Plot3Signals[25],SIGNAL(clicked()),this,SLOT(Plot3Signals_clicked()));
-    Plot3Signals[26] = new QCheckBox("Elevator desired speed pos cont leader");
+    Plot3Signals[26] = new QCheckBox("Roll angle");
     connect(Plot3Signals[26],SIGNAL(clicked()),this,SLOT(Plot3Signals_clicked()));
-    Plot3Signals[27] = new QCheckBox("Aileron desired speed pos cont leader");
+    Plot3Signals[27] = new QCheckBox("Elevator acceleration error");
     connect(Plot3Signals[27],SIGNAL(clicked()),this,SLOT(Plot3Signals_clicked()));
-    Plot3Signals[28] = new QCheckBox("Output throttle");
+    Plot3Signals[28] = new QCheckBox("Elevator acceleration input");
     connect(Plot3Signals[28],SIGNAL(clicked()),this,SLOT(Plot3Signals_clicked()));
-    Plot3Signals[29] = new QCheckBox("Output elevator");
+    Plot3Signals[29] = new QCheckBox("Aileron acceleration error");
     connect(Plot3Signals[29],SIGNAL(clicked()),this,SLOT(Plot3Signals_clicked()));
-    Plot3Signals[30] = new QCheckBox("Output aileron");
+    Plot3Signals[30] = new QCheckBox("Aileron acceleration input");
     connect(Plot3Signals[30],SIGNAL(clicked()),this,SLOT(Plot3Signals_clicked()));
-    Plot3Signals[31] = new QCheckBox("Output rudder");
+    Plot3Signals[31] = new QCheckBox("Altitude integrated component");
     connect(Plot3Signals[31],SIGNAL(clicked()),this,SLOT(Plot3Signals_clicked()));
-    Plot3Signals[32] = new QCheckBox("Blob Distance");
+    Plot3Signals[32] = new QCheckBox("All signals");
     connect(Plot3Signals[32],SIGNAL(clicked()),this,SLOT(Plot3Signals_clicked()));
-    Plot3Signals[33] = new QCheckBox("Blob Horizontal");
-    connect(Plot3Signals[33],SIGNAL(clicked()),this,SLOT(Plot3Signals_clicked()));
-    Plot3Signals[34] = new QCheckBox("Blob Vertical");
-    connect(Plot3Signals[34],SIGNAL(clicked()),this,SLOT(Plot3Signals_clicked()));
-    Plot3Signals[35] = new QCheckBox("Pitch Angle");
-    connect(Plot3Signals[35],SIGNAL(clicked()),this,SLOT(Plot3Signals_clicked()));
-    Plot3Signals[36] = new QCheckBox("Roll Angle");
-    connect(Plot3Signals[36],SIGNAL(clicked()),this,SLOT(Plot3Signals_clicked()));
-    Plot3Signals[37] = new QCheckBox("All signals");
-    connect(Plot3Signals[37],SIGNAL(clicked()),this,SLOT(Plot3SignalAll_clicked()));
 
     Plot4Signals[0] = new QCheckBox("Ground distance estimated");
     connect(Plot4Signals[0],SIGNAL(clicked()),this,SLOT(Plot4Signals_clicked()));
@@ -1085,81 +984,71 @@ void quadro::createScrollCheckBox()
     connect(Plot4Signals[4],SIGNAL(clicked()),this,SLOT(Plot4Signals_clicked()));
     Plot4Signals[5] = new QCheckBox("Aileron speed estimated");
     connect(Plot4Signals[5],SIGNAL(clicked()),this,SLOT(Plot4Signals_clicked()));
-    Plot4Signals[6] = new QCheckBox("Elevator position estimated");
+    Plot4Signals[6] = new QCheckBox("Elevator position");
     connect(Plot4Signals[6],SIGNAL(clicked()),this,SLOT(Plot4Signals_clicked()));
-    Plot4Signals[7] = new QCheckBox("Aileron position estimated");
+    Plot4Signals[7] = new QCheckBox("Aileron position");
     connect(Plot4Signals[7],SIGNAL(clicked()),this,SLOT(Plot4Signals_clicked()));
-    Plot4Signals[8] = new QCheckBox("Throttle controller output");
+    Plot4Signals[8] = new QCheckBox("Altitude controller output");
     connect(Plot4Signals[8],SIGNAL(clicked()),this,SLOT(Plot4Signals_clicked()));
-    Plot4Signals[9] = new QCheckBox("Throttle speed");
+    Plot4Signals[9] = new QCheckBox("Altitude speed");
     connect(Plot4Signals[9],SIGNAL(clicked()),this,SLOT(Plot4Signals_clicked()));
-    Plot4Signals[10] = new QCheckBox("Aileron velocity controller output");
+    Plot4Signals[10] = new QCheckBox("Aileron controller output");
     connect(Plot4Signals[10],SIGNAL(clicked()),this,SLOT(Plot4Signals_clicked()));
-    Plot4Signals[11] = new QCheckBox("Elevator velocity controller output");
+    Plot4Signals[11] = new QCheckBox("Elevator controller output");
     connect(Plot4Signals[11],SIGNAL(clicked()),this,SLOT(Plot4Signals_clicked()));
-    Plot4Signals[12] = new QCheckBox("Aileron position controller output");
+    Plot4Signals[12] = new QCheckBox("Aileron position setpoint");
     connect(Plot4Signals[12],SIGNAL(clicked()),this,SLOT(Plot4Signals_clicked()));
-    Plot4Signals[13] = new QCheckBox("Elevator position controller output");
+    Plot4Signals[13] = new QCheckBox("Elevator position setpoint");
     connect(Plot4Signals[13],SIGNAL(clicked()),this,SLOT(Plot4Signals_clicked()));
-    Plot4Signals[14] = new QCheckBox("Throttle setpoint");
+    Plot4Signals[14] = new QCheckBox("Aileron position setpoint");
     connect(Plot4Signals[14],SIGNAL(clicked()),this,SLOT(Plot4Signals_clicked()));
-    Plot4Signals[15] = new QCheckBox("Elevator position setpoint");
+    Plot4Signals[15] = new QCheckBox("Elevator acceleration");
     connect(Plot4Signals[15],SIGNAL(clicked()),this,SLOT(Plot4Signals_clicked()));
-    Plot4Signals[16] = new QCheckBox("Aileron position setpoint");
+    Plot4Signals[16] = new QCheckBox("Aileron acceleration");
     connect(Plot4Signals[16],SIGNAL(clicked()),this,SLOT(Plot4Signals_clicked()));
-    Plot4Signals[17] = new QCheckBox("Elevator velocity setpoint");
+    Plot4Signals[17] = new QCheckBox("Valid gumstix");
     connect(Plot4Signals[17],SIGNAL(clicked()),this,SLOT(Plot4Signals_clicked()));
-    Plot4Signals[18] = new QCheckBox("Aileron velocity setpoint");
+    Plot4Signals[18] = new QCheckBox("Throttle output");
     connect(Plot4Signals[18],SIGNAL(clicked()),this,SLOT(Plot4Signals_clicked()));
-    Plot4Signals[19] = new QCheckBox("Elevator speed estimated 2");
+    Plot4Signals[19] = new QCheckBox("Elevator output");
     connect(Plot4Signals[19],SIGNAL(clicked()),this,SLOT(Plot4Signals_clicked()));
-    Plot4Signals[20] = new QCheckBox("Aileron speed estimated 2");
+    Plot4Signals[20] = new QCheckBox("Aileron output");
     connect(Plot4Signals[20],SIGNAL(clicked()),this,SLOT(Plot4Signals_clicked()));
-    Plot4Signals[21] = new QCheckBox("Elevator ACC");
+    Plot4Signals[21] = new QCheckBox("Rudder output");
     connect(Plot4Signals[21],SIGNAL(clicked()),this,SLOT(Plot4Signals_clicked()));
-    Plot4Signals[22] = new QCheckBox("Aileron ACC");
+    Plot4Signals[22] = new QCheckBox("Blob elevator");
     connect(Plot4Signals[22],SIGNAL(clicked()),this,SLOT(Plot4Signals_clicked()));
-    Plot4Signals[23] = new QCheckBox("Valid gumstix");
+    Plot4Signals[23] = new QCheckBox("Blob aileron");
     connect(Plot4Signals[23],SIGNAL(clicked()),this,SLOT(Plot4Signals_clicked()));
-    Plot4Signals[24] = new QCheckBox("Elevator desired speed position cont");
+    Plot4Signals[24] = new QCheckBox("Blob altitude");
     connect(Plot4Signals[24],SIGNAL(clicked()),this,SLOT(Plot4Signals_clicked()));
-    Plot4Signals[25] = new QCheckBox("Aileron desired speed position cont");
+    Plot4Signals[25] = new QCheckBox("Pitch angle");
     connect(Plot4Signals[25],SIGNAL(clicked()),this,SLOT(Plot4Signals_clicked()));
-    Plot4Signals[26] = new QCheckBox("Elevator desired speed pos cont leader");
+    Plot4Signals[26] = new QCheckBox("Roll angle");
     connect(Plot4Signals[26],SIGNAL(clicked()),this,SLOT(Plot4Signals_clicked()));
-    Plot4Signals[27] = new QCheckBox("Aileron desired speed pos cont leader");
+    Plot4Signals[27] = new QCheckBox("Elevator acceleration error");
     connect(Plot4Signals[27],SIGNAL(clicked()),this,SLOT(Plot4Signals_clicked()));
-    Plot4Signals[28] = new QCheckBox("Output throttle");
+    Plot4Signals[28] = new QCheckBox("Elevator acceleration input");
     connect(Plot4Signals[28],SIGNAL(clicked()),this,SLOT(Plot4Signals_clicked()));
-    Plot4Signals[29] = new QCheckBox("Output elevator");
+    Plot4Signals[29] = new QCheckBox("Aileron acceleration error");
     connect(Plot4Signals[29],SIGNAL(clicked()),this,SLOT(Plot4Signals_clicked()));
-    Plot4Signals[30] = new QCheckBox("Output aileron");
+    Plot4Signals[30] = new QCheckBox("Aileron acceleration input");
     connect(Plot4Signals[30],SIGNAL(clicked()),this,SLOT(Plot4Signals_clicked()));
-    Plot4Signals[31] = new QCheckBox("Output rudder");
+    Plot4Signals[31] = new QCheckBox("Altitude integrated component");
     connect(Plot4Signals[31],SIGNAL(clicked()),this,SLOT(Plot4Signals_clicked()));
-    Plot4Signals[32] = new QCheckBox("Blob Distance");
+    Plot4Signals[32] = new QCheckBox("All signals");
     connect(Plot4Signals[32],SIGNAL(clicked()),this,SLOT(Plot4Signals_clicked()));
-    Plot4Signals[33] = new QCheckBox("Blob Horizontal");
-    connect(Plot4Signals[33],SIGNAL(clicked()),this,SLOT(Plot4Signals_clicked()));
-    Plot4Signals[34] = new QCheckBox("Blob Vertical");
-    connect(Plot4Signals[34],SIGNAL(clicked()),this,SLOT(Plot4Signals_clicked()));
-    Plot4Signals[35] = new QCheckBox("Pitch Angle");
-    connect(Plot4Signals[35],SIGNAL(clicked()),this,SLOT(Plot4Signals_clicked()));
-    Plot4Signals[36] = new QCheckBox("Roll Angle");
-    connect(Plot4Signals[36],SIGNAL(clicked()),this,SLOT(Plot4Signals_clicked()));
-    Plot4Signals[37] = new QCheckBox("All signals");
-    connect(Plot4Signals[37],SIGNAL(clicked()),this,SLOT(Plot4SignalAll_clicked()));
 
-    for(int i=0;i<38;i++){
+    for(int i=0;i<33;i++){
         checkLayout->addWidget(Plot1Signals[i]);
     }
-    for(int i=0;i<38;i++){
+    for(int i=0;i<33;i++){
         checkLayout->addWidget(Plot2Signals[i]);
     }
-    for(int i=0;i<38;i++){
+    for(int i=0;i<33;i++){
         checkLayout->addWidget(Plot3Signals[i]);
     }
-    for(int i=0;i<38;i++){
+    for(int i=0;i<33;i++){
         checkLayout->addWidget(Plot4Signals[i]);
     }
 
@@ -1169,16 +1058,16 @@ void quadro::createScrollCheckBox()
 
 void quadro::setAllCheckFalse()
 {
-    for(int i=0;i<38;i++){
+    for(int i=0;i<33;i++){
         Plot1Signals[i]->setVisible(false);
     }
-    for(int i=0;i<38;i++){
+    for(int i=0;i<33;i++){
         Plot2Signals[i]->setVisible(false);
     }
-    for(int i=0;i<38;i++){
+    for(int i=0;i<33;i++){
         Plot3Signals[i]->setVisible(false);
     }
-    for(int i=0;i<38;i++){
+    for(int i=0;i<33;i++){
         Plot4Signals[i]->setVisible(false);
     }
 
@@ -1187,25 +1076,25 @@ void quadro::on_comboBox_activated(int index)
 {
     if(index==0){
         setAllCheckFalse();
-        for(int i=0;i<38;i++){
+        for(int i=0;i<33;i++){
             Plot1Signals[i]->setVisible(true);
         }
     }
     else if(index==1){
         setAllCheckFalse();
-        for(int i=0;i<38;i++){
+        for(int i=0;i<33;i++){
             Plot2Signals[i]->setVisible(true);
         }
     }
     else if(index==2){
         setAllCheckFalse();
-        for(int i=0;i<38;i++){
+        for(int i=0;i<33;i++){
             Plot3Signals[i]->setVisible(true);
         }
     }
     else if(index==3){
         setAllCheckFalse();
-        for(int i=0;i<38;i++){
+        for(int i=0;i<33;i++){
             Plot4Signals[i]->setVisible(true);
         }
     }
@@ -1213,91 +1102,99 @@ void quadro::on_comboBox_activated(int index)
 
 void quadro::Plot1SignalAll_clicked()
 {
-    if(Plot1Signals[37]->isChecked()){
-        for(int i=0;i<37;i++){
+    if(Plot1Signals[32]->isChecked()){
+        for(int i=0;i<32;i++){
             Plot1Signals[i]->setChecked(true);
         }
 
     }else{
-        for(int i=0;i<37;i++){
+        for(int i=0;i<32;i++){
             Plot1Signals[i]->setChecked(false);
         }
 
     }
+    CheckSignalsForTurning();
 }
 
 void quadro::Plot1Signals_clicked(){
-    for(int i=0;i<37;i++){
+    for(int i=0;i<32;i++){
         if(!Plot1Signals[i]->isChecked()){
-            Plot1Signals[37]->setChecked(false);
+            Plot1Signals[32]->setChecked(false);
         }
     }
+    CheckSignalsForTurning();
 }
 
 
 void quadro::Plot2SignalAll_clicked()
-{    if(Plot2Signals[37]->isChecked()){
-        for(int i=0;i<37;i++){
+{    if(Plot2Signals[32]->isChecked()){
+        for(int i=0;i<32;i++){
             Plot2Signals[i]->setChecked(true);
         }
 
     }else{
-        for(int i=0;i<37;i++){
+        for(int i=0;i<32;i++){
             Plot2Signals[i]->setChecked(false);
         }
 
     }
+     CheckSignalsForTurning();
 }
 void quadro::Plot2Signals_clicked(){
-    for(int i=0;i<37;i++){
+    for(int i=0;i<32;i++){
         if(!Plot2Signals[i]->isChecked()){
-            Plot2Signals[37]->setChecked(false);
+            Plot2Signals[32]->setChecked(false);
         }
     }
+    CheckSignalsForTurning();
 }
 
 void quadro::Plot3SignalAll_clicked()
 {
-    if(Plot3Signals[37]->isChecked()){
-        for(int i=0;i<37;i++){
+    if(Plot3Signals[32]->isChecked()){
+        for(int i=0;i<32;i++){
             Plot3Signals[i]->setChecked(true);
         }
 
     }else{
-        for(int i=0;i<37;i++){
+        for(int i=0;i<32;i++){
             Plot3Signals[i]->setChecked(false);
         }
 
     }
+    CheckSignalsForTurning();
 }
 void quadro::Plot3Signals_clicked(){
-    for(int i=0;i<37;i++){
+    for(int i=0;i<32;i++){
         if(!Plot3Signals[i]->isChecked()){
-            Plot3Signals[37]->setChecked(false);
+            Plot3Signals[32]->setChecked(false);
         }
     }
+    CheckSignalsForTurning();
 }
 
 void quadro::Plot4SignalAll_clicked()
 {
-    if(Plot4Signals[37]->isChecked()){
-        for(int i=0;i<37;i++){
+    if(Plot4Signals[32]->isChecked()){
+        for(int i=0;i<32;i++){
             Plot4Signals[i]->setChecked(true);
         }
 
     }else{
-        for(int i=0;i<37;i++){
+        for(int i=0;i<32;i++){
             Plot4Signals[i]->setChecked(false);
         }
 
     }
+    CheckSignalsForTurning();
 }
 void quadro::Plot4Signals_clicked(){
-    for(int i=0;i<37;i++){
+    for(int i=0;i<32;i++){
         if(!Plot4Signals[i]->isChecked()){
-            Plot4Signals[37]->setChecked(false);
+            Plot4Signals[32]->setChecked(false);
         }
     }
+    CheckSignalsForTurning();
 }
 
 void quadro::detectStatus()
@@ -1310,12 +1207,19 @@ void quadro::realtimeDataStatus()
 {
     if (getStatus(kopter, COMMANDS.CONTROLLERS)==CONTROLLERS.OFF){
         ui->controllersStatus->setText("Off");
+        failureDetectionThread->setPositionEnable(false);
+        failureDetectionThread->setHeightEnable(false);
     }else if (getStatus(kopter, COMMANDS.CONTROLLERS)==CONTROLLERS.VELOCITY){
         ui->controllersStatus->setText("Velocity");
+        failureDetectionThread->setHeightEnable(true);
+        failureDetectionThread->setPositionEnable(false);
     }else if (getStatus(kopter, COMMANDS.CONTROLLERS)==CONTROLLERS.POSITION){
         ui->controllersStatus->setText("Position");
-    }else if (getStatus(kopter, COMMANDS.CONTROLLERS)==CONTROLLERS.BOTH){
-        ui->controllersStatus->setText("Both");
+        failureDetectionThread->setPositionEnable(true);
+    }else if (getStatus(kopter, COMMANDS.CONTROLLERS)==CONTROLLERS.MPC){
+        ui->controllersStatus->setText("MPC");
+        failureDetectionThread->setPositionEnable(true);
+        failureDetectionThread->setHeightEnable(true);
     }
 
     if (getStatus(kopter, COMMANDS.LANDING)==ONOFF.ON){
@@ -1324,9 +1228,9 @@ void quadro::realtimeDataStatus()
         ui->landingStatus->setText("Off");
     }
 
-    if (getStatus(kopter, COMMANDS.GUMSTIX)==ONOFF.ON){
+    if (getTelemetry(kopter,TELEMETRIES.VALID_GUMSTIX)>0.5){
         ui->gumstixStatus->setText("On");
-    }else if (getStatus(kopter, COMMANDS.GUMSTIX)==ONOFF.OFF){
+    }else{
         ui->gumstixStatus->setText("Off");
     }
     if (getStatus(kopter, COMMANDS.TRAJECTORY_FOLLOW)==ONOFF.ON){
@@ -1334,7 +1238,21 @@ void quadro::realtimeDataStatus()
     }else if (getStatus(kopter, COMMANDS.TRAJECTORY_FOLLOW)==ONOFF.OFF){
         ui->trajectoryStatus->setText("Off");
     }
-
+    //errors
+    bool error=false;
+    for(int i =0;i<3;i++)
+    {
+        if(failureDetectionThread->getErrors(i)==1)
+        {
+            ui->errorLabel_2->setText("ERROR");
+            ui->errorLabel_2->setStyleSheet("QLabel {color : red; }");
+            error=true;
+        }
+    }
+    if(error==false){
+        ui->errorLabel_2->setText("No errors");
+        ui->errorLabel_2->setStyleSheet("QLabel {color : green; }");
+    }
 }
 
 void quadro::createLegend()
@@ -1401,7 +1319,7 @@ void quadro::createLegend()
     palette6.setColor(QPalette::WindowText, Qt::gray);
     line6->setPalette(palette6);
 
-    QLabel *legend7 = new QLabel("Elevator position estimated");
+    QLabel *legend7 = new QLabel("Elevator position");
     QFrame *line7 = new QFrame();
     line7->setObjectName(QString::fromUtf8("line"));
     line7->setFrameShape(QFrame::HLine);
@@ -1411,7 +1329,7 @@ void quadro::createLegend()
     palette7.setColor(QPalette::WindowText, Qt::yellow);
     line7->setPalette(palette7);
 
-    QLabel *legend8 = new QLabel("Aileron position estimated");
+    QLabel *legend8 = new QLabel("Aileron position");
     QFrame *line8 = new QFrame();
     line8->setObjectName(QString::fromUtf8("line"));
     line8->setFrameShape(QFrame::HLine);
@@ -1421,7 +1339,7 @@ void quadro::createLegend()
     palette8.setColor(QPalette::WindowText, Qt::magenta);
     line8->setPalette(palette8);
 
-    QLabel *legend9 = new QLabel("Throttle controller output");
+    QLabel *legend9 = new QLabel("Altitude controller output");
     QFrame *line9 = new QFrame();
     line9->setObjectName(QString::fromUtf8("line"));
     line9->setFrameShape(QFrame::HLine);
@@ -1431,7 +1349,7 @@ void quadro::createLegend()
     palette9.setColor(QPalette::WindowText, Qt::darkBlue);
     line9->setPalette(palette9);
 
-    QLabel *legend10 = new QLabel("Throttle speed");
+    QLabel *legend10 = new QLabel("Altitude speed");
     QFrame *line10 = new QFrame();
     line10->setObjectName(QString::fromUtf8("line"));
     line10->setFrameShape(QFrame::HLine);
@@ -1441,7 +1359,7 @@ void quadro::createLegend()
     palette10.setColor(QPalette::WindowText, Qt::darkRed);
     line10->setPalette(palette10);
 
-    QLabel *legend11 = new QLabel("Aileron velocity controller output");
+    QLabel *legend11 = new QLabel("Aileron controller output");
     QFrame *line11 = new QFrame();
     line11->setObjectName(QString::fromUtf8("line"));
     line11->setFrameShape(QFrame::HLine);
@@ -1451,7 +1369,7 @@ void quadro::createLegend()
     palette11.setColor(QPalette::WindowText, Qt::darkGreen);
     line11->setPalette(palette11);
 
-    QLabel *legend12 = new QLabel("Elevator velocity controller output");
+    QLabel *legend12 = new QLabel("Elevator controller output");
     QFrame *line12 = new QFrame();
     line12->setObjectName(QString::fromUtf8("line"));
     line12->setFrameShape(QFrame::HLine);
@@ -1461,7 +1379,7 @@ void quadro::createLegend()
     palette12.setColor(QPalette::WindowText, Qt::darkCyan);
     line12->setPalette(palette12);
 
-    QLabel *legend13 = new QLabel("Aileron position controller output");
+    QLabel *legend13 = new QLabel("Altitude setpoint");
     QFrame *line13 = new QFrame();
     line13->setObjectName(QString::fromUtf8("line"));
     line13->setFrameShape(QFrame::HLine);
@@ -1471,7 +1389,7 @@ void quadro::createLegend()
     palette13.setColor(QPalette::WindowText, Qt::darkGray);
     line13->setPalette(palette13);
 
-    QLabel *legend14 = new QLabel("Elevator position controller output");
+    QLabel *legend14 = new QLabel("Elevator position setpoint");
     QFrame *line14 = new QFrame();
     line14->setObjectName(QString::fromUtf8("line"));
     line14->setFrameShape(QFrame::HLine);
@@ -1481,7 +1399,7 @@ void quadro::createLegend()
     palette14.setColor(QPalette::WindowText, Qt::darkYellow);
     line14->setPalette(palette14);
 
-    QLabel *legend15 = new QLabel("Throttle setpoint");
+    QLabel *legend15 = new QLabel("Aileron position setpoint");
     QFrame *line15 = new QFrame();
     line15->setObjectName(QString::fromUtf8("line"));
     line15->setFrameShape(QFrame::HLine);
@@ -1491,7 +1409,7 @@ void quadro::createLegend()
     palette15.setColor(QPalette::WindowText, Qt::darkMagenta);
     line15->setPalette(palette15);
 
-    QLabel *legend16 = new QLabel("Elevator position setpoint");
+    QLabel *legend16 = new QLabel("Elevator acceleration");
     QFrame *line16 = new QFrame();
     line16->setObjectName(QString::fromUtf8("line"));
     line16->setFrameShape(QFrame::HLine);
@@ -1501,7 +1419,7 @@ void quadro::createLegend()
     palette16.setColor(QPalette::WindowText, QColor(85,0,130));
     line16->setPalette(palette16);
 
-    QLabel *legend17 = new QLabel("Aileron position setpoint");
+    QLabel *legend17 = new QLabel("Aileron acceleration");
     QFrame *line17 = new QFrame();
     line17->setObjectName(QString::fromUtf8("line"));
     line17->setFrameShape(QFrame::HLine);
@@ -1511,7 +1429,7 @@ void quadro::createLegend()
     palette17.setColor(QPalette::WindowText, QColor(255,170,255));
     line17->setPalette(palette17);
 
-    QLabel *legend18 = new QLabel("Elevator velocity setpoint");
+    QLabel *legend18 = new QLabel("Valid gumstix");
     QFrame *line18 = new QFrame();
     line18->setObjectName(QString::fromUtf8("line"));
     line18->setFrameShape(QFrame::HLine);
@@ -1521,7 +1439,7 @@ void quadro::createLegend()
     palette18.setColor(QPalette::WindowText, QColor(0,255,130));
     line18->setPalette(palette18);
 
-    QLabel *legend19 = new QLabel("Aileron velocity setpoint");
+    QLabel *legend19 = new QLabel("Throttle output");
     QFrame *line19 = new QFrame();
     line19->setObjectName(QString::fromUtf8("line"));
     line19->setFrameShape(QFrame::HLine);
@@ -1531,7 +1449,7 @@ void quadro::createLegend()
     palette19.setColor(QPalette::WindowText, QColor(170,170,255));
     line19->setPalette(palette19);
 
-    QLabel *legend20 = new QLabel("Elevator speed estimated 2");
+    QLabel *legend20 = new QLabel("Elevator output");
     QFrame *line20 = new QFrame();
     line20->setObjectName(QString::fromUtf8("line"));
     line20->setFrameShape(QFrame::HLine);
@@ -1541,7 +1459,7 @@ void quadro::createLegend()
     palette20.setColor(QPalette::WindowText, QColor(255,130,0));
     line20->setPalette(palette20);
 
-    QLabel *legend21 = new QLabel("Aileron speed estimated 2");
+    QLabel *legend21 = new QLabel("Aileron output");
     QFrame *line21 = new QFrame();
     line21->setObjectName(QString::fromUtf8("line"));
     line21->setFrameShape(QFrame::HLine);
@@ -1551,7 +1469,7 @@ void quadro::createLegend()
     palette21.setColor(QPalette::WindowText, QColor(80,25,0));
     line21->setPalette(palette21);
 
-    QLabel *legend22 = new QLabel("Elevator ACC");
+    QLabel *legend22 = new QLabel("Rudder output");
     QFrame *line22 = new QFrame();
     line22->setObjectName(QString::fromUtf8("line"));
     line22->setFrameShape(QFrame::HLine);
@@ -1561,7 +1479,7 @@ void quadro::createLegend()
     palette22.setColor(QPalette::WindowText, QColor(100,0,80));
     line22->setPalette(palette22);
 
-    QLabel *legend23 = new QLabel("Aileron ACC");
+    QLabel *legend23 = new QLabel("Blob elevator");
     QFrame *line23 = new QFrame();
     line23->setObjectName(QString::fromUtf8("line"));
     line23->setFrameShape(QFrame::HLine);
@@ -1571,7 +1489,7 @@ void quadro::createLegend()
     palette23.setColor(QPalette::WindowText, QColor(170,255,0));
     line23->setPalette(palette23);
 
-    QLabel *legend24 = new QLabel("Valid gumstix");
+    QLabel *legend24 = new QLabel("Blob aileron");
     QFrame *line24 = new QFrame();
     line24->setObjectName(QString::fromUtf8("line"));
     line24->setFrameShape(QFrame::HLine);
@@ -1581,7 +1499,7 @@ void quadro::createLegend()
     palette24.setColor(QPalette::WindowText, QColor(255,170,110));
     line24->setPalette(palette24);
 
-    QLabel *legend25 = new QLabel("Elevator desired speed position cont");
+    QLabel *legend25 = new QLabel("Blob altitude");
     QFrame *line25 = new QFrame();
     line25->setObjectName(QString::fromUtf8("line"));
     line25->setFrameShape(QFrame::HLine);
@@ -1591,7 +1509,7 @@ void quadro::createLegend()
     palette25.setColor(QPalette::WindowText, QColor(175,90,0));
     line25->setPalette(palette25);
 
-    QLabel *legend26 = new QLabel("Aileron desired speed position cont");
+    QLabel *legend26 = new QLabel("Pitch angle");
     QFrame *line26 = new QFrame();
     line26->setObjectName(QString::fromUtf8("line"));
     line26->setFrameShape(QFrame::HLine);
@@ -1601,7 +1519,7 @@ void quadro::createLegend()
     palette26.setColor(QPalette::WindowText, QColor(80,100,120));
     line26->setPalette(palette26);
 
-    QLabel *legend27 = new QLabel("Elevator desired speed pos cont leader");
+    QLabel *legend27 = new QLabel("Roll angle");
     QFrame *line27 = new QFrame();
     line27->setObjectName(QString::fromUtf8("line"));
     line27->setFrameShape(QFrame::HLine);
@@ -1611,7 +1529,7 @@ void quadro::createLegend()
     palette27.setColor(QPalette::WindowText, QColor(170,60,110));
     line27->setPalette(palette27);
 
-    QLabel *legend28 = new QLabel("Aileron desired speed pos cont leader");
+    QLabel *legend28 = new QLabel("Elevator acceleration error");
     QFrame *line28 = new QFrame();
     line28->setObjectName(QString::fromUtf8("line"));
     line28->setFrameShape(QFrame::HLine);
@@ -1621,7 +1539,7 @@ void quadro::createLegend()
     palette28.setColor(QPalette::WindowText, QColor(85,85,0));
     line28->setPalette(palette28);
 
-    QLabel *legend29 = new QLabel("Output throttle");
+    QLabel *legend29 = new QLabel("Elevator acceleration input");
     QFrame *line29 = new QFrame();
     line29->setObjectName(QString::fromUtf8("line"));
     line29->setFrameShape(QFrame::HLine);
@@ -1631,7 +1549,7 @@ void quadro::createLegend()
     palette29.setColor(QPalette::WindowText, QColor(80,70,70));
     line29->setPalette(palette29);
 
-    QLabel *legend30 = new QLabel("Output elevator");
+    QLabel *legend30 = new QLabel("Aileron acceleration error");
     QFrame *line30 = new QFrame();
     line30->setObjectName(QString::fromUtf8("line"));
     line30->setFrameShape(QFrame::HLine);
@@ -1641,7 +1559,7 @@ void quadro::createLegend()
     palette30.setColor(QPalette::WindowText, QColor(10,100,80));
     line30->setPalette(palette30);
 
-    QLabel *legend31 = new QLabel("Output aileron");
+    QLabel *legend31 = new QLabel("Aileron acceleration input");
     QFrame *line31 = new QFrame();
     line31->setObjectName(QString::fromUtf8("line"));
     line31->setFrameShape(QFrame::HLine);
@@ -1651,7 +1569,7 @@ void quadro::createLegend()
     palette31.setColor(QPalette::WindowText, QColor(30,110,130));
     line31->setPalette(palette31);
 
-    QLabel *legend32 = new QLabel("Output rudder");
+    QLabel *legend32 = new QLabel("Altitude integrated component");
     QFrame *line32 = new QFrame();
     line32->setObjectName(QString::fromUtf8("line"));
     line32->setFrameShape(QFrame::HLine);
@@ -1660,56 +1578,6 @@ void quadro::createLegend()
     QPalette palette32 = line32->palette();
     palette32.setColor(QPalette::WindowText, QColor(180,180,180));
     line32->setPalette(palette32);
-
-    QLabel *legend33 = new QLabel("Blob Distance");
-    QFrame *line33 = new QFrame();
-    line33->setObjectName(QString::fromUtf8("line"));
-    line33->setFrameShape(QFrame::HLine);
-    line33->setFixedSize(35,15);
-    line33->setLineWidth(2);
-    QPalette palette33 = line33->palette();
-    palette33.setColor(QPalette::WindowText, Qt::red);
-    line33->setPalette(palette33);
-
-    QLabel *legend34 = new QLabel("Blob Horizontal");
-    QFrame *line34 = new QFrame();
-    line34->setObjectName(QString::fromUtf8("line"));
-    line34->setFrameShape(QFrame::HLine);
-    line34->setFixedSize(35,15);
-    line34->setLineWidth(2);
-    QPalette palette34 = line34->palette();
-    palette34.setColor(QPalette::WindowText, Qt::blue);
-    line34->setPalette(palette34);
-
-    QLabel *legend35 = new QLabel("Blob Vertical");
-    QFrame *line35 = new QFrame();
-    line35->setObjectName(QString::fromUtf8("line"));
-    line35->setFrameShape(QFrame::HLine);
-    line35->setFixedSize(35,15);
-    line35->setLineWidth(2);
-    QPalette palette35 = line35->palette();
-    palette35.setColor(QPalette::WindowText, Qt::green);
-    line35->setPalette(palette35);
-
-    QLabel *legend36 = new QLabel("Pitch Angle");
-    QFrame *line36 = new QFrame();
-    line36->setObjectName(QString::fromUtf8("line"));
-    line36->setFrameShape(QFrame::HLine);
-    line36->setFixedSize(35,15);
-    line36->setLineWidth(2);
-    QPalette palette36 = line36->palette();
-    palette36.setColor(QPalette::WindowText, Qt::magenta);
-    line36->setPalette(palette36);
-
-    QLabel *legend37 = new QLabel("Roll Angle");
-    QFrame *line37 = new QFrame();
-    line37->setObjectName(QString::fromUtf8("line"));
-    line37->setFrameShape(QFrame::HLine);
-    line37->setFixedSize(35,15);
-    line37->setLineWidth(2);
-    QPalette palette37 = line37->palette();
-    palette37.setColor(QPalette::WindowText, Qt::gray);
-    line37->setPalette(palette37);
 
     legendLay->addRow(line1,legend1);
     legendLay->addRow(line2,legend2);
@@ -1743,11 +1611,6 @@ void quadro::createLegend()
     legendLay->addRow(line30,legend30);
     legendLay->addRow(line31,legend31);
     legendLay->addRow(line32,legend32);
-    legendLay->addRow(line28,legend33);
-    legendLay->addRow(line29,legend34);
-    legendLay->addRow(line30,legend35);
-    legendLay->addRow(line31,legend36);
-    legendLay->addRow(line32,legend37);
     ui->scrollLegend->setLayout(legendLay);
 }
 
@@ -1801,7 +1664,7 @@ void quadro::on_actionPosition_triggered()
 }
 void quadro::on_actionBoth_triggered()
 {
-    setController(kopter,CONTROLLERS.BOTH);
+    setController(kopter,CONTROLLERS.MPC);
 }
 
 void quadro::on_actionOff_3_triggered()
@@ -1901,12 +1764,12 @@ void quadro::on_actionLoad_trajectory_triggered()
 // Gumstix
 void quadro::on_actionOn_2_triggered()
 {
-    setGumstix(kopter,ONOFF.ON);
+    telemetryGet(kopter,TELEMETRIES.VALID_GUMSTIX,ONOFF.ON);
 }
 
 void quadro::on_actionOff_2_triggered()
 {
-    setGumstix(kopter,ONOFF.OFF);
+    telemetryGet(kopter,TELEMETRIES.VALID_GUMSTIX,ONOFF.OFF);
 }
 
 void quadro::currentDateTime(){
@@ -1924,43 +1787,38 @@ void quadro::currentDateTime(){
 }
 
 void quadro::setSignalsOn(){
-    telemetryGet(kopter,TELEMETRIES.GROUND_DISTANCE_ESTIMATED,ONOFF.ON);
-    telemetryGet(kopter,TELEMETRIES.GROUND_DISTANCE,ONOFF.ON);
-    telemetryGet(kopter,TELEMETRIES.ELEVATOR_SPEED,ONOFF.ON);
-    telemetryGet(kopter,TELEMETRIES.AILERON_SPEED,ONOFF.ON);
+    telemetryGet(kopter,TELEMETRIES.ALTITUDE_ESTIMATED,ONOFF.ON);
+    telemetryGet(kopter,TELEMETRIES.ALTITUDE,ONOFF.ON);
+    /*telemetryGet(kopter,TELEMETRIES.ELEVATOR_SPEED,ONOFF.ON);
+    telemetryGet(kopter,TELEMETRIES.AILERON_SPEED,ONOFF.ON);*/
     telemetryGet(kopter,TELEMETRIES.ELEVATOR_SPEED_ESTIMATED,ONOFF.ON);
     telemetryGet(kopter,TELEMETRIES.AILERON_SPEED_ESTIMATED,ONOFF.ON);
-    telemetryGet(kopter,TELEMETRIES.ELEVATOR_POS_ESTIMATED,ONOFF.ON);
-    telemetryGet(kopter,TELEMETRIES.AILERON_POS_ESTIMATED,ONOFF.ON);
-    telemetryGet(kopter,TELEMETRIES.THROTTLE_CONTROLLER_OUTPUT,ONOFF.ON);
-    telemetryGet(kopter,TELEMETRIES.THROTTLE_SPEED,ONOFF.ON);
-    telemetryGet(kopter,TELEMETRIES.AILERON_VEL_CONTROLLER_OUTPUT,ONOFF.ON);
-    telemetryGet(kopter,TELEMETRIES.ELEVATOR_VEL_CONTROLLER_OUTPUT,ONOFF.ON);
-    telemetryGet(kopter,TELEMETRIES.AILERON_POS_CONTROLLER_OUTPUT,ONOFF.ON);
-    telemetryGet(kopter,TELEMETRIES.ELEVATOR_POS_CONTROLLER_OUTPUT,ONOFF.ON);
-    telemetryGet(kopter,TELEMETRIES.THROTTLE_SETPOINT,ONOFF.ON);
+    telemetryGet(kopter,TELEMETRIES.ELEVATOR_POSITION,ONOFF.ON);
+    telemetryGet(kopter,TELEMETRIES.AILERON_POSITION,ONOFF.ON);
+    telemetryGet(kopter,TELEMETRIES.ALTITUDE_CONTROLLER_OUTPUT,ONOFF.ON);
+    telemetryGet(kopter,TELEMETRIES.ALTITUDE_SPEED,ONOFF.ON);
+    telemetryGet(kopter,TELEMETRIES.AILERON_CONTROLLER_OUTPUT,ONOFF.ON);
+    telemetryGet(kopter,TELEMETRIES.ELEVATOR_CONTROLLER_OUTPUT,ONOFF.ON);
+    /* telemetryGet(kopter,TELEMETRIES.ALTITUDE_SETPOINT,ONOFF.ON);
     telemetryGet(kopter,TELEMETRIES.ELEVATOR_POS_SETPOINT,ONOFF.ON);
-    telemetryGet(kopter,TELEMETRIES.AILERON_POS_SETPOINT,ONOFF.ON);
-    telemetryGet(kopter,TELEMETRIES.ELEVATOR_VEL_SETPOINT,ONOFF.ON);
-    telemetryGet(kopter,TELEMETRIES.AILERON_VEL_SETPOINT,ONOFF.ON);
-    telemetryGet(kopter,TELEMETRIES.ELEVATOR_SPEED_ESTIMATED2,ONOFF.ON);
-    telemetryGet(kopter,TELEMETRIES.AILERON_SPEED_ESTIMATED2,ONOFF.ON);
+    telemetryGet(kopter,TELEMETRIES.AILERON_POS_SETPOINT,ONOFF.ON);*/
     telemetryGet(kopter,TELEMETRIES.ELEVATOR_ACC,ONOFF.ON);
     telemetryGet(kopter,TELEMETRIES.AILERON_ACC,ONOFF.ON);
     telemetryGet(kopter,TELEMETRIES.VALID_GUMSTIX,ONOFF.ON);
-    telemetryGet(kopter,TELEMETRIES.ELEVATOR_DESIRED_SPEED_POS_CONT,ONOFF.ON);
-    telemetryGet(kopter,TELEMETRIES.AILERON_DESIRED_SPEED_POS_CONT,ONOFF.ON);
-    telemetryGet(kopter,TELEMETRIES.ELE_DES_SPEED_POS_CONT_LEADER,ONOFF.ON);
-    telemetryGet(kopter,TELEMETRIES.AIL_DES_SPEED_POS_CONT_LEADER,ONOFF.ON);
-    telemetryGet(kopter,TELEMETRIES.OUTPUT_THROTTLE,ONOFF.ON);
+    /*telemetryGet(kopter,TELEMETRIES.OUTPUT_THROTTLE,ONOFF.ON);
     telemetryGet(kopter,TELEMETRIES.OUTPUT_ELEVATOR,ONOFF.ON);
     telemetryGet(kopter,TELEMETRIES.OUTPUT_AILERON,ONOFF.ON);
     telemetryGet(kopter,TELEMETRIES.OUTPUT_RUDDER,ONOFF.ON);
-    telemetryGet(kopter,TELEMETRIES.BLOB_DISTANCE,ONOFF.ON);
-    telemetryGet(kopter,TELEMETRIES.BLOB_HORIZONTAL,ONOFF.ON);
-    telemetryGet(kopter,TELEMETRIES.BLOB_VERTICAL,ONOFF.ON);
+    telemetryGet(kopter,TELEMETRIES.BLOB_ELEVATOR,ONOFF.ON);
+    telemetryGet(kopter,TELEMETRIES.BLOB_AILERON,ONOFF.ON);
+    telemetryGet(kopter,TELEMETRIES.BLOB_ALTITUDE,ONOFF.ON);
     telemetryGet(kopter,TELEMETRIES.PITCH_ANGLE,ONOFF.ON);
-    telemetryGet(kopter,TELEMETRIES.ROLL_ANGLE,ONOFF.ON);
+    telemetryGet(kopter,TELEMETRIES.ROLL_ANGLE,ONOFF.ON);*/
+    telemetryGet(kopter,TELEMETRIES.ELEVATOR_ACC_ERROR,ONOFF.ON);
+    telemetryGet(kopter,TELEMETRIES.ELEVATOR_ACC_INPUT,ONOFF.ON);
+    telemetryGet(kopter,TELEMETRIES.AILERON_ACC_ERROR,ONOFF.ON);
+    telemetryGet(kopter,TELEMETRIES.AILERON_ACC_INPUT,ONOFF.ON);
+    telemetryGet(kopter,TELEMETRIES.ALTITUDE_INTEGRATED_COMPONENT,ONOFF.ON);
 }
 
 
@@ -1974,8 +1832,8 @@ void quadro::closeEvent (QCloseEvent *event)
         event->ignore();
     } else {
         dataTimer.stop();
-        //failureDetectionThread->m_abort=true;
-        //failureDetectionThread->wait();
+        failureDetectionThread->m_abort=true;
+        failureDetectionThread->wait();
         event->accept();
     }
 }
@@ -1983,11 +1841,11 @@ void quadro::closeEvent (QCloseEvent *event)
 void quadro::startFailureDetectionThread()
 {
     if(failureDetectionBool==false){
-        //failureDetectionThread->setKopter(kopter);
-      //  failureDetectionThread->start();
+        failureDetectionThread->setKopter(kopter);
+        failureDetectionThread->start();
         failureDetectionBool=true;
     }else{
-       // failureDetectionThread->setKopter(kopter);
+        failureDetectionThread->setKopter(kopter);
     }
 
 }
@@ -1998,4 +1856,131 @@ void quadro::on_pushButton_clicked()
     //errorDia->setFailure(failureDetectionThread);
     errorDia->show();
     errorDia->writeErrors();
+}
+
+void quadro::CheckSignalsForTurning()
+{
+
+    if(BoolsForSignals[0]==false&&(Plot1Signals[2]->isChecked()==true||Plot2Signals[2]->isChecked()==true||Plot3Signals[2]->isChecked()==true||Plot4Signals[2]->isChecked()==true))
+    {
+        BoolsForSignals[0]=true;
+        telemetryGet(kopter,TELEMETRIES.ELEVATOR_SPEED,ONOFF.ON);
+    }else if(BoolsForSignals[0]==true&&(Plot1Signals[2]->isChecked()==false||Plot2Signals[2]->isChecked()==true||Plot3Signals[2]->isChecked()==true||Plot4Signals[2]->isChecked()==true)) {
+        BoolsForSignals[0]=false;
+        telemetryGet(kopter,TELEMETRIES.ELEVATOR_SPEED,ONOFF.OFF);
+    }
+    if(BoolsForSignals[1]==(false&&Plot1Signals[3]->isChecked()==true||Plot2Signals[3]->isChecked()==true||Plot3Signals[3]->isChecked()==true||Plot4Signals[3]->isChecked()==true))
+    {
+        BoolsForSignals[1]=true;
+        telemetryGet(kopter,TELEMETRIES.AILERON_SPEED,ONOFF.ON);
+    }else if(BoolsForSignals[1]==true&&(Plot1Signals[3]->isChecked()==false||Plot2Signals[3]->isChecked()==true||Plot3Signals[3]->isChecked()==true||Plot4Signals[3]->isChecked()==true)) {
+        BoolsForSignals[1]=false;
+        telemetryGet(kopter,TELEMETRIES.AILERON_SPEED,ONOFF.OFF);
+    }
+
+    if(BoolsForSignals[2]==false&&(Plot1Signals[12]->isChecked()==true||Plot2Signals[12]->isChecked()==true||Plot3Signals[12]->isChecked()==true||Plot4Signals[12]->isChecked()==true))
+    {
+        BoolsForSignals[2]=true;
+        telemetryGet(kopter,TELEMETRIES.ALTITUDE_SETPOINT,ONOFF.ON);
+    }else if(BoolsForSignals[2]==(true&&Plot1Signals[12]->isChecked()==false||Plot2Signals[12]->isChecked()==true||Plot3Signals[12]->isChecked()==true||Plot4Signals[12]->isChecked()==true)) {
+        BoolsForSignals[2]=false;
+        telemetryGet(kopter,TELEMETRIES.ALTITUDE_SETPOINT,ONOFF.OFF);
+    }
+
+    if(BoolsForSignals[3]==false&&(Plot1Signals[13]->isChecked()==true||Plot2Signals[13]->isChecked()==true||Plot3Signals[13]->isChecked()==true||Plot4Signals[13]->isChecked()==true))
+    {
+        BoolsForSignals[3]=true;
+        telemetryGet(kopter,TELEMETRIES.ELEVATOR_POS_SETPOINT,ONOFF.ON);
+    }else if(BoolsForSignals[3]==true&&(Plot1Signals[13]->isChecked()==false||Plot2Signals[13]->isChecked()==true||Plot3Signals[13]->isChecked()==true||Plot4Signals[13]->isChecked()==true)) {
+        BoolsForSignals[3]=false;
+        telemetryGet(kopter,TELEMETRIES.ELEVATOR_POS_SETPOINT,ONOFF.OFF);
+    }
+
+    if(BoolsForSignals[4]==false&&(Plot1Signals[14]->isChecked()==true||Plot2Signals[14]->isChecked()==true||Plot3Signals[14]->isChecked()==true||Plot4Signals[14]->isChecked()==true))
+    {
+        BoolsForSignals[4]=true;
+        telemetryGet(kopter,TELEMETRIES.AILERON_POS_SETPOINT,ONOFF.ON);
+    }else if(BoolsForSignals[4]==true&&(Plot1Signals[14]->isChecked()==false||Plot2Signals[14]->isChecked()==true||Plot3Signals[14]->isChecked()==true||Plot4Signals[14]->isChecked()==true)) {
+        BoolsForSignals[4]=false;
+        telemetryGet(kopter,TELEMETRIES.AILERON_POS_SETPOINT,ONOFF.OFF);
+    }
+
+    if(BoolsForSignals[5]==false&&(Plot1Signals[18]->isChecked()==true||Plot2Signals[18]->isChecked()==true||Plot3Signals[18]->isChecked()==true||Plot4Signals[18]->isChecked()==true))
+    {
+        BoolsForSignals[5]=true;
+        telemetryGet(kopter,TELEMETRIES.OUTPUT_THROTTLE,ONOFF.ON);
+    }else if(BoolsForSignals[5]==(true&&Plot1Signals[18]->isChecked()==false||Plot2Signals[18]->isChecked()==true||Plot3Signals[18]->isChecked()==true||Plot4Signals[18]->isChecked()==true)) {
+        BoolsForSignals[5]=false;
+        telemetryGet(kopter,TELEMETRIES.OUTPUT_THROTTLE,ONOFF.OFF);
+    }
+
+    if(BoolsForSignals[6]==false&&(Plot1Signals[19]->isChecked()==true||Plot2Signals[19]->isChecked()==true||Plot3Signals[19]->isChecked()==true||Plot4Signals[19]->isChecked()==true))
+    {
+        BoolsForSignals[6]=true;
+        telemetryGet(kopter,TELEMETRIES.OUTPUT_ELEVATOR,ONOFF.ON);
+    }else if(BoolsForSignals[6]==true&&(Plot1Signals[19]->isChecked()==false||Plot2Signals[19]->isChecked()==true||Plot3Signals[19]->isChecked()==true||Plot4Signals[19]->isChecked()==true)) {
+        BoolsForSignals[6]=false;
+        telemetryGet(kopter,TELEMETRIES.OUTPUT_ELEVATOR,ONOFF.OFF);
+    }
+
+    if(BoolsForSignals[7]==false&&(Plot1Signals[20]->isChecked()==true||Plot2Signals[20]->isChecked()==true||Plot3Signals[20]->isChecked()==true||Plot4Signals[20]->isChecked()==true))
+    {
+        BoolsForSignals[7]=true;
+        telemetryGet(kopter,TELEMETRIES.OUTPUT_AILERON,ONOFF.ON);
+    }else if(BoolsForSignals[7]==true&&(Plot1Signals[20]->isChecked()==false||Plot2Signals[20]->isChecked()==true||Plot3Signals[20]->isChecked()==true||Plot4Signals[20]->isChecked()==true)) {
+        BoolsForSignals[7]=false;
+        telemetryGet(kopter,TELEMETRIES.OUTPUT_AILERON,ONOFF.OFF);
+    }
+
+    if(BoolsForSignals[8]==false&&(Plot1Signals[21]->isChecked()==true||Plot2Signals[21]->isChecked()==true||Plot3Signals[21]->isChecked()==true||Plot4Signals[21]->isChecked()==true))
+    {
+        BoolsForSignals[8]=true;
+        telemetryGet(kopter,TELEMETRIES.OUTPUT_RUDDER,ONOFF.ON);
+    }else if(BoolsForSignals[8]==true&&(Plot1Signals[21]->isChecked()==false||Plot2Signals[21]->isChecked()==true||Plot3Signals[21]->isChecked()==true||Plot4Signals[21]->isChecked()==true)) {
+        BoolsForSignals[8]=false;
+        telemetryGet(kopter,TELEMETRIES.OUTPUT_RUDDER,ONOFF.OFF);
+    }
+
+    if(BoolsForSignals[9]==false&&(Plot1Signals[22]->isChecked()==true||Plot2Signals[22]->isChecked()==true||Plot3Signals[22]->isChecked()==true||Plot4Signals[22]->isChecked()==true))
+    {
+        BoolsForSignals[9]=true;
+        telemetryGet(kopter,TELEMETRIES.BLOB_ELEVATOR,ONOFF.ON);
+    }else if(BoolsForSignals[9]==true&&(Plot1Signals[22]->isChecked()==false||Plot2Signals[22]->isChecked()==true||Plot3Signals[22]->isChecked()==true||Plot4Signals[22]->isChecked()==true)) {
+        BoolsForSignals[9]=false;
+        telemetryGet(kopter,TELEMETRIES.BLOB_ELEVATOR,ONOFF.OFF);
+    }
+
+    if(BoolsForSignals[10]==false&&(Plot1Signals[23]->isChecked()==true||Plot2Signals[23]->isChecked()==true||Plot3Signals[23]->isChecked()==true||Plot4Signals[23]->isChecked()==true))
+    {
+        BoolsForSignals[10]=true;
+        telemetryGet(kopter,TELEMETRIES.BLOB_AILERON,ONOFF.ON);
+    }else if(BoolsForSignals[10]==true&&(Plot1Signals[23]->isChecked()==false||Plot2Signals[23]->isChecked()==true||Plot3Signals[23]->isChecked()==true||Plot4Signals[23]->isChecked()==true)) {
+        BoolsForSignals[10]=false;
+        telemetryGet(kopter,TELEMETRIES.BLOB_AILERON,ONOFF.OFF);
+    }
+
+    if(BoolsForSignals[11]==false&&(Plot1Signals[24]->isChecked()==true||Plot2Signals[24]->isChecked()==true||Plot3Signals[24]->isChecked()==true||Plot4Signals[24]->isChecked()==true))
+    {
+        BoolsForSignals[11]=true;
+        telemetryGet(kopter,TELEMETRIES.BLOB_ALTITUDE,ONOFF.ON);
+    }else if(BoolsForSignals[11]==true&&(Plot1Signals[24]->isChecked()==false||Plot2Signals[24]->isChecked()==true||Plot3Signals[24]->isChecked()==true||Plot4Signals[24]->isChecked()==true)) {
+        BoolsForSignals[11]=false;
+        telemetryGet(kopter,TELEMETRIES.BLOB_ALTITUDE,ONOFF.OFF);
+    }
+    if(BoolsForSignals[12]==false&&(Plot1Signals[25]->isChecked()==true||Plot2Signals[25]->isChecked()==true||Plot3Signals[25]->isChecked()==true||Plot4Signals[25]->isChecked()==true))
+    {
+        BoolsForSignals[12]=true;
+        telemetryGet(kopter,TELEMETRIES.PITCH_ANGLE,ONOFF.ON);
+    }else if(BoolsForSignals[12]==true&&(Plot1Signals[25]->isChecked()==false||Plot2Signals[25]->isChecked()==true||Plot3Signals[25]->isChecked()==true||Plot4Signals[25]->isChecked()==true)) {
+        BoolsForSignals[12]=false;
+        telemetryGet(kopter,TELEMETRIES.PITCH_ANGLE,ONOFF.OFF);
+    }
+    if(BoolsForSignals[13]==false&&(Plot1Signals[26]->isChecked()==true||Plot2Signals[26]->isChecked()==true||Plot3Signals[26]->isChecked()==true||Plot4Signals[26]->isChecked()==true))
+    {
+        BoolsForSignals[13]=true;
+        telemetryGet(kopter,TELEMETRIES.ROLL_ANGLE,ONOFF.ON);
+    }else if(BoolsForSignals[13]==true&&(Plot1Signals[26]->isChecked()==false||Plot2Signals[26]->isChecked()==true||Plot3Signals[26]->isChecked()==true||Plot4Signals[26]->isChecked()==true)) {
+        BoolsForSignals[13]=false;
+        telemetryGet(kopter,TELEMETRIES.ROLL_ANGLE,ONOFF.OFF);
+    }
 }

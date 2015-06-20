@@ -16,13 +16,13 @@ HANDLE openSerialLine(int port){
         }
     }else{
 
-    printf("SERIAL PORT COM%i OPEN\n",port);
+        printf("SERIAL PORT COM%i OPEN\n",port);
 
         dcbSerialParams.DCBlength=sizeof(DCB);
         if (!GetCommState(hSerial, &dcbSerialParams)) {
             printf("ERROR in getting state \n");
         }
-        dcbSerialParams.BaudRate=CBR_19200;
+        dcbSerialParams.BaudRate=CBR_115200;
         dcbSerialParams.ByteSize=8;
         dcbSerialParams.StopBits=ONESTOPBIT;
         dcbSerialParams.Parity=NOPARITY;
@@ -52,7 +52,7 @@ DWORD readBytes(HANDLE hSerial,unsigned char *bytes,int length){
     DWORD bytesReaded;
 
     if(!ReadFile(hSerial,bytes,length,&bytesReaded,NULL)){
-            return 0;
+        return 0;
     }
     return bytesReaded;
 }

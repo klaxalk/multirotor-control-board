@@ -35,6 +35,7 @@ public:
 private slots:
     void realtimeDataSlotGraph1();
     void realtimeDataStatus();
+    void CheckSignalsForTurning();
 
     void Plot1SignalAll_clicked();
     void Plot1Signals_clicked();
@@ -70,10 +71,13 @@ private slots:
 
     void on_pushButton_clicked();
 
+    void on_actionChange_name_of_file_triggered();
+
 private:
     Ui::quadroone *ui;
     QTimer dataTimer;
 
+    bool BoolsForSignals[14];
     QCheckBox *Plot1Signals[38];
     bool failureDetectionBool;
     unsigned char kopter;
@@ -82,7 +86,7 @@ private:
     float dataValues[37]={ };
     char myTime[80];
     failuredetection *failureDetectionThread;
-    Model *newModel;
+    //Model *newModel;
 };
 
 #endif // QUADROONE_H

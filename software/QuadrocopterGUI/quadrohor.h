@@ -36,7 +36,7 @@ private slots:
     void realtimeDataSlotGraph1();
     void realtimeDataSlotGraph2();
     void realtimeDataStatus();
-
+    void CheckSignalsForTurning();
     void on_comboBox_activated(int index);
     void Plot1SignalAll_clicked();
     void Plot2SignalAll_clicked();
@@ -79,6 +79,7 @@ private:
     Ui::quadrohor *ui;
     QTimer dataTimer;
 
+    bool BoolsForSignals[14];
     QCheckBox *Plot1Signals[38];
     QCheckBox *Plot2Signals[38];
     bool failureDetectionBool;
@@ -87,7 +88,7 @@ private:
     errorDialog *errorDia;
     float dataValues[37]={ };
     char myTime[80];
-   // failuredetection *failureDetectionThread;
+    failuredetection *failureDetectionThread;
 };
 
 #endif // QUADROHOR_H

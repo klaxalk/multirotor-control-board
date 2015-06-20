@@ -2,7 +2,6 @@
 #define COMMANDS_H
 
 #include "defines.h"
-#include "commands.h"
 float getTelemetry(unsigned char kopter, unsigned char type);
 unsigned char getStatus(unsigned char kopter, unsigned char type);
 
@@ -39,4 +38,8 @@ void kopterControllersReportReceived(unsigned char *address64,unsigned char *add
 void kopterGumstixRequest(unsigned char *address64,unsigned char *address16,unsigned char options,unsigned char frameID);
 void kopterGumstixStatusRequest(unsigned char *address64,unsigned char *address16,unsigned char frameID);
 void kopterGumstixReportRecieved(unsigned char *address64,unsigned char *address16,unsigned char status);
+
+void kopterTrajectorySetRequest(unsigned char *address64,unsigned char *address16,unsigned char size,int* time,float* elevatorPos,float* aileronPos,float* throttlePos,unsigned char frameID);
+float telemetryValue(unsigned char type);
+void kopterTimeRequest(unsigned char *address64,unsigned char *address16,int time,unsigned char frameID);
 #endif /*COMMANDS_H*/

@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Quadcopter</string>
+   <string>MAV window</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -44,7 +44,7 @@
              </font>
             </property>
             <property name="title">
-             <string>Statuses</string>
+             <string>States</string>
             </property>
             <widget class="QWidget" name="layoutWidget">
              <property name="geometry">
@@ -635,7 +635,7 @@
                 <widget class="QPushButton" name="pushButton">
                  <property name="maximumSize">
                   <size>
-                   <width>200</width>
+                   <width>150</width>
                    <height>50</height>
                   </size>
                  </property>
@@ -1186,7 +1186,7 @@
     </property>
     <widget class="QMenu" name="menuConnect_quadrocopter">
      <property name="title">
-      <string>Connect quadrocopter</string>
+      <string>Connect MAV</string>
      </property>
      <addaction name="actionK1"/>
      <addaction name="actionK2"/>
@@ -1281,9 +1281,18 @@
     <addaction name="menuSet_Points"/>
     <addaction name="menuTrajectory"/>
     <addaction name="menuGumstix"/>
+    <addaction name="actionGroup_commanding"/>
+   </widget>
+   <widget class="QMenu" name="menuLogging">
+    <property name="title">
+     <string>Logging</string>
+    </property>
+    <addaction name="actionChange_name_of_file"/>
+    <addaction name="actionLogging_telemetry"/>
    </widget>
    <addaction name="menuConnect"/>
    <addaction name="menuDebug"/>
+   <addaction name="menuLogging"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionOn">
@@ -1409,6 +1418,27 @@
   <action name="actionAbsolute_5">
    <property name="text">
     <string>Absolute</string>
+   </property>
+  </action>
+  <action name="actionChange_name_of_file">
+   <property name="text">
+    <string>Change name of file</string>
+   </property>
+  </action>
+  <action name="actionLogging_telemetry">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Logging telemetry</string>
+   </property>
+  </action>
+  <action name="actionGroup_commanding">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Group commanding</string>
    </property>
   </action>
  </widget>

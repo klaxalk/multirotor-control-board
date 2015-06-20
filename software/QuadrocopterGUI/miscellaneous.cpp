@@ -13,23 +13,23 @@
  */
 matrix_float * matrix_float_alloc(const int16_t h, const int16_t w) {
 
-	matrix_float * m = 0;
+    matrix_float * m = 0;
 
-	// dimensions must be positive
-	if ((h > 0) && (w > 0)) {
+    // dimensions must be positive
+    if ((h > 0) && (w > 0)) {
 
         m = (matrix_float *) malloc(sizeof (matrix_float));
 
-		// if didn't failed to allocated the space
-		if (m != 0) {
+        // if didn't failed to allocated the space
+        if (m != 0) {
 
-			m->height = h;
-			m->width = w;
+            m->height = h;
+            m->width = w;
             m->data = (float *) malloc(w*h*sizeof(float));
-		}
-	}
+        }
+    }
 
-	return m;
+    return m;
 }
 
 /**
@@ -37,67 +37,67 @@ matrix_float * matrix_float_alloc(const int16_t h, const int16_t w) {
  */
 matrix_float * matrix_float_alloc_hollow(const int16_t h, const int16_t w, float * data_pointer) {
 
-	matrix_float * m = 0;
+    matrix_float * m = 0;
 
-	// dimensions must be positive
-	if ((h > 0) && (w > 0)) {
+    // dimensions must be positive
+    if ((h > 0) && (w > 0)) {
 
         m = (matrix_float *) malloc(sizeof (matrix_float));
 
-		// if didn't failed to allocated the space
-		if (m != 0) {
+        // if didn't failed to allocated the space
+        if (m != 0) {
 
-			m->height = h;
-			m->width = w;
-			m->data = data_pointer;
-		}
-	}
+            m->height = h;
+            m->width = w;
+            m->data = data_pointer;
+        }
+    }
 
-	return m;
+    return m;
 }
 
 // vector allocation
 vector_float * vector_float_alloc(const int16_t length, int8_t orientation) {
 
-	vector_float * v = 0;
+    vector_float * v = 0;
 
-	// dimension must be positive
-	if (length > 0) {
+    // dimension must be positive
+    if (length > 0) {
 
         v = (vector_float *) malloc(sizeof (vector_float));
 
-		// if didn't failed to allocated the space
-		if (v != 0) {
+        // if didn't failed to allocated the space
+        if (v != 0) {
 
-			v->length = length;
-			v->orientation = orientation;
+            v->length = length;
+            v->orientation = orientation;
             v->data = (float *) malloc(length*sizeof(float));
-		}
-	}
+        }
+    }
 
-	return v;
+    return v;
 }
 
 // vector allocation without a data
 vector_float * vector_float_alloc_hollow(const int16_t length, int8_t orientation, float * data_pointer) {
 
-	vector_float * v = 0;
+    vector_float * v = 0;
 
-	// dimension must be positive
-	if (length > 0) {
+    // dimension must be positive
+    if (length > 0) {
 
         v = (vector_float *) malloc(sizeof (vector_float));
 
-		// if didn't failed to allocated the space
-		if (v != 0) {
+        // if didn't failed to allocated the space
+        if (v != 0) {
 
-			v->length = length;
-			v->orientation = orientation;
-			v->data = data_pointer;
-		}
-	}
+            v->length = length;
+            v->orientation = orientation;
+            v->data = data_pointer;
+        }
+    }
 
-	return v;
+    return v;
 }
 
 // deallocate the matrix using FreeRTOS free

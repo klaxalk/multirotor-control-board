@@ -1,7 +1,7 @@
 #ifndef defines_H
 #define defines_H
 
-typedef char int8_t;
+//typedef char int8_t;
 
 #define LS_STABILIZATION      2
 #define LS_LANDING            1
