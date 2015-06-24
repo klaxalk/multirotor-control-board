@@ -132,7 +132,7 @@ void commTask(void *p) {
 			aileronSpeed  = + opticalFlowData.flow_comp_m_y;
 			
 			if (opticalFlowData.ground_distance < ALTITUDE_MAXIMUM 
-			&& opticalFlowData.ground_distance >= 0.2 ) {
+			&& opticalFlowData.ground_distance >= 0.3 ) {
 				groundDistance = opticalFlowData.ground_distance;
 			}
 			px4Confidence = opticalFlowData.quality;

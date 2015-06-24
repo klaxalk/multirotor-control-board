@@ -41,19 +41,19 @@ void mainTask(void *p) {
 		// controllers on/off
 		if (RCchannel[AUX3] < (PPM_IN_MIDDLE_LENGTH - 400)) {
 			if (previous_AUX3 != 0) {			
-				controllerSet(CONTROLLERS.OFF);						
+				controllerSet(CONTROLLERS_OFF);						
 				previous_AUX3 = 0;
 			}
 		} else if (RCchannel[AUX3] > (PPM_IN_MIDDLE_LENGTH + 400)) {
 			if (previous_AUX3 != 2) {			
-				controllerSet(CONTROLLERS.MPC);
+				controllerSet(CONTROLLERS_MPC);
 				TRAJ_POINT(0,0,0,0,1);
 				trajMaxIndex=0;		
 				previous_AUX3 = 2;
 			}			
 		} else {
 			if (previous_AUX3 != 1) {			
-				controllerSet(CONTROLLERS.ALTITUDE);
+				controllerSet(CONTROLLERS_ALTITUDE);
 				previous_AUX3 = 1;
 			}
 		}

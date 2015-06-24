@@ -8,6 +8,7 @@
 #include "mpcHandler.h"
 
 
+
 //XBee data payload
 unsigned char dataOUT[200];
 
@@ -22,77 +23,114 @@ void packetTypeError(unsigned char *inPacket){
 //TELEMETRY
 float telemetryValue(unsigned char type){
 	float f=0.0;
-	if(type==TELEMETRIES.ALTITUDE_ESTIMATED){
+	
+	switch (type)
+	{
+	case TELEMETRIES_ALTITUDE_ESTIMATED:
 		f=altitude.position;
-	}else if(type==TELEMETRIES.ALTITUDE){
+		break;
+	case TELEMETRIES_ALTITUDE:
 		f=groundDistance;
-	}else if(type==TELEMETRIES.ELEVATOR_SPEED){
+		break;
+	case TELEMETRIES_ELEVATOR_SPEED:
 		f=elevatorSpeed;
-	}else if(type==TELEMETRIES.AILERON_SPEED){
+		break;
+	case TELEMETRIES_AILERON_SPEED:
 		f=aileronSpeed;
-	}else if(type==TELEMETRIES.ELEVATOR_SPEED_ESTIMATED){
+		break;
+	case TELEMETRIES_ELEVATOR_SPEED_ESTIMATED:	
 		f=kalmanStates.elevator.velocity;
-	}else if(type==TELEMETRIES.AILERON_SPEED_ESTIMATED){
+		break;
+	case TELEMETRIES_AILERON_SPEED_ESTIMATED:
 		f=kalmanStates.aileron.velocity;
-	}else if(type==TELEMETRIES.ELEVATOR_POSITION){
+		break;
+	case TELEMETRIES_ELEVATOR_POSITION:
 		f=kalmanStates.elevator.position+positionShift.elevator;
-	}else if(type==TELEMETRIES.AILERON_POSITION){
+		break;
+	case TELEMETRIES_AILERON_POSITION:
 		f=kalmanStates.aileron.position+positionShift.aileron;
-	}else if(type==TELEMETRIES.ALTITUDE_CONTROLLER_OUTPUT){
+		break;
+	case TELEMETRIES_ALTITUDE_CONTROLLER_OUTPUT:
 		f=controllerThrottleOutput;
-	}else if(type==TELEMETRIES.ALTITUDE_SPEED){
+		break;
+	case TELEMETRIES_ALTITUDE_SPEED:
 		f=altitude.speed;
-	}else if(type==TELEMETRIES.AILERON_CONTROLLER_OUTPUT){
+		break;
+	case TELEMETRIES_AILERON_CONTROLLER_OUTPUT:
 		f=controllerAileronOutput;
-	}else if(type==TELEMETRIES.ELEVATOR_CONTROLLER_OUTPUT){
+		break;
+	case TELEMETRIES_ELEVATOR_CONTROLLER_OUTPUT:
 		f=controllerElevatorOutput;
-	}else if(type==TELEMETRIES.ALTITUDE_SETPOINT){
+		break;
+	case TELEMETRIES_ALTITUDE_SETPOINT:
 		f=setpoints.altitude;
-	}else if(type==TELEMETRIES.ELEVATOR_POS_SETPOINT){
+		break;
+	case TELEMETRIES_ELEVATOR_POS_SETPOINT:
 		f=setpoints.elevator;
 		//f=mpcSetpoints.elevator+positionShift.elevator;
-	}else if(type==TELEMETRIES.AILERON_POS_SETPOINT){
-	    f=setpoints.aileron;
+		break;
+	case TELEMETRIES_AILERON_POS_SETPOINT:
+		f=setpoints.aileron;
 		//f=mpcSetpoints.aileron+positionShift.aileron;
-	}else if(type==TELEMETRIES.ELEVATOR_ACC){
+		break;
+	case TELEMETRIES_ELEVATOR_ACC:
 		f=kalmanStates.elevator.acceleration;
-	}else if(type==TELEMETRIES.AILERON_ACC){
+		break;
+	case TELEMETRIES_AILERON_ACC:
 		f=kalmanStates.aileron.acceleration;
-	}else if(type==TELEMETRIES.VALID_GUMSTIX){
+		break;
+	case TELEMETRIES_VALID_GUMSTIX:
 		f=gumstixStable;
-    }else if(type==TELEMETRIES.OUTPUT_THROTTLE){
+		break;
+	case TELEMETRIES_OUTPUT_THROTTLE:
 		f=(float)outputThrottle;
-    }else if(type==TELEMETRIES.OUTPUT_ELEVATOR){
+		break;
+	case TELEMETRIES_OUTPUT_ELEVATOR:
 		f=(float)outputElevator;
-    }else if(type==TELEMETRIES.OUTPUT_AILERON){
+		break;
+	case TELEMETRIES_OUTPUT_AILERON:
 		f=(float)outputAileron;
-    }else if(type==TELEMETRIES.OUTPUT_RUDDER){
+		break;
+	case TELEMETRIES_OUTPUT_RUDDER:
 		f=(float)outputRudder;
-    }else if(type==TELEMETRIES.BLOB_ELEVATOR){
+		break;
+	case TELEMETRIES_BLOB_ELEVATOR:
 		f=elevatorGumstix;
-    }else if(type==TELEMETRIES.BLOB_AILERON){
+		break;
+	case TELEMETRIES_BLOB_AILERON:
 		f=aileronGumstix;
-    }else if(type==TELEMETRIES.BLOB_ALTITUDE){
+		break;
+	case TELEMETRIES_BLOB_ALTITUDE:
 		f=throttleGumstix;
-    }else if(type==TELEMETRIES.PITCH_ANGLE){
+		break;
+	case TELEMETRIES_PITCH_ANGLE:
 		f=0.0;
-    }else if(type==TELEMETRIES.ROLL_ANGLE){
+		break;
+	case TELEMETRIES_ROLL_ANGLE:
 		f=0.0;
-    }else if(type==TELEMETRIES.ELEVATOR_ACC_ERROR){
+		break;
+	case TELEMETRIES_ELEVATOR_ACC_ERROR:
 		f=kalmanStates.elevator.acceleration_error;
-    }else if(type==TELEMETRIES.ELEVATOR_ACC_INPUT){
+		break;
+	case TELEMETRIES_ELEVATOR_ACC_INPUT:
 		f=kalmanStates.elevator.acceleration_input;
-    }else if(type==TELEMETRIES.AILERON_ACC_ERROR){
+		break;
+	case TELEMETRIES_AILERON_ACC_ERROR:
 		f=kalmanStates.aileron.acceleration_error;
-    }else if(type==TELEMETRIES.AILERON_ACC_INPUT){
+		break;
+	case TELEMETRIES_AILERON_ACC_INPUT:
 		f=kalmanStates.aileron.acceleration_input;
-    }else if(type==TELEMETRIES.ELEVATOR_SHIFT){
+		break;
+	case TELEMETRIES_ELEVATOR_SHIFT:
 		f=positionShift.elevator;
-    }else if(type==TELEMETRIES.AILERON_SHIFT){
+		break;
+	case TELEMETRIES_AILERON_SHIFT:
 		f=positionShift.aileron;
-    }
+		break;
+	}			
 	return f;
 }
+
 void telemetryReceive(unsigned char *address64,unsigned char *address16,unsigned char type,float value){
 }
 
@@ -105,7 +143,7 @@ void telemetryToCoordinatorSend(){
 	
 	*dataOUT='t';
 	for(i=0;i<TELEMETRY_VARIABLES;i++){
-		if(telemetryToCoordinatorArr[i]==ONOFF.ON){			
+		if(telemetryToCoordinatorArr[i]==ENABLE){			
 			type=i;						
 
 			f=telemetryValue(type);
@@ -123,7 +161,7 @@ void telemetryToCoordinatorSend(){
 }
 void telemetryToCoordinatorSet(unsigned char *address64,unsigned char *address16,unsigned char type,unsigned char on, unsigned char frameID){
 	*dataOUT='c';
-	*(dataOUT+1)=COMMANDS.TELEMETRY_COORDINATOR;
+	*(dataOUT+1)=COMMANDS_TELEMETRY_COORDINATOR;
 	*(dataOUT+2)=on;
 	*(dataOUT+3)=type;
 	makeTRPacket(address64,address16,0x00,frameID,dataOUT,4);
@@ -133,14 +171,14 @@ void telemetryToCoordinator(unsigned char *address64,unsigned char *address16,un
 }
 void telemetryToCoordinatorStatusRequest(unsigned char *address64,unsigned char *address16,unsigned char type,unsigned char frameID){
 	*dataOUT='c';
-	*(dataOUT+1)=COMMANDS.TELEMETRY_COORDINATOR;
+	*(dataOUT+1)=COMMANDS_TELEMETRY_COORDINATOR;
 	*(dataOUT+2)=GET_STATUS;
 	*(dataOUT+3)=type;
 	makeTRPacket(address64,address16,0x00,frameID,dataOUT,4);
 }
 void telemetryToCoordinatorReport(unsigned char *address64,unsigned char *address16,unsigned char type,unsigned char frameID){
 	*dataOUT='r';
-	*(dataOUT+1)=COMMANDS.TELEMETRY_COORDINATOR;
+	*(dataOUT+1)=COMMANDS_TELEMETRY_COORDINATOR;
 	*(dataOUT+2)=telemetryToCoordinatorArr[type];
 	*(dataOUT+3)=type;
 	
@@ -153,7 +191,7 @@ void telemetryToCoordinatorReportRecieved(unsigned char *address64,unsigned char
 //LANDING
 void kopterLandRequest(unsigned char *address64,unsigned char *address16,unsigned char options,unsigned char frameID){
 	*(dataOUT)='c';
-	*(dataOUT+1)=COMMANDS.LANDING;
+	*(dataOUT+1)=COMMANDS_LANDING;
 	*(dataOUT+2)=options;
 	makeTRPacket(address64,address16,0x00,frameID,dataOUT,3);
 }
@@ -166,69 +204,51 @@ void kopterLand(unsigned char *address64,unsigned char *address16,unsigned char 
 }
 void kopterLandStatusRequest(unsigned char *address64,unsigned char *address16,unsigned char frameID){
 	*dataOUT='c';
-	*(dataOUT+1)=COMMANDS.LANDING;
+	*(dataOUT+1)=COMMANDS_LANDING;
 	*(dataOUT+2)=GET_STATUS;
 	makeTRPacket(address64,address16,0x00,frameID,dataOUT,3);
 }
 void kopterLandReport(unsigned char *address64,unsigned char *address16,unsigned char frameID){
 	*dataOUT='r';
-	*(dataOUT+1)=COMMANDS.LANDING;
+	*(dataOUT+1)=COMMANDS_LANDING;
 	*(dataOUT+2)=landingState;	
 	makeTRPacket(address64,address16,0x00,frameID,dataOUT,3);
 }
 void kopterLandReportRecieved(unsigned char *address64,unsigned char *address16,unsigned char status){
-	if(status==LANDING.LANDING){
-		
-	}else if(status==LANDING.FLIGHT){
-		
-	}else if(status==LANDING.STABILIZATION){
-	
-	}else if(status==LANDING.ON_GROUND){
-
-	}else if(status==LANDING.TAKE_OFF){
-
-	}
 }
 
 
 //CONTROLLERS
 void kopterControllersRequest(unsigned char *address64,unsigned char *address16,unsigned char option,unsigned char frameID){
 	*(dataOUT)='c';
-	*(dataOUT+1)=COMMANDS.CONTROLLERS;
+	*(dataOUT+1)=COMMANDS_CONTROLLERS;
 	*(dataOUT+2)=option;
 	makeTRPacket(address64,address16,0x00,frameID,dataOUT,3);
 }
 void kopterControllers(unsigned char *address64,unsigned char *address16,unsigned char option){
 	portENTER_CRITICAL();
-	if(		 option==CONTROLLERS.OFF){
-		controllerSet(CONTROLLERS.OFF);	
-	}else if(option==CONTROLLERS.ALTITUDE){
-		controllerSet(CONTROLLERS.ALTITUDE);
-	}else if(option==CONTROLLERS.MPC){
-		controllerSet(CONTROLLERS.MPC);	
+	if(		 option==CONTROLLERS_OFF){
+		controllerSet(CONTROLLERS_OFF);	
+	}else if(option==CONTROLLERS_ALTITUDE){
+		controllerSet(CONTROLLERS_ALTITUDE);
+	}else if(option==CONTROLLERS_MPC){
+		controllerSet(CONTROLLERS_MPC);	
 	}
 	portEXIT_CRITICAL();
 }
 void kopterControllersStatusRequest(unsigned char *address64,unsigned char *address16,unsigned char frameID){
 	*(dataOUT)='c';
-	*(dataOUT+1)=COMMANDS.CONTROLLERS;
+	*(dataOUT+1)=COMMANDS_CONTROLLERS;
 	*(dataOUT+2)=GET_STATUS;
 	makeTRPacket(address64,address16,0x00,frameID,dataOUT,3);
 }
 void kopterControllersReport(unsigned char *address64,unsigned char *address16,unsigned char frameID){
 	*(dataOUT)='r';
-	*(dataOUT+1)=COMMANDS.CONTROLLERS;
+	*(dataOUT+1)=COMMANDS_CONTROLLERS;
 	*(dataOUT+2)=controllerActive;
 	makeTRPacket(address64,address16,0x00,frameID,dataOUT,3);
 }
 void kopterControllersReportReceived(unsigned char *address64,unsigned char *address16,unsigned char status){
-	if(		 status==CONTROLLERS.OFF){		
-	
-	}else if(status==CONTROLLERS.ALTITUDE){
-
-	}else if(status==CONTROLLERS.MPC){
-		
-	}
 }
 
 //TRAJECTORY POINTS
@@ -237,7 +257,7 @@ void kopterTrajectorySetRequest(unsigned char *address64,unsigned char *address1
 	uint8_t i;
 	
 	*(dataOUT)='c';
-	*(dataOUT+1)=COMMANDS.TRAJECTORY_POINTS;
+	*(dataOUT+1)=COMMANDS_TRAJECTORY_POINTS;
 	*(dataOUT+2)=size;
 	for(i=0;i<size;i++){		
 		ch=(unsigned char *) time+i;
@@ -263,7 +283,7 @@ void kopterTrajectorySet(unsigned char *address64,unsigned char *address16,unsig
 }
 void kopterTrajectorySetStatusRequest(unsigned char *address64,unsigned char *address16,unsigned char frameID){
 	*(dataOUT)='c';
-	*(dataOUT+1)=COMMANDS.TRAJECTORY_POINTS;
+	*(dataOUT+1)=COMMANDS_TRAJECTORY_POINTS;
 	*(dataOUT+2)=GET_STATUS;
 	makeTRPacket(address64,address16,0x00,frameID,dataOUT,4);
 }
@@ -272,7 +292,7 @@ void kopterTrajectorySetReport(unsigned char *address64,unsigned char *address16
 	uint8_t i;
 	
 	*(dataOUT)='r';
-	*(dataOUT+1)=COMMANDS.TRAJECTORY_POINTS;
+	*(dataOUT+1)=COMMANDS_TRAJECTORY_POINTS;
 	*(dataOUT+2)=trajMaxIndex+1;
 	
 	for(i=0;i<trajMaxIndex+1;i++){	
@@ -302,7 +322,7 @@ void kopterTrajectorySetReportReceived(unsigned char *address64,unsigned char *a
 void kopterPositionSlaveSetRequest(unsigned char *address64,unsigned char *address16,unsigned char *slaveAddr,unsigned char frameID){
 	char i;
 	*(dataOUT)='c';
-	*(dataOUT+1)=COMMANDS.POSITION_SLAVE_SET;
+	*(dataOUT+1)=COMMANDS_POSITION_SLAVE_SET;
 	for (i=0;i<8;i++){
 		*(dataOUT+2+i)=*(slaveAddr+i);
 	}
@@ -316,14 +336,14 @@ void kopterPositionSlaveSet(unsigned char *address64,unsigned char *address16,un
 }
 void kopterPositionSlaveSetStatusRequest(unsigned char *address64,unsigned char *address16,unsigned char frameID){
 	*(dataOUT)='c';
-	*(dataOUT+1)=COMMANDS.POSITION_SLAVE_SET;
+	*(dataOUT+1)=COMMANDS_POSITION_SLAVE_SET;
 	*(dataOUT+2)=GET_STATUS;
 	makeTRPacket(address64,address16,0x00,frameID,dataOUT,3);
 }
 void kopterPositionSlaveSetReport(unsigned char *address64,unsigned char *address16,unsigned char frameID){
 	char i;
 	*(dataOUT)='r';
-	*(dataOUT+1)=COMMANDS.POSITION_SLAVE_SET;
+	*(dataOUT+1)=COMMANDS_POSITION_SLAVE_SET;
 	for (i=0;i<8;i++){
 		*(dataOUT+2+i)=*(posSlave+i);
 	}
@@ -350,7 +370,7 @@ void kopterTimeRequest(unsigned char *address64,unsigned char *address16,uint32_
 		unsigned char *ch;		
 		
 		*(dataOUT)='c';
-		*(dataOUT+1)=COMMANDS.TIME;
+		*(dataOUT+1)=COMMANDS_TIME;
 		
 		ch=(unsigned char *) &time;
 		*(dataOUT+2)=*ch;
@@ -365,7 +385,7 @@ void kopterTime(unsigned char *address64,unsigned char *address16,uint32_t time)
 }
 void kopterTimeStatusRequest(unsigned char *address64,unsigned char *address16,unsigned char frameID){
 	*(dataOUT)='c';
-	*(dataOUT+1)=COMMANDS.TIME;
+	*(dataOUT+1)=COMMANDS_TIME;
 	*(dataOUT+2)=GET_STATUS;
 	makeTRPacket(address64,address16,0x00,frameID,dataOUT,3);	
 }
@@ -373,7 +393,7 @@ void kopterTimeReport(unsigned char *address64,unsigned char *address16,unsigned
 	unsigned char *ch;
 			
 	*(dataOUT)='r';
-	*(dataOUT+1)=COMMANDS.TIME;
+	*(dataOUT+1)=COMMANDS_TIME;
 			
 	ch=(unsigned char *) &secondsTimer;
 	*(dataOUT+2)=*ch;
@@ -390,7 +410,7 @@ void kopterPositionSetRequest(unsigned char *address64,unsigned char *address16,
 	unsigned char *ch;
 	
 	*(dataOUT)='c';
-	*(dataOUT+1)=COMMANDS.POSITION_SET;
+	*(dataOUT+1)=COMMANDS_POSITION_SET;
 	
 	ch=(unsigned char *) &elevator;
 	*(dataOUT+2)=*ch;

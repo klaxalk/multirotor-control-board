@@ -192,7 +192,7 @@ portENTER_CRITICAL();
 	outputElevator = RCchannel[ELEVATOR];
 	outputAileron = RCchannel[AILERON];
 	
-	if (controllerActive!=CONTROLLERS.OFF) {
+	if (controllerActive!=CONTROLLERS_OFF) {
 		outputElevator += saturationInt16(controllerElevatorOutput,CONTROLLER_ELEVATOR_SATURATION);
 		outputAileron += saturationInt16(controllerAileronOutput,CONTROLLER_AILERON_SATURATION);
 		outputThrottle += saturationInt16(controllerThrottleOutput,CONTROLLER_THROTTLE_SATURATION);				

@@ -46,7 +46,7 @@ void logTaskReadable(void *p){
 		logValueStr((float)RCchannel[AILERON]);
 		logValueStr((float)RCchannel[RUDDER]);
 		logValueStr((float)milisecondsTimer); //time	
-		sprintf(str,"%d,",secondsTimer); 
+		sprintf(str,"%d,",(int)secondsTimer); 
 		usartBufferPutString(usart_buffer_log,str,10); 
 		logValueStr(mpcSetpoints.elevator);
 		logValueStr(mpcSetpoints.aileron);

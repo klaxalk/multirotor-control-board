@@ -42,30 +42,30 @@ void initTrajectory(){
 }
 
 void enableLanding(){	
-	if(landingState==LANDING.FLIGHT || landingState==LANDING.TAKE_OFF){
-		landingState=LANDING.STABILIZATION;
+	if(landingState==LANDING_FLIGHT || landingState==LANDING_TAKE_OFF){
+		landingState=LANDING_STABILIZATION;
 	}
 }
 
 void disableLanding(){	
-	if(landingState!=LANDING.FLIGHT){
-		landingState=LANDING.TAKE_OFF;
+	if(landingState!=LANDING_FLIGHT){
+		landingState=LANDING_TAKE_OFF;
 	}
 }
 
 void controllerSet(unsigned char controllerDesired){
 	if(controllerDesired!=controllerActive){
 		//NONE
-		if(controllerDesired==CONTROLLERS.OFF){
-			controllerActive=CONTROLLERS.OFF;			
+		if(controllerDesired==CONTROLLERS_OFF){
+			controllerActive=CONTROLLERS_OFF;			
 		}else
 		//ALTITUDE
-		if(controllerDesired==CONTROLLERS.ALTITUDE){		
-			controllerActive=CONTROLLERS.ALTITUDE;			
+		if(controllerDesired==CONTROLLERS_ALTITUDE){		
+			controllerActive=CONTROLLERS_ALTITUDE;			
 		}else
 		//MPC
-		if(controllerDesired==CONTROLLERS.MPC){	
-			controllerActive=CONTROLLERS.MPC;	
+		if(controllerDesired==CONTROLLERS_MPC){	
+			controllerActive=CONTROLLERS_MPC;	
 			stmResetKalman(0,0);
 			stmResetKalman(0,0);
 			stmResetKalman(0,0);		
@@ -160,12 +160,12 @@ void altitudeController(float setpoint) {
 void landingController(){
 	/*
 	static int8_t landingCounter=0;
-		if(landingState==LANDING.ON_GROUND){
+		if(landingState==LANDING_ON_GROUND){
 			controllerThrottleOutput = -CONTROLLER_THROTTLE_SATURATION;
 			controllerElevatorOutput = 0;
 			controllerAileronOutput = 0;
 		}else
-		if(landingState==LANDING.TAKE_OFF){
+		if(landingState==LANDING_TAKE_OFF){
 			altitudeController(setpoints.altitude);
 			velocityController();				
 			//stabilize altitude for 0.5s
@@ -179,7 +179,7 @@ void landingController(){
 				landingCounter=0;
 			}
 		}else	
-		if(landingState==LANDING.STABILIZATION){
+		if(landingState==LANDING_STABILIZATION){
 			//stabilize altitude for 0.5s
 			altitudeController(ALTITUDE_MINIMUM);
 			velocityController();
@@ -190,11 +190,11 @@ void landingController(){
 				landingCounter = 0;
 			}
 			if(landingCounter >= 35){
-				landingState = LANDING.LANDING;	
+				landingState = LANDING_LANDING;	
 				landingCounter=0;				
 			}
 		}else
-		if(landingState==LANDING.LANDING){
+		if(landingState==LANDING_LANDING){
 			controllerThrottleOutput-=5;
 			if(controllerThrottleOutput <= -CONTROLLER_THROTTLE_SATURATION){
 				landingState = LANDING.ON_GROUND;
