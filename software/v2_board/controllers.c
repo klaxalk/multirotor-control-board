@@ -158,7 +158,6 @@ void altitudeController(float setpoint) {
 }
 
 void landingController(){
-	/*
 	static int8_t landingCounter=0;
 		if(landingState==LANDING_ON_GROUND){
 			controllerThrottleOutput = -CONTROLLER_THROTTLE_SATURATION;
@@ -167,7 +166,8 @@ void landingController(){
 		}else
 		if(landingState==LANDING_TAKE_OFF){
 			altitudeController(setpoints.altitude);
-			velocityController();				
+			controllerElevatorOutput = saturationInt16(mpcElevatorOutput,CONTROLLER_ELEVATOR_SATURATION);
+			controllerAileronOutput = saturationInt16(mpcAileronOutput,CONTROLLER_AILERON_SATURATION);
 			//stabilize altitude for 0.5s
 			if(fabs(setpoints.altitude - altitude.position) < 0.1 && fabs(altitude.speed) < 0.2){
 				landingCounter++;
@@ -182,7 +182,8 @@ void landingController(){
 		if(landingState==LANDING_STABILIZATION){
 			//stabilize altitude for 0.5s
 			altitudeController(ALTITUDE_MINIMUM);
-			velocityController();
+			controllerElevatorOutput = saturationInt16(mpcElevatorOutput,CONTROLLER_ELEVATOR_SATURATION);
+			controllerAileronOutput = saturationInt16(mpcAileronOutput,CONTROLLER_AILERON_SATURATION);
 			
 			if(fabs(setpoints.altitude - altitude.position) < 0.1 && fabs(altitude.speed) < 0.2){
 				landingCounter++;
@@ -196,9 +197,12 @@ void landingController(){
 		}else
 		if(landingState==LANDING_LANDING){
 			controllerThrottleOutput-=5;
+			controllerElevatorOutput = saturationInt16(mpcElevatorOutput,CONTROLLER_ELEVATOR_SATURATION);
+			controllerAileronOutput = saturationInt16(mpcAileronOutput,CONTROLLER_AILERON_SATURATION);
+			
 			if(controllerThrottleOutput <= -CONTROLLER_THROTTLE_SATURATION){
 				landingState = LANDING.ON_GROUND;
 			}			
-		}*/
+		}
 }
 

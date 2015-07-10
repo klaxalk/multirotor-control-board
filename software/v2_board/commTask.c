@@ -46,7 +46,7 @@ void commTask(void *p) {
 		}
 		
 		//send trajectory to MPC
-		if(trajSend==1){
+		if(trajSend==1 && landingState==LANDING_FLIGHT){
 			stmSendSetpoint(setpoints.elevator-positionShift.elevator,setpoints.aileron-positionShift.aileron);				
 			trajSend=0;			
 		}	
@@ -138,7 +138,9 @@ void commTask(void *p) {
 			px4Confidence = opticalFlowData.quality;
 			opticalFlowDataFlag = 0;
 			
-			stmSendMeasurement(elevatorSpeed, aileronSpeed, controllerElevatorOutput, controllerAileronOutput);			
+			if(altitude.position>ALTITUDE_MINIMUM){
+				stmSendMeasurement(elevatorSpeed, aileronSpeed, controllerElevatorOutput, controllerAileronOutput);			
+			}
 		}
 
 
