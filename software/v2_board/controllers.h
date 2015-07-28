@@ -26,9 +26,9 @@ volatile bool mpcControllerEnabled;
 
 #define CONTROLLER_THROTTLE_SATURATION 300
 
-#define ALTITUDE_KP 100
+#define ALTITUDE_KP 180
 #define ALTITUDE_KI 100
-#define ALTITUDE_KV 200
+#define ALTITUDE_KV 120
 
 // constants for altitude and landing controllers
 #define ALTITUDE_MAXIMUM	3.00 // used to crop values from PX4Flow

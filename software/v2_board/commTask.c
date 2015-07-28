@@ -41,6 +41,8 @@ volatile float rpiz = 0;
 volatile char rpiOk = 0;
 volatile float curSetX = 0;
 volatile float curSetY = 0;
+volatile float lastPositionX = 0;
+volatile float lastPositionY = 0;
 
 void commTask(void *p) {
 	
@@ -246,8 +248,16 @@ void commTask(void *p) {
 				if (rpiOk) {
 					
 					curSetX = kalmanStates.elevator.position + rpix - 1.5;
-					curSetY = kalmanStates.aileron.position + rpiy;
+					curSetY = kalmanStates.aileron.position - rpiy;
+					
+					lastPositionX = kalmanStates.elevator.position;
+					lastPositionY = kalmanStates.aileron.position;
+				} else {
+					
+					curSetX = lastPositionX;
+					curSetY = lastPositionY;
 				}
+				
 				stmSendSetpoint(curSetX, curSetY);
 
 			} else if (main2commMessage.messageType == SET_TRAJECTORY) {

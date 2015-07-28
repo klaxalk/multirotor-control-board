@@ -35,25 +35,24 @@ volatile float throttleSetpoint = 0.75;
 void altitudeEstimator() {
 	//new cycle
 	estimator_cycle++;
-	if(groundDistance != estimatedThrottlePos_prev) {//input data changed
-		// extreme filter
-		if(fabs(groundDistance - estimatedThrottlePos_prev) <= 0.5) {//limitation cca 3m/s
-			// compute new values
-			estimatedThrottleVel = (groundDistance - estimatedThrottlePos_prev) / (12*DT);
-			estimatedThrottlePos      = groundDistance;
-			estimatedThrottlePos_prev = groundDistance;
-			estimator_cycle = 0;
-
-		}
-		} else {
-		if (estimator_cycle >= 8) { //safety reset
-			estimatedThrottleVel = 0;
-			estimatedThrottlePos = groundDistance;
-			estimatedThrottlePos_prev = groundDistance;
-			estimator_cycle = 0;
-			} else { //estimate position
-			estimatedThrottlePos += estimatedThrottleVel * DT;
-		}
+	
+	// extreme filter
+	if(fabs(groundDistance - estimatedThrottlePos_prev) <= 0.1) {//limitation cca 3m/s
+		// compute new values
+		estimatedThrottleVel = (groundDistance - estimatedThrottlePos_prev) / (DT);
+		estimatedThrottlePos      = groundDistance;
+		estimatedThrottlePos_prev = groundDistance;
+		estimator_cycle = 0;
+	}
+	
+	if (estimator_cycle >= 20) { //safety reset
+		estimatedThrottleVel = 0;
+		estimatedThrottlePos = groundDistance;
+		estimatedThrottlePos_prev = groundDistance;
+		estimator_cycle = 0;
+		
+		} else { //estimate position
+		estimatedThrottlePos += estimatedThrottleVel * DT;
 	}
 }
 

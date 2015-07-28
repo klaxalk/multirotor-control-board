@@ -98,7 +98,7 @@ void mainTask(void *p) {
 					for (i = 0; i < 5; i++) {
 
 						main2commMessage.data.trajectory.elevatorTrajectory[i] = pgm_read_float(&(elevatorCircle[futureSetpointIdx]));
-						main2commMessage.data.trajectory.aileronTrajectory[i] = 0;//pgm_read_float(&(aileronCircle[futureSetpointIdx]));
+						main2commMessage.data.trajectory.aileronTrajectory[i] = 0; // pgm_read_float(&(aileronCircle[futureSetpointIdx]));
 
 						futureSetpointIdx = futureSetpointIdx + 50;
 						
