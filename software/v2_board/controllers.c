@@ -175,7 +175,7 @@ void landingController(){
 				landingCounter = 0;
 			}
 			if(landingCounter >= 35){
-				landingState=LANDING.FLIGHT;
+				landingState=LANDING_FLIGHT;
 				landingCounter=0;
 			}
 		}else	
@@ -201,7 +201,7 @@ void landingController(){
 			controllerAileronOutput = saturationInt16(mpcAileronOutput,CONTROLLER_AILERON_SATURATION);
 			
 			if(controllerThrottleOutput <= -CONTROLLER_THROTTLE_SATURATION){
-				landingState = LANDING.ON_GROUND;
+				landingState = LANDING_ON_GROUND;
 			}			
 		}
 }

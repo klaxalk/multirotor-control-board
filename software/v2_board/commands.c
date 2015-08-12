@@ -319,19 +319,20 @@ void kopterTrajectorySetReportReceived(unsigned char *address64,unsigned char *a
 }
 
 //POSITION SLAVE SET
-void kopterPositionSlaveSetRequest(unsigned char *address64,unsigned char *address16,unsigned char *slaveAddr,unsigned char frameID){
+void kopterPositionSlaveSetRequest(unsigned char *address64,unsigned char *address16,unsigned char slaveID ,unsigned char *slaveAddr,unsigned char frameID){
 	char i;
 	*(dataOUT)='c';
 	*(dataOUT+1)=COMMANDS_POSITION_SLAVE_SET;
+	*(dataOUT+2)=slaveID;
 	for (i=0;i<8;i++){
-		*(dataOUT+2+i)=*(slaveAddr+i);
+		*(dataOUT+3+i)=*(slaveAddr+i);
 	}
-	makeTRPacket(address64,address16,0x00,frameID,dataOUT,10);
+	makeTRPacket(address64,address16,0x00,frameID,dataOUT,11);
 }
-void kopterPositionSlaveSet(unsigned char *address64,unsigned char *address16,unsigned char *slaveAddr){
+void kopterPositionSlaveSet(unsigned char *address64,unsigned char *address16,unsigned char slaveID, unsigned char *slaveAddr){
 	char i;
 	for(i=0;i<8;i++){
-		*(posSlave+i)=*(slaveAddr+i);
+		*(*(posSlave+slaveID)+i)=*(slaveAddr+i);
 	}
 }
 void kopterPositionSlaveSetStatusRequest(unsigned char *address64,unsigned char *address16,unsigned char frameID){
@@ -341,13 +342,16 @@ void kopterPositionSlaveSetStatusRequest(unsigned char *address64,unsigned char 
 	makeTRPacket(address64,address16,0x00,frameID,dataOUT,3);
 }
 void kopterPositionSlaveSetReport(unsigned char *address64,unsigned char *address16,unsigned char frameID){
-	char i;
+	char i,j;
 	*(dataOUT)='r';
 	*(dataOUT+1)=COMMANDS_POSITION_SLAVE_SET;
-	for (i=0;i<8;i++){
-		*(dataOUT+2+i)=*(posSlave+i);
+	for (j=0;j<4;j++)
+	{
+		for (i=0;i<8;i++){
+			*(dataOUT+2+i+j*8)=*(*(posSlave+j)+i);
+		}
 	}
-	makeTRPacket(address64,address16,0x00,frameID,dataOUT,10);
+	makeTRPacket(address64,address16,0x00,frameID,dataOUT,34);
 }
 void kopterPositionSlaveSetReportRecieved(unsigned char *address64,unsigned char *address16,unsigned char *slaveAddr){
 	

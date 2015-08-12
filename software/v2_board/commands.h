@@ -32,8 +32,8 @@ void kopterControllersStatusRequest(unsigned char *address64,unsigned char *addr
 void kopterControllersReport(unsigned char *address64,unsigned char *address16,unsigned char frameID);
 void kopterControllersReportReceived(unsigned char *address64,unsigned char *address16,unsigned char status);
 
-void kopterPositionSlaveSetRequest(unsigned char *address64,unsigned char *address16,unsigned char *slaveAddr,unsigned char frameID);
-void kopterPositionSlaveSet(unsigned char *address64,unsigned char *address16,unsigned char *slaveAddr);
+void kopterPositionSlaveSetRequest(unsigned char *address64,unsigned char *address16,unsigned char slaveID ,unsigned char *slaveAddr,unsigned char frameID);
+void kopterPositionSlaveSet(unsigned char *address64,unsigned char *address16,unsigned char slaveID, unsigned char *slaveAddr);
 void kopterPositionSlaveSetStatusRequest(unsigned char *address64,unsigned char *address16,unsigned char frameID);
 void kopterPositionSlaveSetReport(unsigned char *address64,unsigned char *address16,unsigned char frameID);
 void kopterPositionSlaveSetReportRecieved(unsigned char *address64,unsigned char *address16,unsigned char *slaveAddr);

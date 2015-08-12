@@ -91,7 +91,7 @@ void packetHandler(unsigned char *inPacket){
 								if(*(dataIN+3)==GET_STATUS){
 									kopterPositionSlaveSetReport(address64,address16,0x00);
 								}else{
-									kopterPositionSlaveSet(address64,address16,dataIN+3);
+									kopterPositionSlaveSet(address64,address16,dataIN+3,dataIN+4);
 								}
 								break;
 						//TIME
