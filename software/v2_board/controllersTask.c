@@ -22,7 +22,7 @@ void controllersTask(void *p) {
 		}else{		
 			//FLIGHT
 			if(landingState==LANDING_FLIGHT){				
-				//POSITION
+				//ALTITUDE
 				if(controllerActive==CONTROLLERS_ALTITUDE){
 					altitudeController(setpoints.altitude);	
 					controllerElevatorOutput=0;
