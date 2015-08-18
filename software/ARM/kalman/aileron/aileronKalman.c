@@ -6,6 +6,7 @@
 
 #include "kalman/aileron/aileronKalman.h"
 #include "miscellaneous.h"
+#include "config.h"
 
 kalmanHandler_t aileronKalmanHandler;
 
@@ -37,7 +38,7 @@ kalmanHandler_t * initializeAileronKalman() {
 	matrix_float_set(aileronKalmanHandler.system_A, 4, 1, 0);
 	matrix_float_set(aileronKalmanHandler.system_A, 4, 2, 0);
 	matrix_float_set(aileronKalmanHandler.system_A, 4, 3, 0);
-	matrix_float_set(aileronKalmanHandler.system_A, 4, 4, DT_AILERON*82.2945);
+	matrix_float_set(aileronKalmanHandler.system_A, 4, 4, ATTITUDE_P0);
 	matrix_float_set(aileronKalmanHandler.system_A, 4, 5, 0);
 
 	matrix_float_set(aileronKalmanHandler.system_A, 5, 1, 0);
@@ -54,7 +55,7 @@ kalmanHandler_t * initializeAileronKalman() {
 	matrix_float_set(aileronKalmanHandler.system_B, 1, 1, 0);
 	matrix_float_set(aileronKalmanHandler.system_B, 2, 1, 0);
 	matrix_float_set(aileronKalmanHandler.system_B, 3, 1, 0);
-	matrix_float_set(aileronKalmanHandler.system_B, 4, 1, 0.0113*DT_AILERON);
+	matrix_float_set(aileronKalmanHandler.system_B, 4, 1, ATTITUDE_P1);
 	matrix_float_set(aileronKalmanHandler.system_B, 5, 1, 0);
 
 	/* -------------------------------------------------------------------- */

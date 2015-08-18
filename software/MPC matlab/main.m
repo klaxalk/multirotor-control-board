@@ -2,19 +2,49 @@ clear all;
 
 %% Matice systemu
 
-dt = 0.0114;
+dt = 0.0101;
 
-A = [1 dt   0  0            0;
-     0 1    dt 0            0;
-     0 0    0  1            1;
-     0 0    0  0.9796       0;
-     0 0    0  0            1];
- 
-B = [0; 0; 0; 0.0045*dt; 0];
+uav = 2;
+% 1 = 250tka, KK2
+% 2 = Mikrokopter, KK2, ss = 15
+% 3 = Tricopter, KK2 
+
+%% 250tka, KK2 
+if uav == 1
+    A = [1 dt   0  0            0;
+         0 1    dt 0            0;
+         0 0    0  1            1;
+         0 0    0  0.9775       0;
+         0 0    0  0            1];
+
+    B = [0; 0; 0; 7.0987e-05; 0];
+end
+
+%% Mikrokopter, KK2, stick scaling = 15
+if uav == 2
+    A = [1 dt   0  0            0;
+         0 1    dt 0            0;
+         0 0    0  1            1;
+         0 0    0  0.9783       0;
+         0 0    0  0            1];
+
+    B = [0; 0; 0; 6.3151e-05; 0];
+end
+
+%% Tricopter, KK2 
+if uav == 3
+    A = [1 dt   0  0            0;
+         0 1    dt 0            0;
+         0 0    0  1            1;
+         0 0    0  0.9796       0;
+         0 0    0  0            1];
+
+    B = [0; 0; 0; 0.0045*dt; 0];    
+end
 
 %% Kovariancni matice mereni
 
-measurement_covariance = diag([0.0058, 0.08, 0, 0, 0]);
+measurement_covariance = diag([0.0058, 0.19, 0, 0, 0]);
 
 % pocet stavu systemu 
 n_states = size(A, 1);
@@ -89,11 +119,37 @@ B_roof = B_roof*U;
 %           ..., ..., Q,    0;
 %           0,   ..., ...,  S];
 
-Q = [1.07, 0, 0, 0, 0;
+% 250tka, KK2
+if uav == 1
+   
+    Q = [1.07, 0, 0, 0, 0;
      0, 0, 0, 0, 0;
      0, 0, 0, 0, 0;
      0, 0, 0, 0, 0;
      0, 0, 0, 0, 0];
+    
+end
+
+% mikrokopter, KK2
+if uav == 2
+    
+    Q = [1.07, 0, 0, 0, 0;
+         0, 0, 0, 0, 0;
+         0, 0, 0, 0, 0;
+         0, 0, 0, 0, 0;
+         0, 0, 0, 0, 0];
+     
+end
+
+if uav == 3
+    
+    Q = [1.07, 0, 0, 0, 0;
+         0, 0, 0, 0, 0;
+         0, 0, 0, 0, 0;
+         0, 0, 0, 0, 0;
+         0, 0, 0, 0, 0];
+     
+end
 
 S = [10, 0, 0, 0, 0;
      0, 0, 0, 0, 0;
@@ -146,9 +202,9 @@ time(1) = 0;
 elevator_vel = 0.25*cos(0:0.003:2*pi*20);
 aileron_vel = 0.25*sin(0:0.003:2*pi*20);
 
-elevator_pos = integrate(elevator_vel, dt);
-aileron_pos = integrate(aileron_vel, dt);
-aileron_pos = aileron_pos - mean(aileron_pos);
+elevator_pos = integrate(elevator_vel, dt)*0;
+aileron_pos = integrate(aileron_vel, dt)*0;
+aileron_pos = aileron_pos - mean(aileron_pos)*0;
 
 % reference position
 x_ref = elevator_pos;
@@ -156,7 +212,7 @@ x_ref = elevator_pos;
 % x_ref((simu_len+horizon_len)/2+1:end) = 1 + 0.2*sin(linspace(1, 20, (simu_len+horizon_len)/2))';
     
 % initial conditions
-x(:, 1) = [0; 0; 0; 0; 0];
+x(:, 1) = [1.2; 0; 0; 0; 0];
 
 % vektor akcnich zasahu
 u = zeros(horizon_len, u_size);
@@ -168,14 +224,14 @@ u_hist(1) = 0;
 saturace = 800;
 
 % max speed
-max_speed = 0.35;
+max_speed = 0.28;
 
 u_sat = 0;
 
 % kalman variables
 
 kalmanCovariance = eye(5);
-estimate(:, 1) = [0; 0; 0; 0; 0];
+estimate(:, 1) = [1; 0; 0; 0; 0];
 
 xd_pure_integration(1) = x(1, 1);
 

@@ -15,6 +15,8 @@ fid = fopen('elevAileMpcMatrices.c', 'w');
 fprintf(fid, '#include "CMatrixLib.h"\n');
 fprintf(fid, '#include "elevAileMpcMatrices.h"\n\n');
 
+fprintf(fid, '// MIKROKOPTER, KK2, stick scaling = 15\n\n');
+
 fprintf(fid, '/*\n');
 fprintf(fid, 'This file was created automatically with following parameters\n\n');
 
@@ -28,7 +30,6 @@ printMatrixM(fid, 'S', '%1.3f', S);
 printMatrixM(fid, 'P', '%1.10f', P);
 
 fprintf(fid, '*/\n\n');
-
 
 %% Print A_roof
 

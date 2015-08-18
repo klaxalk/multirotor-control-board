@@ -65,7 +65,6 @@ void mainTask(void *p) {
 		}
 		
 		// aux stick for setting the setpoint
-		
 		aux2filtered = aux2filtered*0.997 + RCchannel[AUX2]*0.003;
 		
 		if (auxSetpointFlag == 1) {
@@ -74,7 +73,7 @@ void mainTask(void *p) {
 				
 				setpointChangeTrigger = 1;
 		
-				if ((aux2filtered > (PPM_IN_MIDDLE_LENGTH + 300)) && AUX2_previous != 1) {
+				if ((aux2filtered > (PPM_IN_MIDDLE_LENGTH + 300))) {
 			
 					main2commMessage.messageType = SET_SETPOINT;
 					main2commMessage.data.simpleSetpoint.elevator = 2;
@@ -89,8 +88,8 @@ void mainTask(void *p) {
 					main2commMessage.messageType = SET_TRAJECTORY;
 
 					// when the trajectory is over
-					if (++currentSetpointIdx >= TRAJECTORY_CIRCLE_LENGTH)
-						currentSetpointIdx = 0; // reset it and go again
+					if (++currentSetpointIdx >= (TRAJECTORY_CIRCLE_LENGTH-200))
+						currentSetpointIdx = (TRAJECTORY_CIRCLE_LENGTH-200); // reset it and go again
 						
 					int16_t futureSetpointIdx = currentSetpointIdx;
 					
@@ -111,7 +110,7 @@ void mainTask(void *p) {
 					AUX2_previous = 2;
 					led_orange_on();
 
-				} else if ((abs(aux2filtered - PPM_IN_MIDDLE_LENGTH) <= 300) && AUX2_previous != 3) {
+				} else if ((abs(aux2filtered - PPM_IN_MIDDLE_LENGTH) <= 300)) {
 			
 					main2commMessage.messageType = SET_SETPOINT;
 					main2commMessage.data.simpleSetpoint.elevator = 0;

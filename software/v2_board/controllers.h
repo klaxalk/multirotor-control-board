@@ -24,19 +24,33 @@ volatile bool mpcControllerEnabled;
 /*	variables that support altitude controller and estimator			*/
 /* -------------------------------------------------------------------- */
 
-#define CONTROLLER_THROTTLE_SATURATION 300
+#define CONTROLLER_THROTTLE_SATURATION 600
+
+#ifdef MIKROKOPTER_KK2
+
+#define ALTITUDE_KP 80
+#define ALTITUDE_KI 70
+#define ALTITUDE_KV 1800
+
+#endif
+
+#ifdef TRICOPTER
 
 #define ALTITUDE_KP 180
 #define ALTITUDE_KI 100
 #define ALTITUDE_KV 120
 
+#endif
+
 // constants for altitude and landing controllers
-#define ALTITUDE_MAXIMUM	3.00 // used to crop values from PX4Flow
+#define ALTITUDE_MAXIMUM	2.00 // used to crop values from PX4Flow
 #define ALTITUDE_MINIMUM	0.35 // used for landing (must be > 0.3)
 #define ALTITUDE_SPEED_MAX	0.8 // in m/s, must be positive!
 
 // for altitude estimator
 volatile float estimatedThrottlePos;
+volatile float estimatedThrottleVel;
+volatile float   estimatedThrottlePos_prev;
 
 // for altitude controller
 volatile float throttleSetpoint;

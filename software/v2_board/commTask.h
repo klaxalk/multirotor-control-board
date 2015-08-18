@@ -46,6 +46,12 @@ volatile int16_t mpcRate;
 volatile int16_t kalmanCounter;
 volatile int16_t kalmanRate;
 
+#ifdef IDENTIFICATION
+
+volatile uint16_t dt_identification;
+
+#endif
+
 /* -------------------------------------------------------------------- */
 /*	methods in commTask													*/
 /* -------------------------------------------------------------------- */

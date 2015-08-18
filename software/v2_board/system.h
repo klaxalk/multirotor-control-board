@@ -13,6 +13,7 @@
 #include <stdlib.h> // abs
 #include "usart_driver_RTOS.h"
 #include "ioport.h"
+#include "config.h"
 
 /* -------------------------------------------------------------------- */
 /*	CPU clock															*/
@@ -57,10 +58,17 @@
 /* -------------------------------------------------------------------- */
 /*	Constants for PPM input timing										*/
 /* -------------------------------------------------------------------- */
-#define PPM_IN_MIN_LENGTH		2000
-#define PPM_IN_MIDDLE_LENGTH	3000
-#define PPM_IN_MAX_LENGTH		4000
-#define PPM_IN_TRESHOLD			5000
+#define PPM_IN_MIN_LENGTH		4000
+#define PPM_IN_MIDDLE_LENGTH	6000
+#define PPM_IN_MAX_LENGTH		8000
+#define PPM_IN_TRESHOLD			10000
+
+/* -------------------------------------------------------------------- */
+/*	Constants for PWM input timing										*/
+/* -------------------------------------------------------------------- */
+#define PWM_IN_MIN_LENGTH		4000
+#define PWM_IN_MIDDLE_LENGTH	6000
+#define PWM_IN_MAX_LENGTH		8000
 
 /* -------------------------------------------------------------------- */
 /*	Constants for PPM output timing										*/
@@ -120,7 +128,7 @@ UsartBuffer * usart_buffer_4;
 #define USART_XBEE_BAUDRATE		BAUD115200
 #define USART_LOG_BAUDRATE		BAUD115200
 #define USART_1_BAUDRATE		BAUDPX4FLOW
-#define USART_2_BAUDRATE		BAUD19200
+#define USART_2_BAUDRATE		BAUD115200
 #define USART_3_BAUDRATE		BAUD19200
 #define USART_4_BAUDRATE		BAUD115200
 

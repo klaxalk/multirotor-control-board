@@ -15,6 +15,7 @@
 #include "communication.h"
 #include "commTask.h"
 #include "controllers.h"
+#include "config.h"
 
 /* -------------------------------------------------------------------- */
 /*	Variables for PPM input capture										*/
@@ -22,6 +23,19 @@
 uint16_t PPM_in_start = 0;
 uint8_t PPM_in_current_channel = 0;
 volatile uint16_t RCchannel[9] = {PPM_IN_MIN_LENGTH, PPM_IN_MIDDLE_LENGTH, PPM_IN_MIDDLE_LENGTH, PPM_IN_MIDDLE_LENGTH, PPM_IN_MIN_LENGTH, PPM_IN_MIN_LENGTH, PPM_IN_MIN_LENGTH, PPM_IN_MIN_LENGTH, PPM_IN_MIN_LENGTH};
+volatile uint8_t channelUpdated[9] = {0, 0, 0, 0, 0, 0, 0, 0, 0};
+volatile uint8_t inFailsave = 0;
+
+#ifdef PWM_INPUT
+
+volatile uint8_t portAMask = 0;
+volatile uint8_t portRMask = 0;
+volatile uint8_t portDMask = 0;
+volatile uint16_t pulseStart[9] = {0, 0, 0, 0, 0, 0, 0, 0, 0};
+volatile uint16_t pulseEnd[9] = {0, 0, 0, 0, 0, 0, 0, 0, 0};
+volatile uint8_t pulseFlag[9] = {0, 0, 0, 0, 0, 0, 0, 0, 0};
+
+#endif
 
 /* -------------------------------------------------------------------- */
 /*	Variables for PPM output generation									*/
@@ -148,12 +162,42 @@ void boardInit() {
 	/*	setup PD4 as a PPM input with interrupt								*/
 	/* -------------------------------------------------------------------- */
 	
+	#ifdef PPM_INPUT
+	
 	// self explanatory
 	PORT_ConfigurePins(&PORTD, 0x10, false, false, PORT_OPC_TOTEM_gc, PORT_ISC_RISING_gc);
 	PORT_SetPinsAsInput(&PORTD, 0x10);
 	
 	// configure interrupt on PD4
 	PORT_ConfigureInterrupt0(&PORTD, PORT_INT0LVL_LO_gc, 0x10);
+	
+	#endif
+
+	// in case of PWM (9-Wire) input from the RC receiver
+	#ifdef PWM_INPUT
+
+	// setup PORTA (pins 0 to 5) as inputs 1 to 6s
+	PORT_ConfigurePins(&PORTA, 0x3F, false, false, PORT_OPC_TOTEM_gc, PORT_ISC_BOTHEDGES_gc);
+	PORT_SetPinsAsInput(&PORTA, 0x3F);
+	
+	// configure interrupt on PA
+	PORT_ConfigureInterrupt0(&PORTA, PORT_INT0LVL_LO_gc, 0x3F);
+	
+	// setup PORTR (pins 0 to 1) as inputs 7 to 8
+	PORT_ConfigurePins(&PORTR, 0x3, false, false, PORT_OPC_TOTEM_gc, PORT_ISC_BOTHEDGES_gc);
+	PORT_SetPinsAsInput(&PORTR, 0x3);
+	
+	// configure interrupt on PR
+	PORT_ConfigureInterrupt0(&PORTR, PORT_INT0LVL_LO_gc, 0x3);
+	
+	// setup PORTD (pin 4) as in 9
+	PORT_ConfigurePins(&PORTD, 0x10, false, false, PORT_OPC_TOTEM_gc, PORT_ISC_BOTHEDGES_gc);
+	PORT_SetPinsAsInput(&PORTD, 0x10);
+	
+	// configure interrupt on PD4
+	PORT_ConfigureInterrupt0(&PORTD, PORT_INT0LVL_LO_gc, 0x10);
+
+	#endif
 	
 	/* -------------------------------------------------------------------- */
 	/*	Initialize USARTs													*/
@@ -181,21 +225,34 @@ void boardInit() {
 /*	Merge signals from RC Receiver with the controller outputs			*/
 /* -------------------------------------------------------------------- */
 void mergeSignalsToOutput() {
-
+	
+	int16_t outputThrottle;
+	int16_t outputElevator;
+	int16_t outputAileron;
+	int16_t outputRudder;
+		
 	portENTER_CRITICAL();
+	
+	if (inFailsave == 0) {
 
-	int16_t outputThrottle = RCchannel[THROTTLE];
-	int16_t outputElevator = RCchannel[ELEVATOR];
-	int16_t outputAileron = RCchannel[AILERON];
-	int16_t outputRudder = RCchannel[RUDDER];
+		outputThrottle = RCchannel[THROTTLE];
+		outputElevator = RCchannel[ELEVATOR];
+		outputAileron = RCchannel[AILERON];
+		outputRudder = RCchannel[RUDDER];
+		
+	} else {
+		
+		outputThrottle = PULSE_OUT_MIN;
+		outputElevator = PULSE_OUT_MIDDLE;
+		outputAileron = PULSE_OUT_MIDDLE;
+		outputRudder = PULSE_OUT_MIDDLE;
+	}
 
 	// add altitude controller to output
 	if (altitudeControllerEnabled == true) {
 
 		outputThrottle += controllerThrottleOutput;
-		led_red_on();
-	} else
-		led_red_off();
+	}
 	
 	// add mpc controller controller to output
 	if (mpcControllerEnabled == true) {
@@ -207,13 +264,15 @@ void mergeSignalsToOutput() {
 		led_blue_off();
 
 	// Everithing is *2 because the PPM incoming to this board is twice slower then the PPM going out
-	outputChannels[0] = outputThrottle*2;
-	outputChannels[1] = outputRudder*2;
-	outputChannels[2] = outputElevator*2;
-	outputChannels[3] = outputAileron*2;
+	outputChannels[0] = outputThrottle;
+	outputChannels[1] = outputRudder;
+	outputChannels[2] = outputElevator;
+	outputChannels[3] = outputAileron;
 	
 	portEXIT_CRITICAL();
 }
+
+#ifdef PPM_INPUT
 
 /* -------------------------------------------------------------------- */
 /*	Interrupt for receiving PPM with RC Receiver signals, DO NOT MODIFY!*/
@@ -239,15 +298,16 @@ ISR(PORTD_INT0_vect) {
 	}
 	
 	// if the PPM is longer then threshold => synchronizing pulse
-	if (PPM_in_length > 10000) {
+	if (PPM_in_length > PPM_IN_TRESHOLD) {
 		
 		PPM_in_current_channel = 0;
 		
 	// if it is within the boundaries of desired PPM pulse
-	} else if ((PPM_in_length >= 4000) && (PPM_in_length <= 8000)) {
+	} else if ((PPM_in_length >= PPM_IN_MIN_LENGTH) && (PPM_in_length <= PPM_IN_MAX_LENGTH)) {
 		
 		// stores the value into the RCchannel array
-		RCchannel[PPM_in_current_channel] = PPM_in_length/2;
+		RCchannel[PPM_in_current_channel] = PPM_in_length;
+		channelUpdated[PPM_in_current_channel] = 1;
 		PPM_in_current_channel++;
 	} else {
 		
@@ -256,6 +316,90 @@ ISR(PORTD_INT0_vect) {
 	
 	PPM_in_start = PPM_in_end;
 }
+
+#endif
+
+#ifdef PWM_INPUT
+
+ISR(PORTA_INT0_vect) {
+
+	uint16_t currentTime = TCD1.CNT;
+	uint8_t i;
+
+	// walks through all 5 channel inputs
+	for(i = 0; i < 6; i++) {
+		
+		// i-th port has changed
+		if ((PORTA.IN ^ portAMask) & _BV(5-i)) {
+
+			// i-th pin is now HIGH
+			if (PORTA.IN & _BV(5-i)) {
+				
+				pulseStart[i] = currentTime;
+			} else { // i-th pin is no LOW
+				
+				pulseEnd[i] = currentTime;
+				pulseFlag[i] = 1;
+			}
+		}
+	}
+	
+	// saves the current A port mask
+	portAMask = PORTA.IN;
+}
+
+// capture the channel AUX
+ISR(PORTR_INT0_vect) {
+
+	uint16_t currentTime = TCD1.CNT;
+	uint8_t i;
+
+	// walks through all 5 channel inputs
+	for(i = 6; i < 8; i++) {
+		
+		// i-th port has changed
+		if ((PORTR.IN ^ portRMask) & _BV(1-(i-6))) {
+
+			// i-th pin is now HIGH
+			if (PORTR.IN & _BV(1-(i-6))) {
+				
+				pulseStart[i] = currentTime;
+			} else { // i-th pin is no LOW
+				
+				pulseEnd[i] = currentTime;
+				pulseFlag[i] = 1;
+			}
+		}
+	}
+	
+	// saves the current A port mask
+	portRMask = PORTR.IN;
+}
+
+// capture the channel AUX5 from PD4
+ISR(PORTD_INT0_vect) {
+
+	uint16_t currentTime = TCD1.CNT;
+		
+	// i-th port has changed
+	if ((PORTD.IN ^ portDMask) & _BV(4)) {
+
+		// i-th pin is now HIGH
+		if (PORTD.IN & _BV(4)) {
+				
+			pulseStart[8] = currentTime;
+		} else { // i-th pin is no LOW
+				
+			pulseEnd[8] = currentTime;
+			pulseFlag[8] = 1;
+		}
+	}
+	
+	// saves the current A port mask
+	portDMask = PORTD.IN;
+}
+
+#endif
 
 /* -------------------------------------------------------------------- */
 /*	Interrupt for timing the PPM output pulse, DO NOT MODIFY!			*/
@@ -271,7 +415,7 @@ ISR(TCD0_OVF_vect) {
 		
 		currentChannelOut++;
 
-		} else {
+	} else {
 
 		int i = 0;
 		int outputSum = 0;
@@ -297,6 +441,73 @@ ISR(TCD0_CCA_vect) {
 	ppm_out_off();
 }
 
+#ifdef PWM_INPUT
+
+void capture_pwm_inputs() {
+	
+    // PWM input capture
+	uint8_t j;
+	uint16_t pulseLength;
+	
+	// ite/rate through all channel possible inputs
+    for(j = 0; j < 9; j++) {
+	    
+	    // if the state of channel has changed
+	    if (pulseFlag[j]) {
+		    
+		    // count the length of the pulse
+		    if (pulseStart[j] > pulseEnd[j]) {
+			    
+			    pulseLength = pulseEnd[j];
+			    pulseLength += 65535;
+			    pulseLength -= pulseStart[j];
+			} else {
+			    
+			    pulseLength = pulseEnd[j] - pulseStart[j];
+		    }
+		    
+		    // if it's in defined boundaries
+		    if ((pulseLength >= PWM_IN_MIN_LENGTH) && (pulseLength <= PWM_IN_MAX_LENGTH)) {
+			    
+			    // set the length
+			    RCchannel[j] = pulseLength;
+				channelUpdated[j] = 1;
+		    }
+		    
+		    // clear the flag
+		    pulseFlag[j] = 0;
+	    }
+    }
+	 
+}
+
+#endif
+
+/* -------------------------------------------------------------------- */
+/*	Failsave for NOT receiving RC channels								*/
+/* -------------------------------------------------------------------- */
+void RCInputFailsave() {
+	
+	uint8_t i;
+	
+	// iterate the control channels
+	for (i = 0; i < 4; i++) {
+		
+		if (channelUpdated[i] == 0) {
+			
+			// problem, jump to fail save
+			led_red_on();
+			inFailsave = 1;
+			altitudeControllerEnabled = 0;
+			mpcControllerEnabled = 0;
+			
+		} else {
+			
+			channelUpdated[i] = 0;
+		}
+	}
+}
+
 /* -------------------------------------------------------------------- */
 /*	Interrupt for timing the RTC & mergeSignalsToOutput					*/
 /* -------------------------------------------------------------------- */
@@ -305,6 +516,8 @@ ISR(TCC1_OVF_vect) {
 	auxSetpointFlag = 1;
 	
 	if (milisecondsTimer++ == 1000) {
+
+		RCInputFailsave();
 		
 		mpcRate = mpcCounter;
 		mpcCounter = 0;
@@ -319,6 +532,14 @@ ISR(TCC1_OVF_vect) {
 			hoursTimer++;
 		}
 	}
+
+#ifdef IDENTIFICATION
+	dt_identification++;
+#endif
+	
+#ifdef PWM_INPUT
+	capture_pwm_inputs();
+#endif
 	
 	mergeSignalsToOutput();
 }

@@ -50,34 +50,40 @@ void logTask(void *p) {
 		sprintf(temp, "%2.3f, ", elevatorSpeed);
 		usartBufferPutString(usart_buffer_log, temp, 10);
 		
-		sprintf(temp, "%2.3f, ", aileronSpeed);
+		sprintf(temp, "%2.3f, ", aileronSpeed); //10
 		usartBufferPutString(usart_buffer_log, temp, 10);
 		
-		sprintf(temp, "%d, ", controllerElevatorOutput);
+		sprintf(temp, "%d, ", controllerElevatorOutput); //11
 		usartBufferPutString(usart_buffer_log, temp, 10);
 		
-		sprintf(temp, "%d, ", controllerAileronOutput);
+		sprintf(temp, "%d, ", controllerAileronOutput); //12
 		usartBufferPutString(usart_buffer_log, temp, 10);
 		
-		sprintf(temp, "%2.3f, ", groundDistance);
+		sprintf(temp, "%2.3f, ", estimatedThrottlePos); //13
 		usartBufferPutString(usart_buffer_log, temp, 10);
 		
-		sprintf(temp, "%d, ", RCchannel[THROTTLE]);
+		sprintf(temp, "%d, ", RCchannel[THROTTLE]); //14
 		usartBufferPutString(usart_buffer_log, temp, 10);
 		
-		sprintf(temp, "%d, ", controllerThrottleOutput);
+		sprintf(temp, "%d, ", controllerThrottleOutput); //15
 		usartBufferPutString(usart_buffer_log, temp, 10);
 		
-		sprintf(temp, "%d, ", altitudeControllerEnabled);
+		sprintf(temp, "%d, ", altitudeControllerEnabled); //16
 		usartBufferPutString(usart_buffer_log, temp, 10);
 		
-		sprintf(temp, "%d, ", mpcControllerEnabled);
+		sprintf(temp, "%d, ", mpcControllerEnabled); //17
 		usartBufferPutString(usart_buffer_log, temp, 10);
 
-		sprintf(temp, "%d", opticalFlowData.quality);
+		sprintf(temp, "%d, ", opticalFlowData.quality);//18
 		usartBufferPutString(usart_buffer_log, temp, 10);
 		
-		usartBufferPutByte(usart_buffer_log, '\n', 10);
+		sprintf(temp, "%2.3f, ", estimatedThrottleVel);//19
+		usartBufferPutString(usart_buffer_log, temp, 10);
+		
+		sprintf(temp, "%2.3f, ", estimatedThrottlePos_prev);//20
+		usartBufferPutString(usart_buffer_log, temp, 10);
+		
+		usartBufferPutByte(usart_buffer_log, '\n', 10);//21
 				
 		// makes the 50Hz loop
 		vTaskDelay(DELAY_MILISECONDS);

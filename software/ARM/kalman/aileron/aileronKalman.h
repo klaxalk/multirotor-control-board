@@ -12,7 +12,7 @@
 #define	NUMBER_OF_STATES_AILERON	5
 #define NUMBER_OF_INPUTS_AILERON	1
 
-#define DT_AILERON					0.0114
+#define DT_AILERON					0.0101
 
 // this method initializes the kalman handler
 kalmanHandler_t * initializeAileronKalman();

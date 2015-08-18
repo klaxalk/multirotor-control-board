@@ -9,7 +9,7 @@
 #include "commTask.h"
 #include "communication.h"
 #include "controllers.h"
-
+#include "config.h"
 #include "mpcHandler.h"
 
 /* -------------------------------------------------------------------- */
@@ -29,6 +29,30 @@ main2commMessage_t main2commMessage;
 /*	The message handler for STM	 										*/
 /* -------------------------------------------------------------------- */
 stmMessageHandler_t stmMessage;
+
+#ifdef RASPBERRY_PI
+
+/* -------------------------------------------------------------------- */
+/*	The message handler for raspberry									*/
+/* -------------------------------------------------------------------- */
+rpiMessageHandler_t rpiMessage;
+
+volatile float rpix = 1.5;
+volatile float rpiy = 0;
+volatile float rpiz = 0;
+volatile char rpiOk = 0;
+volatile float curSetX = 0;
+volatile float curSetY = 0;
+volatile float lastPositionX = 0;
+volatile float lastPositionY = 0;
+
+#endif
+
+#ifdef IDENTIFICATION
+
+volatile uint16_t dt_identification = 0;
+
+#endif
 
 void commTask(void *p) {
 	
@@ -107,6 +131,40 @@ void commTask(void *p) {
 			}
 		}
 		
+#ifdef RASPBERRY_PI
+
+		/* -------------------------------------------------------------------- */
+		/*	A character received from raspberry									*/
+		/* -------------------------------------------------------------------- */
+		if (usartBufferGetByte(usart_buffer_2, &inChar, 0)) {
+
+			// parse it and handle the message if it is complete
+			if (rpiParseChar(inChar, &rpiMessage)) {
+				
+				// index for iterating the rxBuffer
+				int idx = 0;
+				
+				if (rpiMessage.messageId == 'p') {
+					
+					// saturate the incoming elevator output
+					rpiy = -readFloat(rpiMessage.messageBuffer, &idx);
+					rpiz = readFloat(rpiMessage.messageBuffer, &idx);
+					rpix = readFloat(rpiMessage.messageBuffer, &idx);
+					rpiOk = 1;
+					
+					led_green_on();
+					
+				} else if (rpiMessage.messageId == '0') {
+					
+					rpiOk = 0;
+					
+					led_green_off();
+				}
+			}
+		}
+
+#endif
+		
 		/* -------------------------------------------------------------------- */
 		/*	A character received from XBee										*/
 		/* -------------------------------------------------------------------- */
@@ -146,10 +204,10 @@ void commTask(void *p) {
 				
 				portENTER_CRITICAL();
 				
-				if (fabs(opticalFlowData.flow_comp_m_x) <= 0.6)
+				if (fabs(opticalFlowData.flow_comp_m_x) <= 1)
 					elevatorSpeed = -opticalFlowData.flow_comp_m_x;
 				
-				if (fabs(opticalFlowData.flow_comp_m_y) <= 0.6)
+				if (fabs(opticalFlowData.flow_comp_m_y) <= 1)
 					aileronSpeed  = +opticalFlowData.flow_comp_m_y;
 
 				// saturate the ground distance
@@ -157,12 +215,35 @@ void commTask(void *p) {
 
 					groundDistance = opticalFlowData.ground_distance;
 				}
-	
-				portEXIT_CRITICAL();
 
 				px4Confidence = opticalFlowData.quality;
 
-				opticalFlowDataFlag = 0;
+				opticalFlowDataFlag = 0;			
+				
+				portEXIT_CRITICAL();
+				
+				#ifdef IDENTIFICATION
+				
+				char temp[30];
+				
+				sprintf(temp, "%1.2f, ", ((float) dt_identification)/1000);
+				usartBufferPutString(usart_buffer_log, temp, 10);
+				
+				sprintf(temp, "%2.5f, ", elevatorSpeed);
+				usartBufferPutString(usart_buffer_log, temp, 10);
+				
+				sprintf(temp, "%2.5f, ", groundDistance);
+				usartBufferPutString(usart_buffer_log, temp, 10);
+				
+				sprintf(temp, "%d, ", RCchannel[ELEVATOR]);
+				usartBufferPutString(usart_buffer_log, temp, 10);
+				
+				usartBufferPutByte(usart_buffer_log, '\n', 10);
+				
+				dt_identification = 0;
+				
+				#endif
+
 					
 				/* -------------------------------------------------------------------- */
 				/*	Send data to ARM													*/
@@ -179,6 +260,44 @@ void commTask(void *p) {
 		/* -------------------------------------------------------------------- */
 		if (xQueueReceive(main2commsQueue, &main2commMessage, 0)) {
 						
+#ifdef RASPBERRY_PI
+
+			// send message to STM to reset its Kalman filter
+			if (main2commMessage.messageType == CLEAR_STATES) {
+				
+				stmResetKalman(main2commMessage.data.simpleSetpoint.elevator, main2commMessage.data.simpleSetpoint.aileron);
+				
+				curSetX = 0;
+				curSetY = 0;
+				rpix = 1.5;
+				rpiy = 0;
+				rpiOk = 0;
+				
+			} else if (main2commMessage.messageType == SET_SETPOINT) {
+				
+				if (rpiOk) {
+					
+					curSetX = kalmanStates.elevator.position + rpix - 1.5;
+					curSetY = kalmanStates.aileron.position - rpiy;
+					
+					lastPositionX = kalmanStates.elevator.position;
+					lastPositionY = kalmanStates.aileron.position;
+					
+				} else {
+					
+					curSetX = lastPositionX + main2commMessage.data.simpleSetpoint.elevator;
+					curSetY = lastPositionY + main2commMessage.data.simpleSetpoint.aileron;
+					
+				}
+				
+				stmSendSetpoint(curSetX, curSetY);
+
+			} else if (main2commMessage.messageType == SET_TRAJECTORY) {
+				
+				stmSendTrajectory(main2commMessage.data.trajectory.elevatorTrajectory, main2commMessage.data.trajectory.aileronTrajectory);
+			}
+			
+#else					
 			// send message to STM to reset its Kalman filter			
 			if (main2commMessage.messageType == CLEAR_STATES) {
 	
@@ -192,6 +311,8 @@ void commTask(void *p) {
 				
 				stmSendTrajectory(main2commMessage.data.trajectory.elevatorTrajectory, main2commMessage.data.trajectory.aileronTrajectory);
 			}
+			
+#endif
 		}
 	}
 }

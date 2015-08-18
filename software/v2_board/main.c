@@ -38,7 +38,9 @@ int main(void)
 	/* -------------------------------------------------------------------- */
 	/*	Start the data logging task routine									*/
 	/* -------------------------------------------------------------------- */
+	#ifndef IDENTIFICATION
 	xTaskCreate(logTask, (signed char*) "logTask", 1024, NULL, 2, NULL);
+	#endif
 	
 	/* -------------------------------------------------------------------- */
 	/*	Start the FreeRTOS scheduler										*/

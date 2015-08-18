@@ -12,7 +12,7 @@
 #define	NUMBER_OF_STATES_ELEVATOR	5
 #define NUMBER_OF_INPUTS_ELEVATOR	1
 
-#define DT_ELEVATOR					0.0114
+#define DT_ELEVATOR					0.0101
 
 // this method initializes the kalman handler
 kalmanHandler_t * initializeElevatorKalman();

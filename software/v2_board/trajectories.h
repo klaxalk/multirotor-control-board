@@ -12,7 +12,7 @@
 #include "system.h"
 #include <avr/pgmspace.h>
 
-#define TRAJECTORY_CIRCLE_LENGTH 5654
+#define TRAJECTORY_CIRCLE_LENGTH 6201
 
 const float elevatorCircle[TRAJECTORY_CIRCLE_LENGTH] PROGMEM;
 const float aileronCircle[TRAJECTORY_CIRCLE_LENGTH] PROGMEM;

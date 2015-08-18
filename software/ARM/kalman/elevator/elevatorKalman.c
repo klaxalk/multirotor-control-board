@@ -6,6 +6,7 @@
 
 #include "kalman/elevator/elevatorKalman.h"
 #include "miscellaneous.h"
+#include "config.h"
 
 kalmanHandler_t elevatorKalmanHandler;
 
@@ -37,7 +38,7 @@ kalmanHandler_t * initializeElevatorKalman() {
 	matrix_float_set(elevatorKalmanHandler.system_A, 4, 1, 0);
 	matrix_float_set(elevatorKalmanHandler.system_A, 4, 2, 0);
 	matrix_float_set(elevatorKalmanHandler.system_A, 4, 3, 0);
-	matrix_float_set(elevatorKalmanHandler.system_A, 4, 4, DT_ELEVATOR*82.2945);
+	matrix_float_set(elevatorKalmanHandler.system_A, 4, 4, ATTITUDE_P0);
 	matrix_float_set(elevatorKalmanHandler.system_A, 4, 5, 0);
 
 	matrix_float_set(elevatorKalmanHandler.system_A, 5, 1, 0);
@@ -54,7 +55,7 @@ kalmanHandler_t * initializeElevatorKalman() {
 	matrix_float_set(elevatorKalmanHandler.system_B, 1, 1, 0);
 	matrix_float_set(elevatorKalmanHandler.system_B, 2, 1, 0);
 	matrix_float_set(elevatorKalmanHandler.system_B, 3, 1, 0);
-	matrix_float_set(elevatorKalmanHandler.system_B, 4, 1, 0.0113*DT_ELEVATOR);
+	matrix_float_set(elevatorKalmanHandler.system_B, 4, 1, ATTITUDE_P1);
 	matrix_float_set(elevatorKalmanHandler.system_B, 5, 1, 0);
 
 	/* -------------------------------------------------------------------- */

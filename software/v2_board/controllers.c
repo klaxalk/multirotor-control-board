@@ -27,7 +27,7 @@ volatile float   estimatedThrottlePos_prev = 0;
 
 // for altitude controller
 volatile float throttleIntegration = 0;
-volatile float throttleSetpoint = 0.75;
+volatile float throttleSetpoint = 1;
 
 /* -------------------------------------------------------------------- */
 /*	Altitude Estimator - interpolates the data from PX4Flow				*/
@@ -37,15 +37,16 @@ void altitudeEstimator() {
 	estimator_cycle++;
 	
 		// extreme filter
-		if(fabs(groundDistance - estimatedThrottlePos_prev) <= 0.1) {//limitation cca 3m/s
+		if(fabs(groundDistance - estimatedThrottlePos_prev) <= 0.2) {//limitation cca 3m/s
 			// compute new values
-			estimatedThrottleVel = (groundDistance - estimatedThrottlePos_prev) / (DT);
+			estimatedThrottleVel = ((groundDistance - estimatedThrottlePos_prev) / (7*DT));
 			estimatedThrottlePos      = groundDistance;
 			estimatedThrottlePos_prev = groundDistance;
 			estimator_cycle = 0;
 		}
 		
-		if (estimator_cycle >= 20) { //safety reset
+		if (estimator_cycle >= 30) { //safety reset
+			
 			estimatedThrottleVel = 0;
 			estimatedThrottlePos = groundDistance;
 			estimatedThrottlePos_prev = groundDistance;
@@ -65,7 +66,7 @@ void altitudeController() {
 	float vd; //desired velocity
 	float KX, KI, KV;
 
-	KX = ((float)ALTITUDE_KP / ALTITUDE_KV);
+	KX = ((float) ALTITUDE_KP / (float) ALTITUDE_KV);
 	KI = ALTITUDE_KI;
 	KV = ALTITUDE_KV;
 
@@ -84,10 +85,8 @@ void altitudeController() {
 	}
 
 	//total output
-	
 	portENTER_CRITICAL();
-	controllerThrottleOutput =
-	KV * (vd - estimatedThrottleVel) + throttleIntegration;
+	controllerThrottleOutput = (int16_t) (KV * (vd - estimatedThrottleVel) + throttleIntegration);
 	if (controllerThrottleOutput > CONTROLLER_THROTTLE_SATURATION) {
 		controllerThrottleOutput = CONTROLLER_THROTTLE_SATURATION;
 	}
