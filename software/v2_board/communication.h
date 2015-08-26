@@ -11,6 +11,8 @@
 #include "mavlink/common/mavlink.h"
 #include "system.h"
 
+uint8_t hex2bin(const uint8_t * ptr);
+
 /* -------------------------------------------------------------------- */
 /*	Variables for data reception from RPi								*/
 /* -------------------------------------------------------------------- */
@@ -42,5 +44,6 @@ volatile uint8_t px4Confidence;
 extern int8_t opticalFlowDataFlag;
 
 int8_t px4flowParseChar(uint8_t incomingChar);
+uint8_t readUint8(char * message, int * indexFrom);
 
 #endif // COMMUNICATION_H

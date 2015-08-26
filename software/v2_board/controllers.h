@@ -37,8 +37,16 @@ volatile bool mpcControllerEnabled;
 #ifdef TRICOPTER
 
 #define ALTITUDE_KP 180
-#define ALTITUDE_KI 100
-#define ALTITUDE_KV 120
+#define ALTITUDE_KI 70
+#define ALTITUDE_KV 2000
+
+#endif
+
+#ifdef PRASE
+
+#define ALTITUDE_KP 180
+#define ALTITUDE_KI 70
+#define ALTITUDE_KV 2000
 
 #endif
 
@@ -50,7 +58,7 @@ volatile bool mpcControllerEnabled;
 // for altitude estimator
 volatile float estimatedThrottlePos;
 volatile float estimatedThrottleVel;
-volatile float   estimatedThrottlePos_prev;
+volatile float estimatedThrottlePos_prev;
 
 // for altitude controller
 volatile float throttleSetpoint;

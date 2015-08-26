@@ -9,6 +9,36 @@
 #include "system.h"
 #include "ioport.h"
 
+// converts two characters in hex to one byte in binary
+uint8_t hex2bin(const uint8_t * ptr) {
+	
+	uint8_t value = 0;
+	uint8_t ch = *ptr;
+	
+	int i;
+	for (i = 0; i < 2; i++) {
+		
+		if (ch >= '0' && ch <= '9')
+		value = (value << 4) + (ch - '0');
+		else if (ch >= 'A' && ch <= 'F')
+		value = (value << 4) + (ch - 'A' + 10);
+		else if (ch >= 'a' && ch <= 'f')
+		value = (value << 4) + (ch - 'a' + 10);
+		else
+		return value;
+		ch = *(++ptr);
+	}
+	
+	return value;
+}
+
+uint8_t readUint8(char * message, int * indexFrom) {
+
+	char tempChar = message[(*indexFrom)++];
+
+	return tempChar;
+}
+
 /* -------------------------------------------------------------------- */
 /*	Variables for data reception from RPi								*/
 /* -------------------------------------------------------------------- */
@@ -39,16 +69,16 @@ int8_t rpiParseChar(char inChar, rpiMessageHandler_t * messageHandler) {
 				rpiPayloadSize = inChar;
 				rpiReceiverState = 1;
 				rpiCrcIn += inChar;
-				
-				// the receiving message is over the buffer size
-				} else {
+			
+			// the receiving message is over the buffer size
+			} else {
 
 				rpiReceivingMessage = 0;
 				rpiReceiverState = 0;
 			}
 
-			// expecting to receive the payload
-			} else if (rpiReceiverState == 1) {
+		// expecting to receive the payload
+		} else if (rpiReceiverState == 1) {
 
 			// put the char in the buffer
 			rpiRxBuffer[rpiBytesReceived++] = inChar;
@@ -56,17 +86,17 @@ int8_t rpiParseChar(char inChar, rpiMessageHandler_t * messageHandler) {
 			rpiCrcIn += inChar;
 
 			// if the message should end, change state
-			if (rpiBytesReceived >= rpiPayloadSize)
+		if (rpiBytesReceived >= rpiPayloadSize)
 			rpiReceiverState = 2;
 
-			// expecting to receive the crc
-			} else if (rpiReceiverState == 2) {
+		// expecting to receive the crc
+		} else if (rpiReceiverState == 2) {
 
 			if (rpiCrcIn == inChar) {
 
 				rpiMessageReceived = 1;
 				rpiReceivingMessage = 0;
-				} else {
+			} else {
 
 				rpiReceivingMessage = 0;
 				rpiReceiverState = 0;

@@ -235,6 +235,12 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="argos3D.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="argos3D.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="commTask.c">
       <SubType>compile</SubType>
     </Compile>
@@ -725,6 +731,12 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="mpcHandler.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="multiCon.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="multiCon.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="MyDrivers\pmic_driver.c">

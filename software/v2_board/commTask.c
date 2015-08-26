@@ -11,6 +11,8 @@
 #include "controllers.h"
 #include "config.h"
 #include "mpcHandler.h"
+#include "argos3D.h"
+#include "multiCon.h"
 
 /* -------------------------------------------------------------------- */
 /*	For calculating rate of MPC and Kalman								*/
@@ -48,11 +50,25 @@ volatile float lastPositionY = 0;
 
 #endif
 
+#ifdef ARGOS
+
+argosMessageHandler_t argosMessage;
+
+#endif
+
+#ifdef MULTICON
+
+multiconMessageHandler_t multiconMessage;
+
+#endif
+
 #ifdef IDENTIFICATION
 
 volatile uint16_t dt_identification = 0;
 
 #endif
+
+char temp[40];
 
 void commTask(void *p) {
 	
@@ -164,6 +180,71 @@ void commTask(void *p) {
 		}
 
 #endif
+
+#ifdef ARGOS
+
+		/* -------------------------------------------------------------------- */
+		/*	A character received from Argos computer							*/
+		/* -------------------------------------------------------------------- */
+		if (usartBufferGetByte(usart_buffer_3, &inChar, 0)) {
+
+			// parse it and handle the message if it is complete
+			if (argosParseChar(inChar, &argosMessage)) {
+				
+				// index for iterating the rxBuffer
+				int idx = 0;
+				
+				if (argosMessage.messageId == 'A') {
+					
+					// parse the 'A' message
+					
+									
+				} else if (argosMessage.messageId == 'B') {
+					
+					// parse the 'B' message
+					
+				}
+			}
+		}
+
+#endif
+
+#ifdef MULTICON
+
+		/* -------------------------------------------------------------------- */
+		/*	A character received from Multicon system							*/
+		/* -------------------------------------------------------------------- */
+		if (usartBufferGetByte(usart_buffer_2, &inChar, 0)) {
+			led_green_toggle();
+			
+			// parse it and handle the message if it is complete
+			if (multiconParseChar(inChar, &multiconMessage)) {
+		
+				// index for iterating the rxBuffer
+				int idx = 0;
+		
+				if (multiconMessage.messageId == 'A') {
+			
+					uint8_t blobId = readUint8(multiconMessage.messageBuffer, &idx);
+					blobs[blobId].x = readFloat(multiconMessage.messageBuffer, &idx);
+					blobs[blobId].y  = readFloat(multiconMessage.messageBuffer, &idx);
+					blobs[blobId].z  = readFloat(multiconMessage.messageBuffer, &idx);
+					
+					sprintf(temp, "Blob %d [%2.3f %2.3f %2.3f] %d\n\r", blobId, blobs[blobId].x, blobs[blobId].y, blobs[blobId].z, readUint8(multiconMessage.messageBuffer, &idx));
+					usartBufferPutString(usart_buffer_4, temp, 10);
+			
+				} else if (multiconMessage.messageId == 'B') {
+			
+					multiconErrorState = readUint8(multiconMessage.messageBuffer, &idx);
+					numberOfDetectedBlobs = readUint8(multiconMessage.messageBuffer, &idx);
+					
+					sprintf(temp, "Num. blobs = %d, Error = %d\n\r", numberOfDetectedBlobs, multiconErrorState);
+					usartBufferPutString(usart_buffer_4, temp, 10);
+				}
+			}
+		}
+
+#endif
 		
 		/* -------------------------------------------------------------------- */
 		/*	A character received from XBee										*/
@@ -232,10 +313,19 @@ void commTask(void *p) {
 				sprintf(temp, "%2.5f, ", elevatorSpeed);
 				usartBufferPutString(usart_buffer_log, temp, 10);
 				
-				sprintf(temp, "%2.5f, ", groundDistance);
+				sprintf(temp, "%2.5f, ", aileronSpeed);
+				usartBufferPutString(usart_buffer_log, temp, 10);
+				
+				sprintf(temp, "%2.5f, ", opticalFlowData.ground_distance);
 				usartBufferPutString(usart_buffer_log, temp, 10);
 				
 				sprintf(temp, "%d, ", RCchannel[ELEVATOR]);
+				usartBufferPutString(usart_buffer_log, temp, 10);
+				
+				sprintf(temp, "%d, ", RCchannel[AILERON]);
+				usartBufferPutString(usart_buffer_log, temp, 10);
+				
+				sprintf(temp, "%d, ", RCchannel[THROTTLE]);
 				usartBufferPutString(usart_buffer_log, temp, 10);
 				
 				usartBufferPutByte(usart_buffer_log, '\n', 10);
