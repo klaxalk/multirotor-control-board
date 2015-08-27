@@ -28,27 +28,23 @@ uint8_t multiconReceivingMessage = 0;
 uint8_t multiconReceiverState = 0;
 uint8_t multiconCrcIn = 0;
 
-uint8_t temp[20];
-
 /* -------------------------------------------------------------------- */
 /*	Fetch the incoming char into a buffer, completes the message		*/
 /* -------------------------------------------------------------------- */
 int8_t multiconParseChar(char inChar, multiconMessageHandler_t * messageHandler) {
-	
-	uint8_t i;
 
 	if (multiconReceivingMessage) {
 
 		// expecting to receive the payload size
 		if (multiconReceiverState == 0) {
 
-			multiconRxBuffer[0] = inChar;
+			multiconRxBuffer[multiconBytesReceived++] = inChar;
 			multiconReceiverState = 1;
 			multiconCrcIn += inChar;
 			
 		} else if (multiconReceiverState == 1) {
 			
-			multiconRxBuffer[1] = inChar;
+			multiconRxBuffer[multiconBytesReceived++] = inChar;
 			
 			multiconPayloadSize = hex2bin((uint8_t *) &multiconRxBuffer);		
 			
@@ -70,28 +66,23 @@ int8_t multiconParseChar(char inChar, multiconMessageHandler_t * messageHandler)
 			multiconRxBuffer[multiconBytesReceived++] = inChar;
 			
 			// add crc
-			if (multiconBytesReceived <= multiconPayloadSize-2)
+			if (multiconBytesReceived <= multiconPayloadSize)
 				multiconCrcIn += inChar;
 			
 			// if the message should end, change state
-			if (multiconBytesReceived >= multiconPayloadSize)
+			if (multiconBytesReceived >= multiconPayloadSize + 2) // the payload size itself is not included in the payload size
 				multiconReceiverState = 3;
 
 		} else if (multiconReceiverState == 3) {
-		
-			/*
-			sprintf(temp, "%d %d\n\r", hex2bin((uint8_t *) (multiconRxBuffer + multiconBytesReceived - 2)), multiconCrcIn);
-			usartBufferPutString(usart_buffer_4, temp, 10);
-			*/
 			
 			// check the crc
-			if (true || multiconCrcIn == hex2bin((uint8_t *) (multiconRxBuffer + multiconBytesReceived - 2))) {
+			if (multiconCrcIn == hex2bin((uint8_t *) (multiconRxBuffer + multiconBytesReceived - 2))) {
 				
 				multiconMessageReceived = 1;
 				multiconReceivingMessage = 0;
 				
 				uint8_t i;
-				for (i = 0; i < multiconPayloadSize/2; i++) {
+				for (i = 0; i < multiconBytesReceived/2; i++) {
 					
 					multiconRxBuffer[i] = hex2bin((uint8_t *) (multiconRxBuffer + i*2));
 				}
@@ -109,7 +100,6 @@ int8_t multiconParseChar(char inChar, multiconMessageHandler_t * messageHandler)
 		if (inChar == 'A') {
 
 			multiconCrcIn = 0;
-
 			multiconReceivingMessage = 1;
 			multiconReceiverState = 0;
 			multiconBytesReceived = 0;
@@ -118,8 +108,8 @@ int8_t multiconParseChar(char inChar, multiconMessageHandler_t * messageHandler)
 	
 	if (multiconMessageReceived) {
 		
-		messageHandler->messageBuffer = multiconRxBuffer+1;
-		messageHandler->messageId = multiconRxBuffer[0];
+		messageHandler->messageBuffer = multiconRxBuffer+2;
+		messageHandler->messageId = multiconRxBuffer[1];
 		multiconMessageReceived = 0;
 		return 1;
 	}

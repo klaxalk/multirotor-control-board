@@ -126,30 +126,3 @@ void mainTask(void *p) {
 		}
 	}
 }
-
-
-					/*						
-
-					*/
-							
-		/* 
-		 * Manual setpoint changes 
-		 *
-		if (auxSetpointFlag == 1) {
-			
-			aux2filtered = aux2filtered*0.99 + RCchannel[AUX2]*0.01;
-			
-			float filteredSetpoint = 5*((aux2filtered - PPM_IN_MIDDLE_LENGTH)/((float) (PPM_IN_MAX_LENGTH - PPM_IN_MIN_LENGTH)));
-			
-			float diference = filteredSetpoint - mpcSetpoints.elevatorSetpoint;
-			
-			if (diference > 0.00030)
-				diference = 0.00030;
-			else if (diference < -0.00030)
-				diference = -0.00030;
-				
-			mpcSetpoints.elevatorSetpoint = mpcSetpoints.elevatorSetpoint + diference;
-			
-			auxSetpointFlag = 0;
-		}
-		*/

@@ -215,7 +215,6 @@ void commTask(void *p) {
 		/*	A character received from Multicon system							*/
 		/* -------------------------------------------------------------------- */
 		if (usartBufferGetByte(usart_buffer_2, &inChar, 0)) {
-			led_green_toggle();
 			
 			// parse it and handle the message if it is complete
 			if (multiconParseChar(inChar, &multiconMessage)) {
@@ -230,7 +229,7 @@ void commTask(void *p) {
 					blobs[blobId].y  = readFloat(multiconMessage.messageBuffer, &idx);
 					blobs[blobId].z  = readFloat(multiconMessage.messageBuffer, &idx);
 					
-					sprintf(temp, "Blob %d [%2.3f %2.3f %2.3f] %d\n\r", blobId, blobs[blobId].x, blobs[blobId].y, blobs[blobId].z, readUint8(multiconMessage.messageBuffer, &idx));
+					sprintf(temp, "Blob %d [%2.3f %2.3f %2.3f]\n\r", blobId, blobs[blobId].x, blobs[blobId].y, blobs[blobId].z);
 					usartBufferPutString(usart_buffer_4, temp, 10);
 			
 				} else if (multiconMessage.messageId == 'B') {
@@ -240,6 +239,8 @@ void commTask(void *p) {
 					
 					sprintf(temp, "Num. blobs = %d, Error = %d\n\r", numberOfDetectedBlobs, multiconErrorState);
 					usartBufferPutString(usart_buffer_4, temp, 10);
+					
+					led_green_toggle();
 				}
 			}
 		}
