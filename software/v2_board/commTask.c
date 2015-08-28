@@ -160,21 +160,27 @@ void commTask(void *p) {
 				// index for iterating the rxBuffer
 				int idx = 0;
 				
-				if (rpiMessage.messageId == 'p') {
+				switch (rpiMessage.messageId) {
 					
-					// saturate the incoming elevator output
-					rpiy = -readFloat(rpiMessage.messageBuffer, &idx);
-					rpiz = readFloat(rpiMessage.messageBuffer, &idx);
-					rpix = readFloat(rpiMessage.messageBuffer, &idx);
-					rpiOk = 1;
+					case 'p':
 					
-					led_green_on();
+						// saturate the incoming elevator output
+						rpiy = -readFloat(rpiMessage.messageBuffer, &idx);
+						rpiz = readFloat(rpiMessage.messageBuffer, &idx);
+						rpix = readFloat(rpiMessage.messageBuffer, &idx);
+						rpiOk = 1;
 					
-				} else if (rpiMessage.messageId == '0') {
+						led_green_on();
+						
+					break;
 					
-					rpiOk = 0;
+					case '0':
 					
-					led_green_off();
+						rpiOk = 0;
+						
+						led_green_off();
+						
+					break;
 				}
 			}
 		}
@@ -194,15 +200,15 @@ void commTask(void *p) {
 				// index for iterating the rxBuffer
 				int idx = 0;
 				
-				if (argosMessage.messageId == 'A') {
+				switch (argosMessage.messageId) {
 					
-					// parse the 'A' message
+					case 'A':
 					
-									
-				} else if (argosMessage.messageId == 'B') {
+					break;
 					
-					// parse the 'B' message
+					case 'B':
 					
+					break;
 				}
 			}
 		}
@@ -214,33 +220,43 @@ void commTask(void *p) {
 		/* -------------------------------------------------------------------- */
 		/*	A character received from Multicon system							*/
 		/* -------------------------------------------------------------------- */
-		if (usartBufferGetByte(usart_buffer_2, &inChar, 0)) {
+		if (usartBufferGetByte(usart_buffer_4, &inChar, 0)) {
 			
 			// parse it and handle the message if it is complete
 			if (multiconParseChar(inChar, &multiconMessage)) {
 		
 				// index for iterating the rxBuffer
 				int idx = 0;
-		
-				if (multiconMessage.messageId == 'A') {
-			
-					uint8_t blobId = readUint8(multiconMessage.messageBuffer, &idx);
-					blobs[blobId].x = readFloat(multiconMessage.messageBuffer, &idx);
-					blobs[blobId].y  = readFloat(multiconMessage.messageBuffer, &idx);
-					blobs[blobId].z  = readFloat(multiconMessage.messageBuffer, &idx);
+				
+				switch (multiconMessage.messageId) {
 					
-					sprintf(temp, "Blob %d [%2.3f %2.3f %2.3f]\n\r", blobId, blobs[blobId].x, blobs[blobId].y, blobs[blobId].z);
-					usartBufferPutString(usart_buffer_4, temp, 10);
-			
-				} else if (multiconMessage.messageId == 'B') {
-			
-					multiconErrorState = readUint8(multiconMessage.messageBuffer, &idx);
-					numberOfDetectedBlobs = readUint8(multiconMessage.messageBuffer, &idx);
+					case 'A':
 					
-					sprintf(temp, "Num. blobs = %d, Error = %d\n\r", numberOfDetectedBlobs, multiconErrorState);
-					usartBufferPutString(usart_buffer_4, temp, 10);
+						blobId = readUint8(multiconMessage.messageBuffer, &idx);
+						
+						if (blobId < NUMBER_OF_BLOBS) {
+							
+							blobs[blobId].x = readFloat(multiconMessage.messageBuffer, &idx);
+							blobs[blobId].y  = readFloat(multiconMessage.messageBuffer, &idx);
+							blobs[blobId].z  = readFloat(multiconMessage.messageBuffer, &idx);
+							
+							sprintf(temp, "Blob %d [%2.3f %2.3f %2.3f]\n\r", blobId, blobs[blobId].x, blobs[blobId].y, blobs[blobId].z);
+							usartBufferPutString(usart_buffer_3, temp, 10);
+						}
+						
+					break;
+			
+					case 'B':
 					
-					led_green_toggle();
+						multiconErrorState = readUint8(multiconMessage.messageBuffer, &idx);
+						numberOfDetectedBlobs = readUint8(multiconMessage.messageBuffer, &idx);
+						
+						sprintf(temp, "Num. blobs = %d, Error = %d\n\r", numberOfDetectedBlobs, multiconErrorState);
+						usartBufferPutString(usart_buffer_3, temp, 10);
+						
+						led_green_toggle();
+					
+					break;
 				}
 			}
 		}
@@ -334,7 +350,6 @@ void commTask(void *p) {
 				dt_identification = 0;
 				
 				#endif
-
 					
 				/* -------------------------------------------------------------------- */
 				/*	Send data to ARM													*/
