@@ -227,6 +227,7 @@ void commTask(void *p) {
 		
 				// index for iterating the rxBuffer
 				int idx = 0;
+				uint8_t blobId;
 				
 				switch (multiconMessage.messageId) {
 					
