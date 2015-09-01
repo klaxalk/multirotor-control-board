@@ -517,7 +517,8 @@ ISR(TCC1_OVF_vect) {
 	
 	if (milisecondsTimer++ == 1000) {
 
-		RCInputFailsave();
+		if ((secondsTimer > 3) || (hoursTimer > 0))
+			RCInputFailsave();
 		
 		mpcRate = mpcCounter;
 		mpcCounter = 0;

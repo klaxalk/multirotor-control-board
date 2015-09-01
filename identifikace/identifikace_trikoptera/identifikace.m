@@ -1,19 +1,19 @@
 clear all;
 
-data = load('log.txt');
+data = load('log2.txt');
 
 %% data labels
 
 dt = 1;
 velocity = 2;
-altitude = 3;
-input = 4;
+altitude = 4;
+input = 5;
 
 %% data margins
 
 % okrojení dat
-from = 2000;
-to = from + 2800;
+from = 1350;
+to = size(data, 1) - 200;
 
 % od-do fitování
 plot_window = from:to;
@@ -21,6 +21,8 @@ plot_window = from:to;
 % od-do identifikace
 margin = 200;
 iden_window = (from+margin):(to-margin); 
+
+meanDt = mean(data(:, 1))
 
 %% integrate dt to time vector
 
@@ -35,7 +37,7 @@ position = integrate(data(plot_window, velocity), data(plot_window, dt));
 %% velocity
 
 % fituji rychlost polynomem
-velocity_pol = polyfit(time_plot', data(plot_window, velocity)', 200);
+velocity_pol = polyfit(time_plot', data(plot_window, velocity)', 110);
 velocity_fit = polyval(velocity_pol, time_identifikace);
 
 %% acceleration
@@ -47,7 +49,7 @@ acceleration_fit = polyval(acceleration_pol, time_identifikace);
 %% input
 
 % shift input of the offset
-data(:, input) = data(:, input) - mean(data(plot_window(1:50), input))*0.960;
+data(:, input) = filtr_extremnich_hodnot(data(:, input)) - mean(data(plot_window(1:20), input));
 
 %% identify transfare input -> acceleration
 input_window = data(iden_window, input);
@@ -81,7 +83,6 @@ title('Position');
 legend('Integrated measurement', 'Estimated in open-loop');
 xlabel('Time [s]');
 ylabel('Position [m]');
-axis([0 time_plot(end) -1.2 2.5]);
 
 %% plot velocity
 
@@ -94,7 +95,6 @@ title('Speed');
 legend('Measured speed', 'Estimated in open-loop');
 xlabel('Time [s]');
 ylabel('Speed [m/s]');
-axis([0 time_plot(end) -1 2]);
 
 %% plot acceleration
 
@@ -107,7 +107,6 @@ title('Acceleration');
 legend('Derived velocity', 'Estimated in open-loop');
 xlabel('Time [s]');
 ylabel('Acceleration [m/s^2]');
-axis([0 time_plot(end) -1.2 2.1]);
 
 %% plot input
 
@@ -119,16 +118,6 @@ title('Input');
 legend('Input, desired angle of attitude');
 xlabel('Time [s]');
 ylabel('Input [-]');
-axis([0 time_plot(end) -450 800]);  
-
-set(hFig, 'Units', 'centimeters');
-set(hFig, 'Position', [0 0 21 21*0.5625])
-
-drawnow;
-
-pause(2);
-
-tightfig(hFig);
 
 %% plotting for thesis
 
@@ -164,61 +153,61 @@ pause(2);
 
 tightfig(hFig);
 
-%% Kalman test
-
-covariance = eye(3);
-
-kalmanfrom = from+2800;
-kalmanto = kalmanfrom+800;
-
-dt = 0.0114;
-
-kalmandata = data(kalmanfrom:kalmanto, :);
-timekalman = integrate(kalmandata(:, 1));
-
-states(:, 1) = [0; kalmandata(1, velocity); 0];
-
-A = [1 dt 0;
-     0 1 dt;
-     0 0 0.9799];
- 
-B = [0; 0; 5.0719e-05];
-
-R = [1 0 0;
-     0 0.0000053333 0;
-     0 0 0.01];
- 
-Q = diag([0.08]);
-
-C = [0, 1, 0];
-
-exp_filter(1) = kalmandata(1, velocity);
-exp_alpha = 0.90;
-
-for i=2:size(kalmandata, 1)
-    [states(:, i) covariance] = kalman(states(:, i-1), covariance, kalmandata(i, velocity), kalmandata(i, input), A, B, R, Q, C);
-    exp_filter(i) = exp_alpha*exp_filter(i-1) + (1-exp_alpha)*kalmandata(i, velocity);
-end
-
-%% 
-
-hFig = figure(4);
- 
-hold off
-plot(timekalman, kalmandata(:, velocity), 'r', 'LineWidth', 1.5);
-hold on
-plot(timekalman, exp_filter, 'g', 'LineWidth', 1.5);
-plot(timekalman, states(2, :), 'b', 'LineWidth', 1.5);
-legend('Measured speed', 'Exponential filter', 'Kalman filter');
-xlabel('Time [s]');
-ylabel('Speed [m/s]');
-axis([0 timekalman(end) -0.9 1.1]);
-
-set(hFig, 'Units', 'centimeters');
-set(hFig, 'Position', [0 0 21 21*0.5625/2])
-
-drawnow;
-
-pause(2);
-
-tightfig(hFig);
+% %% Kalman test
+% 
+% covariance = eye(3);
+% 
+% kalmanfrom = from+2800;
+% kalmanto = kalmanfrom+800;
+% 
+% dt = 0.0114;
+% 
+% kalmandata = data(kalmanfrom:kalmanto, :);
+% timekalman = integrate(kalmandata(:, 1));
+% 
+% states(:, 1) = [0; kalmandata(1, velocity); 0];
+% 
+% A = [1 dt 0;
+%      0 1 dt;
+%      0 0 0.9799];
+%  
+% B = [0; 0; 5.0719e-05];
+% 
+% R = [1 0 0;
+%      0 0.0000053333 0;
+%      0 0 0.01];
+%  
+% Q = diag([0.08]);
+% 
+% C = [0, 1, 0];
+% 
+% exp_filter(1) = kalmandata(1, velocity);
+% exp_alpha = 0.90;
+% 
+% for i=2:size(kalmandata, 1)
+%     [states(:, i) covariance] = kalman(states(:, i-1), covariance, kalmandata(i, velocity), kalmandata(i, input), A, B, R, Q, C);
+%     exp_filter(i) = exp_alpha*exp_filter(i-1) + (1-exp_alpha)*kalmandata(i, velocity);
+% end
+% 
+% %% 
+% 
+% hFig = figure(4);
+%  
+% hold off
+% plot(timekalman, kalmandata(:, velocity), 'r', 'LineWidth', 1.5);
+% hold on
+% plot(timekalman, exp_filter, 'g', 'LineWidth', 1.5);
+% plot(timekalman, states(2, :), 'b', 'LineWidth', 1.5);
+% legend('Measured speed', 'Exponential filter', 'Kalman filter');
+% xlabel('Time [s]');
+% ylabel('Speed [m/s]');
+% axis([0 timekalman(end) -0.9 1.1]);
+% 
+% set(hFig, 'Units', 'centimeters');
+% set(hFig, 'Position', [0 0 21 21*0.5625/2])
+% 
+% drawnow;
+% 
+% pause(2);
+% 
+% tightfig(hFig);

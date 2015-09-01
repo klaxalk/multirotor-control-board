@@ -36,7 +36,7 @@ volatile bool mpcControllerEnabled;
 
 #ifdef TRICOPTER
 
-#define ALTITUDE_KP 180
+#define ALTITUDE_KP 250
 #define ALTITUDE_KI 70
 #define ALTITUDE_KV 2000
 

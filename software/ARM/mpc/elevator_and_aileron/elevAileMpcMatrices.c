@@ -1,7 +1,7 @@
 #include "CMatrixLib.h"
 #include "elevAileMpcMatrices.h"
 
-// 250, KK2, stick scaling = 10
+// tricopter, KK2, stick scaling = 10
 
 /*
 This file was created automatically with following parameters
