@@ -1,18 +1,15 @@
 %% circle
 
-dt = 0.0114;
+dt = 0.0101;
 
-traj = load('trajectory_uav_coord20150806T123529.txt');
+k = 0.007;
+speed = 0.2;
 
-to = size(traj, 1)-500;
+elevator_vel = [speed*sin(0:k:2*pi) -speed*sin(0:k:2*pi)];
+aileron_vel = [-speed*cos(0:k:2*pi) -speed*cos(0:k:2*pi)];
 
-koef = 1;
-
-elevator_pos = [zeros(500, 1); traj(1:to, 2)./koef];
-aileron_pos = [zeros(500, 1); -traj(1:to, 1)./koef];
-
-elevator_pos = [elevator_pos; elevator_pos(end)*ones(500, 1)];
-aileron_pos = [aileron_pos; aileron_pos(end)*ones(500, 1)];
+elevator_pos = integrate(elevator_vel, dt);
+aileron_pos = integrate(aileron_vel, dt);
 
 figure(20);
 subplot(2, 1, 1);
@@ -26,8 +23,6 @@ plot(aileron_pos);
 % elevator_pos = integrate(elevator_vel, dt);
 % aileron_pos = integrate(aileron_vel, dt);
 % aileron_pos = aileron_pos - mean(aileron_pos);
-
-
 
 figure(1);
 subplot(3, 1, 1);
@@ -46,6 +41,7 @@ title('Positions');
 
 subplot(3, 1, 3);
 scatter(-aileron_pos, elevator_pos);
+axis equal;
 
 %%
 
@@ -53,6 +49,10 @@ fid = fopen('trajectories.c', 'w');
 
 fprintf(fid, '#include "trajectories.h"\n');
 fprintf(fid, '#include <avr/pgmspace.h>');
+
+fprintf(fid, '\n\n');
+
+fprintf(fid, '// length = %d', length(elevator_pos));
 
 fprintf(fid, '\n\n');
 

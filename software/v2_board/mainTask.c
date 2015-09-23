@@ -88,8 +88,8 @@ void mainTask(void *p) {
 					main2commMessage.messageType = SET_TRAJECTORY;
 
 					// when the trajectory is over
-					if (++currentSetpointIdx >= (TRAJECTORY_CIRCLE_LENGTH-200))
-						currentSetpointIdx = (TRAJECTORY_CIRCLE_LENGTH-200); // reset it and go again
+					if (++currentSetpointIdx >= TRAJECTORY_CIRCLE_LENGTH)
+						currentSetpointIdx = 0; // reset it and go again
 						
 					int16_t futureSetpointIdx = currentSetpointIdx;
 					
@@ -102,7 +102,7 @@ void mainTask(void *p) {
 						futureSetpointIdx = futureSetpointIdx + 50;
 						
 						if (futureSetpointIdx >= TRAJECTORY_CIRCLE_LENGTH)
-							futureSetpointIdx = futureSetpointIdx - TRAJECTORY_CIRCLE_LENGTH;
+							futureSetpointIdx = futureSetpointIdx - TRAJECTORY_CIRCLE_LENGTH;	
 					}
 
 					xQueueSend(main2commsQueue, &main2commMessage, 0);
