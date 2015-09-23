@@ -56,9 +56,6 @@ Desktop.ini
 # Recycle Bin used on file shares
 $RECYCLE.BIN/
 
-# Debug folder
-Debug/
-
 # Windows Installer files
 *.cab
 *.msi
@@ -66,3 +63,6 @@ Debug/
 *.msp
 *.cogui
 *.atsuo
+
+software/ATxMega128a3u/Debug/
+software/STM32F415/ArmMCU/
