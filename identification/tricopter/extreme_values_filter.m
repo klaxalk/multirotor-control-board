@@ -1,4 +1,4 @@
-function [ outputVektor ] = filtr_extremnich_hodnot( inputVektor )
+function [ outputVektor ] = extreme_values_filter( inputVektor )
 
     outputVektor = inputVektor;
     
