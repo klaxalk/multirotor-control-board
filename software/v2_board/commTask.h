@@ -38,6 +38,8 @@ typedef struct {
 	main2commMessagePayload data;
 } main2commMessage_t;
 
+int xbeeflag;
+
 /* -------------------------------------------------------------------- */
 /*	Variables for measuring MPC and kalman rates						*/
 /* -------------------------------------------------------------------- */

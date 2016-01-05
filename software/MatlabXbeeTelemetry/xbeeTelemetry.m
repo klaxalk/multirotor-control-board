@@ -24,6 +24,17 @@ in(1:horizon_length, 1:4) = 0;
 
 figure(11);
 
+numBlobs = 6;
+blobx = 7;
+bloby = 8;
+blobz = 9;
+
+magx = 10;
+magy = 11;
+magz = 12;
+
+plotSize = 3;
+
 while true
     
     % request data from a helicopter        
@@ -38,8 +49,19 @@ while true
     in(pos, 3) = fread(s, 1, 'single');
     in(pos, 4) = fread(s, 1, 'single');
     
-    in(pos, 5) = fread(s, 1, 'int16');
-    in(pos, 6) = fread(s, 1, 'int16');
+    in(pos, 5) = fread(s, 1, 'uint8');
+    
+%     blob
+    in(pos, blobx) = fread(s, 1, 'single');
+    in(pos, bloby) = fread(s, 1, 'single');
+    in(pos, blobz) = fread(s, 1, 'single');
+    [in(pos, blobx) in(pos, bloby) in(pos, blobz)]
+    
+%     magnetometer
+%     in(pos, magx) = fread(s, 1, 'int16');
+%     in(pos, magy) = fread(s, 1, 'int16');
+%     in(pos, magz) = fread(s, 1, 'int16');
+%     [in(pos, magx) in(pos, magy) in(pos, magz)]
     
     % read line ending     
     fread(s, 1, 'int16');
@@ -49,9 +71,9 @@ while true
     hold off
     scatter(-in(pos, 2), in(pos, 1), 'filled');
     hold on
-%     scatter(-in(pos, 4), in(pos, 3), 'filled', 'r');
-    circle(-in(pos, 4), in(pos, 3), 0.1);
-    axis([-1.5 1.5 -1.5 1.5]*2);
+    scatter(-in(pos, 4), in(pos, 3), 'filled', 'r');
+    circle(-in(pos, bloby)-in(pos, 2), in(pos, blobx)+in(pos, 1), 0.1);
+    axis([-plotSize-in(pos, 2) plotSize-in(pos, 2) -plotSize+in(pos, 1) plotSize+in(pos, 1)]);
     
     % plot the action
     subplot(2, 1, 2);

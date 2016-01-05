@@ -12,9 +12,16 @@
 #include "system.h"
 #include <avr/pgmspace.h>
 
-#define TRAJECTORY_CIRCLE_LENGTH 1796
+#define TRAJECTORY_LENGTH 2717
 
-const float elevatorCircle[TRAJECTORY_CIRCLE_LENGTH] PROGMEM;
-const float aileronCircle[TRAJECTORY_CIRCLE_LENGTH] PROGMEM;
+const float elevator[TRAJECTORY_LENGTH] PROGMEM;
+const float aileron[TRAJECTORY_LENGTH] PROGMEM;
+
+#if defined(LEFT_FOLLOWER) || defined(RIGHT_FOLLOWER)
+
+const float elevatorDiff[TRAJECTORY_LENGTH] PROGMEM;
+const float aileronDiff[TRAJECTORY_LENGTH] PROGMEM;
+
+#endif
 
 #endif /* TRAJECTORIES_H_ */

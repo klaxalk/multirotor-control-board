@@ -334,6 +334,12 @@
     <Compile Include="logTask.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="magnetometer.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="magnetometer.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="main.c">
       <SubType>compile</SubType>
     </Compile>
@@ -776,6 +782,12 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="MyDrivers\usart_driver_RTOS.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="raspberryPi.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="raspberryPi.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="system.c">

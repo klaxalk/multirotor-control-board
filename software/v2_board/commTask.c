@@ -11,8 +11,7 @@
 #include "controllers.h"
 #include "config.h"
 #include "mpcHandler.h"
-#include "argos3D.h"
-#include "multiCon.h"
+#include "trajectories.h"
 
 /* -------------------------------------------------------------------- */
 /*	For calculating rate of MPC and Kalman								*/
@@ -34,31 +33,35 @@ stmMessageHandler_t stmMessage;
 
 #ifdef RASPBERRY_PI
 
+#include "raspberryPi.h"
+
 /* -------------------------------------------------------------------- */
 /*	The message handler for raspberry									*/
 /* -------------------------------------------------------------------- */
 rpiMessageHandler_t rpiMessage;
 
-volatile float rpix = 1.5;
-volatile float rpiy = 0;
-volatile float rpiz = 0;
-volatile char rpiOk = 0;
-volatile float curSetX = 0;
-volatile float curSetY = 0;
-volatile float lastPositionX = 0;
-volatile float lastPositionY = 0;
-
 #endif
 
 #ifdef ARGOS
 
+#include "argos3D.h"
+
+/* -------------------------------------------------------------------- */
+/*	The message handler for ARGOS									*/
+/* -------------------------------------------------------------------- */
 argosMessageHandler_t argosMessage;
 
 #endif
 
 #ifdef MULTICON
 
+#include "multiCon.h"
 multiconMessageHandler_t multiconMessage;
+
+volatile float curSetX = 0;
+volatile float curSetY = 0;
+volatile float lastPositionX = 0;
+volatile float lastPositionY = 0;
 
 #endif
 
@@ -68,7 +71,15 @@ volatile uint16_t dt_identification = 0;
 
 #endif
 
+#ifdef MAGNETOMETER
+
+#include "magnetometer.h"
+
+#endif
+
 char temp[40];
+int i;
+int xbeeflag = 0;
 
 void commTask(void *p) {
 	
@@ -153,6 +164,10 @@ void commTask(void *p) {
 		/*	A character received from raspberry									*/
 		/* -------------------------------------------------------------------- */
 		if (usartBufferGetByte(usart_buffer_2, &inChar, 0)) {
+			
+			#ifdef RASPBERRY_DOWNWARD
+			float tempx, tempy, tempz;
+			#endif
 
 			// parse it and handle the message if it is complete
 			if (rpiParseChar(inChar, &rpiMessage)) {
@@ -164,10 +179,22 @@ void commTask(void *p) {
 					
 					case 'p':
 					
-						// saturate the incoming elevator output
+						#ifdef RASPBERRY_FORWARD
 						rpiy = -readFloat(rpiMessage.messageBuffer, &idx);
 						rpiz = readFloat(rpiMessage.messageBuffer, &idx);
 						rpix = readFloat(rpiMessage.messageBuffer, &idx);
+						#endif
+						
+						#ifdef RASPBERRY_DOWNWARD
+						tempy = readFloat(rpiMessage.messageBuffer, &idx);
+						tempz = readFloat(rpiMessage.messageBuffer, &idx);
+						tempx = readFloat(rpiMessage.messageBuffer, &idx);
+						
+						rpiy = tempy;
+						rpix = 0.9*tempz + (1 - 0.9)*tempx;
+						rpiz = (1 - 0.9)*tempz + 0.9*tempx;
+						#endif
+						
 						rpiOk = 1;
 					
 						led_green_on();
@@ -237,12 +264,14 @@ void commTask(void *p) {
 						
 						if (blobId < NUMBER_OF_BLOBS) {
 							
-							blobs[blobId].x = readFloat(multiconMessage.messageBuffer, &idx);
-							blobs[blobId].y  = readFloat(multiconMessage.messageBuffer, &idx);
+							blobs[blobId].y = readFloat(multiconMessage.messageBuffer, &idx);
 							blobs[blobId].z  = readFloat(multiconMessage.messageBuffer, &idx);
+							blobs[blobId].x  = readFloat(multiconMessage.messageBuffer, &idx);
 							
 							sprintf(temp, "Blob %d [%2.3f %2.3f %2.3f]\n\r", blobId, blobs[blobId].x, blobs[blobId].y, blobs[blobId].z);
 							usartBufferPutString(usart_buffer_3, temp, 10);
+							
+							led_green_on();
 						}
 						
 					break;
@@ -256,6 +285,11 @@ void commTask(void *p) {
 						usartBufferPutString(usart_buffer_3, temp, 10);
 						
 						led_green_toggle();
+						
+						if (numberOfDetectedBlobs == 0) {
+							
+							led_green_off();
+						}
 					
 					break;
 				}
@@ -279,9 +313,35 @@ void commTask(void *p) {
 				
 				sendFloat(usart_buffer_xbee, mpcSetpoints.elevator, &crc);
 				sendFloat(usart_buffer_xbee, mpcSetpoints.aileron, &crc);
+				
+				#ifdef MULTICON
+				
+				sendChar(usart_buffer_xbee, numberOfDetectedBlobs, &crc);
 					
-				sendInt16(usart_buffer_xbee, mpcElevatorOutput, &crc);
-				sendInt16(usart_buffer_xbee, mpcAileronOutput, &crc);
+				sendFloat(usart_buffer_xbee, blobs[0].x, &crc);
+				sendFloat(usart_buffer_xbee, blobs[0].y, &crc);
+				sendFloat(usart_buffer_xbee, blobs[0].z, &crc);
+				
+				#endif
+				
+				#ifdef RASPBERRY_PI
+				
+				sendChar(usart_buffer_xbee, rpiOk, &crc);
+				
+				sendFloat(usart_buffer_xbee, rpix, &crc);
+				sendFloat(usart_buffer_xbee, rpiy, &crc);
+				sendFloat(usart_buffer_xbee, rpiz, &crc);
+				
+				#endif
+				
+				#ifdef MAGNETOMETER
+				
+				magnetometerRead();
+				sendInt16(usart_buffer_xbee, magnetometerData.x, &crc);
+				sendInt16(usart_buffer_xbee, magnetometerData.y, &crc);
+				sendInt16(usart_buffer_xbee, magnetometerData.z, &crc);
+
+				#endif
 
 				usartBufferPutString(usart_buffer_xbee, "\r\n", 10);
 			}
@@ -366,45 +426,7 @@ void commTask(void *p) {
 		/*	A message received from the main Task								*/
 		/* -------------------------------------------------------------------- */
 		if (xQueueReceive(main2commsQueue, &main2commMessage, 0)) {
-						
-#ifdef RASPBERRY_PI
-
-			// send message to STM to reset its Kalman filter
-			if (main2commMessage.messageType == CLEAR_STATES) {
-				
-				stmResetKalman(main2commMessage.data.simpleSetpoint.elevator, main2commMessage.data.simpleSetpoint.aileron);
-				
-				curSetX = 0;
-				curSetY = 0;
-				rpix = 1.5;
-				rpiy = 0;
-				rpiOk = 0;
-				
-			} else if (main2commMessage.messageType == SET_SETPOINT) {
-				
-				if (rpiOk) {
-					
-					curSetX = kalmanStates.elevator.position + rpix - 1.5;
-					curSetY = kalmanStates.aileron.position - rpiy;
-					
-					lastPositionX = kalmanStates.elevator.position;
-					lastPositionY = kalmanStates.aileron.position;
-					
-				} else {
-					
-					curSetX = lastPositionX + main2commMessage.data.simpleSetpoint.elevator;
-					curSetY = lastPositionY + main2commMessage.data.simpleSetpoint.aileron;
-					
-				}
-				
-				stmSendSetpoint(curSetX, curSetY);
-
-			} else if (main2commMessage.messageType == SET_TRAJECTORY) {
-				
-				stmSendTrajectory(main2commMessage.data.trajectory.elevatorTrajectory, main2commMessage.data.trajectory.aileronTrajectory);
-			}
-			
-#else					
+		
 			// send message to STM to reset its Kalman filter			
 			if (main2commMessage.messageType == CLEAR_STATES) {
 	
@@ -418,8 +440,6 @@ void commTask(void *p) {
 				
 				stmSendTrajectory(main2commMessage.data.trajectory.elevatorTrajectory, main2commMessage.data.trajectory.aileronTrajectory);
 			}
-			
-#endif
 		}
 	}
 }

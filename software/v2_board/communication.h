@@ -14,21 +14,6 @@
 uint8_t hex2bin(const uint8_t * ptr);
 
 /* -------------------------------------------------------------------- */
-/*	Variables for data reception from RPi								*/
-/* -------------------------------------------------------------------- */
-
-#define RPI_BUFFER_SIZE 24
-
-// this structure holds a message received from STM
-typedef struct {
-
-	char messageId;
-	char * messageBuffer;
-} rpiMessageHandler_t;
-
-int8_t rpiParseChar(char inChar, rpiMessageHandler_t * messageHandler);
-
-/* -------------------------------------------------------------------- */
 /*	px4flow receiver support											*/
 /* -------------------------------------------------------------------- */
 

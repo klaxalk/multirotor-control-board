@@ -11,6 +11,7 @@
 #include "communication.h"
 #include <stdio.h>
 
+#include "multiCon.h"
 #include "mpcHandler.h"
 
 #define DELAY_MILISECONDS 33
@@ -23,10 +24,10 @@ void logTask(void *p) {
 	
 	while (1) {
 		
-		sprintf(temp, "%2.3f, ", kalmanStates.elevator.position);
+		sprintf(temp, "%2.3f, ", kalmanStates.elevator.position); // 1
 		usartBufferPutString(usart_buffer_log, temp, 10);
 		
-		sprintf(temp, "%2.3f, ", kalmanStates.aileron.position);
+		sprintf(temp, "%2.3f, ", kalmanStates.aileron.position); // 2
 		usartBufferPutString(usart_buffer_log, temp, 10);
 		
 		sprintf(temp, "%2.3f, ", kalmanStates.elevator.velocity);
@@ -82,6 +83,20 @@ void logTask(void *p) {
 		
 		sprintf(temp, "%2.3f, ", estimatedThrottlePos_prev);//20
 		usartBufferPutString(usart_buffer_log, temp, 10);
+		
+		#ifdef MULTICON
+		sprintf(temp, "%d, ", numberOfDetectedBlobs); //21
+		usartBufferPutString(usart_buffer_log, temp, 10);
+		
+		sprintf(temp, "%2.3f, ", blobs[0].x);//22
+		usartBufferPutString(usart_buffer_log, temp, 10);
+		
+		sprintf(temp, "%2.3f, ", blobs[0].y);//23
+		usartBufferPutString(usart_buffer_log, temp, 10);
+		
+		sprintf(temp, "%2.3f, ", blobs[0].z);//24
+		usartBufferPutString(usart_buffer_log, temp, 10);
+		#endif
 		
 		usartBufferPutByte(usart_buffer_log, '\n', 10);//21
 				

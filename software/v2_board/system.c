@@ -16,6 +16,7 @@
 #include "commTask.h"
 #include "controllers.h"
 #include "config.h"
+#include "magnetometer.h"
 
 /* -------------------------------------------------------------------- */
 /*	Variables for PPM input capture										*/
@@ -219,6 +220,13 @@ void boardInit() {
 	/*	Initialize queues													*/
 	/* -------------------------------------------------------------------- */
 	main2commsQueue = xQueueCreate(10, sizeof(main2commMessage_t));
+	
+	/* -------------------------------------------------------------------- */
+	/*	Initialize magnetometer												*/
+	/* -------------------------------------------------------------------- */
+	#ifdef MAGNETOMETER
+	magnetometerInit();
+	#endif
 }
 
 /* -------------------------------------------------------------------- */
@@ -524,6 +532,7 @@ ISR(TCC1_OVF_vect) {
 		mpcCounter = 0;
 		kalmanRate = kalmanCounter;
 		kalmanCounter = 0;
+		xbeeflag = 1;
 		
 		milisecondsTimer = 0;
 		

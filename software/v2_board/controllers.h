@@ -28,9 +28,9 @@ volatile bool mpcControllerEnabled;
 
 #ifdef MIKROKOPTER_KK2
 
-#define ALTITUDE_KP 200
-#define ALTITUDE_KI 100
-#define ALTITUDE_KV 1200
+#define ALTITUDE_KP 300
+#define ALTITUDE_KI 70
+#define ALTITUDE_KV 1700 //1200
 
 #endif
 
