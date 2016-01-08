@@ -32,6 +32,7 @@ uint8_t hex2bin(const uint8_t * ptr) {
 	return value;
 }
 
+// parses a single uint8_t from the buffer
 uint8_t readUint8(char * message, int * indexFrom) {
 
 	char tempChar = message[(*indexFrom)++];

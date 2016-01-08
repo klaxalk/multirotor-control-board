@@ -170,7 +170,7 @@ void commTask(void *p) {
 			#endif
 
 			// parse it and handle the message if it is complete
-			if (rpiParseChar(inChar, &rpiMessage)) {
+			if (rpiParseChar(inChar, &rpiMessage, &rpiReceiver)) {
 				
 				// index for iterating the rxBuffer
 				int idx = 0;
@@ -209,6 +209,9 @@ void commTask(void *p) {
 						
 					break;
 				}
+			
+				// free the buffer of the receiver
+				rpiReceiver.receiverState = NOT_RECEIVING;
 			}
 		}
 
@@ -303,48 +306,7 @@ void commTask(void *p) {
 		/* -------------------------------------------------------------------- */
 		if (usartBufferGetByte(usart_buffer_xbee, &inChar, 0)) {
 
-			// send a simple telemetry
-			if (inChar == 'b') {
-
-				char crc = 0;
-
-				sendFloat(usart_buffer_xbee, kalmanStates.elevator.position, &crc);
-				sendFloat(usart_buffer_xbee, kalmanStates.aileron.position, &crc);
-				
-				sendFloat(usart_buffer_xbee, mpcSetpoints.elevator, &crc);
-				sendFloat(usart_buffer_xbee, mpcSetpoints.aileron, &crc);
-				
-				#ifdef MULTICON
-				
-				sendChar(usart_buffer_xbee, numberOfDetectedBlobs, &crc);
-					
-				sendFloat(usart_buffer_xbee, blobs[0].x, &crc);
-				sendFloat(usart_buffer_xbee, blobs[0].y, &crc);
-				sendFloat(usart_buffer_xbee, blobs[0].z, &crc);
-				
-				#endif
-				
-				#ifdef RASPBERRY_PI
-				
-				sendChar(usart_buffer_xbee, rpiOk, &crc);
-				
-				sendFloat(usart_buffer_xbee, rpix, &crc);
-				sendFloat(usart_buffer_xbee, rpiy, &crc);
-				sendFloat(usart_buffer_xbee, rpiz, &crc);
-				
-				#endif
-				
-				#ifdef MAGNETOMETER
-				
-				magnetometerRead();
-				sendInt16(usart_buffer_xbee, magnetometerData.x, &crc);
-				sendInt16(usart_buffer_xbee, magnetometerData.y, &crc);
-				sendInt16(usart_buffer_xbee, magnetometerData.z, &crc);
-
-				#endif
-
-				usartBufferPutString(usart_buffer_xbee, "\r\n", 10);
-			}
+			xbeeParseChar((uint8_t) inChar);
 		}
 	
 		/* -------------------------------------------------------------------- */
