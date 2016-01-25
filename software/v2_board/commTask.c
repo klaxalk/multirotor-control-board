@@ -12,6 +12,7 @@
 #include "config.h"
 #include "mpcHandler.h"
 #include "trajectories.h"
+#include "xbee.h"
 
 /* -------------------------------------------------------------------- */
 /*	For calculating rate of MPC and Kalman								*/
@@ -47,7 +48,7 @@ rpiMessageHandler_t rpiMessage;
 #include "argos3D.h"
 
 /* -------------------------------------------------------------------- */
-/*	The message handler for ARGOS									*/
+/*	The message handler for ARGOS										*/
 /* -------------------------------------------------------------------- */
 argosMessageHandler_t argosMessage;
 
@@ -81,9 +82,18 @@ char temp[40];
 int i;
 int xbeeflag = 0;
 
+/* -------------------------------------------------------------------- */
+/*	Xbee										*/
+/* -------------------------------------------------------------------- */
+
+xbeeMessageHandler_t xbeeMessage;
+
+uint16_t lastTime = 0;
+uint8_t xbeeCount = 0;
+
 void commTask(void *p) {
 	
-	unsigned char inChar;
+	uint8_t inChar;
 	
 	initializeKalmanStates();
 	
@@ -306,7 +316,22 @@ void commTask(void *p) {
 		/* -------------------------------------------------------------------- */
 		if (usartBufferGetByte(usart_buffer_xbee, &inChar, 0)) {
 
-			xbeeParseChar((uint8_t) inChar);
+			if (xbeeParseChar(inChar, &xbeeMessage, &xbeeReceiver)) {
+				
+				if (secondsTimer > lastTime) {
+					
+					char temp[25];
+					sprintf(&temp, "%i.%i\n\r", xbeeCount, milisecondsTimer);
+					usartBufferPutString(usart_buffer_4, temp, 10);	
+					lastTime = secondsTimer;
+					xbeeCount = 1;
+				} else {
+					
+					xbeeCount++;
+				}
+				
+				xbeeReceiver.receiverState = XBEE_NOT_RECEIVING;
+			}
 		}
 	
 		/* -------------------------------------------------------------------- */

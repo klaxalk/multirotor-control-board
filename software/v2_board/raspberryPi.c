@@ -26,7 +26,7 @@ volatile char rpiOk = 0;
 /* -------------------------------------------------------------------- */
 int8_t rpiParseChar(char inChar, rpiMessageHandler_t * messageHandler, receiverStateMachine_t * receiver) {
 	
-	// following byte should containt the payload size
+	// following byte should contain the payload size
 	if (receiver->receiverState == RECEIVING_PAYLOAD_SIZE) {
 		
 		// does the message fit into our buffer?
@@ -73,7 +73,7 @@ int8_t rpiParseChar(char inChar, rpiMessageHandler_t * messageHandler, receiverS
 		}
 	}
 	
-	// wainting for the first byte of the message
+	// waiting for the first byte of the message
 	if (receiver->receiverState == NOT_RECEIVING) {
 		
 		// we received the starting byte

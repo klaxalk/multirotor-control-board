@@ -37,7 +37,7 @@ typedef struct {
 	receiver_states_t receiverState;
 	
 	// the payload size of the packet
-	uint16_t payloadSize;
+	uint8_t payloadSize;
 	
 	// how many bytes have been already received
 	uint16_t bytesReceived;
