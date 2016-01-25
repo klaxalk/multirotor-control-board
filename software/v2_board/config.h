@@ -13,7 +13,7 @@
 // #define ARGOS			1
 // #define MULTICON			1
 
-// #define IDENTIFICATION	1
+#define IDENTIFICATION	1
 
 // #define MIKROKOPTER_KK2		1
 // #define TRICOPTER		1

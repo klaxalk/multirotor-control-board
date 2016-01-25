@@ -11,12 +11,7 @@
 #include "system.h"
 #include "TC_driver.h"
 
-volatile unsigned int battery_level;
-volatile float battery_voltage;
-unsigned int levels[4];
-unsigned char pos;
-
-uint8_t ReadCalibrationByte(uint8_t index);
+float getBatteryVoltage();
 
 void batteryInit();
 

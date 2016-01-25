@@ -241,6 +241,12 @@
     <Compile Include="argos3D.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="battery.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="battery.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="commTask.c">
       <SubType>compile</SubType>
     </Compile>

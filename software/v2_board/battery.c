@@ -36,7 +36,7 @@ void batteryInit() {
 	
 	TC0_SetOverflowIntLevel(&TCF0, TC_OVFINTLVL_LO_gc); //Set low level interrupt
 	
-	TC_SetPeriod(&TCF0, 49999); //for 100 ms period
+	TC_SetPeriod(&TCF0, 4999); //for 100 ms period
 	
 	/* -------------------------------------------------------------------- */
 	/*	Initialize ADC														*/
@@ -63,14 +63,33 @@ void batteryInit() {
 }
 
 ISR(TCF0_OVF_vect) {		
+	
 	ADCA.CH0.CTRL |= ADC_CH_START_bm; // Start conversion on channel 0		
 }
 
+
+float getBatteryVoltage() {
+	
+	return ((float) (battery_level - 185)) / 220.5;
+}
+
 ISR(ADCA_CH0_vect) {
-	char i;
-	levels [(pos++) & 0x03] = ADCA.CH0RES; // Save conversion result
-	led_yellow_toggle();
-	battery_level = 0;
-	for(i = 0; i < 4; i++) battery_level += levels[i]; //running average
-	battery_voltage = (float)((battery_level >> 2) - 185) / 220.5;
+	
+	// char i;
+	
+	battery_level = ADCA.CH0RES;
+	
+	// with filter
+	// levels [(pos++) & 0x03] = ADCA.CH0RES; // Save conversion result
+	
+	// led_yellow_toggle();
+	// battery_level = 0;
+	
+	/*
+	* with filter
+	for(i = 0; i < 4; i++)
+		battery_level += levels[i]; //running average
+	*/
+	
+	// battery_voltage = ((float) (battery_level - 185)) / 220.5;
 }

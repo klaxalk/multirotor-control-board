@@ -13,6 +13,7 @@
 #include "mpcHandler.h"
 #include "trajectories.h"
 #include "xbee.h"
+#include "battery.h"
 
 /* -------------------------------------------------------------------- */
 /*	For calculating rate of MPC and Kalman								*/
@@ -353,7 +354,7 @@ void commTask(void *p) {
 				
 				char temp[30];
 				
-				sprintf(temp, "%1.2f, ", ((float) dt_identification)/1000);
+				sprintf(temp, "%1.3f, ", ((float) dt_identification)/1000);
 				usartBufferPutString(usart_buffer_log, temp, 10);
 				
 				sprintf(temp, "%2.5f, ", elevatorSpeed);
@@ -372,6 +373,9 @@ void commTask(void *p) {
 				usartBufferPutString(usart_buffer_log, temp, 10);
 				
 				sprintf(temp, "%d, ", RCchannel[THROTTLE]);
+				usartBufferPutString(usart_buffer_log, temp, 10);
+		
+				sprintf(temp, "%2.3f, ", getBatteryVoltage());
 				usartBufferPutString(usart_buffer_log, temp, 10);
 				
 				usartBufferPutByte(usart_buffer_log, '\n', 10);

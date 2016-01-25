@@ -99,7 +99,7 @@ void logTask(void *p) {
 		usartBufferPutString(usart_buffer_log, temp, 10);
 		#endif
 		
-		sprintf(temp, "%2.3f, ", battery_voltage); //25
+		sprintf(temp, "%2.3f, ", getBatteryVoltage()); //25
 		usartBufferPutString(usart_buffer_log, temp, 10);
 		
 		usartBufferPutByte(usart_buffer_log, '\n', 10);//26
