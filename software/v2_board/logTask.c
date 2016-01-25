@@ -13,6 +13,7 @@
 
 #include "multiCon.h"
 #include "mpcHandler.h"
+#include "battery.h"
 
 #define DELAY_MILISECONDS 33
 
@@ -98,7 +99,10 @@ void logTask(void *p) {
 		usartBufferPutString(usart_buffer_log, temp, 10);
 		#endif
 		
-		usartBufferPutByte(usart_buffer_log, '\n', 10);//21
+		sprintf(temp, "%2.3f, ", battery_voltage); //25
+		usartBufferPutString(usart_buffer_log, temp, 10);
+		
+		usartBufferPutByte(usart_buffer_log, '\n', 10);//26
 				
 		// makes the 50Hz loop
 		vTaskDelay(DELAY_MILISECONDS);
