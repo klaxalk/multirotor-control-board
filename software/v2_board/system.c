@@ -17,6 +17,7 @@
 #include "controllers.h"
 #include "config.h"
 #include "magnetometer.h"
+#include "battery.h"
 
 /* -------------------------------------------------------------------- */
 /*	Variables for PPM input capture										*/
@@ -226,6 +227,13 @@ void boardInit() {
 	/* -------------------------------------------------------------------- */
 	#ifdef MAGNETOMETER
 	magnetometerInit();
+	#endif
+	
+	/* -------------------------------------------------------------------- */
+	/*	Initialize battery voltage poll										*/
+	/* -------------------------------------------------------------------- */
+	#ifdef BATTERY_H_
+	batteryInit();
 	#endif
 }
 
