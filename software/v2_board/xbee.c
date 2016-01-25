@@ -186,7 +186,8 @@ uint8_t xbeeParseChar(uint8_t inChar, xbeeMessageHandler_t * messageHandler, xbe
 				messageHandler->address64 = receiver->rxBuffer[0];
 				messageHandler->address16 = receiver->rxBuffer[4];
 				messageHandler->messageId = receiver->rxBuffer[6];
-				messageHandler->messageBuffer = receiver->rxBuffer+7;
+				messageHandler->payload = (uint8_t) (&receiver->rxBuffer + 7);
+				messageHandler->messageLength = receiver->payloadSize-9;
 				receiver->receiverState = XBEE_MESSAGE_RECEIVED;
 				return 1;
 
@@ -210,7 +211,7 @@ void xbeeSendMessage(uint8_t * message, uint16_t length, uint64_t address) {
 	// initiates the message
 	xbeeSendUint8(usart_buffer_xbee, XBEE_INIT_BYTE, &checkSum);
 	
-	// send the packet length, 15 is the overhead of the xbee transmit packet
+	// send the packet length, 14 is the overhead of the xbee transmit packet
 	xbeeSendUint16(usart_buffer_xbee, length + 14, &checkSum);
 	
 	checkSum = 0xFF;

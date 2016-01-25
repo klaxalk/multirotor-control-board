@@ -62,7 +62,8 @@ typedef struct {
 	uint16_t address16;
 	uint8_t messageId;
 	uint8_t receiveOptions;
-	char * messageBuffer;
+	uint8_t * payload;
+	uint16_t messageLength;
 	
 } xbeeMessageHandler_t;
 
