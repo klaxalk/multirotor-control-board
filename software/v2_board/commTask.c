@@ -78,18 +78,11 @@ volatile uint16_t dt_identification = 0;
 
 #endif
 
-char temp[40];
-int i;
-int xbeeflag = 0;
-
 /* -------------------------------------------------------------------- */
 /*	Xbee										*/
 /* -------------------------------------------------------------------- */
 
 xbeeMessageHandler_t xbeeMessage;
-
-uint16_t lastTime = 0;
-uint8_t xbeeCount = 0;
 
 void commTask(void *p) {
 	
@@ -317,18 +310,6 @@ void commTask(void *p) {
 		if (usartBufferGetByte(usart_buffer_xbee, &inChar, 0)) {
 
 			if (xbeeParseChar(inChar, &xbeeMessage, &xbeeReceiver)) {
-				
-				if (secondsTimer > lastTime) {
-					
-					char temp[25];
-					sprintf(&temp, "%i.%i\n\r", xbeeCount, milisecondsTimer);
-					usartBufferPutString(usart_buffer_4, temp, 10);	
-					lastTime = secondsTimer;
-					xbeeCount = 1;
-				} else {
-					
-					xbeeCount++;
-				}
 				
 				xbeeReceiver.receiverState = XBEE_NOT_RECEIVING;
 			}
