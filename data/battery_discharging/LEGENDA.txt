@@ -1,0 +1,8 @@
+-> øídící signály se pohybují v rozmìzí <4000, 8000>, kde 4000 je
+    minimum, 8000 je maximum, 6000 je støed. V pøípadì øízení vıšky je tedy
+    4000 = ádnı plyn, 8000 = plnı plyn, v pøípadì øízení napø. dopøedné osy je to
+    4000 = plnì dozadu, 8000 = plnì dopøedu
+
+-> data nejsou jakkoliv filtrována, toto jsou skuteènì surová data
+
+-> helikoptera byla øízena ruènì
