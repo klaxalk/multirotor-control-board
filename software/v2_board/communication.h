@@ -28,7 +28,11 @@ volatile uint8_t px4Confidence;
 
 extern int8_t opticalFlowDataFlag;
 
+uint8_t readUint8(char * message, int * indexFrom);
+void writeFloatToBuffer(char * buffer, const float input, uint16_t position);
+
 int8_t px4flowParseChar(uint8_t incomingChar);
 uint8_t readUint8(char * message, int * indexFrom);
+void writeUint64ToBuffer(char * buffer, const uint64_t input, uint16_t position);
 
 #endif // COMMUNICATION_H

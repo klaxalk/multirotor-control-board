@@ -17,6 +17,7 @@
 #include "controllers.h"
 #include "config.h"
 #include "magnetometer.h"
+#include "commTask.h"
 
 /* -------------------------------------------------------------------- */
 /*	Variables for PPM input capture										*/
@@ -533,6 +534,8 @@ ISR(TCC1_OVF_vect) {
 		kalmanRate = kalmanCounter;
 		kalmanCounter = 0;
 		xbeeflag = 1;
+		commTaskRate = commTaskCounter;
+		commTaskCounter = 0;
 		
 		milisecondsTimer = 0;
 		

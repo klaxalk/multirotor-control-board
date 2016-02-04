@@ -126,6 +126,8 @@ void kalmanTask(void *p) {
 
 			memcpy(&kalman2commMesasge.elevatorData, elevatorKalmanHandler->states->data, NUMBER_OF_STATES_ELEVATOR*sizeof(float));
 			memcpy(&kalman2commMesasge.aileronData, aileronKalmanHandler->states->data, NUMBER_OF_STATES_AILERON*sizeof(float));
+			kalman2commMesasge.elevatorPositionCovariance = matrix_float_get(elevatorKalmanHandler->covariance, 1, 1);
+			kalman2commMesasge.aileronPositionCovariance = matrix_float_get(aileronKalmanHandler->covariance, 1, 1);
 
 			xQueueOverwrite(kalman2commQueue, &kalman2commMesasge);
 		}

@@ -318,7 +318,7 @@ void commTask(void *p) {
 			// clear the crc
 			crcOut = 0;
 			sendChar('a', &crcOut);			// this character initiates the transmission
-			sendChar(1+2*5*4, &crcOut);		// this will be the size of the message
+			sendChar(1 + 2*5*4 + 2*4, &crcOut);		// this will be the size of the message
 
 			sendChar('2', &crcOut);			// id of the message
 
@@ -333,6 +333,9 @@ void commTask(void *p) {
 			sendFloat(kalmanMessage.aileronData[2], &crcOut);
 			sendFloat(kalmanMessage.aileronData[3], &crcOut);
 			sendFloat(kalmanMessage.aileronData[4], &crcOut);
+
+			sendFloat(kalmanMessage.elevatorPositionCovariance, &crcOut);
+			sendFloat(kalmanMessage.aileronPositionCovariance, &crcOut);
 
 			sendChar(crcOut, &crcOut);
 		}

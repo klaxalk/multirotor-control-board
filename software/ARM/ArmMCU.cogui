@@ -42,17 +42,19 @@
 <part id="29"/>
 <part id="30"/>
 <part id="31"/>
+<part id="32"/>
+<part id="33"/>
 </presentation>
 </folder>
 </info>
 </editorArea>
 <editor id="org.eclipse.cdt.ui.editor.CEditor" name="commTask.c" partName="commTask.c" path="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/commTask.c" title="commTask.c" tooltip="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/commTask.c" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/ArmMCU/commTask.c"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="7483" selectionTopPixel="1479"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="7401" selectionTopPixel="4209"/>
 </editor>
 <editor id="org.eclipse.cdt.ui.editor.CEditor" name="kalmanTask.c" partName="kalmanTask.c" path="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/kalmanTask.c" title="kalmanTask.c" tooltip="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/kalmanTask.c" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/ArmMCU/kalmanTask.c"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="1458" selectionTopPixel="234"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="4309" selectionTopPixel="1104"/>
 </editor>
 <editor id="org.eclipse.cdt.ui.editor.CEditor" name="mpcTask.c" partName="mpcTask.c" path="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/mpcTask.c" title="mpcTask.c" tooltip="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/mpcTask.c" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/ArmMCU/mpcTask.c"/>
@@ -62,17 +64,17 @@
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/ArmMCU/mpc/mpc.h"/>
 <editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="0" selectionTopPixel="0"/>
 </editor>
-<editor activePart="true" focus="true" id="org.eclipse.cdt.ui.editor.CEditor" name="elevAileMpcMatrices.h" partName="elevAileMpcMatrices.h" path="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/mpc/elevator_and_aileron/elevAileMpcMatrices.h" title="elevAileMpcMatrices.h" tooltip="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/mpc/elevator_and_aileron/elevAileMpcMatrices.h" workbook="DefaultEditorWorkbook">
+<editor id="org.eclipse.cdt.ui.editor.CEditor" name="elevAileMpcMatrices.h" partName="elevAileMpcMatrices.h" path="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/mpc/elevator_and_aileron/elevAileMpcMatrices.h" title="elevAileMpcMatrices.h" tooltip="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/mpc/elevator_and_aileron/elevAileMpcMatrices.h" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/ArmMCU/mpc/elevator_and_aileron/elevAileMpcMatrices.h"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="298" selectionTopPixel="0"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="480" selectionTopPixel="0"/>
 </editor>
 <editor id="org.eclipse.cdt.ui.editor.CEditor" name="kalman.c" partName="kalman.c" path="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/kalman/kalman.c" title="kalman.c" tooltip="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/kalman/kalman.c" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/ArmMCU/kalman/kalman.c"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="6045" selectionTopPixel="2094"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="6147" selectionTopPixel="180"/>
 </editor>
 <editor id="org.eclipse.cdt.ui.editor.CEditor" name="aileronKalman.c" partName="aileronKalman.c" path="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/kalman/aileron/aileronKalman.c" title="aileronKalman.c" tooltip="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/kalman/aileron/aileronKalman.c" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/ArmMCU/kalman/aileron/aileronKalman.c"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="2625" selectionTopPixel="144"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="2625" selectionTopPixel="234"/>
 </editor>
 <editor id="org.eclipse.cdt.ui.editor.CEditor" name="elevatorKalman.c" partName="elevatorKalman.c" path="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/kalman/elevator/elevatorKalman.c" title="elevatorKalman.c" tooltip="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/kalman/elevator/elevatorKalman.c" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/ArmMCU/kalman/elevator/elevatorKalman.c"/>
@@ -80,7 +82,7 @@
 </editor>
 <editor id="org.eclipse.cdt.ui.editor.CEditor" name="system.h" partName="system.h" path="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/system.h" title="system.h" tooltip="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/system.h" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/ArmMCU/system.h"/>
-<editorState selectionHorizontalPixel="0" selectionLength="117" selectionOffset="0" selectionTopPixel="0"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="2593" selectionTopPixel="999"/>
 </editor>
 <editor id="org.eclipse.cdt.ui.editor.CEditor" name="mpcTask.h" partName="mpcTask.h" path="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/mpcTask.h" title="mpcTask.h" tooltip="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/mpcTask.h" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/ArmMCU/mpcTask.h"/>
@@ -98,13 +100,13 @@
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/ArmMCU/commTask.h"/>
 <editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="234" selectionTopPixel="0"/>
 </editor>
-<editor id="org.eclipse.cdt.ui.editor.CEditor" name="system.c" partName="system.c" path="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/system.c" title="system.c" tooltip="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/system.c" workbook="DefaultEditorWorkbook">
+<editor activePart="true" focus="true" id="org.eclipse.cdt.ui.editor.CEditor" name="system.c" partName="system.c" path="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/system.c" title="system.c" tooltip="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/system.c" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/ArmMCU/system.c"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="1217" selectionTopPixel="750"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="3287" selectionTopPixel="1179"/>
 </editor>
 <editor id="org.eclipse.cdt.ui.editor.CEditor" name="main.c" partName="main.c" path="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/main.c" title="main.c" tooltip="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/main.c" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/ArmMCU/main.c"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="0" selectionTopPixel="0"/>
+<editorState selectionHorizontalPixel="0" selectionLength="9" selectionOffset="282" selectionTopPixel="0"/>
 </editor>
 <editor id="org.eclipse.cdt.ui.editor.CEditor" name="FreeRTOSConfig.h" partName="FreeRTOSConfig.h" path="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/FreeRTOS/FreeRTOSConfig.h" title="FreeRTOSConfig.h" tooltip="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/FreeRTOS/FreeRTOSConfig.h" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/ArmMCU/FreeRTOS/FreeRTOSConfig.h"/>
@@ -124,7 +126,7 @@
 </editor>
 <editor id="org.eclipse.cdt.ui.editor.CEditor" name="config.h" partName="config.h" path="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/config.h" title="config.h" tooltip="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/config.h" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/ArmMCU/config.h"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="367" selectionTopPixel="0"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="187" selectionTopPixel="0"/>
 </editor>
 <editor id="org.eclipse.cdt.ui.editor.CEditor" name="aileronKalman.h" partName="aileronKalman.h" path="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/kalman/aileron/aileronKalman.h" title="aileronKalman.h" tooltip="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/kalman/aileron/aileronKalman.h" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/ArmMCU/kalman/aileron/aileronKalman.h"/>
@@ -144,11 +146,11 @@
 </editor>
 <editor id="org.eclipse.cdt.ui.editor.CEditor" name="kalman.h" partName="kalman.h" path="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/kalman/kalman.h" title="kalman.h" tooltip="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/kalman/kalman.h" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/ArmMCU/kalman/kalman.h"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="0" selectionTopPixel="0"/>
+<editorState selectionHorizontalPixel="0" selectionLength="1" selectionOffset="748" selectionTopPixel="0"/>
 </editor>
 <editor id="org.eclipse.cdt.ui.editor.CEditor" name="elevAileMpcMatrices.c" partName="elevAileMpcMatrices.c" path="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/mpc/elevator_and_aileron/elevAileMpcMatrices.c" title="elevAileMpcMatrices.c" tooltip="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/mpc/elevator_and_aileron/elevAileMpcMatrices.c" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/ArmMCU/mpc/elevator_and_aileron/elevAileMpcMatrices.c"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="482" selectionTopPixel="0"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="404" selectionTopPixel="0"/>
 </editor>
 <editor id="org.eclipse.cdt.ui.editor.CEditor" name="kalmanTask.h" partName="kalmanTask.h" path="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/kalmanTask.h" title="kalmanTask.h" tooltip="C:/Users/klaxalk/Desktop/multirotor-control-board/software/ARM/kalmanTask.h" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/ArmMCU/kalmanTask.h"/>
@@ -174,6 +176,14 @@
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/ArmMCU/CMatrixLib/CMatrixLib.c"/>
 <editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="9574" selectionTopPixel="5974"/>
 </editor>
+<editor id="org.coocox.builder.ui.editors.ConfigEditor" name="" partName="Configuration" title="Configuration" tooltip="" workbook="DefaultEditorWorkbook">
+<input factoryID="org.coocox.builder.ui.persistent.PersistentElementFactory">&#x0A;<org.coocox.builder.ui.editors.ConfigEditor horizontalPosition="0" subTagIndex="1" verticalPosition="0"/>
+</input>
+</editor>
+<editor id="org.coocox.welcome.ui.WelcomePage" name="" partName="welcome" title="welcome" tooltip="" workbook="DefaultEditorWorkbook">
+<input factoryID="org.coocox.builder.ui.persistent.PersistentElementFactory">&#x0A;<org.coocox.welcome.ui.WelcomePage/>
+</input>
+</editor>
 </editors>
 <views>
 <view id="org.coocox.builder.ui.views.ProjectView" partName="Project">
@@ -189,7 +199,7 @@
 <element path="/ArmMCU/mpc/elevator_and_aileron"/>
 </expanded>
 <selection>
-<element path="/ArmMCU/mpc/elevator_and_aileron/elevAileMpcMatrices.h"/>
+<element path="/ArmMCU/main.c"/>
 </selection>
 </viewState>
 </view>
@@ -234,7 +244,7 @@
 <fastViewBars>
 <fastViewBar fastViewLocation="1024" id="org.eclipse.ui.internal.ViewStack@e75656" orientation="256" selectedTabId="org.eclipse.ui.console.ConsoleView" style="0">
 <fastViews>
-<view id="org.eclipse.ui.console.ConsoleView" ratio="0.38198757"/>
+<view id="org.eclipse.ui.console.ConsoleView" ratio="0.38187373"/>
 </fastViews>
 </fastViewBar>
 <fastViewBar fastViewLocation="131072" id="org.eclipse.ui.internal.ViewStack@1daca94" orientation="512" selectedTabId="org.coocox.component.ui.Help" style="0">
@@ -290,185 +300,177 @@
 <workingSets/>
 <navigationHistory>
 <editors>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/kalman/elevator/elevatorKalman.h"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/mpc/elevator_and_aileron/elevAileMpcMatrices.c"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/mpc/aileron/aileronMpc.h"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/mpc/elevator/elevatorMpc.h"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/kalman/aileron/aileronKalman.h"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/mpc/elevator_and_aileron/elevAileMpcMatrices.h"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/config.h"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/config.h"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/mpc/elevator_and_aileron/elevAileMpcMatrices.c"/>
+<editor factoryID="org.coocox.builder.ui.persistent.PersistentElementFactory" id="org.coocox.builder.ui.editors.ConfigEditor">
+<org.coocox.builder.ui.editors.ConfigEditor horizontalPosition="0" subTagIndex="1" verticalPosition="0"/>
+</editor>
+<editor factoryID="org.coocox.builder.ui.persistent.PersistentElementFactory" id="org.coocox.welcome.ui.WelcomePage">
+<org.coocox.welcome.ui.WelcomePage/>
+</editor>
+<editor factoryID="org.coocox.builder.ui.persistent.PersistentElementFactory" id="org.coocox.welcome.ui.WelcomePage">
+<org.coocox.welcome.ui.WelcomePage/>
+</editor>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/commTask.c"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/kalmanTask.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/mpc/aileron/aileronMpc.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/kalman/kalman.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/kalman/aileron/aileronKalman.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/kalman/elevator/elevatorKalman.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/config.h"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/mpc/elevator_and_aileron/elevAileMpcMatrices.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/kalman/elevator/elevatorKalman.h"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/kalman/aileron/aileronKalman.h"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/mpc/aileron/aileronMpc.h"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/mpc/elevator/elevatorMpc.h"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/mpc/elevator_and_aileron/elevAileMpcMatrices.h"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/config.h"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/system.h"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/mpcTask.c"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/kalman/kalman.h"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/kalman/aileron/aileronKalman.c"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/kalman/kalman.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/kalman/aileron/aileronKalman.h"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/kalman/elevator/elevatorKalman.h"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/mpc/mpc.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/CMatrixLib/CMatrixLib.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/miscellaneous.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/mpc/elevator_and_aileron/elevAileMpcMatrices.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/mpc/aileron/aileronMpc.h"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/mpc/elevator/elevatorMpc.h"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/mpc/aileron/aileronMpc.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/kalman/aileron/aileronKalman.h"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/mpc/elevator_and_aileron/elevAileMpcMatrices.h"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/config.h"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/system.c"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/main.c"/>
 </editors>
-<item historyLabel="elevatorKalman.c" index="6">
-<position info="not_deleted" x="1481" y="0"/>
-</item>
-<item historyLabel="config.h" index="1">
-<position info="not_deleted" x="253" y="0"/>
-</item>
-<item historyLabel="config.h" index="1">
-<position info="not_deleted" x="178" y="11"/>
-</item>
-<item historyLabel="aileronKalman.c" index="5">
-<position info="not_deleted" x="2625" y="0"/>
-</item>
-<item historyLabel="elevatorKalman.c" index="6">
-<position info="not_deleted" x="2667" y="0"/>
-</item>
-<item historyLabel="aileronKalman.c" index="5">
-<position info="not_deleted" x="2625" y="0"/>
-</item>
-<item historyLabel="elevatorKalman.c" index="6">
-<position info="not_deleted" x="2667" y="0"/>
-</item>
-<item historyLabel="kalman.c" index="4">
-<position info="not_deleted" x="6045" y="0"/>
-</item>
-<item historyLabel="kalmanTask.c" index="2">
-<position info="not_deleted" x="1458" y="0"/>
-</item>
-<item historyLabel="elevAileMpcMatrices.c" index="0">
-<position info="not_deleted" x="930" y="0"/>
-</item>
-<item historyLabel="aileronMpc.c" index="3">
-<position info="not_deleted" x="960" y="0"/>
-</item>
-<item historyLabel="config.h" index="7">
-<position info="not_deleted" x="198" y="11"/>
-</item>
-<item historyLabel="elevAileMpcMatrices.c" index="8">
-<position info="not_deleted" x="930" y="0"/>
-</item>
-<item historyLabel="config.h" index="7">
-<position info="not_deleted" x="479" y="0"/>
-</item>
-<item historyLabel="elevatorKalman.h" index="9">
+<item historyLabel="elevatorKalman.h" index="0">
 <position info="not_deleted" x="247" y="0"/>
 </item>
-<item historyLabel="aileronKalman.h" index="10">
-<position info="not_deleted" x="0" y="0"/>
-</item>
-<item historyLabel="aileronMpc.h" index="11">
-<position info="not_deleted" x="0" y="0"/>
-</item>
-<item historyLabel="elevatorMpc.h" index="12">
-<position info="not_deleted" x="0" y="0"/>
-</item>
-<item historyLabel="elevAileMpcMatrices.h" index="13">
-<position info="not_deleted" x="511" y="0"/>
-</item>
-<item historyLabel="config.h" index="7">
-<position info="not_deleted" x="283" y="0"/>
-</item>
-<item historyLabel="elevAileMpcMatrices.h" index="13">
-<position info="not_deleted" x="511" y="0"/>
-</item>
-<item historyLabel="config.h" index="14">
-<position info="not_deleted" x="283" y="0"/>
-</item>
-<item historyLabel="config.h" index="14">
-<position/>
-</item>
-<item historyLabel="config.h" index="14">
-<position/>
-</item>
-<item historyLabel="kalman.h" index="15">
-<position info="not_deleted" x="0" y="0"/>
-</item>
-<item historyLabel="kalman.c" index="16">
-<position info="not_deleted" x="6045" y="0"/>
-</item>
-<item historyLabel="aileronKalman.h" index="17">
-<position info="not_deleted" x="0" y="0"/>
-</item>
-<item historyLabel="elevatorKalman.h" index="18">
-<position info="not_deleted" x="247" y="0"/>
-</item>
-<item historyLabel="mpc.c" index="19">
-<position info="not_deleted" x="2136" y="26"/>
-</item>
-<item historyLabel="CMatrixLib.c" index="20">
-<position info="not_deleted" x="8889" y="26"/>
-</item>
-<item historyLabel="miscellaneous.c" index="21">
-<position info="not_deleted" x="0" y="0"/>
-</item>
-<item historyLabel="elevatorKalman.h" index="18">
-<position info="not_deleted" x="247" y="0"/>
-</item>
-<item historyLabel="mpc.c" index="19">
-<position info="not_deleted" x="2136" y="26"/>
-</item>
-<item historyLabel="elevAileMpcMatrices.c" index="22">
-<position info="not_deleted" x="0" y="0"/>
-</item>
-<item historyLabel="elevAileMpcMatrices.c" index="22">
-<position info="not_deleted" x="0" y="0"/>
-</item>
-<item historyLabel="aileronMpc.h" index="23">
-<position info="not_deleted" x="0" y="0"/>
-</item>
-<item historyLabel="elevatorMpc.h" index="24">
-<position info="not_deleted" x="0" y="0"/>
-</item>
-<item historyLabel="aileronMpc.h" index="23">
-<position info="not_deleted" x="0" y="0"/>
-</item>
-<item historyLabel="aileronMpc.c" index="25">
-<position info="not_deleted" x="278" y="0"/>
-</item>
-<item historyLabel="elevatorKalman.h" index="18">
-<position info="not_deleted" x="247" y="0"/>
-</item>
-<item historyLabel="aileronKalman.h" index="26">
+<item historyLabel="aileronKalman.h" index="4">
 <position info="not_deleted" x="233" y="6"/>
 </item>
-<item historyLabel="aileronMpc.h" index="23">
+<item historyLabel="aileronMpc.h" index="2">
 <position info="not_deleted" x="0" y="0"/>
 </item>
-<item historyLabel="elevatorMpc.h" index="24">
+<item historyLabel="elevatorMpc.h" index="3">
 <position info="not_deleted" x="0" y="0"/>
 </item>
-<item historyLabel="elevAileMpcMatrices.h" index="27">
+<item historyLabel="elevAileMpcMatrices.h" index="5">
 <position info="not_deleted" x="298" y="0"/>
 </item>
-<item historyLabel="elevAileMpcMatrices.c" index="22">
+<item historyLabel="elevAileMpcMatrices.c" index="1">
 <position info="not_deleted" x="482" y="0"/>
 </item>
-<item historyLabel="elevatorMpc.h" index="24">
+<item historyLabel="elevatorMpc.h" index="3">
 <position info="not_deleted" x="0" y="0"/>
 </item>
-<item historyLabel="config.h" index="28">
+<item historyLabel="config.h" index="6">
 <position info="not_deleted" x="367" y="0"/>
 </item>
-<item historyLabel="elevatorKalman.h" index="18">
+<item historyLabel="elevatorKalman.h" index="0">
 <position info="not_deleted" x="247" y="0"/>
 </item>
-<item historyLabel="aileronKalman.h" index="26">
+<item historyLabel="aileronKalman.h" index="4">
 <position info="not_deleted" x="233" y="6"/>
 </item>
-<item active="true" historyLabel="elevAileMpcMatrices.h" index="27">
+<item historyLabel="elevAileMpcMatrices.h" index="5">
 <position info="not_deleted" x="298" y="0"/>
+</item>
+<item historyLabel="config.h" index="7">
+<position info="not_deleted" x="367" y="0"/>
+</item>
+<item historyLabel="elevAileMpcMatrices.c" index="8">
+<position info="not_deleted" x="0" y="0"/>
+</item>
+<item historyLabel="elevAileMpcMatrices.c" index="8">
+<position info="not_deleted" x="404" y="0"/>
+</item>
+<item historyLabel="config.h" index="7">
+<position info="not_deleted" x="187" y="0"/>
+</item>
+<item historyLabel="Configuration" index="9"/>
+<item historyLabel="welcome" index="10"/>
+<item historyLabel="welcome" index="11"/>
+<item historyLabel="commTask.c" index="12">
+<position info="not_deleted" x="7483" y="0"/>
+</item>
+<item historyLabel="kalmanTask.c" index="13">
+<position info="not_deleted" x="1458" y="0"/>
+</item>
+<item historyLabel="kalmanTask.c" index="13">
+<position info="not_deleted" x="5456" y="18"/>
+</item>
+<item historyLabel="kalmanTask.c" index="13">
+<position info="not_deleted" x="1935" y="18"/>
+</item>
+<item historyLabel="system.h" index="14">
+<position info="not_deleted" x="0" y="117"/>
+</item>
+<item historyLabel="system.h" index="14">
+<position info="not_deleted" x="2597" y="20"/>
+</item>
+<item historyLabel="mpcTask.c" index="15">
+<position info="not_deleted" x="468" y="21"/>
+</item>
+<item historyLabel="commTask.c" index="12">
+<position info="not_deleted" x="8463" y="0"/>
+</item>
+<item historyLabel="kalmanTask.c" index="13">
+<position info="not_deleted" x="1914" y="20"/>
+</item>
+<item historyLabel="kalmanTask.c" index="13">
+<position info="not_deleted" x="2961" y="21"/>
+</item>
+<item historyLabel="kalmanTask.c" index="13">
+<position info="not_deleted" x="360" y="21"/>
+</item>
+<item historyLabel="kalman.h" index="16">
+<position info="not_deleted" x="0" y="0"/>
+</item>
+<item historyLabel="kalman.h" index="16">
+<position info="not_deleted" x="748" y="1"/>
+</item>
+<item historyLabel="kalmanTask.c" index="13">
+<position info="not_deleted" x="342" y="15"/>
+</item>
+<item historyLabel="kalmanTask.c" index="13">
+<position info="not_deleted" x="4818" y="17"/>
+</item>
+<item historyLabel="kalmanTask.c" index="13">
+<position info="not_deleted" x="1873" y="19"/>
+</item>
+<item historyLabel="system.h" index="14">
+<position info="not_deleted" x="2593" y="0"/>
+</item>
+<item historyLabel="kalmanTask.c" index="13">
+<position info="not_deleted" x="1873" y="19"/>
+</item>
+<item historyLabel="kalmanTask.c" index="13">
+<position info="not_deleted" x="5673" y="0"/>
+</item>
+<item historyLabel="kalmanTask.c" index="13">
+<position info="not_deleted" x="5592" y="0"/>
+</item>
+<item historyLabel="kalmanTask.c" index="13">
+<position info="not_deleted" x="5575" y="0"/>
+</item>
+<item historyLabel="commTask.c" index="12">
+<position info="not_deleted" x="8463" y="0"/>
+</item>
+<item historyLabel="commTask.c" index="12">
+<position info="not_deleted" x="8923" y="0"/>
+</item>
+<item historyLabel="aileronKalman.c" index="17">
+<position info="not_deleted" x="2625" y="0"/>
+</item>
+<item historyLabel="kalman.c" index="18">
+<position info="not_deleted" x="5066" y="0"/>
+</item>
+<item historyLabel="aileronKalman.c" index="17">
+<position info="not_deleted" x="2625" y="0"/>
+</item>
+<item historyLabel="kalmanTask.c" index="13">
+<position info="not_deleted" x="4662" y="0"/>
+</item>
+<item historyLabel="kalman.c" index="18">
+<position info="not_deleted" x="6147" y="0"/>
+</item>
+<item historyLabel="kalmanTask.c" index="13">
+<position info="not_deleted" x="4662" y="0"/>
+</item>
+<item historyLabel="system.c" index="19">
+<position info="not_deleted" x="1217" y="0"/>
+</item>
+<item historyLabel="main.c" index="20">
+<position info="not_deleted" x="282" y="9"/>
+</item>
+<item active="true" historyLabel="system.c" index="19">
+<position info="not_deleted" x="526" y="9"/>
 </item>
 </navigationHistory>
 <input factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/" type="8"/>
@@ -480,47 +482,47 @@
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="CMatrixLib.c" tooltip="ArmMCU/CMatrixLib/CMatrixLib.c">
 <persistable path="/ArmMCU/CMatrixLib/CMatrixLib.c"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="miscellaneous.c" tooltip="ArmMCU/miscellaneous.c">
-<persistable path="/ArmMCU/miscellaneous.c"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="mpc.h" tooltip="ArmMCU/mpc/mpc.h">
+<persistable path="/ArmMCU/mpc/mpc.h"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="uart_driver.h" tooltip="ArmMCU/uart_driver/uart_driver.h">
-<persistable path="/ArmMCU/uart_driver/uart_driver.h"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="elevAileMpcMatrices.h" tooltip="ArmMCU/mpc/elevator_and_aileron/elevAileMpcMatrices.h">
+<persistable path="/ArmMCU/mpc/elevator_and_aileron/elevAileMpcMatrices.h"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="uart_driver.c" tooltip="ArmMCU/uart_driver/uart_driver.c">
-<persistable path="/ArmMCU/uart_driver/uart_driver.c"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="soubor.h" tooltip="ArmMCU/mpc/soubor.h">
+<persistable path="/ArmMCU/mpc/soubor.h"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="soubor.c" tooltip="ArmMCU/mpc/soubor.c">
+<persistable path="/ArmMCU/mpc/soubor.c"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="startup_stm32f4xx.c" tooltip="ArmMCU/cmsis_boot/startup/startup_stm32f4xx.c">
+<persistable path="/ArmMCU/cmsis_boot/startup/startup_stm32f4xx.c"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="system.h" tooltip="ArmMCU/system.h">
+<persistable path="/ArmMCU/system.h"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="system.c" tooltip="ArmMCU/system.c">
+<persistable path="/ArmMCU/system.c"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="FreeRTOSConfig.h" tooltip="ArmMCU/FreeRTOS/FreeRTOSConfig.h">
+<persistable path="/ArmMCU/FreeRTOS/FreeRTOSConfig.h"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="CMatrixLib.h" tooltip="ArmMCU/CMatrixLib/CMatrixLib.h">
+<persistable path="/ArmMCU/CMatrixLib/CMatrixLib.h"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="kalman.c" tooltip="ArmMCU/kalman/kalman.c">
+<persistable path="/ArmMCU/kalman/kalman.c"/>
 </file>
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="elevatorMpc.c" tooltip="ArmMCU/mpc/elevator/elevatorMpc.c">
 <persistable path="/ArmMCU/mpc/elevator/elevatorMpc.c"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="kalmanTask.h" tooltip="ArmMCU/kalmanTask.h">
-<persistable path="/ArmMCU/kalmanTask.h"/>
-</file>
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="elevAileMpcMatrices.c" tooltip="ArmMCU/mpc/elevator_and_aileron/elevAileMpcMatrices.c">
 <persistable path="/ArmMCU/mpc/elevator_and_aileron/elevAileMpcMatrices.c"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="kalman.h" tooltip="ArmMCU/kalman/kalman.h">
-<persistable path="/ArmMCU/kalman/kalman.h"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="aileronMpc.c" tooltip="ArmMCU/mpc/aileron/aileronMpc.c">
-<persistable path="/ArmMCU/mpc/aileron/aileronMpc.c"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="CMatrixLib.c" tooltip="ArmMCU/CMatrixLib/CMatrixLib.c">
+<persistable path="/ArmMCU/CMatrixLib/CMatrixLib.c"/>
 </file>
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="aileronMpc.h" tooltip="ArmMCU/mpc/aileron/aileronMpc.h">
 <persistable path="/ArmMCU/mpc/aileron/aileronMpc.h"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="elevatorMpc.h" tooltip="ArmMCU/mpc/elevator/elevatorMpc.h">
-<persistable path="/ArmMCU/mpc/elevator/elevatorMpc.h"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="aileronKalman.h" tooltip="ArmMCU/kalman/aileron/aileronKalman.h">
-<persistable path="/ArmMCU/kalman/aileron/aileronKalman.h"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="config.h" tooltip="ArmMCU/config.h">
-<persistable path="/ArmMCU/config.h"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="altitudeKalman.c" tooltip="ArmMCU/kalman/altitude/altitudeKalman.c">
-<persistable path="/ArmMCU/kalman/altitude/altitudeKalman.c"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="elevatorKalman.h" tooltip="ArmMCU/kalman/elevator/elevatorKalman.h">
-<persistable path="/ArmMCU/kalman/elevator/elevatorKalman.h"/>
 </file>
 </mruList>
 </workbench>

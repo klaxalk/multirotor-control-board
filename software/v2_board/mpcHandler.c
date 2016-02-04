@@ -56,6 +56,9 @@ void initializeKalmanStates() {
 	kalmanStates.aileron.acceleration = 0;
 	kalmanStates.aileron.acceleration_input = 0;
 	kalmanStates.aileron.acceleration_error = 0;
+	
+	kalmanStates.elevatorPositionCovariance = 0;
+	kalmanStates.aileronPositionCovariance = 0;
 }
 
 /* -------------------------------------------------------------------- */

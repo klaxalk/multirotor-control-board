@@ -15,6 +15,12 @@
 #include "xbee.h"
 
 /* -------------------------------------------------------------------- */
+/*	Execution rate of this task	is vital								*/
+/* -------------------------------------------------------------------- */
+volatile uint16_t commTaskRate = 0;
+volatile uint16_t commTaskCounter = 0;
+
+/* -------------------------------------------------------------------- */
 /*	For calculating rate of MPC and Kalman								*/
 /* -------------------------------------------------------------------- */
 volatile int16_t mpcCounter = 0;
@@ -83,6 +89,8 @@ volatile uint16_t dt_identification = 0;
 /* -------------------------------------------------------------------- */
 
 xbeeMessageHandler_t xbeeMessage;
+volatile uint8_t RSSI;
+volatile uint64_t respondTo = 0;
 
 void commTask(void *p) {
 	
@@ -94,6 +102,8 @@ void commTask(void *p) {
 	mpcSetpoints.aileron = 0;
 		
 	while (1) {
+		
+		commTaskCounter++;
 				
 		/* -------------------------------------------------------------------- */
 		/*	A character received from STM										*/
@@ -157,6 +167,9 @@ void commTask(void *p) {
 					kalmanStates.aileron.acceleration = readFloat(stmMessage.messageBuffer, &idx);
 					kalmanStates.aileron.acceleration_input = readFloat(stmMessage.messageBuffer, &idx);
 					kalmanStates.aileron.acceleration_error = readFloat(stmMessage.messageBuffer, &idx);
+					
+					kalmanStates.elevatorPositionCovariance = readFloat(stmMessage.messageBuffer, &idx);
+					kalmanStates.aileronPositionCovariance = readFloat(stmMessage.messageBuffer, &idx);
 				}
 			}
 		}
@@ -274,9 +287,11 @@ void commTask(void *p) {
 							blobs[blobId].z  = readFloat(multiconMessage.messageBuffer, &idx);
 							blobs[blobId].x  = readFloat(multiconMessage.messageBuffer, &idx);
 							
+							/*
+							uint8_t temp[32];
 							sprintf(temp, "Blob %d [%2.3f %2.3f %2.3f]\n\r", blobId, blobs[blobId].x, blobs[blobId].y, blobs[blobId].z);
 							usartBufferPutString(usart_buffer_3, temp, 10);
-							
+							*/
 							led_green_on();
 						}
 						
@@ -287,8 +302,11 @@ void commTask(void *p) {
 						multiconErrorState = readUint8(multiconMessage.messageBuffer, &idx);
 						numberOfDetectedBlobs = readUint8(multiconMessage.messageBuffer, &idx);
 						
+						/*
+						uint8_t temp[32];
 						sprintf(temp, "Num. blobs = %d, Error = %d\n\r", numberOfDetectedBlobs, multiconErrorState);
 						usartBufferPutString(usart_buffer_3, temp, 10);
+						*/
 						
 						led_green_toggle();
 						
@@ -296,6 +314,13 @@ void commTask(void *p) {
 							
 							led_green_off();
 						}
+					
+					break;
+					
+					case 'M':
+					
+						// led_green_toggle();
+						bluetooth_RSSI = readFloat(multiconMessage.messageBuffer, &idx);
 					
 					break;
 				}
@@ -311,9 +336,42 @@ void commTask(void *p) {
 
 			if (xbeeParseChar(inChar, &xbeeMessage, &xbeeReceiver)) {
 				
-				led_green_toggle();
+				if (xbeeMessage.apiId == XBEE_API_PACKET_RECEIVE) {
+
+					switch (xbeeMessage.content.receiveResponse.messageId) {
+						
+						case 'R':
+
+							respondTo = xbeeMessage.content.receiveResponse.address64;
+							xbeeGetRSSI();
+						
+						break;
+						
+						case 'M':
+						
+							sendBlobs(xbeeMessage.content.receiveResponse.address64);
+						
+						break;
+					}
+					
+				} else if (xbeeMessage.apiId == XBEE_API_PACKET_AT_RESPONSE) {
 				
-				xbeeSendMessage(xbeeMessage.payload, xbeeMessage.messageLength, XBEE_BASE1);
+					// led_green_toggle();
+					uint8_t temp[32];
+					
+					/*
+					writeUint8ToBuffer(&temp, (uint8_t) 'M', 0);
+					writeFloatToBuffer(&temp, (float) kalmanStates.elevator.position, 1);
+					writeFloatToBuffer(&temp, (float) kalmanStates.aileron.position, 5);
+					writeFloatToBuffer(&temp, (float) kalmanStates.elevatorPositionCovariance, 9);
+					writeFloatToBuffer(&temp, (float) kalmanStates.aileronPositionCovariance, 13);
+					writeFloatToBuffer(&temp, (float) bluetooth_RSSI, 17);
+					writeUint8ToBuffer(&temp, (uint8_t) xbeeMessage.content.atReponse.cmdData, 21);
+
+					xbeeSendMessageTo(&temp, 22, respondTo);
+					*/
+				
+				}
 							
 				xbeeReceiver.receiverState = XBEE_NOT_RECEIVING;
 			}

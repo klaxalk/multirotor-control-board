@@ -56,6 +56,8 @@ typedef struct {
 
 	oneAxisStates_t elevator;
 	oneAxisStates_t aileron;
+	float elevatorPositionCovariance;
+	float aileronPositionCovariance;
 	
 } kalmanStates_t;
 

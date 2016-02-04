@@ -31,6 +31,9 @@ typedef struct {
 
 blob_t blobs[NUMBER_OF_BLOBS];
 
+volatile float bluetooth_RSSI;
+
 int8_t multiconParseChar(char inChar, multiconMessageHandler_t * messageHandler);
+void sendBlobs(uint64_t address);
 
 #endif /* MULTICON_H_ */

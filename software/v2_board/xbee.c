@@ -76,6 +76,35 @@ void xbeeSendDataBlob(uint8_t * pointer, uint8_t length, uint8_t * checkSum) {
 	}
 }
 
+// iterates through the data blob and sends it byte by byte
+uint64_t xbeeReadUint64(const uint8_t * pointer) {
+	
+	uint8_t i;
+	uint64_t output;
+	uint8_t * tempPtr = (uint8_t *) &output;
+	
+	// swaps the bytes
+	for (i = 0; i < 8; i++) {
+		
+		*(tempPtr + 7 - i) = *(pointer + i);
+	}
+	
+	return output;
+}
+
+
+// iterates through the data blob and sends it byte by byte
+uint16_t xbeeReadUint16(const uint8_t * pointer) {
+	
+	uint64_t output;
+	uint8_t * tempPtr = (uint8_t *) &output;
+	
+	*(tempPtr) = *(pointer+1);
+	*(tempPtr+1) = *(pointer);
+	
+	return output;
+}
+
 /* -------------------------------------------------------------------- */
 /*	Parsing state machine												*/
 /* -------------------------------------------------------------------- */
@@ -152,16 +181,27 @@ uint8_t xbeeParseChar(uint8_t inChar, xbeeMessageHandler_t * messageHandler, xbe
 		// API type (0x90 for receive packet)
 		case XBEE_RECEIVING_API_TYPE:
 		
-			if (inChar == XBEE_API_PACKET_RECEIVE) {
+			receiver->apiId = inChar;
 			
-				receiver->receiverState = XBEE_RECEIVING_PAYLOAD;
-				receiver->checksum -= inChar;
-
-			} else {
-			
-				// restart the state machine
-				receiver->receiverState = XBEE_NOT_RECEIVING;
+			switch (receiver->apiId) {
+				
+				case XBEE_API_PACKET_RECEIVE:
+					receiver->receiverState = XBEE_RECEIVING_PAYLOAD;
+					receiver->checksum -= inChar;
+				break;
+				
+				case XBEE_API_PACKET_AT_RESPONSE:
+					receiver->receiverState = XBEE_RECEIVING_PAYLOAD;
+					receiver->checksum -= inChar;
+				break;
+				
+				default:
+					// restart the state machine
+					receiver->receiverState = XBEE_NOT_RECEIVING;
+				break;
+				
 			}
+		
 		break;
 	
 		// the new byte is the payload byte
@@ -182,13 +222,36 @@ uint8_t xbeeParseChar(uint8_t inChar, xbeeMessageHandler_t * messageHandler, xbe
 		
 			// if the checksum is correct
 			if (receiver->checksum == inChar) {
-
-				messageHandler->address64 = receiver->rxBuffer[0];
-				messageHandler->address16 = receiver->rxBuffer[4];
-				messageHandler->messageId = receiver->rxBuffer[6];
-				messageHandler->payload = (uint8_t) (&receiver->rxBuffer + 7);
-				messageHandler->messageLength = receiver->payloadSize-9;
-				receiver->receiverState = XBEE_MESSAGE_RECEIVED;
+				
+				switch (receiver->apiId) {
+					
+					case XBEE_API_PACKET_RECEIVE:
+					
+						messageHandler->apiId = receiver->apiId;
+						messageHandler->content.receiveResponse.address64 = xbeeReadUint64((uint8_t *) &receiver->rxBuffer);
+						messageHandler->content.receiveResponse.address16 = xbeeReadUint16((uint8_t *) &receiver->rxBuffer + 8);
+						messageHandler->content.receiveResponse.receiveOptions = xbeeReadUint16((uint8_t *) &receiver->rxBuffer + 9);
+						messageHandler->content.receiveResponse.messageId = (uint8_t) *(receiver->rxBuffer + 11);
+						messageHandler->content.receiveResponse.payload = (uint8_t *) (&receiver->rxBuffer) + 12;
+						messageHandler->content.receiveResponse.payloadSize = receiver->payloadSize - 13;
+						receiver->receiverState = XBEE_MESSAGE_RECEIVED;
+						
+					break;
+					
+					case XBEE_API_PACKET_AT_RESPONSE:
+						
+						messageHandler->apiId = receiver->apiId;
+						messageHandler->content.atReponse.frameID = receiver->rxBuffer[0];
+						messageHandler->content.atReponse.ATcmd[0] = receiver->rxBuffer[1];
+						messageHandler->content.atReponse.ATcmd[1] = receiver->rxBuffer[2];
+						messageHandler->content.atReponse.cmdStatus = receiver->rxBuffer[3];
+						messageHandler->content.atReponse.cmdData = receiver->rxBuffer[4];
+						receiver->receiverState = XBEE_MESSAGE_RECEIVED;
+						
+					break;
+					
+				}
+				
 				return 1;
 
 			// if it is not correct, restart the receiver
@@ -202,7 +265,7 @@ uint8_t xbeeParseChar(uint8_t inChar, xbeeMessageHandler_t * messageHandler, xbe
 	return 0;
 }
 
-void xbeeSendMessage(uint8_t * message, uint16_t length, uint64_t address) {
+void xbeeSendMessageTo(const uint8_t * message, const uint16_t length, const uint64_t address) {
 	
 	uint16_t i;
 	
@@ -239,6 +302,32 @@ void xbeeSendMessage(uint8_t * message, uint16_t length, uint64_t address) {
 		
 		xbeeSendUint8(usart_buffer_xbee, *(message+i), &checkSum);
 	}
+	
+	// send the checksum
+	xbeeSendUint8(usart_buffer_xbee, checkSum, &checkSum);
+}
+
+void xbeeGetRSSI() {
+	
+	uint8_t checkSum = 0;
+	
+	// initiates the message
+	xbeeSendUint8(usart_buffer_xbee, XBEE_INIT_BYTE, &checkSum);
+	
+	// send the packet length, 8 for RSSI AT command
+	xbeeSendUint16(usart_buffer_xbee, 4, &checkSum);
+	
+	checkSum = 0xFF;
+
+	// send the api type
+	xbeeSendUint8(usart_buffer_xbee, XBEE_API_AT_COMMAND, &checkSum);	
+	
+	// send the frameID, for EG 0x09
+	xbeeSendUint8(usart_buffer_xbee, 0x09, &checkSum);
+	
+	// what AT command? DB, two ascii characters
+	xbeeSendUint8(usart_buffer_xbee, 'D', &checkSum);
+	xbeeSendUint8(usart_buffer_xbee, 'B', &checkSum);
 	
 	// send the checksum
 	xbeeSendUint8(usart_buffer_xbee, checkSum, &checkSum);

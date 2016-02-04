@@ -8,6 +8,9 @@
 #ifndef COMMTASK_H_
 #define COMMTASK_H_
 
+volatile uint16_t commTaskRate;
+volatile uint16_t commTaskCounter;
+
 /* -------------------------------------------------------------------- */
 /*	message from mainTask to commTask									*/
 /* -------------------------------------------------------------------- */

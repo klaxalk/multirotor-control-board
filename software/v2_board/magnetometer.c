@@ -25,26 +25,20 @@ void magnetometerInit() {
 	mag_write_buffer[2] = 0x70;
 	TWI_MasterWriteRead(&twi_mag_master, MAG_I2C_ADDRESS, &mag_write_buffer, 3, 0);
 	
-	vTaskDelay(10);
-	
-	/*
 	mag_write_buffer[0] = 0x3C;
 	mag_write_buffer[1] = 0x01;
 	mag_write_buffer[2] = 0xA0;
 	TWI_MasterWrite(&twi_mag_master, MAG_I2C_ADDRESS, &mag_write_buffer, 3);
-	
-	vTaskDelay(10);
-	*/
 }
 
 void magnetometerRead() {
 	
-	/*
 	mag_write_buffer[0] = 0x3D;
 	mag_write_buffer[1] = 0x06;	
 	TWI_MasterWriteRead(&twi_mag_master, MAG_I2C_ADDRESS, &mag_write_buffer, 2, 6);
 
 	vTaskDelay(200);
+	
 	magnetometerData.x = twi_mag_master.readData[0] << 8;
 	magnetometerData.x |= twi_mag_master.readData[1];
 	
@@ -53,7 +47,6 @@ void magnetometerRead() {
 	
 	magnetometerData.z = twi_mag_master.readData[3] << 8;
 	magnetometerData.z |= twi_mag_master.readData[3];
-	*/
 }
 
 /*!  Master Interrupt vector for HMC5883L. */
