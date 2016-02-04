@@ -265,7 +265,7 @@ uint8_t xbeeParseChar(uint8_t inChar, xbeeMessageHandler_t * messageHandler, xbe
 	return 0;
 }
 
-void xbeeSendMessageTo(const uint8_t * message, const uint16_t length, const uint64_t address) {
+void xbeeSendMessageTo(const char * message, const uint16_t length, const uint64_t address) {
 	
 	uint16_t i;
 	

@@ -67,7 +67,7 @@ typedef struct {
 	uint16_t address16;
 	uint8_t receiveOptions;
 	uint8_t messageId;
-	uint8_t * payload;
+	char * payload;
 	uint16_t payloadSize;
 	
 } xbeeReceiveMessageHandler_t;
@@ -98,7 +98,7 @@ xbeeReceiverStateMachine_t xbeeReceiver;
 uint8_t xbeeParseChar(uint8_t inChar, xbeeMessageHandler_t * messageHandler, xbeeReceiverStateMachine_t * receiver);
 
 // sends message to a particular device
-void xbeeSendMessageTo(const uint8_t * message, const uint16_t length, const uint64_t address);
+void xbeeSendMessageTo(const char * message, const uint16_t length, const uint64_t address);
 
 // sends request to xbee for RSSI of the last packet
 void xbeeGetRSSI();

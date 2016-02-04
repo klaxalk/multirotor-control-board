@@ -11,7 +11,6 @@
 #include "controllers.h"
 #include "config.h"
 #include "mpcHandler.h"
-#include "trajectories.h"
 #include "xbee.h"
 
 /* -------------------------------------------------------------------- */
@@ -284,8 +283,8 @@ void commTask(void *p) {
 						if (blobId < NUMBER_OF_BLOBS) {
 							
 							blobs[blobId].y = readFloat(multiconMessage.messageBuffer, &idx);
-							blobs[blobId].z  = readFloat(multiconMessage.messageBuffer, &idx);
-							blobs[blobId].x  = readFloat(multiconMessage.messageBuffer, &idx);
+							blobs[blobId].z = readFloat(multiconMessage.messageBuffer, &idx);
+							blobs[blobId].x = readFloat(multiconMessage.messageBuffer, &idx);
 							
 							/*
 							uint8_t temp[32];
@@ -337,13 +336,26 @@ void commTask(void *p) {
 			if (xbeeParseChar(inChar, &xbeeMessage, &xbeeReceiver)) {
 				
 				if (xbeeMessage.apiId == XBEE_API_PACKET_RECEIVE) {
+					
+					int idx = 0;
+					
+					// pro ukazku
+					char buffer[20];
+					float tempFloat, jinyFloat, dalsiFloat;
 
 					switch (xbeeMessage.content.receiveResponse.messageId) {
 						
 						case 'R':
+						
+							// pøíklad toho jak vyndám 3 promìnné z bufferu
+							tempFloat = readFloat(xbeeMessage.content.receiveResponse.payload, &idx);
+							tempFloat = readFloat(xbeeMessage.content.receiveResponse.payload, &idx);
+							tempFloat = readFloat(xbeeMessage.content.receiveResponse.payload, &idx);
 
-							respondTo = xbeeMessage.content.receiveResponse.address64;
-							xbeeGetRSSI();
+							// do something as a response to received message
+							buffer[0] = 'A'; // prvni znak zprávy je pozdìji v xbeeMessage.content.receiveResponse.messageId
+							writeFloatToBuffer(buffer, blobs[0].x, 1); // poèínaje bytem 1 zapíše float do buffer, tudíž v nìm bude 5 bytù
+							xbeeSendMessageTo(buffer, 5, XBEE_UAV1);
 						
 						break;
 						
@@ -354,23 +366,6 @@ void commTask(void *p) {
 						break;
 					}
 					
-				} else if (xbeeMessage.apiId == XBEE_API_PACKET_AT_RESPONSE) {
-				
-					// led_green_toggle();
-					uint8_t temp[32];
-					
-					/*
-					writeUint8ToBuffer(&temp, (uint8_t) 'M', 0);
-					writeFloatToBuffer(&temp, (float) kalmanStates.elevator.position, 1);
-					writeFloatToBuffer(&temp, (float) kalmanStates.aileron.position, 5);
-					writeFloatToBuffer(&temp, (float) kalmanStates.elevatorPositionCovariance, 9);
-					writeFloatToBuffer(&temp, (float) kalmanStates.aileronPositionCovariance, 13);
-					writeFloatToBuffer(&temp, (float) bluetooth_RSSI, 17);
-					writeUint8ToBuffer(&temp, (uint8_t) xbeeMessage.content.atReponse.cmdData, 21);
-
-					xbeeSendMessageTo(&temp, 22, respondTo);
-					*/
-				
 				}
 							
 				xbeeReceiver.receiverState = XBEE_NOT_RECEIVING;

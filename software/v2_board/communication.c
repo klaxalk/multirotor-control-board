@@ -52,22 +52,22 @@ void writeFloatToBuffer(char * buffer, const float input, uint16_t position) {
 }
 
 // write 4 bytes of float number to the buffer on position
-void writeUint64ToBuffer(char * buffer, const uint64_t input, uint16_t position) {
+void writeUint64ToBuffer(uint8_t * buffer, const uint64_t input, uint16_t position) {
 	
 	uint8_t * tempPtr = (uint8_t *) &input;
 	
-	*(buffer+position) = *tempPtr;
-	*(buffer+position+1) = *(tempPtr+1);
-	*(buffer+position+2) = *(tempPtr+2);
-	*(buffer+position+3) = *(tempPtr+3);
-	*(buffer+position+4) = *(tempPtr+4);
-	*(buffer+position+5) = *(tempPtr+5);
-	*(buffer+position+6) = *(tempPtr+6);
-	*(buffer+position+7) = *(tempPtr+7);
+	*(buffer++ + position) = *tempPtr;
+	*(buffer++ + position) = *(tempPtr++);
+	*(buffer++ + position) = *(tempPtr++);
+	*(buffer++ + position) = *(tempPtr++);
+	*(buffer++ + position) = *(tempPtr++);
+	*(buffer++ + position) = *(tempPtr++);
+	*(buffer++ + position) = *(tempPtr++);
+	*(buffer++ + position) = *(tempPtr++);
 }
 
 // write 4 bytes of float number to the buffer on position
-void writeUint8ToBuffer(char * buffer, const uint8_t input, uint16_t position) {
+void writeUint8ToBuffer(uint8_t * buffer, const uint8_t input, uint16_t position) {
 	
 	*(buffer+position) = input;
 }

@@ -796,12 +796,6 @@
     <Compile Include="system.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="trajectories.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="trajectories.h">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="xbee.c">
       <SubType>compile</SubType>
     </Compile>
