@@ -88,37 +88,87 @@ void mainTask(void *p) {
 			if (setpointChangeTrigger++ == 30) {
 				
 				setpointChangeTrigger = 1;
-		
+				
+				// up
 				if ((aux2filtered > (PPM_IN_MIDDLE_LENGTH + 300))) {
-			
+				
+					#if defined (MULTICON)
+
+					if (numberOfDetectedBlobs == 1) {
+
+						main2commMessage.messageType = SET_SETPOINT;
+						
+						main2commMessage.data.simpleSetpoint.elevator = kalmanStates.elevator.position + blobs[0].x - 2;
+						main2commMessage.data.simpleSetpoint.aileron = kalmanStates.aileron.position + blobs[0].y + 0;
+						
+						xQueueSend(main2commsQueue, &main2commMessage, 0);
+						
+					}
+
+					#endif
+					
+					AUX2_previous = 2;
+					led_orange_toggle();
+				
+				// down
+				} else if ((aux2filtered < (PPM_IN_MIDDLE_LENGTH - 300))) {
+					
 					main2commMessage.messageType = SET_SETPOINT;
 					main2commMessage.data.simpleSetpoint.elevator = 0;
 					main2commMessage.data.simpleSetpoint.aileron = 0;
 					xQueueSend(main2commsQueue, &main2commMessage, 0);
-			
+
 					AUX2_previous = 1;
 					led_orange_off();
+				
+				// middle
+				} else if ((abs(aux2filtered - PPM_IN_MIDDLE_LENGTH) <= 300)) {
 			
-				} else if ((aux2filtered < (PPM_IN_MIDDLE_LENGTH - 300))) {
+					#if defined (MULTICON)
+
+					if (numberOfDetectedBlobs == 2) {
+
+						main2commMessage.messageType = SET_SETPOINT;
+						
+						main2commMessage.data.simpleSetpoint.elevator = kalmanStates.elevator.position + (blobs[0].x + blobs[1].x)/2;
+						main2commMessage.data.simpleSetpoint.aileron = kalmanStates.aileron.position + (blobs[0].y + blobs[1].y)/2;
+						
+						xQueueSend(main2commsQueue, &main2commMessage, 0);
+				
+					}
+
+					#endif
 					
+					AUX2_previous = 3;
+					led_orange_on();
+				}
+			}
+		
+			auxSetpointFlag = 0;
+		}
+	}
+}
+
+/*
+
 					main2commMessage.messageType = SET_TRAJECTORY;
 
 					// when the trajectory is over
 					if (++currentSetpointIdx >= TRAJECTORY_LENGTH)
-						currentSetpointIdx = TRAJECTORY_LENGTH-1; // reset it and go again
-						
+					currentSetpointIdx = TRAJECTORY_LENGTH-1; // reset it and go again
+					
 					int16_t futureSetpointIdx = currentSetpointIdx;
 					
 					// calculate the setpoint correction based on the multicon blob detection
 					#ifdef MULTICON
-		
+					
 					if (numberOfDetectedBlobs >= 1) {
-			
+						
 						correctionX = kalmanStates.elevator.position + blobs[0].x - pgm_read_float(&(elevatorDiff[currentSetpointIdx])) - pgm_read_float(&(elevator[currentSetpointIdx]));
 						correctionY = kalmanStates.aileron.position + blobs[0].y - pgm_read_float(&(aileronDiff[currentSetpointIdx])) - pgm_read_float(&(aileron[currentSetpointIdx]));
-				
+						
 					}
-		
+					
 					#endif
 					
 					// calculate the setpoint correction based on the multicon blob detection
@@ -137,13 +187,13 @@ void mainTask(void *p) {
 						
 						#if defined (MULTICON) || defined (RASPBERRY_PI)
 
-							main2commMessage.data.trajectory.elevatorTrajectory[i] = correctionX + pgm_read_float(&(elevator[futureSetpointIdx]));
-							main2commMessage.data.trajectory.aileronTrajectory[i] = correctionY + pgm_read_float(&(aileron[futureSetpointIdx]));
+						main2commMessage.data.trajectory.elevatorTrajectory[i] = correctionX + pgm_read_float(&(elevator[futureSetpointIdx]));
+						main2commMessage.data.trajectory.aileronTrajectory[i] = correctionY + pgm_read_float(&(aileron[futureSetpointIdx]));
 						
-						#else	
+						#else
 
-							main2commMessage.data.trajectory.elevatorTrajectory[i] = pgm_read_float(&(elevator[futureSetpointIdx]));
-							main2commMessage.data.trajectory.aileronTrajectory[i] = pgm_read_float(&(aileron[futureSetpointIdx]));
+						main2commMessage.data.trajectory.elevatorTrajectory[i] = pgm_read_float(&(elevator[futureSetpointIdx]));
+						main2commMessage.data.trajectory.aileronTrajectory[i] = pgm_read_float(&(aileron[futureSetpointIdx]));
 						
 						#endif
 
@@ -151,52 +201,42 @@ void mainTask(void *p) {
 					}
 
 					xQueueSend(main2commsQueue, &main2commMessage, 0);
-					
-					AUX2_previous = 2;
-					led_orange_on();
 
-				} else if ((abs(aux2filtered - PPM_IN_MIDDLE_LENGTH) <= 300)) {
-			
+*/
+
+/*
+
 					main2commMessage.messageType = SET_SETPOINT;
 					
 					#if defined (MULTICON)
 					
-						if (numberOfDetectedBlobs >= 1) {
-							
-							correctionX = kalmanStates.elevator.position + blobs[0].x;
-							correctionY = kalmanStates.aileron.position + blobs[0].y;
-							
-						}
+					if (numberOfDetectedBlobs == 1) {
+						
+						correctionX = kalmanStates.elevator.position + blobs[0].x;
+						correctionY = kalmanStates.aileron.position + blobs[0].y;
+					}
 					
-						main2commMessage.data.simpleSetpoint.elevator = -pgm_read_float(&(elevatorDiff[0])) + correctionX;
-						main2commMessage.data.simpleSetpoint.aileron = -pgm_read_float(&(aileronDiff[0])) + correctionY;
+					main2commMessage.data.simpleSetpoint.elevator = 0 + correctionX;
+					main2commMessage.data.simpleSetpoint.aileron = 0 + correctionY;
 					
 					#elif defined (RASPBERRY_PI)
 					
-						if (rpiOk >= 1) {
-							
-							correctionX = kalmanStates.elevator.position + rpix;
-							correctionY = kalmanStates.aileron.position + rpiy;
-						}
+					if (rpiOk >= 1) {
+						
+						correctionX = kalmanStates.elevator.position + rpix;
+						correctionY = kalmanStates.aileron.position + rpiy;
+					}
 					
-						main2commMessage.data.simpleSetpoint.elevator = 0 + correctionX;
-						main2commMessage.data.simpleSetpoint.aileron = 0 + correctionY;
+					main2commMessage.data.simpleSetpoint.elevator = 0 + correctionX;
+					main2commMessage.data.simpleSetpoint.aileron = 0 + correctionY;
 					
 					#else
 					
-						main2commMessage.data.simpleSetpoint.elevator = 0;
-						main2commMessage.data.simpleSetpoint.aileron = 0;
+					main2commMessage.data.simpleSetpoint.elevator = 0;
+					main2commMessage.data.simpleSetpoint.aileron = 0;
 					
 					#endif
 					
 					xQueueSend(main2commsQueue, &main2commMessage, 0);
-					
-					AUX2_previous = 3;
-					led_orange_off();
-				}
-			}
-		
-			auxSetpointFlag = 0;
-		}
-	}
-}
+
+*/

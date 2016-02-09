@@ -7,6 +7,7 @@ end
 clear all
 
 global COM;
+
 COM = serial('COM19');
 set(COM,'BaudRate', 115200);
 fopen(COM);
@@ -40,38 +41,56 @@ while true
             dec2hex(packetIN);
             data = packetIN(16:end-1);
             
-            numOfBlobs = data(1);
+            numOfBlobs = data(2);
             
-            idx = 2;
+            idx = 3;
             
             posx = typecast(uint8(data(idx:idx+3)), 'single');
             idx = idx + 4;
             posy = typecast(uint8(data(idx:idx+3)), 'single');
             idx = idx + 4;
             
+            setx = typecast(uint8(data(idx:idx+3)), 'single');
+            idx = idx + 4;
+            sety = typecast(uint8(data(idx:idx+3)), 'single');
+            idx = idx + 4;
+            
             figure(1);
             hold off
-            scatter(-posy, posx, 'filled');
+            plot(0, 0);
             hold on
-            
-            blobs = zeros(3, numOfBlobs);
+            drawUAV(-posy, posx, numOfBlobs);
+            scatter(-sety, setx, 75, 'k', 'filled'); 
+
+            blobs = zeros(2, numOfBlobs);
             for i=1:numOfBlobs
-               for j=1:3
+               for j=1:2
                   blobs(j, i) = typecast(uint8(data(idx:idx+3)), 'single');
                   idx = idx + 4;
                end
                
-               circle(-blobs(2, i)-posy, blobs(1, i)+posx, 0.1); 
+               if (i == 1)
+                blobColor = 'r';
+               elseif (i == 2)
+                blobColor = 'b';
+               elseif (i == 3)
+                blobColor = 'k';
+               end
+               scatter(-blobs(2, i)-posy, blobs(1, i)+posx, 150, blobColor, 'filled'); 
             end
             
             blobs
             osy = 5;
+%             grid minor;
             axis([-posy-osy, -posy+osy, posx-osy, posx+osy]);
+            axis equal;
+            set(gca,'xtick',[(round(-posy)-2*osy):1:(round(-posy)+2*osy)]);
+            set(gca,'ytick',[(round(posx)-2*osy):1:(round(posx)+2*osy)]);
+            grid on;
             drawnow;
             
             write(packet);
-            
-            
+                       
         end   
    end       
 end

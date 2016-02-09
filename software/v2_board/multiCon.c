@@ -133,11 +133,18 @@ void sendBlobs(uint64_t address) {
 	uint8_t buffer[64];
 	
 	uint8_t idx = 0;
+	
+	buffer[idx++] = 'N';
 	buffer[idx++] = numberOfDetectedBlobs;
 	
 	writeFloatToBuffer(buffer, kalmanStates.elevator.position, idx);
 	idx += 4;
 	writeFloatToBuffer(buffer, kalmanStates.aileron.position, idx);
+	idx += 4;
+	
+	writeFloatToBuffer(buffer, mpcSetpoints.elevator, idx);
+	idx += 4;
+	writeFloatToBuffer(buffer, mpcSetpoints.aileron, idx);
 	idx += 4;
 	
 	uint8_t i, j;
@@ -147,9 +154,6 @@ void sendBlobs(uint64_t address) {
 		idx += 4;
 		
 		writeFloatToBuffer(buffer, blobs[i].y, idx);
-		idx += 4;
-		
-		writeFloatToBuffer(buffer, blobs[i].z, idx);
 		idx += 4;
 	}
 	
