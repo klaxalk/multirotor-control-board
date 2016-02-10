@@ -151,6 +151,7 @@ volatile int16_t hoursTimer;
 /*	Queue from main to comms											*/
 /* -------------------------------------------------------------------- */
 xQueueHandle main2commsQueue;
+xQueueHandle comm2mainQueue;
 
 volatile int8_t auxSetpointFlag;
 

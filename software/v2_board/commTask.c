@@ -286,6 +286,23 @@ void commTask(void *p) {
 							blobs[blobId].z = readFloat(multiconMessage.messageBuffer, &idx);
 							blobs[blobId].x = readFloat(multiconMessage.messageBuffer, &idx);
 							
+							if(blobId == numberOfDetectedBlobs-1){
+								int i = 0;
+								portENTER_CRITICAL();
+								comm2mainMessage_t message;
+								message.data.pocet_blobu = numberOfDetectedBlobs;
+								
+								for(i=0;i<numberOfDetectedBlobs;i++){
+									message.data.bloby[i][0] = blobs[i].x;
+									message.data.bloby[i][1] = blobs[i].y;
+								}
+								
+								xQueueSend(comm2mainQueue,&message,0);
+								
+								
+								portEXIT_CRITICAL();
+							}
+							
 							/*
 							uint8_t temp[32];
 							sprintf(temp, "Blob %d [%2.3f %2.3f %2.3f]\n\r", blobId, blobs[blobId].x, blobs[blobId].y, blobs[blobId].z);
@@ -332,17 +349,30 @@ void commTask(void *p) {
 		/*	A character received from XBee										*/
 		/* -------------------------------------------------------------------- */
 		if (usartBufferGetByte(usart_buffer_xbee, &inChar, 0)) {
+			
+			//usartBufferPutByte(usart_buffer_3,inChar,10);
+			
+			//ledka->neco sem prijal
+			//led_yellow_toggle();
 
 			if (xbeeParseChar(inChar, &xbeeMessage, &xbeeReceiver)) {
 				
 				if (xbeeMessage.apiId == XBEE_API_PACKET_RECEIVE) {
 					
 					int idx = 0;
+					uint8_t pocet_blobu;
+					float x_pos,y_pos,x_set,y_set;
+					float blob[2][5];
+					int i;
+					char string_buffer[32];
+					char string_pom[20];
 					
 					// pro ukazku
 					char buffer[20];
 					float tempFloat, jinyFloat, dalsiFloat;
-
+					
+					
+					
 					switch (xbeeMessage.content.receiveResponse.messageId) {
 						
 						case 'R':
@@ -364,6 +394,38 @@ void commTask(void *p) {
 							sendBlobs(xbeeMessage.content.receiveResponse.address64);
 						
 						break;
+						
+						case 'N' : 
+						//ledka->neco sem prijal
+						//led_yellow_toggle();
+						led_green_toggle();
+						
+						//vytahnuti info z prijatyho paketu
+						pocet_blobu = readUint8(xbeeMessage.content.receiveResponse.payload,&idx);
+						x_pos = readFloat(xbeeMessage.content.receiveResponse.payload,&idx);
+						y_pos = readFloat(xbeeMessage.content.receiveResponse.payload,&idx);	
+						x_set = readFloat(xbeeMessage.content.receiveResponse.payload,&idx);
+						y_set = readFloat(xbeeMessage.content.receiveResponse.payload,&idx);
+						
+						
+						for(i = 0; i< pocet_blobu;i++){
+							blob[0][i] = readFloat(xbeeMessage.content.receiveResponse.payload,&idx);
+							blob[1][i] = readFloat(xbeeMessage.content.receiveResponse.payload,&idx);
+						}
+						
+						sprintf(string_buffer,"blb: %d, pos: %.2f, %.2f, set: %.2f, %.2f  \n\r",pocet_blobu,x_pos,y_pos,x_set,y_set);
+						usartBufferPutString(usart_buffer_3,string_buffer,10);
+						
+						for(i = 0;i<pocet_blobu;i++){
+							sprintf(string_buffer,"blb_%d: el: %.2f, ai: %.2f \n\r",i+1,blob[0][i],blob[1][i]);
+							usartBufferPutString(usart_buffer_3,string_buffer,10);
+						}
+						
+						sprintf(string_buffer,"\n\r-------\n\r");
+						usartBufferPutString(usart_buffer_3,string_buffer,10);
+						
+						break;
+						
 					}
 					
 				}
@@ -446,6 +508,17 @@ void commTask(void *p) {
 				stmSendMeasurement(elevatorSpeed, aileronSpeed, mpcElevatorOutput, mpcAileronOutput);
 			}
 		}
+				if (usartBufferGetByte(usart_buffer_3, &inChar, 0)) {
+					uint8_t buff[1];
+					buff[0] = 'M';
+										
+					//led_yellow_toggle();
+					
+					
+					xbeeSendMessageTo(buff,1,XBEE_UAV2);
+					
+				
+				}
 		
 		/* -------------------------------------------------------------------- */
 		/*	A message received from the main Task								*/

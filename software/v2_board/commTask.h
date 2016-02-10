@@ -41,6 +41,24 @@ typedef struct {
 	main2commMessagePayload data;
 } main2commMessage_t;
 
+/************************************************************************/
+/* MUJ KOD                                                                     */
+/************************************************************************/
+
+typedef struct{
+	int8_t pocet_blobu;
+	float bloby[2][2]; //1.index - bloby, 2.index - souradnice
+}comm2mainMessagePayload;
+
+ typedef struct {
+	 //enum messagetype ted nepotrebuju
+	 comm2mainMessagePayload data;
+}comm2mainMessage_t;
+
+
+
+
+
 int xbeeflag;
 
 /* -------------------------------------------------------------------- */

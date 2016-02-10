@@ -5,11 +5,14 @@
  *  Author: Tomas Baca
  */ 
 
+
+
 #include "mainTask.h"
 #include "system.h"
 #include "controllers.h"
 #include "commTask.h"
 #include "mpcHandler.h"
+#include "pom_fce.h"
 
 // for on-off by AUX3 channel
 volatile int8_t AUX1_previous = 0;
@@ -88,6 +91,7 @@ void mainTask(void *p) {
 				
 				setpointChangeTrigger = 1;
 		
+		//horni poloha
 				if ((aux2filtered > (PPM_IN_MIDDLE_LENGTH + 300))) {
 			
 					main2commMessage.messageType = SET_SETPOINT;
@@ -96,23 +100,69 @@ void mainTask(void *p) {
 					xQueueSend(main2commsQueue, &main2commMessage, 0);
 			
 					AUX2_previous = 1;
-					led_orange_off();
+					led_orange_toggle();
 			
-				} else if ((aux2filtered < (PPM_IN_MIDDLE_LENGTH - 300))) {
+			//prostredni poloha
+				} else if ((abs(aux2filtered - PPM_IN_MIDDLE_LENGTH) <= 300)) {
+					comm2mainMessage_t message;
 					
-					main2commMessage.messageType = SET_SETPOINT;
-					main2commMessage.data.simpleSetpoint.elevator = 0;
-					main2commMessage.data.simpleSetpoint.aileron = 0;
-					xQueueSend(main2commsQueue, &main2commMessage, 0);
+				//	main2commMessage.messageType = SET_SETPOINT;
+				//	main2commMessage.data.simpleSetpoint.elevator = 0;
+				//	main2commMessage.data.simpleSetpoint.aileron = 0;
+				//	xQueueSend(main2commsQueue, &main2commMessage, 0);
+					
+					if(xQueueReceive(comm2mainQueue,&message,0)){
+						if(message.data.pocet_blobu == 1){
+							//sledovani targetu
+							float target_pos[2];
+							float velocity[2];
+							
+							target_pos[0] = message.data.bloby[0][0];
+							target_pos[1] = message.data.bloby[0][1];
+							target_intercept_pid(target_pos,velocity,20*0.05,0.56*0.05,0);
+							
+							main2commMessage.messageType = SET_SETPOINT;
+							
+							main2commMessage.data.simpleSetpoint.elevator = velocity[0]*0.5;
+							main2commMessage.data.simpleSetpoint.aileron = velocity[1]*0.5;
+								xQueueSend(main2commsQueue, &main2commMessage, 0);
+							
+							}else if (message.data.pocet_blobu == 2){
+							//pruseciky
+							float rel_neigh_pos[2][2];
+							float prusecik_vysledny[2];
+							rel_neigh_pos[0][0] = message.data.bloby[0][0];
+							rel_neigh_pos[0][1] = message.data.bloby[0][1];
+							rel_neigh_pos[1][0] = message.data.bloby[1][0];
+							rel_neigh_pos[1][1] = message.data.bloby[1][1];
+							
+							
+								nearest_intersection(rel_neigh_pos,1.8,prusecik_vysledny);
+								main2commMessage.messageType = SET_SETPOINT;
+								main2commMessage.data.simpleSetpoint.elevator = prusecik_vysledny[0];
+								main2commMessage.data.simpleSetpoint.aileron = prusecik_vysledny[1];
+								
+							xQueueSend(main2commsQueue, &main2commMessage, 0);
+							
+							}else{
+							//nic nedelat
+						}
+						
+						
+					}
+					
 					
 					AUX2_previous = 2;
 					led_orange_on();
+					
+//dolni
 
-				} else if ((abs(aux2filtered - PPM_IN_MIDDLE_LENGTH) <= 300)) {
+
+				} else if ((aux2filtered < (PPM_IN_MIDDLE_LENGTH - 300)))  {
 			
 					main2commMessage.messageType = SET_SETPOINT;
 					
-					main2commMessage.data.simpleSetpoint.elevator = 1;
+					main2commMessage.data.simpleSetpoint.elevator = 0;
 					main2commMessage.data.simpleSetpoint.aileron = 0;
 					xQueueSend(main2commsQueue, &main2commMessage, 0);
 					

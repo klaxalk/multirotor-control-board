@@ -78,6 +78,7 @@ volatile int16_t hoursTimer;
 /*	Queue from main to comms											*/
 /* -------------------------------------------------------------------- */
 xQueueHandle main2commsQueue;
+xQueueHandle comm2mainQueue;
 
 volatile int8_t auxSetpointFlag = 0;
 
@@ -221,6 +222,7 @@ void boardInit() {
 	/*	Initialize queues													*/
 	/* -------------------------------------------------------------------- */
 	main2commsQueue = xQueueCreate(10, sizeof(main2commMessage_t));
+	comm2mainQueue =  xQueueCreate(1, sizeof(comm2mainMessage_t));
 	
 	/* -------------------------------------------------------------------- */
 	/*	Initialize magnetometer												*/
