@@ -16,9 +16,11 @@ QueueHandle_t * usartTxQueue;
 
 // queues between tasks
 QueueHandle_t * comm2kalmanQueue;
+QueueHandle_t * comm2kalmanThrottleQueue;
 QueueHandle_t * mpc2commQueue;
 QueueHandle_t * kalman2mpcQueue;
 QueueHandle_t * kalman2commQueue;
+QueueHandle_t * kalman2commThrottleQueue;
 QueueHandle_t * comm2mpcQueue;
 QueueHandle_t * resetKalmanQueue;
 QueueHandle_t * setKalmanQueue;
@@ -29,8 +31,11 @@ void boardInit() {
     usartRxQueue = xQueueCreate(256, sizeof(char));
     usartTxQueue = xQueueCreate(256, sizeof(char));
 
-    // create a queue from commTask to kalmanTask
+    // create a queue from commTask to kalmanTask with aileron and elevator
     comm2kalmanQueue = xQueueCreate(1, sizeof(comm2kalmanMessage_t));
+
+    // create a queue from commTask to kalmanTask with throttle
+    comm2kalmanThrottleQueue = xQueueCreate(1, sizeof(comm2kalmanThrottleMessage_t));
 
     // create a queue from mpcTask to commTask
     mpc2commQueue = xQueueCreate(1, sizeof(mpc2commMessage_t));
@@ -38,8 +43,11 @@ void boardInit() {
     // create a queue from kalmanTask to mpcTask
     kalman2mpcQueue = xQueueCreate(1, sizeof(kalman2mpcMessage_t));
 
-    // create a queue from kalmanTask to commTask
+    // create a queue from kalmanTask to commTask with aileron and elevator
     kalman2commQueue = xQueueCreate(1, sizeof(kalman2commMessage_t));
+
+    // create a queue from kalmanTask to commTask with throttle
+    kalman2commThrottleQueue = xQueueCreate(1, sizeof(kalman2commThrottleMessage_t));
 
     // create a queue from commTask to mpcTask
     comm2mpcQueue = xQueueCreate(50, sizeof(comm2mpcMessage_t));
@@ -50,7 +58,7 @@ void boardInit() {
     // queue for setting particular value of KF
     setKalmanQueue = xQueueCreate(1, sizeof(resetKalmanMessage_t));
 
-	// set th clock and initialize the GPIO
+	// set the clock and initialize the GPIO
 	gpioInit();
 
 	// set the UART

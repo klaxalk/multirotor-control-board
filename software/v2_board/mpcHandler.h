@@ -123,6 +123,15 @@ void sendChar(UsartBuffer * usartBuffer, const char var, char * crc);
 void stmSendMeasurement(float elevSpeed, float aileSpeed, int16_t elevInput, int16_t aileInput);
 
 /**
+ * @brief send a px4flow measurement to STM together with currently used controller actions
+ * 
+ * @param groundDist Altitude
+ * @param battLvl Battery level reading
+ * @param throInput Throttle controller input
+ */
+void stmSendThrottleMeasurement(float groundDist, int16_t battLvl, int16_t throInput);
+
+/**
  * @brief send setpoint for the whole optimized horizon (constant setpoint)
  * @param elevatorSetpoint desired elevator position [m], + means forwards
  * @param aileronSetpoint desired aileron position [m], + means leftwards

@@ -11,6 +11,8 @@
 #include "system.h"
 #include "TC_driver.h"
 
+volatile int16_t batteryLevel;
+
 float getBatteryVoltage();
 
 void batteryInit();

@@ -391,6 +391,7 @@ void commTask(void *p) {
 				led_yellow_toggle();
 					
 				stmSendMeasurement(elevatorSpeed, aileronSpeed, mpcElevatorOutput, mpcAileronOutput);
+				stmSendThrottleMeasurement(groundDistance, batteryLevel, RCchannel[THROTTLE]);
 			}
 		}
 		

@@ -9,12 +9,14 @@
 #include "kalman/kalman.h"
 #include "kalman/elevator/elevatorKalman.h"
 #include "kalman/aileron/aileronKalman.h"
+#include "kalman/throttle/throttleKalman.h"
 #include "config.h"
 
 void kalmanTask(void *p) {
 
 	kalmanHandler_t * aileronKalmanHandler = initializeAileronKalman();
 	kalmanHandler_t * elevatorKalmanHandler = initializeElevatorKalman();
+	kalmanHandler_t * throttleKalmanHandler = initializeThrottleKalman();
 
 	/* -------------------------------------------------------------------- */
 	/* Vector for 1-state measurement										*/
@@ -27,6 +29,11 @@ void kalmanTask(void *p) {
 	matrix_float * px4flow_Q_matrix_1_state = matrix_float_alloc(1, 1);
 
 	matrix_float_set(px4flow_Q_matrix_1_state, 1, 1, KALMAN_Q);
+
+	/* -------------------------------------------------------------------- */
+	/* throttle measurement noise matrix	(Q)	(1-state)					*/
+	/* -------------------------------------------------------------------- */
+	matrix_float * throttle_Q_matrix_1_state = matrix_float_alloc(1, 1);
 
 	/* -------------------------------------------------------------------- */
 	/* px4flow speed C matrix (transfer measurements -> states)				*/
@@ -43,8 +50,10 @@ void kalmanTask(void *p) {
 	/* Messages between tasks												*/
 	/* -------------------------------------------------------------------- */
 	comm2kalmanMessage_t comm2kalmanMessage;
+	comm2kalmanThrottleMessage_t comm2kalmanThrottle;
 	kalman2mpcMessage_t kalman2mpcMessage;
 	kalman2commMessage_t kalman2commMesasge;
+	kalman2commThrottleMessage_t kalman2commThrottleMesasge;
 	resetKalmanMessage_t resetKalmanMessage;
 
 	while (1) {
@@ -54,14 +63,18 @@ void kalmanTask(void *p) {
 			// reset state vectors
 			vector_float_set_zero(elevatorKalmanHandler->states);
 			vector_float_set_zero(aileronKalmanHandler->states);
+			vector_float_set_zero(throttleKalmanHandler->states);
 
 			// set the default position
 			vector_float_set(elevatorKalmanHandler->states, 1, resetKalmanMessage.elevatorPosition);
 			vector_float_set(aileronKalmanHandler->states, 1, resetKalmanMessage.aileronPosition);
+			vector_float_set(throttleKalmanHandler->states, 1, resetKalmanMessage.throttlePosition);
+
 
 			// reset the covariance matrices
 			matrix_float_set_identity(elevatorKalmanHandler->covariance);
 			matrix_float_set_identity(aileronKalmanHandler->covariance);
+			matrix_float_set_identity(throttleKalmanHandler->covariance);
 		}
 
 		if (xQueueReceive(setKalmanQueue, &resetKalmanMessage, 0)) {
@@ -69,10 +82,12 @@ void kalmanTask(void *p) {
 			// set the position
 			vector_float_set(elevatorKalmanHandler->states, 1, resetKalmanMessage.elevatorPosition);
 			vector_float_set(aileronKalmanHandler->states, 1, resetKalmanMessage.aileronPosition);
+			vector_float_set(throttleKalmanHandler->states, 1, resetKalmanMessage.throttlePosition);
 
 			// reset the covariance of the postion
 			matrix_float_set(elevatorKalmanHandler->covariance, 1, 1, 1);
 			matrix_float_set(aileronKalmanHandler->covariance, 1, 1, 1);
+			matrix_float_set(throttleKalmanHandler->covariance, 1, 1, 1);
 		}
 
 		if (xQueueReceive(comm2kalmanQueue, &comm2kalmanMessage, 0)) {
@@ -129,5 +144,41 @@ void kalmanTask(void *p) {
 
 			xQueueOverwrite(kalman2commQueue, &kalman2commMesasge);
 		}
+
+		if (xQueueReceive(comm2kalmanThrottleQueue, &comm2kalmanThrottle, 0)) {
+
+					/* -------------------------------------------------------------------- */
+					/*	Compute throttle kalman												*/
+					/* -------------------------------------------------------------------- */
+
+					// set the input vector
+					vector_float_set(throttleKalmanHandler->input, 1, comm2kalmanMessage.throttleInput);
+					vector_float_set(throttleKalmanHandler->input, 2, comm2kalmanMessage.batteryVoltage);
+					vector_float_set(throttleKalmanHandler->input, 3, (float) 1);
+
+					// set the measurement vector
+					vector_float_set(measurement_1_state, 1, comm2kalmanMessage.altitude);
+					matrix_float_set(throttle_Q_matrix_1_state, 1, 1, (THROTTLE_Q / (comm2kalmanMessage.signalGood + 0.001)));
+
+					// set pointers to measurement related matrices
+					throttleKalmanHandler->measurement = measurement_1_state;
+					throttleKalmanHandler->Q_matrix = throttle_Q_matrix_1_state;
+
+					kalmanIteration(throttleKalmanHandler);
+
+					/* -------------------------------------------------------------------- */
+					/*	Create a message for mpcTask										*/
+					/* -------------------------------------------------------------------- */
+
+                    //not yet implemented
+
+					/* -------------------------------------------------------------------- */
+					/*	Create a message for commTask										*/
+					/* -------------------------------------------------------------------- */
+
+					memcpy(&kalman2commMesasge.throttleData, throttleKalmanHandler->states->data, NUMBER_OF_STATES_THROTTLE*sizeof(float));
+
+					xQueueOverwrite(kalman2commThrottleQueue, &kalman2commThrottleMesasge);
+				}
 	}
 }

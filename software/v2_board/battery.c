@@ -11,10 +11,7 @@
 #include "system.h"
 #include "TC_driver.h"
 
-volatile unsigned int battery_level = 0;
-volatile float battery_voltage = 0;
-unsigned int levels[4] = { 0 };	//missing elements are 0 by default
-unsigned char pos = 0;
+volatile int16_t batteryLevel = 0;
 
 uint8_t ReadCalibrationByte(uint8_t index) {
 	
@@ -70,26 +67,10 @@ ISR(TCF0_OVF_vect) {
 
 float getBatteryVoltage() {
 	
-	return ((float) (battery_level - 185)) / 220.5;
+	return ((float) (batteryLevel - 185)) / 220.5;
 }
 
 ISR(ADCA_CH0_vect) {
 	
-	// char i;
-	
-	battery_level = ADCA.CH0RES;
-	
-	// with filter
-	// levels [(pos++) & 0x03] = ADCA.CH0RES; // Save conversion result
-	
-	// led_yellow_toggle();
-	// battery_level = 0;
-	
-	/*
-	* with filter
-	for(i = 0; i < 4; i++)
-		battery_level += levels[i]; //running average
-	*/
-	
-	// battery_voltage = ((float) (battery_level - 185)) / 220.5;
+	batteryLevel = ADCA.CH0RES;	
 }

@@ -27,6 +27,7 @@
 
 #include "kalman/elevator/elevatorKalman.h"
 #include "kalman/aileron/aileronKalman.h"
+#include "kalman/throttle/throttleKalman.h"
 
 /**********************************************************************************
  *
@@ -69,6 +70,14 @@ typedef struct {
 	float aileronInput;
 } comm2kalmanMessage_t;
 
+// fresh throttle data message
+typedef struct {
+
+	float groundDistance;
+	float batteryVoltage;
+	float throttleInput;
+} comm2kalmanThrottleMessage_t;
+
 // mpc output message
 typedef struct {
 
@@ -92,19 +101,28 @@ typedef struct {
 	float aileronData[NUMBER_OF_STATES_AILERON];
 } kalman2mpcMessage_t;
 
-// kalman output message (to comm)
+// kalman output message (to comm) with aileron and elevator
 typedef struct {
 
 	float elevatorData[NUMBER_OF_STATES_ELEVATOR];
 	float aileronData[NUMBER_OF_STATES_AILERON];
 } kalman2commMessage_t;
 
+// kalman output message (to comm) with throttle
+typedef struct {
+
+	float throttleData[NUMBER_OF_STATES_THROTTLE];
+} kalman2commThrottleMessage_t;
+
 /* -------------------------------------------------------------------- */
 /*	Queues for communication between tasks								*/
 /* -------------------------------------------------------------------- */
 
-// queue from commTask to kalmanTask
+// queue from commTask to kalmanTask with aileron and elevator
 QueueHandle_t * comm2kalmanQueue;
+
+// queue from commTask to kalmanTask with throttle
+QueueHandle_t * comm2kalmanThrottleQueue;
 
 // queue from mpcTask to commTask
 QueueHandle_t * mpc2commQueue;
@@ -112,8 +130,11 @@ QueueHandle_t * mpc2commQueue;
 // queue from kalman to mpc
 QueueHandle_t * kalman2mpcQueue;
 
-// queue from kalmanTask to commTask
+// queue from kalmanTask to commTask with aileron and elevator
 QueueHandle_t * kalman2commQueue;
+
+// queue from kalmanTask to commTask with throttle
+QueueHandle_t * kalman2commThrottleQueue;
 
 // queue from commTask to mpcTask
 QueueHandle_t * comm2mpcQueue;

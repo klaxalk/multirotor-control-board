@@ -197,9 +197,9 @@ void sendChar(UsartBuffer * usartBuffer, const char var, char * crc) {
 	*crc += var;
 }
 
-/* -------------------------------------------------------------------- */
-/*	Send actual measurement and system input values to STM				*/
-/* -------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------- */
+/* Send measurement and system input values of aileron and elevator to STM */
+/* ----------------------------------------------------------------------- */
 void stmSendMeasurement(float elevSpeed, float aileSpeed, int16_t elevInput, int16_t aileInput) {
 	
 	char crc = 0;
@@ -213,7 +213,30 @@ void stmSendMeasurement(float elevSpeed, float aileSpeed, int16_t elevInput, int
 	sendFloat(usart_buffer_stm, elevSpeed, &crc);
 	sendFloat(usart_buffer_stm, aileSpeed, &crc);
 	sendInt16(usart_buffer_stm, elevInput, &crc);
-	sendInt16(usart_buffer_stm, aileInput, &crc);
+	sendInt16(usart_buffer_stm, aileInput, &crc);	
+	
+	
+	// at last send the crc, ends the transmission
+	sendChar(usart_buffer_stm, crc, &crc);
+}
+
+/* --------------------------------------------------------------------- */
+/* Send measurement and system input values of throttle to STM			 */
+/* --------------------------------------------------------------------- */
+void stmSendThrottleMeasurement(float groundDist, int16_t battLvl, int16_t throInput) {
+	
+	char crc = 0;
+	
+	sendChar(usart_buffer_stm, 'a', &crc);		// this character initiates the transmission
+	
+	sendChar(usart_buffer_stm, 1+12, &crc);		// this will be the size of the message
+	sendChar(usart_buffer_stm, '4', &crc);		// id of the message
+	
+	// sends the payload
+	sendFloat(usart_buffer_stm, groundDist, &crc);
+	sendInt16(usart_buffer_stm, battLvl, &crc);
+	sendInt16(usart_buffer_stm, throInput, &crc);
+	
 	
 	// at last send the crc, ends the transmission
 	sendChar(usart_buffer_stm, crc, &crc);

@@ -11,6 +11,7 @@
 #include <stdlib.h>
 #include "kalman/aileron/aileronKalman.h"
 #include "kalman/elevator/elevatorKalman.h"
+#include "kalman/throttle/throttleKalman.h"
 
 float readFloat(char * message, int * indexFrom) {
 
@@ -86,6 +87,9 @@ void commTask(void *p) {
 
 	// message from kalmanTask
 	kalman2commMessage_t kalmanMessage;
+
+	// message from kalmanTask
+	kalman2commThrottleMessage_t kalmanThrottleMessage;
 
 	float tempFloat;
 	int16_t tempInt;
@@ -236,6 +240,24 @@ void commTask(void *p) {
 
 				xQueueSend(setKalmanQueue, &mes, 0);
 
+			} else if (messageId == '4') {
+
+				comm2kalmanThrottleMessage_t mes;
+
+				tempFloat = readFloat(messageBuffer, &idx);
+				if (fabs(tempFloat) < 10)
+					mes.groundDistance = tempFloat;
+
+				tempInt = readInt16(messageBuffer, &idx);
+				if (abs(tempInt) < 10000)
+					mes.batteryVoltage = (((float) (tempInt - 185)) / 220.5);
+
+				tempInt = readInt16(messageBuffer, &idx);
+				if (abs(tempInt) < 10000)
+					mes.throttleInput = (float) tempInt;
+
+				xQueueSend(setKalmanQueue, &mes, 0);
+
 			} else if (messageId == 's') {
 
 				comm2mpcMessage_t comm2mpcMessage;
@@ -307,7 +329,7 @@ void commTask(void *p) {
 		}
 
 		/* -------------------------------------------------------------------- */
-		/*	Receive message from kalman task									*/
+		/*	Receive message from kalman task with aileron and elevator			*/
 		/* -------------------------------------------------------------------- */
 		if (xQueueReceive(kalman2commQueue, &kalmanMessage, 0)) {
 
@@ -333,6 +355,30 @@ void commTask(void *p) {
 			sendFloat(kalmanMessage.aileronData[2], &crcOut);
 			sendFloat(kalmanMessage.aileronData[3], &crcOut);
 			sendFloat(kalmanMessage.aileronData[4], &crcOut);
+
+			sendChar(crcOut, &crcOut);
+		}
+
+		/* -------------------------------------------------------------------- */
+		/*	Receive message from kalman task with throttle						*/
+		/* -------------------------------------------------------------------- */
+		if (xQueueReceive(kalman2commThrottleQueue, &kalmanThrottleMessage, 0)) {
+
+			/* -------------------------------------------------------------------- */
+			/*	Send message to xMega												*/
+			/* -------------------------------------------------------------------- */
+
+			// clear the crc
+					crcOut = 0;
+			sendChar('a', &crcOut);			// this character initiates the transmission
+			sendChar(1+2*5*4, &crcOut);		// this will be the size of the message
+
+			sendChar('3', &crcOut);			// id of the message
+
+			sendFloat(kalmanThrottleMessage.throttleData[0], &crcOut);
+			sendFloat(kalmanThrottleMessage.throttleData[1], &crcOut);
+			sendFloat(kalmanThrottleMessage.throttleData[2], &crcOut);
+			sendFloat(kalmanThrottleMessage.throttleData[3], &crcOut);
 
 			sendChar(crcOut, &crcOut);
 		}
