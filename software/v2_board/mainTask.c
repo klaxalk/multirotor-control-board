@@ -63,6 +63,7 @@ void mainTask(void *p) {
 				main2commMessage.messageType = CLEAR_STATES;
 				main2commMessage.data.simpleSetpoint.elevator = 0;
 				main2commMessage.data.simpleSetpoint.aileron = 0;
+				main2commMessage.data.simpleSetpoint.throttle = 0;
 				xQueueSend(main2commsQueue, &main2commMessage, 0);
 				
 				// wait between reseting the kalman and starting the controller

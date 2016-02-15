@@ -14,6 +14,9 @@
 
 volatile bool altitudeControllerEnabled;
 volatile bool mpcControllerEnabled;
+float lastGoodGroundDistance;
+float groundDistanceConfidence;
+uint8_t cyclesSinceGoodDistance = 0;
 
 /* -------------------------------------------------------------------- */
 /*	variables that support altitude controller and estimator			*/
@@ -32,6 +35,7 @@ volatile float throttleSetpoint = 1;
 /* -------------------------------------------------------------------- */
 /*	Altitude Estimator - interpolates the data from PX4Flow				*/
 /* -------------------------------------------------------------------- */
+
 void altitudeEstimator() {
 	//new cycle
 	estimator_cycle++;
@@ -60,6 +64,7 @@ void altitudeEstimator() {
 /* -------------------------------------------------------------------- */
 /*	Altitude Controller - stabilizes throttle							*/
 /* -------------------------------------------------------------------- */
+
 void altitudeController() {
 	
 	float error;
@@ -131,4 +136,39 @@ void disableMpcController() {
 	}
 	
 	mpcControllerEnabled = false;
+}
+
+void altitudeEvaluateAndSendToKalman() {
+	
+	if (lastGoodGroundDistance == groundDistance)  { //reject unchanged value
+		
+		groundDistanceConfidence = (float) 0;
+		
+	} else {
+		
+		if (fabs(lastGoodGroundDistance - groundDistance) > GRND_DIST_DIFF_MAX) { //reject likely erroneous reading based on difference
+			
+			groundDistanceConfidence = ((float) (1 << cyclesSinceGoodDistance)) / 65536; //full confidence after 16 cycles (0.8 s)
+			
+			if (cyclesSinceGoodDistance++ >= 16) { //accept steady yet differentiated distance reading
+			
+				lastGoodGroundDistance = groundDistance;
+				groundDistanceConfidence = (float) 1;	
+				cyclesSinceGoodDistance = 0;
+				
+		}
+				
+		} else { //accept good distance reading
+			
+			lastGoodGroundDistance = groundDistance;
+			groundDistanceConfidence = (float) 1;
+			cyclesSinceGoodDistance = 0;
+			
+		}
+	}		
+	stmSendThrottleMeasurement(groundDistance, batteryLevel, outputChannels[0], groundDistanceConfidence);	
+}
+
+void calculateNextThrottle() {
+	//not yet implemented
 }

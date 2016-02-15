@@ -199,3 +199,95 @@ void kalmanIteration(kalmanHandler_t * handler) {
 
 	portEXIT_CRITICAL();
 }
+
+void kalmanPredictionOnly(kalmanHandler_t * handler) {
+
+	/* -------------------------------------------------------------------- */
+	/*	Copy the kalman variables locally									*/
+	/* -------------------------------------------------------------------- */
+
+	kalmanHandler_t handler_local;
+
+	// copy of the states vector
+	vector_float handler_local_states;
+	float handler_local_states_data[handler->number_of_states];
+	handler_local_states.data = (float *) &handler_local_states_data;
+	handler_local_states.length = handler->number_of_states;
+
+	handler_local.states = &handler_local_states;
+	vector_float_copy(handler_local.states, handler->states);
+
+	// copy of the covariance matrix
+	matrix_float handler_local_covariance;
+	handler_local_covariance.height = handler->covariance->height;
+	handler_local_covariance.width = handler->covariance->width;
+	float handler_local_covariance_data[handler->number_of_states*handler->number_of_states];
+	handler_local_covariance.data = (float *) &handler_local_covariance_data;
+
+	handler_local.covariance = &handler_local_covariance;
+	matrix_float_copy(handler_local.covariance, handler->covariance);
+
+	/* -------------------------------------------------------------------- */
+	/* Aux matrices and vectors for part-results							*/
+	/* -------------------------------------------------------------------- */
+
+	// temp vector
+	vector_float temp_vector_n;
+	float temp_vector_data[handler->number_of_states];
+	temp_vector_n.data = (float *) &temp_vector_data;
+	temp_vector_n.length = handler->number_of_states;
+	temp_vector_n.orientation = 0;
+
+	// temp matrix
+	matrix_float temp_matrix_n_n;
+	float temp_matrix_data[handler->number_of_states*handler->number_of_states];
+	temp_matrix_n_n.data = (float *) &temp_matrix_data;
+	temp_matrix_n_n.height = handler->number_of_states;
+	temp_matrix_n_n.width = handler->number_of_states;
+
+	// temp matrix2
+	matrix_float temp_matrix2_n_n;
+	float temp_matrix2_data[handler->number_of_states*handler->number_of_states];
+	temp_matrix2_n_n.data = (float *) &temp_matrix2_data;
+	temp_matrix2_n_n.height = handler->number_of_states;
+	temp_matrix2_n_n.width = handler->number_of_states;
+
+	/* -------------------------------------------------------------------- */
+	/*	prediction step	(the only step)										*/
+	/* -------------------------------------------------------------------- */
+
+	// recompute new states
+
+	// temp_states = a*handler->states;
+	matrix_float_mul_vec_right(handler->system_A, handler_local.states, &temp_vector_n);
+
+	vector_float_copy(handler_local.states, &temp_vector_n);
+
+	// temp_states = temp_states + b*input
+	matrix_float_mul_vec_right(handler->system_B, handler->input, &temp_vector_n);
+
+	vector_float_add(handler_local.states, &temp_vector_n);
+
+	// recompute covariance
+
+	// temp_matrix = A*covariance
+	matrix_float_mul(handler->system_A, handler_local.covariance, &temp_matrix_n_n);
+
+	// temp_matrix2 = temp_matrix*A'
+	matrix_float_mul_trans(&temp_matrix_n_n, handler->system_A, &temp_matrix2_n_n);
+
+	// covariance = temp_matrix2 + R
+	matrix_float_copy(handler_local.covariance, &temp_matrix2_n_n);
+	matrix_float_add(handler_local.covariance, handler->R_matrix);
+
+	/* -------------------------------------------------------------------- */
+	/*	Copy output to the handler											*/
+	/* -------------------------------------------------------------------- */
+
+	portENTER_CRITICAL();
+
+	vector_float_copy(handler->states, handler_local.states);
+	matrix_float_copy(handler->covariance, &temp_matrix2_n_n);
+
+	portEXIT_CRITICAL();
+}

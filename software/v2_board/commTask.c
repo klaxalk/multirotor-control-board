@@ -144,7 +144,7 @@ void commTask(void *p) {
 					portEXIT_CRITICAL();
 					
 				// messageId == '2'
-				// receive all states estimated by kalman filter
+				// receive aileron and elevator states estimated by kalman filter
 				} else if (stmMessage.messageId == '2') {
 					
 					kalmanStates.elevator.position = readFloat(stmMessage.messageBuffer, &idx);
@@ -158,7 +158,17 @@ void commTask(void *p) {
 					kalmanStates.aileron.acceleration = readFloat(stmMessage.messageBuffer, &idx);
 					kalmanStates.aileron.acceleration_input = readFloat(stmMessage.messageBuffer, &idx);
 					kalmanStates.aileron.acceleration_error = readFloat(stmMessage.messageBuffer, &idx);
-				}
+					
+				// messageId == '3'
+				// receive throttle states estimated by kalman filter	
+				} else if (stmMessage.messageId == '3') {
+					
+					kalmanStates.throttle.position = readFloat(stmMessage.messageBuffer, &idx);
+					kalmanStates.throttle.velocity = readFloat(stmMessage.messageBuffer, &idx);
+					kalmanStates.throttle.acceleration = readFloat(stmMessage.messageBuffer, &idx);
+					kalmanStates.throttle.omega = readFloat(stmMessage.messageBuffer, &idx);
+										
+				}					
 			}
 		}
 		
@@ -403,7 +413,7 @@ void commTask(void *p) {
 			// send message to STM to reset its Kalman filter			
 			if (main2commMessage.messageType == CLEAR_STATES) {
 	
-				stmResetKalman(main2commMessage.data.simpleSetpoint.elevator, main2commMessage.data.simpleSetpoint.aileron);
+				stmResetKalman(main2commMessage.data.simpleSetpoint.elevator, main2commMessage.data.simpleSetpoint.aileron, main2commMessage.data.simpleSetpoint.throttle);
 			
 			} else if (main2commMessage.messageType == SET_SETPOINT) {
 				

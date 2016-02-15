@@ -76,6 +76,7 @@ typedef struct {
 	float groundDistance;
 	float batteryVoltage;
 	float throttleInput;
+	float signalConfidence;
 } comm2kalmanThrottleMessage_t;
 
 // mpc output message
@@ -92,6 +93,7 @@ typedef struct {
 
 	float elevatorPosition;
 	float aileronPosition;
+	float throttlePosition;
 } resetKalmanMessage_t;
 
 // kalman output message (to mpc)

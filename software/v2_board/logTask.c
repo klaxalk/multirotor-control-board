@@ -1,9 +1,9 @@
 /*
- * logTask.c
- *
- * Created: 28.1.2015 0:44:35
- *  Author: klaxalk
- */
+* logTask.c
+*
+* Created: 28.1.2015 0:44:35
+*  Author: klaxalk
+*/
 
 #include "logTask.h"
 #include "system.h"
@@ -102,8 +102,17 @@ void logTask(void *p) {
 		sprintf(temp, "%2.3f, ", getBatteryVoltage()); //25
 		usartBufferPutString(usart_buffer_log, temp, 10);
 		
-		usartBufferPutByte(usart_buffer_log, '\n', 10);//26
-				
+		sprintf(temp, "%2.3f, ", kalmanStates.throttle.position); //26
+		usartBufferPutString(usart_buffer_log, temp, 10);
+		
+		sprintf(temp, "%2.3f, ", kalmanStates.throttle.velocity); //27
+		usartBufferPutString(usart_buffer_log, temp, 10);
+		
+		sprintf(temp, "%2.3f, ", kalmanStates.throttle.acceleration); //28
+		usartBufferPutString(usart_buffer_log, temp, 10);
+		
+		usartBufferPutByte(usart_buffer_log, '\n', 10);//29
+		
 		// makes the 50Hz loop
 		vTaskDelay(DELAY_MILISECONDS);
 	}

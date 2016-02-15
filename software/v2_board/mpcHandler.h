@@ -24,11 +24,12 @@ typedef struct {
 	char * messageBuffer;
 } stmMessageHandler_t;
 
-// this structure hold setpoints for elevator and aileron position, mainly for debugging
+// this structure hold setpoints for elevator, aileron and throttle position, mainly for debugging
 typedef struct {
 	
 	float elevator;
 	float aileron;
+	float throttle;
 } mpcSetpoints_t;
 
 volatile int16_t mpcElevatorOutput;
@@ -51,11 +52,22 @@ typedef struct {
 	
 } oneAxisStates_t;
 
+// this struct contains variables for throttle axis
+typedef struct {
+	
+	volatile float position;
+	volatile float velocity;
+	volatile float acceleration;
+	volatile float omega; //this stands for relative rotor rads
+	
+} throttleStates_t;
+
 // this struct contains states computed by kalman filter in STM MCU
 typedef struct {
 
 	oneAxisStates_t elevator;
 	oneAxisStates_t aileron;
+	throttleStates_t throttle;
 	
 } kalmanStates_t;
 
@@ -129,7 +141,7 @@ void stmSendMeasurement(float elevSpeed, float aileSpeed, int16_t elevInput, int
  * @param battLvl Battery level reading
  * @param throInput Throttle controller input
  */
-void stmSendThrottleMeasurement(float groundDist, int16_t battLvl, int16_t throInput);
+void stmSendThrottleMeasurement(float groundDist, int16_t battLvl, int16_t throInput, float groundDistConf);
 
 /**
  * @brief send setpoint for the whole optimized horizon (constant setpoint)
@@ -166,7 +178,7 @@ int8_t stmParseChar(char inChar, stmMessageHandler_t * messageHandler);
  * @param initElevator the value of ElevatorPosition after reset
  * @param initAileron the value of AileronPosition after reset
  */
-void stmResetKalman(float initElevator, float initAileron);
+void stmResetKalman(float initElevator, float initAileron, float initThrottle);
 
 /**
  * @brief Set Kalman's integrated position to particular values
@@ -174,6 +186,6 @@ void stmResetKalman(float initElevator, float initAileron);
  * @param elevatorPos the value of ElevatorPosition
  * @param aileronPos the value of AileronPosition
  */
-void stmSetKalmanPosition(float elevatorPos, float aileronPos);
+void stmSetKalmanPosition(float elevatorPos, float aileronPos, float throttlePos);
 
 #endif /* MPCHANDLER_H_ */

@@ -13,14 +13,23 @@
 
 void controllersTask(void *p) {
 	
+	unsigned int startTimeMillis, endTimeMillis;
+	
 	while (1) {
 		
-		altitudeEstimator();
+		startTimeMillis = milisecondsTimer;
+
+		//altitudeEstimator();
+		altitudeEvaluateAndSendToKalman();
 		
-		if (altitudeControllerEnabled == true)
-			altitudeController();
+		//if (altitudeControllerEnabled == true)
+			//altitudeController();
+				
+		endTimeMillis = milisecondsTimer;
 		
-		// makes the 70Hz loop
-		vTaskDelay(14);
+		if (startTimeMillis >= endTimeMillis) //timer overflowed
+			endTimeMillis += 1000;
+			
+		vTaskDelay(DT_MS - (endTimeMillis - startTimeMillis)); // makes the 20Hz loop
 	}
 }

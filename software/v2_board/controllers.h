@@ -16,6 +16,7 @@
 
 // controllers period (do not change!)
 #define DT	0.0142222
+#define DT_MS	50
 
 volatile bool altitudeControllerEnabled;
 volatile bool mpcControllerEnabled;
@@ -54,6 +55,7 @@ volatile bool mpcControllerEnabled;
 #define ALTITUDE_MAXIMUM	2.00 // used to crop values from PX4Flow
 #define ALTITUDE_MINIMUM	0.35 // used for landing (must be > 0.3)
 #define ALTITUDE_SPEED_MAX	0.8 // in m/s, must be positive!
+#define GRND_DIST_DIFF_MAX	0.4 // maximum allowed difference between two measurements
 
 // for altitude estimator
 volatile float estimatedThrottlePos;
@@ -79,5 +81,7 @@ void disableMpcController();
 
 void altitudeEstimator();
 void altitudeController();
+void altitudeEvaluateAndSendToKalman();
+void calculateNextThrottle();
 
 #endif // _CONTROLLERS_H

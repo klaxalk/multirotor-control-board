@@ -27,4 +27,6 @@ typedef struct {
 
 void kalmanIteration(kalmanHandler_t * kalmanHandler);
 
+void kalmanPredictionOnly(kalmanHandler_t * kalmanHandler); //used if new sensor data is not available
+
 #endif /* KALMAN_H_ */

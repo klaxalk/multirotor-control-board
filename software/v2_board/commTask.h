@@ -18,6 +18,7 @@ typedef struct {
 	
 	float elevator;
 	float aileron;
+	float throttle;
 } simpleSetpoint_t;
 
 typedef struct {
