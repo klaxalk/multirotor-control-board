@@ -82,6 +82,7 @@ kalmanHandler_t * initializeAileronKalman() {
 	matrix_float_set_identity(aileronKalmanHandler.R_matrix);
 	matrix_float_set(aileronKalmanHandler.R_matrix, 5, 5, 0.04);
 
+	aileronKalmanHandler.number_of_measurements = NUMBER_OF_MEASUREMENTS_AILERON;
 	aileronKalmanHandler.number_of_inputs = NUMBER_OF_INPUTS_AILERON;
 	aileronKalmanHandler.number_of_states = NUMBER_OF_STATES_AILERON;
 

@@ -22,6 +22,7 @@ typedef struct {
 	matrix_float * C_matrix;	// transfere from measurements to states
 	int number_of_states;
 	int number_of_inputs;
+	int number_of_measurements;
 
 } kalmanHandler_t;
 

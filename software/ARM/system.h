@@ -93,8 +93,13 @@ typedef struct {
 
 	float elevatorPosition;
 	float aileronPosition;
-	float throttlePosition;
 } resetKalmanMessage_t;
+
+// message to reset the throttle kalman states
+typedef struct {
+
+	float throttlePosition;
+} resetThrottleKalmanMessage_t;
 
 // kalman output message (to mpc)
 typedef struct {

@@ -82,6 +82,7 @@ kalmanHandler_t * initializeElevatorKalman() {
 	matrix_float_set_identity(elevatorKalmanHandler.R_matrix);
 	matrix_float_set(elevatorKalmanHandler.R_matrix, 5, 5, 0.04);
 
+	elevatorKalmanHandler.number_of_measurements = NUMBER_OF_MEASUREMENTS_ELEVATOR;
 	elevatorKalmanHandler.number_of_inputs = NUMBER_OF_INPUTS_ELEVATOR;
 	elevatorKalmanHandler.number_of_states = NUMBER_OF_STATES_ELEVATOR;
 

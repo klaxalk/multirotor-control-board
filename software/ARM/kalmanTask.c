@@ -65,6 +65,7 @@ void kalmanTask(void *p) {
 	kalman2commMessage_t kalman2commMesasge;
 	kalman2commThrottleMessage_t kalman2commThrottleMesasge;
 	resetKalmanMessage_t resetKalmanMessage;
+	resetThrottleKalmanMessage_t resetThrottleKalmanMessage;
 
 	while (1) {
 
@@ -73,17 +74,25 @@ void kalmanTask(void *p) {
 			// reset state vectors
 			vector_float_set_zero(elevatorKalmanHandler->states);
 			vector_float_set_zero(aileronKalmanHandler->states);
-			vector_float_set_zero(throttleKalmanHandler->states);
 
 			// set the default position
 			vector_float_set(elevatorKalmanHandler->states, 1, resetKalmanMessage.elevatorPosition);
 			vector_float_set(aileronKalmanHandler->states, 1, resetKalmanMessage.aileronPosition);
-			vector_float_set(throttleKalmanHandler->states, 1, resetKalmanMessage.throttlePosition);
-
 
 			// reset the covariance matrices
 			matrix_float_set_identity(elevatorKalmanHandler->covariance);
 			matrix_float_set_identity(aileronKalmanHandler->covariance);
+		}
+
+		if (xQueueReceive(resetThrottleKalmanQueue, &resetThrottleKalmanMessage, 0)) {
+
+			// reset state vectors
+			vector_float_set_zero(throttleKalmanHandler->states);
+
+			// set the default position
+			vector_float_set(throttleKalmanHandler->states, 1, resetThrottleKalmanMessage.throttlePosition);
+
+			// reset the covariance matrices
 			matrix_float_set_identity(throttleKalmanHandler->covariance);
 		}
 
@@ -92,11 +101,18 @@ void kalmanTask(void *p) {
 			// set the position
 			vector_float_set(elevatorKalmanHandler->states, 1, resetKalmanMessage.elevatorPosition);
 			vector_float_set(aileronKalmanHandler->states, 1, resetKalmanMessage.aileronPosition);
-			vector_float_set(throttleKalmanHandler->states, 1, resetKalmanMessage.throttlePosition);
 
 			// reset the covariance of the postion
 			matrix_float_set(elevatorKalmanHandler->covariance, 1, 1, 1);
 			matrix_float_set(aileronKalmanHandler->covariance, 1, 1, 1);
+		}
+
+		if (xQueueReceive(setThrottleKalmanQueue, &resetThrottleKalmanMessage, 0)) {
+
+			// set the position
+			vector_float_set(throttleKalmanHandler->states, 1, resetThrottleKalmanMessage.throttlePosition);
+
+			// reset the covariance of the postion
 			matrix_float_set(throttleKalmanHandler->covariance, 1, 1, 1);
 		}
 

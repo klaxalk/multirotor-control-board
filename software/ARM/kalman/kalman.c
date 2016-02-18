@@ -48,9 +48,9 @@ void kalmanIteration(kalmanHandler_t * handler) {
 
 	// temp vector2
 	vector_float temp_vector2_u;
-	float temp_vector2_data[handler->number_of_inputs];
+	float temp_vector2_data[handler->number_of_measurements];
 	temp_vector2_u.data = (float *) &temp_vector2_data;
-	temp_vector2_u.length = handler->number_of_inputs;
+	temp_vector2_u.length = handler->number_of_measurements;
 	temp_vector2_u.orientation = 0;
 
 	// temp matrix
@@ -69,17 +69,17 @@ void kalmanIteration(kalmanHandler_t * handler) {
 
 	// temp matrix3 for computing the kalman gain
 	matrix_float temp_matrix3_u_n;
-	float temp_matrix3_data[handler->number_of_inputs*handler->number_of_states];
+	float temp_matrix3_data[handler->number_of_measurements*handler->number_of_states];
 	temp_matrix3_u_n.data = (float *) &temp_matrix3_data;
-	temp_matrix3_u_n.height = handler->number_of_inputs;
+	temp_matrix3_u_n.height = handler->number_of_measurements;
 	temp_matrix3_u_n.width = handler->number_of_states;
 
 	// temp matrix4
 	matrix_float temp_matrix4_u_u;
-	float temp_matrix4_data[handler->number_of_inputs*handler->number_of_inputs];
+	float temp_matrix4_data[handler->number_of_measurements*handler->number_of_measurements];
 	temp_matrix4_u_u.data = (float *) &temp_matrix4_data;
-	temp_matrix4_u_u.height = handler->number_of_inputs;
-	temp_matrix4_u_u.width = handler->number_of_inputs;
+	temp_matrix4_u_u.height = handler->number_of_measurements;
+	temp_matrix4_u_u.width = handler->number_of_measurements;
 
 	/* -------------------------------------------------------------------- */
 	/*	prediction step														*/
@@ -130,23 +130,23 @@ void kalmanIteration(kalmanHandler_t * handler) {
 
 	// convert temp_matrix3 to n*u
 	temp_matrix3_u_n.height = handler->number_of_states;
-	temp_matrix3_u_n.width = handler->number_of_inputs;
+	temp_matrix3_u_n.width = handler->number_of_measurements;
 
 	// temp_matrix3 = covariance*C'
 	matrix_float_mul_trans(handler_local.covariance, handler->C_matrix, &temp_matrix3_u_n);
 
 	// matrix for the kalman gain
 	matrix_float K;
-	float kalman_gain_data[handler->number_of_inputs*handler->number_of_states];
+	float kalman_gain_data[handler->number_of_measurements*handler->number_of_states];
 	K.data = (float *) &kalman_gain_data;
 	K.height = handler->number_of_states;
-	K.width = handler->number_of_inputs;
+	K.width = handler->number_of_measurements;
 
 	// K = temp_matrix3*temp_matrix4
 	matrix_float_mul(&temp_matrix3_u_n, &temp_matrix4_u_u, &K);
 
 	// convert temp_matrix3 to original dimensions
-	temp_matrix3_u_n.height = handler->number_of_inputs;
+	temp_matrix3_u_n.height = handler->number_of_measurements;
 	temp_matrix3_u_n.width = handler->number_of_states;
 
 	/* -------------------------------------------------------------------- */

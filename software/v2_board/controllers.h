@@ -15,7 +15,7 @@
 /* -------------------------------------------------------------------- */
 
 // controllers period (do not change!)
-#define DT	0.0142222
+#define DT	0.05
 #define DT_MS	50
 
 volatile bool altitudeControllerEnabled;
@@ -48,6 +48,12 @@ volatile bool mpcControllerEnabled;
 #define ALTITUDE_KP 180
 #define ALTITUDE_KI 70
 #define ALTITUDE_KV 2000
+
+#define ALTITUDE_K1 240
+#define ALTITUDE_K2 507
+#define ALTITUDE_K3 -253
+#define ALTITUDE_K4 594
+#define ALTITUDE_K5 1
 
 #endif
 

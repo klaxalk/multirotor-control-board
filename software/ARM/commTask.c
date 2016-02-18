@@ -220,12 +220,6 @@ void commTask(void *p) {
 				if (fabs(tempFloat) < 5)
 					mes.aileronPosition = tempFloat;
 
-				mes.throttlePosition = 0;
-
-				tempFloat = readFloat(messageBuffer, &idx);
-				if (fabs(tempFloat) < 5)
-					mes.throttlePosition = tempFloat;
-
 				xQueueSend(resetKalmanQueue, &mes, 0);
 
 			} else if (messageId == '3') {
@@ -241,12 +235,6 @@ void commTask(void *p) {
 				tempFloat = readFloat(messageBuffer, &idx);
 				if (fabs(tempFloat) < 200)
 					mes.aileronPosition = tempFloat;
-				else
-					continue;
-
-				tempFloat = readFloat(messageBuffer, &idx);
-				if (fabs(tempFloat) < 200)
-					mes.throttlePosition = tempFloat;
 				else
 					continue;
 
@@ -273,6 +261,30 @@ void commTask(void *p) {
 					mes.signalConfidence = tempFloat;
 
 				xQueueSend(comm2kalmanThrottleQueue, &mes, 0);
+
+			} else if (messageId == '5') {
+
+				resetThrottleKalmanMessage_t mes;
+
+				mes.throttlePosition = 0;
+
+				tempFloat = readFloat(messageBuffer, &idx);
+				if (fabs(tempFloat) < 5)
+					mes.throttlePosition = tempFloat;
+
+				xQueueSend(resetThrottleKalmanQueue, &mes, 0);
+
+			} else if (messageId == '6') {
+
+				resetThrottleKalmanMessage_t mes;
+
+				tempFloat = readFloat(messageBuffer, &idx);
+				if (fabs(tempFloat) < 200)
+					mes.throttlePosition = tempFloat;
+				else
+					continue;
+
+				xQueueSend(setThrottleKalmanQueue, &mes, 0);
 
 			} else if (messageId == 's') {
 

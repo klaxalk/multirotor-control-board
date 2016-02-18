@@ -178,7 +178,7 @@ int8_t stmParseChar(char inChar, stmMessageHandler_t * messageHandler);
  * @param initElevator the value of ElevatorPosition after reset
  * @param initAileron the value of AileronPosition after reset
  */
-void stmResetKalman(float initElevator, float initAileron, float initThrottle);
+void stmResetKalman(float initElevator, float initAileron);
 
 /**
  * @brief Set Kalman's integrated position to particular values
@@ -186,6 +186,20 @@ void stmResetKalman(float initElevator, float initAileron, float initThrottle);
  * @param elevatorPos the value of ElevatorPosition
  * @param aileronPos the value of AileronPosition
  */
-void stmSetKalmanPosition(float elevatorPos, float aileronPos, float throttlePos);
+void stmSetKalmanPosition(float elevatorPos, float aileronPos);
+
+/**
+ * @brief Reset the kalman states (in STM) and set initial position
+ * 
+ * @param initThrottle the value of ThrottlePosition after reset
+ */
+void stmResetThrottleKalman(float initThrottle);
+
+/**
+ * @brief Set Kalman's integrated position to particular values
+ * 
+ * @param throttlePos the value of ThrottlePosition
+ */
+void stmSetThrottleKalmanPosition(float throttlePos);
 
 #endif /* MPCHANDLER_H_ */

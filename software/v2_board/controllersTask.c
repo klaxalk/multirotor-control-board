@@ -22,8 +22,9 @@ void controllersTask(void *p) {
 		//altitudeEstimator();
 		altitudeEvaluateAndSendToKalman();
 		
-		//if (altitudeControllerEnabled == true)
+		if (altitudeControllerEnabled == true)
 			//altitudeController();
+			calculateNextThrottle();
 				
 		endTimeMillis = milisecondsTimer;
 		

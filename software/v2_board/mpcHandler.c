@@ -226,6 +226,45 @@ void stmSendMeasurement(float elevSpeed, float aileSpeed, int16_t elevInput, int
 	sendChar(usart_buffer_stm, crc, &crc);
 }
 
+
+/* -------------------------------------------------------------------- */
+/*	Send request for reset the kalman states							*/
+/* -------------------------------------------------------------------- */
+void stmResetKalman(float initElevator, float initAileron) {
+	
+	char crc = 0;
+	
+	sendChar(usart_buffer_stm, 'a', &crc);		// this character initiates the transmission
+	sendChar(usart_buffer_stm, 1 + 2*4, &crc);		// this will be the size of the message
+	
+	sendChar(usart_buffer_stm, '2', &crc);		// id of the message
+	
+	sendFloat(usart_buffer_stm, initElevator, &crc);
+	sendFloat(usart_buffer_stm, initAileron, &crc);
+
+	// at last send the crc, ends the transmission
+	sendChar(usart_buffer_stm, crc, &crc);
+}
+
+/* -------------------------------------------------------------------- */
+/*	Override the current kalman's integrated position					*/
+/* -------------------------------------------------------------------- */
+void stmSetKalmanPosition(float elevatorPos, float aileronPos) {
+	
+	char crc = 0;
+	
+	sendChar(usart_buffer_stm, 'a', &crc);		// this character initiates the transmission
+	sendChar(usart_buffer_stm, 1 + 2*4, &crc);		// this will be the size of the message
+	
+	sendChar(usart_buffer_stm, '3', &crc);		// id of the message
+	
+	sendFloat(usart_buffer_stm, elevatorPos, &crc);
+	sendFloat(usart_buffer_stm, aileronPos, &crc);
+	
+	// at last send the crc, ends the transmission
+	sendChar(usart_buffer_stm, crc, &crc);
+}
+
 /* --------------------------------------------------------------------- */
 /* Send measurement and system input values of throttle to STM			 */
 /* --------------------------------------------------------------------- */
@@ -244,6 +283,43 @@ void stmSendThrottleMeasurement(float groundDist, int16_t battLvl, int16_t throI
 	sendInt16(usart_buffer_stm, throInput, &crc);
 	sendFloat(usart_buffer_stm, groundDistConf, &crc);
 	
+	// at last send the crc, ends the transmission
+	sendChar(usart_buffer_stm, crc, &crc);
+}
+
+
+/* -------------------------------------------------------------------- */
+/*	Send request for reset the throttle kalman states					*/
+/* -------------------------------------------------------------------- */
+void stmResetThrottleKalman(float initThrottle) {
+	
+	char crc = 0;
+	
+	sendChar(usart_buffer_stm, 'a', &crc);		// this character initiates the transmission
+	sendChar(usart_buffer_stm, 1 + 2*4, &crc);		// this will be the size of the message
+	
+	sendChar(usart_buffer_stm, '5', &crc);		// id of the message
+	
+	sendFloat(usart_buffer_stm, initThrottle, &crc);
+
+	// at last send the crc, ends the transmission
+	sendChar(usart_buffer_stm, crc, &crc);
+}
+
+/* -------------------------------------------------------------------- */
+/*	Override the current kalman's integrated altitude					*/
+/* -------------------------------------------------------------------- */
+void stmSetThrottleKalmanPosition(float throttlePos) {
+	
+	char crc = 0;
+	
+	sendChar(usart_buffer_stm, 'a', &crc);		// this character initiates the transmission
+	sendChar(usart_buffer_stm, 1 + 2*4, &crc);		// this will be the size of the message
+	
+	sendChar(usart_buffer_stm, '6', &crc);		// id of the message
+	
+	sendFloat(usart_buffer_stm, throttlePos, &crc);
+
 	// at last send the crc, ends the transmission
 	sendChar(usart_buffer_stm, crc, &crc);
 }
@@ -296,44 +372,4 @@ void stmSendTrajectory(float elevatorTrajectory[5], float aileronTrajectory[5]) 
 	
 	// at last send the crc, ends the transmission
 	sendChar(usart_buffer_stm, crc, &crc);	
-}
-
-/* -------------------------------------------------------------------- */
-/*	Send request for reset the kalman states							*/
-/* -------------------------------------------------------------------- */
-void stmResetKalman(float initElevator, float initAileron, float initThrottle) {
-	
-	char crc = 0;
-	
-	sendChar(usart_buffer_stm, 'a', &crc);		// this character initiates the transmission
-	sendChar(usart_buffer_stm, 1 + 2*4, &crc);		// this will be the size of the message
-				
-	sendChar(usart_buffer_stm, '2', &crc);		// id of the message
-	
-	sendFloat(usart_buffer_stm, initElevator, &crc);
-	sendFloat(usart_buffer_stm, initAileron, &crc);
-	sendFloat(usart_buffer_stm, initThrottle, &crc);
-
-	// at last send the crc, ends the transmission
-	sendChar(usart_buffer_stm, crc, &crc);
-}
-
-/* -------------------------------------------------------------------- */
-/*	Override the current kalman's integrated position					*/
-/* -------------------------------------------------------------------- */
-void stmSetKalmanPosition(float elevatorPos, float aileronPos, float throttlePos) {
-	
-	char crc = 0;
-	
-	sendChar(usart_buffer_stm, 'a', &crc);		// this character initiates the transmission
-	sendChar(usart_buffer_stm, 1 + 2*4, &crc);		// this will be the size of the message
-	
-	sendChar(usart_buffer_stm, '3', &crc);		// id of the message
-	
-	sendFloat(usart_buffer_stm, elevatorPos, &crc);
-	sendFloat(usart_buffer_stm, aileronPos, &crc);
-	sendFloat(usart_buffer_stm, throttlePos, &crc);
-
-	// at last send the crc, ends the transmission
-	sendChar(usart_buffer_stm, crc, &crc);
 }

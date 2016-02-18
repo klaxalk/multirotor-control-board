@@ -23,7 +23,9 @@ QueueHandle_t * kalman2commQueue;
 QueueHandle_t * kalman2commThrottleQueue;
 QueueHandle_t * comm2mpcQueue;
 QueueHandle_t * resetKalmanQueue;
+QueueHandle_t * resetThrottleKalmanQueue;
 QueueHandle_t * setKalmanQueue;
+QueueHandle_t * setThrottleKalmanQueue;
 
 void boardInit() {
 
@@ -52,11 +54,17 @@ void boardInit() {
     // create a queue from commTask to mpcTask
     comm2mpcQueue = xQueueCreate(50, sizeof(comm2mpcMessage_t));
 
-    // create a queue from commTask to mpcTask
+    // queue for resetting KF
     resetKalmanQueue = xQueueCreate(1, sizeof(resetKalmanMessage_t));
+
+    // queue for resetting throttle KF
+    resetThrottleKalmanQueue = xQueueCreate(1, sizeof(resetThrottleKalmanMessage_t));
 
     // queue for setting particular value of KF
     setKalmanQueue = xQueueCreate(1, sizeof(resetKalmanMessage_t));
+
+    // queue for setting particular value of throttle KF
+    setThrottleKalmanQueue = xQueueCreate(1, sizeof(resetThrottleKalmanMessage_t));
 
 	// set the clock and initialize the GPIO
 	gpioInit();

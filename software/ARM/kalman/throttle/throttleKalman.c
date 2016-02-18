@@ -155,6 +155,7 @@ kalmanHandler_t * initializeThrottleKalman() {
 
 	matrix_float_set(throttleKalmanHandler.C_matrix, 1, 1, THROTTLE_Q);
 
+	throttleKalmanHandler.number_of_measurements = NUMBER_OF_MEASUREMENTS_THROTTLE;
 	throttleKalmanHandler.number_of_inputs = NUMBER_OF_INPUTS_THROTTLE;
 	throttleKalmanHandler.number_of_states = NUMBER_OF_STATES_THROTTLE;
 
