@@ -47,7 +47,7 @@ typedef struct {
 
 typedef struct{
 	int8_t pocet_blobu;
-	float bloby[2][2]; //1.index - bloby, 2.index - souradnice
+	float bloby[3][2]; //1.index - bloby, 2.index - souradnice
 }comm2mainMessagePayload;
 
  typedef struct {

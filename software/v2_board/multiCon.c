@@ -128,6 +128,9 @@ int8_t multiconParseChar(char inChar, multiconMessageHandler_t * messageHandler)
 /*	Create a message with all blobs to send								*/
 /* -------------------------------------------------------------------- */
 
+extern volatile uint8_t pes;
+extern volatile float kocka;
+
 void sendBlobs(uint64_t address) {
 	
 	uint8_t buffer[64];
@@ -144,6 +147,11 @@ void sendBlobs(uint64_t address) {
 	writeFloatToBuffer(buffer, mpcSetpoints.elevator, idx);
 	idx += 4;
 	writeFloatToBuffer(buffer, mpcSetpoints.aileron, idx);
+	idx += 4;
+	
+	buffer[idx++] = pes;
+	
+	writeFloatToBuffer(buffer, kocka, idx);
 	idx += 4;
 	
 	uint8_t i, j;

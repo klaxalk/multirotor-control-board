@@ -5,6 +5,9 @@
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
+#include "commTask.h"
+#include <math.h>
+#include "pom_fce.h"
 
 #define NON_MATLAB_PARSING
 #define MAX_EXT_API_CONNECTIONS 255
@@ -151,4 +154,46 @@ int nearest_intersection(float rel_neigh_pos[2][2], float circle_dist,float p_pr
 	}
 
 	return prusecik_error;
+}
+
+float distance(float x[2]){
+	return sqrt(x[0]*x[0] + x[1]*x[1]);
+}
+
+int initialize_target(comm2mainMessage_t *message, float *neco){
+	float a = distance(message->data.bloby[0]);
+	float b = distance(message->data.bloby[1]);
+	float c = distance(message->data.bloby[2]);
+	
+	*neco = c;
+	
+	float x = fmin(a,fmin(b,c));
+	
+	if(x == a){ return 0;}
+	else if(x == b) {return 1;}
+	else { return 2;}
+		
+}
+
+int find_target(comm2mainMessage_t *message,float target_pos[2],float *kocka){
+	int i;
+	float dist = pow(message->data.bloby[0][0] - target_pos[0],2.0) + pow(message->data.bloby[0][1] - target_pos[1],2.0);
+	float min_dist = dist;
+	int min_index = 0;
+	
+	for(i=1;i<message->data.pocet_blobu;i++){
+		dist = pow(message->data.bloby[i][0] - target_pos[0],2.0) + pow(message->data.bloby[i][1] - target_pos[1],2.0);
+		if(dist < min_dist){
+			min_index = i;
+			min_dist = dist;
+		}
+	}
+	if(sqrt(min_dist) >= 0.5){
+		*kocka = min_dist;
+		return 100;
+	}else{
+		*kocka = min_dist;
+		return min_index;
+	}
+	
 }
