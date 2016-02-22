@@ -41,7 +41,7 @@
           <Memory name="IROM2" type="ReadOnly" size="" startValue=""/>
           <Memory name="IRAM2" type="ReadWrite" size="0x00010000" startValue="0x10000000"/>
         </MemoryAreas>
-        <LocateLinkFile path="../../../../../../../coocox/coide/configuration/programdata/armmcu/link.ld" type="0"/>
+        <LocateLinkFile path="../../../../../../../coocox/coide/configuration/programdata/armmcu/arm-gcc-link.ld" type="0"/>
       </Link>
       <Output>
         <Option name="OutputFileType" value="0"/>
@@ -114,9 +114,9 @@
     <File name="FreeRTOS/Source/include/task.h" path="FreeRTOS/Source/include/task.h" type="1"/>
     <File name="cmsis_boot/startup/startup_stm32f4xx.c" path="cmsis_boot/startup/startup_stm32f4xx.c" type="1"/>
     <File name="cmsis_lib/source/stm32f4xx_rcc.c" path="cmsis_lib/source/stm32f4xx_rcc.c" type="1"/>
-    <File name="uart_driver/uart_driver.c" path="uart_driver.c" type="1"/>
     <File name="mpc/mpc.c" path="mpc/mpc.c" type="1"/>
     <File name="cmsis/core_cmInstr.h" path="cmsis/core_cmInstr.h" type="1"/>
+    <File name="uart_driver/uart_driver.c" path="uart_driver.c" type="1"/>
     <File name="kalman/aileron" path="" type="2"/>
     <File name="FreeRTOS/Source/include/semphr.h" path="FreeRTOS/Source/include/semphr.h" type="1"/>
     <File name="StdPeriphDriver/misc.c" path="STM32F4xx_StdPeriph_Driver/src/misc.c" type="1"/>

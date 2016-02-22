@@ -8,8 +8,8 @@
 #define CONFIG_H_
 
 // #define MIKROKOPTER_KK2	1
-#define TRICOPTER		1
-// #define PRASE	1
+// #define TRICOPTER		1
+#define PRASE	1
 
 #ifdef	MIKROKOPTER_KK2
 
@@ -41,7 +41,7 @@
 	#define THROTTLE_B41 0.0011525
 	#define THROTTLE_B42 -0.052414
 	#define THROTTLE_B43 -7.5757
-    #define THROTTLE_Q 330
+    #define THROTTLE_Q 100
 #endif
 
 #endif

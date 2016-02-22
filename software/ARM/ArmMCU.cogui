@@ -11,13 +11,48 @@
 <folder appearance="1" expanded="2">
 <presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
 <part id="0"/>
+<part id="1"/>
+<part id="2"/>
+<part id="3"/>
+<part id="4"/>
+<part id="5"/>
+<part id="6"/>
+<part id="7"/>
 </presentation>
 </folder>
 </info>
 </editorArea>
-<editor activePart="true" focus="true" id="org.eclipse.cdt.ui.editor.CEditor" name="commTask.c" partName="commTask.c" path="C:/Users/Franta/Desktop/proj/multirotor-control-board/software/ARM/commTask.c" title="commTask.c" tooltip="C:/Users/Franta/Desktop/proj/multirotor-control-board/software/ARM/commTask.c" workbook="DefaultEditorWorkbook">
-<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/ArmMCU/commTask.c"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="6452" selectionTopPixel="0"/>
+<editor activePart="true" focus="true" id="org.eclipse.cdt.ui.editor.CEditor" name="kalmanTask.c" partName="kalmanTask.c" path="C:/Users/Franta/Desktop/proj/multirotor-control-board/software/ARM/kalmanTask.c" title="kalmanTask.c" tooltip="C:/Users/Franta/Desktop/proj/multirotor-control-board/software/ARM/kalmanTask.c" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/ArmMCU/kalmanTask.c"/>
+<editorState selectionHorizontalPixel="0" selectionLength="14" selectionOffset="4172" selectionTopPixel="2043"/>
+</editor>
+<editor id="org.eclipse.cdt.ui.editor.CEditor" name="config.h" partName="config.h" path="C:/Users/Franta/Desktop/proj/multirotor-control-board/software/ARM/config.h" title="config.h" tooltip="C:/Users/Franta/Desktop/proj/multirotor-control-board/software/ARM/config.h" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/ArmMCU/config.h"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="144" selectionTopPixel="0"/>
+</editor>
+<editor id="org.eclipse.cdt.ui.editor.CEditor" name="throttleKalman.c" partName="throttleKalman.c" path="C:/Users/Franta/Desktop/proj/multirotor-control-board/software/ARM/kalman/throttle/throttleKalman.c" title="throttleKalman.c" tooltip="C:/Users/Franta/Desktop/proj/multirotor-control-board/software/ARM/kalman/throttle/throttleKalman.c" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/ArmMCU/kalman/throttle/throttleKalman.c"/>
+<editorState selectionHorizontalPixel="0" selectionLength="72" selectionOffset="2921" selectionTopPixel="0"/>
+</editor>
+<editor id="org.eclipse.cdt.ui.editor.CEditor" name="system.c" partName="system.c" path="C:/Users/Franta/Desktop/proj/multirotor-control-board/software/ARM/system.c" title="system.c" tooltip="C:/Users/Franta/Desktop/proj/multirotor-control-board/software/ARM/system.c" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/ArmMCU/system.c"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="503" selectionTopPixel="0"/>
+</editor>
+<editor id="org.eclipse.cdt.ui.editor.CEditor" name="system.h" partName="system.h" path="C:/Users/Franta/Desktop/proj/multirotor-control-board/software/ARM/system.h" title="system.h" tooltip="C:/Users/Franta/Desktop/proj/multirotor-control-board/software/ARM/system.h" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/ArmMCU/system.h"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="450" selectionTopPixel="0"/>
+</editor>
+<editor id="org.eclipse.cdt.ui.editor.CEditor" name="miscellaneous.c" partName="miscellaneous.c" path="C:/Users/Franta/Desktop/proj/multirotor-control-board/software/ARM/miscellaneous.c" title="miscellaneous.c" tooltip="C:/Users/Franta/Desktop/proj/multirotor-control-board/software/ARM/miscellaneous.c" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/ArmMCU/miscellaneous.c"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="0" selectionTopPixel="0"/>
+</editor>
+<editor id="org.eclipse.cdt.ui.editor.CEditor" name="miscellaneous.h" partName="miscellaneous.h" path="C:/Users/Franta/Desktop/proj/multirotor-control-board/software/ARM/miscellaneous.h" title="miscellaneous.h" tooltip="C:/Users/Franta/Desktop/proj/multirotor-control-board/software/ARM/miscellaneous.h" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/ArmMCU/miscellaneous.h"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="0" selectionTopPixel="0"/>
+</editor>
+<editor id="org.eclipse.cdt.ui.editor.CEditor" name="kalmanTask.h" partName="kalmanTask.h" path="C:/Users/Franta/Desktop/proj/multirotor-control-board/software/ARM/kalmanTask.h" title="kalmanTask.h" tooltip="C:/Users/Franta/Desktop/proj/multirotor-control-board/software/ARM/kalmanTask.h" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/ArmMCU/kalmanTask.h"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="0" selectionTopPixel="0"/>
 </editor>
 </editors>
 <views>
@@ -27,7 +62,7 @@
 <element path="/ArmMCU"/>
 </expanded>
 <selection>
-<element path="/ArmMCU/commTask.c"/>
+<element path="/ArmMCU/kalmanTask.c"/>
 </selection>
 </viewState>
 </view>
@@ -69,12 +104,8 @@
 <hide_toolbar_item_id id="org.eclipse.ui.edit.text.toggleShowSelectedElementOnly"/>
 <hide_toolbar_item_id id="org.eclipse.debug.ui.commands.TerminateAndRelaunch"/>
 <view id="org.coocox.builder.ui.views.ProjectView"/>
+<view id="org.eclipse.ui.console.ConsoleView"/>
 <fastViewBars>
-<fastViewBar fastViewLocation="1024" id="org.eclipse.ui.internal.ViewStack@e75656" orientation="256" selectedTabId="org.eclipse.ui.console.ConsoleView" style="0">
-<fastViews>
-<view id="org.eclipse.ui.console.ConsoleView" ratio="0.38198757"/>
-</fastViews>
-</fastViewBar>
 <fastViewBar fastViewLocation="131072" id="org.eclipse.ui.internal.ViewStack@1daca94" orientation="512" selectedTabId="org.coocox.component.ui.Help" style="0">
 <fastViews>
 <view id="org.coocox.component.ui.Help" ratio="0.3"/>
@@ -96,9 +127,11 @@
 </folder>
 </info>
 <info folder="true" part="org.eclipse.ui.internal.ViewStack@e75656" ratio="0.69957536" ratioLeft="659" ratioRight="283" relationship="4" relative="org.eclipse.ui.internal.ViewStack@1fe40d5">
-<folder appearance="2" expanded="2">
-<page content="org.eclipse.ui.console.ConsoleView" label="LabelNotFound"/>
-<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory"/>
+<folder activePageID="org.eclipse.ui.console.ConsoleView" appearance="2" expanded="2">
+<page content="org.eclipse.ui.console.ConsoleView" label="Console"/>
+<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
+<part id="0"/>
+</presentation>
 </folder>
 </info>
 <info part="org.coocox.builder.ui.exampleView" ratio="0.12964931" ratioLeft="244" ratioRight="1638" relationship="2" relative="org.eclipse.ui.internal.ViewStack@1fe40d5"/>
@@ -128,15 +161,9 @@
 <workingSets/>
 <navigationHistory>
 <editors>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/commTask.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/kalman/throttle/throttleKalman.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/system.h"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/kalman/elevator/elevatorKalman.h"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/kalmanTask.c"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/kalman/throttle/throttleKalman.c"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/kalman/kalman.h"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/system.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/system.h"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/kalman/kalman.c"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/kalman/throttle/throttleKalman.h"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/kalman/aileron/aileronKalman.h"/>
@@ -144,156 +171,164 @@
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/kalman/elevator/elevatorKalman.c"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/kalman/aileron/aileronKalman.c"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/commTask.c"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/kalmanTask.c"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/config.h"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/kalman/throttle/throttleKalman.c"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/system.h"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/system.c"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/miscellaneous.c"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/miscellaneous.h"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/ArmMCU/kalmanTask.h"/>
 </editors>
+<item historyLabel="kalman.h" index="2">
+<position info="not_deleted" x="0" y="0"/>
+</item>
+<item historyLabel="kalman.c" index="3">
+<position/>
+</item>
+<item historyLabel="kalman.h" index="2">
+<position info="not_deleted" x="0" y="0"/>
+</item>
+<item historyLabel="kalmanTask.c" index="0">
+<position/>
+</item>
 <item historyLabel="throttleKalman.c" index="1">
-<position info="not_deleted" x="2699" y="0"/>
-</item>
-<item historyLabel="commTask.c" index="0">
-<position info="not_deleted" x="10699" y="0"/>
-</item>
-<item historyLabel="system.h" index="2">
-<position info="not_deleted" x="2909" y="12"/>
-</item>
-<item historyLabel="commTask.c" index="0">
-<position info="not_deleted" x="10699" y="0"/>
-</item>
-<item historyLabel="elevatorKalman.h" index="3">
-<position info="not_deleted" x="207" y="0"/>
-</item>
-<item historyLabel="commTask.c" index="0">
-<position info="not_deleted" x="10699" y="0"/>
-</item>
-<item historyLabel="kalmanTask.c" index="4">
 <position/>
 </item>
-<item historyLabel="throttleKalman.c" index="5">
-<position/>
-</item>
-<item historyLabel="kalman.h" index="6">
-<position/>
-</item>
-<item historyLabel="throttleKalman.c" index="5">
-<position/>
-</item>
-<item historyLabel="kalmanTask.c" index="4">
-<position/>
-</item>
-<item historyLabel="system.c" index="7">
-<position info="not_deleted" x="1901" y="0"/>
-</item>
-<item historyLabel="system.h" index="8">
-<position info="not_deleted" x="2520" y="28"/>
-</item>
-<item historyLabel="system.c" index="7">
-<position info="not_deleted" x="2162" y="0"/>
-</item>
-<item historyLabel="system.h" index="8">
-<position info="not_deleted" x="2520" y="28"/>
-</item>
-<item historyLabel="system.c" index="7">
-<position info="not_deleted" x="2162" y="0"/>
-</item>
-<item historyLabel="system.h" index="8">
-<position info="not_deleted" x="2520" y="28"/>
-</item>
-<item historyLabel="system.c" index="7">
-<position info="not_deleted" x="1944" y="8"/>
-</item>
-<item historyLabel="system.h" index="8">
-<position info="not_deleted" x="2516" y="0"/>
-</item>
-<item historyLabel="system.c" index="7">
-<position info="not_deleted" x="1944" y="8"/>
-</item>
-<item historyLabel="kalmanTask.c" index="4">
-<position/>
-</item>
-<item historyLabel="system.c" index="7">
-<position info="not_deleted" x="2007" y="0"/>
-</item>
-<item historyLabel="kalmanTask.c" index="4">
-<position/>
-</item>
-<item historyLabel="throttleKalman.c" index="5">
-<position/>
-</item>
-<item historyLabel="kalmanTask.c" index="4">
-<position/>
-</item>
-<item historyLabel="kalman.h" index="6">
-<position info="not_deleted" x="0" y="0"/>
-</item>
-<item historyLabel="kalman.c" index="9">
-<position/>
-</item>
-<item historyLabel="kalman.h" index="6">
-<position info="not_deleted" x="0" y="0"/>
-</item>
-<item historyLabel="kalmanTask.c" index="4">
-<position/>
-</item>
-<item historyLabel="throttleKalman.c" index="5">
-<position/>
-</item>
-<item historyLabel="throttleKalman.h" index="10">
+<item historyLabel="throttleKalman.h" index="4">
 <position info="not_deleted" x="174" y="0"/>
 </item>
-<item historyLabel="throttleKalman.c" index="5">
+<item historyLabel="throttleKalman.c" index="1">
 <position/>
 </item>
-<item historyLabel="kalmanTask.c" index="4">
+<item historyLabel="kalmanTask.c" index="0">
 <position/>
 </item>
-<item historyLabel="aileronKalman.h" index="11">
+<item historyLabel="aileronKalman.h" index="5">
 <position/>
 </item>
-<item historyLabel="kalmanTask.c" index="4">
+<item historyLabel="kalmanTask.c" index="0">
 <position/>
 </item>
-<item historyLabel="elevatorKalman.h" index="12">
+<item historyLabel="elevatorKalman.h" index="6">
 <position info="not_deleted" x="137" y="0"/>
 </item>
-<item historyLabel="kalmanTask.c" index="4">
+<item historyLabel="kalmanTask.c" index="0">
 <position/>
 </item>
-<item historyLabel="throttleKalman.c" index="5">
+<item historyLabel="throttleKalman.c" index="1">
 <position info="not_deleted" x="5914" y="0"/>
 </item>
-<item historyLabel="kalmanTask.c" index="4">
+<item historyLabel="kalmanTask.c" index="0">
 <position/>
 </item>
-<item historyLabel="elevatorKalman.c" index="13">
+<item historyLabel="elevatorKalman.c" index="7">
 <position/>
 </item>
-<item historyLabel="kalmanTask.c" index="4">
+<item historyLabel="kalmanTask.c" index="0">
 <position/>
 </item>
-<item historyLabel="aileronKalman.h" index="11">
+<item historyLabel="aileronKalman.h" index="5">
 <position info="not_deleted" x="0" y="0"/>
 </item>
-<item historyLabel="kalmanTask.c" index="4">
+<item historyLabel="kalmanTask.c" index="0">
 <position/>
 </item>
-<item historyLabel="aileronKalman.c" index="14">
+<item historyLabel="aileronKalman.c" index="8">
 <position info="not_deleted" x="4182" y="0"/>
 </item>
-<item historyLabel="kalmanTask.c" index="4">
+<item historyLabel="kalmanTask.c" index="0">
 <position/>
 </item>
-<item historyLabel="elevatorKalman.c" index="13">
+<item historyLabel="elevatorKalman.c" index="7">
 <position info="not_deleted" x="0" y="0"/>
 </item>
-<item historyLabel="kalmanTask.c" index="4">
+<item historyLabel="kalmanTask.c" index="0">
 <position/>
 </item>
-<item historyLabel="kalman.c" index="9">
+<item historyLabel="kalman.c" index="3">
 <position info="not_deleted" x="5683" y="0"/>
 </item>
-<item historyLabel="kalmanTask.c" index="4">
+<item historyLabel="kalmanTask.c" index="0">
 <position info="not_deleted" x="0" y="0"/>
 </item>
-<item active="true" historyLabel="commTask.c" index="15">
+<item historyLabel="commTask.c" index="9">
+<position info="not_deleted" x="379" y="0"/>
+</item>
+<item historyLabel="kalmanTask.c" index="10">
+<position info="not_deleted" x="282" y="0"/>
+</item>
+<item historyLabel="config.h" index="11">
+<position info="not_deleted" x="790" y="0"/>
+</item>
+<item historyLabel="kalmanTask.c" index="10">
+<position info="not_deleted" x="8224" y="0"/>
+</item>
+<item historyLabel="config.h" index="11">
+<position info="not_deleted" x="790" y="0"/>
+</item>
+<item historyLabel="commTask.c" index="9">
+<position info="not_deleted" x="379" y="0"/>
+</item>
+<item historyLabel="config.h" index="11">
+<position info="not_deleted" x="790" y="0"/>
+</item>
+<item historyLabel="kalmanTask.c" index="10">
+<position info="not_deleted" x="8224" y="0"/>
+</item>
+<item historyLabel="throttleKalman.c" index="12">
+<position info="not_deleted" x="2703" y="72"/>
+</item>
+<item historyLabel="throttleKalman.c" index="12">
+<position info="not_deleted" x="150" y="0"/>
+</item>
+<item historyLabel="throttleKalman.c" index="12">
+<position info="not_deleted" x="2921" y="72"/>
+</item>
+<item historyLabel="kalmanTask.c" index="10">
+<position info="not_deleted" x="8224" y="0"/>
+</item>
+<item historyLabel="config.h" index="11">
+<position info="not_deleted" x="144" y="0"/>
+</item>
+<item historyLabel="kalmanTask.c" index="10">
+<position info="not_deleted" x="4172" y="14"/>
+</item>
+<item historyLabel="system.h" index="13">
+<position info="not_deleted" x="4237" y="0"/>
+</item>
+<item historyLabel="system.c" index="14">
+<position info="not_deleted" x="676" y="0"/>
+</item>
+<item historyLabel="system.h" index="13">
+<position info="not_deleted" x="450" y="0"/>
+</item>
+<item historyLabel="system.c" index="14">
+<position info="not_deleted" x="676" y="0"/>
+</item>
+<item historyLabel="system.h" index="13">
+<position info="not_deleted" x="450" y="0"/>
+</item>
+<item historyLabel="throttleKalman.c" index="12">
+<position info="not_deleted" x="2921" y="72"/>
+</item>
+<item historyLabel="system.c" index="14">
+<position info="not_deleted" x="503" y="0"/>
+</item>
+<item historyLabel="miscellaneous.c" index="15">
 <position info="not_deleted" x="0" y="0"/>
+</item>
+<item historyLabel="miscellaneous.h" index="16">
+<position info="not_deleted" x="0" y="0"/>
+</item>
+<item historyLabel="kalmanTask.c" index="10">
+<position info="not_deleted" x="4172" y="14"/>
+</item>
+<item historyLabel="kalmanTask.h" index="17">
+<position info="not_deleted" x="0" y="0"/>
+</item>
+<item active="true" historyLabel="kalmanTask.c" index="10">
+<position info="not_deleted" x="4172" y="14"/>
 </item>
 </navigationHistory>
 <input factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/" type="8"/>
@@ -302,11 +337,32 @@
 <actionBarAdvisor/>
 </window>
 <mruList>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="commTask.c" tooltip="ArmMCU/commTask.c">
-<persistable path="/ArmMCU/commTask.c"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="kalmanTask.h" tooltip="ArmMCU/kalmanTask.h">
+<persistable path="/ArmMCU/kalmanTask.h"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="miscellaneous.h" tooltip="ArmMCU/miscellaneous.h">
+<persistable path="/ArmMCU/miscellaneous.h"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="miscellaneous.c" tooltip="ArmMCU/miscellaneous.c">
+<persistable path="/ArmMCU/miscellaneous.c"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="system.h" tooltip="ArmMCU/system.h">
+<persistable path="/ArmMCU/system.h"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="system.c" tooltip="ArmMCU/system.c">
+<persistable path="/ArmMCU/system.c"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="throttleKalman.c" tooltip="ArmMCU/kalman/throttle/throttleKalman.c">
+<persistable path="/ArmMCU/kalman/throttle/throttleKalman.c"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="config.h" tooltip="ArmMCU/config.h">
+<persistable path="/ArmMCU/config.h"/>
 </file>
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="kalmanTask.c" tooltip="ArmMCU/kalmanTask.c">
 <persistable path="/ArmMCU/kalmanTask.c"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="commTask.c" tooltip="ArmMCU/commTask.c">
+<persistable path="/ArmMCU/commTask.c"/>
 </file>
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="kalman.c" tooltip="ArmMCU/kalman/kalman.c">
 <persistable path="/ArmMCU/kalman/kalman.c"/>
@@ -320,32 +376,11 @@
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="aileronKalman.h" tooltip="ArmMCU/kalman/aileron/aileronKalman.h">
 <persistable path="/ArmMCU/kalman/aileron/aileronKalman.h"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="throttleKalman.c" tooltip="ArmMCU/kalman/throttle/throttleKalman.c">
-<persistable path="/ArmMCU/kalman/throttle/throttleKalman.c"/>
-</file>
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="elevatorKalman.h" tooltip="ArmMCU/kalman/elevator/elevatorKalman.h">
 <persistable path="/ArmMCU/kalman/elevator/elevatorKalman.h"/>
 </file>
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="throttleKalman.h" tooltip="ArmMCU/kalman/throttle/throttleKalman.h">
 <persistable path="/ArmMCU/kalman/throttle/throttleKalman.h"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="kalman.h" tooltip="ArmMCU/kalman/kalman.h">
-<persistable path="/ArmMCU/kalman/kalman.h"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="system.h" tooltip="ArmMCU/system.h">
-<persistable path="/ArmMCU/system.h"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="system.c" tooltip="ArmMCU/system.c">
-<persistable path="/ArmMCU/system.c"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="config.h" tooltip="ArmMCU/config.h">
-<persistable path="/ArmMCU/config.h"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="elevAileMpcMatrices.c" tooltip="ArmMCU/mpc/elevator_and_aileron/elevAileMpcMatrices.c">
-<persistable path="/ArmMCU/mpc/elevator_and_aileron/elevAileMpcMatrices.c"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="elevatorMpc.h" tooltip="ArmMCU/mpc/elevator/elevatorMpc.h">
-<persistable path="/ArmMCU/mpc/elevator/elevatorMpc.h"/>
 </file>
 </mruList>
 </workbench>

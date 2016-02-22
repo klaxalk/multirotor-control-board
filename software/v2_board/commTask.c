@@ -401,7 +401,6 @@ void commTask(void *p) {
 				led_yellow_toggle();
 					
 				stmSendMeasurement(elevatorSpeed, aileronSpeed, mpcElevatorOutput, mpcAileronOutput);
-				stmSendThrottleMeasurement(groundDistance, batteryLevel, RCchannel[THROTTLE]);
 			}
 		}
 		
@@ -413,7 +412,8 @@ void commTask(void *p) {
 			// send message to STM to reset its Kalman filter			
 			if (main2commMessage.messageType == CLEAR_STATES) {
 	
-				stmResetKalman(main2commMessage.data.simpleSetpoint.elevator, main2commMessage.data.simpleSetpoint.aileron, main2commMessage.data.simpleSetpoint.throttle);
+				stmResetKalman(main2commMessage.data.simpleSetpoint.elevator, main2commMessage.data.simpleSetpoint.aileron);
+				stmResetThrottleKalman(main2commMessage.data.simpleSetpoint.throttle);
 			
 			} else if (main2commMessage.messageType == SET_SETPOINT) {
 				

@@ -4,7 +4,7 @@
  *  Author: Frantisek Puciow
  */
 
-#include "kalman/aileron/aileronKalman.h"
+#include "kalman/throttle/throttleKalman.h"
 #include "miscellaneous.h"
 #include "config.h"
 

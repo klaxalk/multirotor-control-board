@@ -149,8 +149,14 @@ QueueHandle_t * comm2mpcQueue;
 // queue to reset a kalman
 QueueHandle_t * resetKalmanQueue;
 
+// queue to reset throttle kalman
+QueueHandle_t * resetThrottleKalmanQueue;
+
 // queue to set kalman's position to a particular value
 QueueHandle_t * setKalmanQueue;
+
+// queue to set throttle kalman's position to a particular value
+QueueHandle_t * setThrottleKalmanQueue;
 
 #define led_toggle() GPIO_ToggleBits(GPIOC, GPIO_Pin_2)
 #define led_on() GPIO_WriteBit(GPIOC, GPIO_Pin_2, 1)
