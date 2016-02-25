@@ -2,11 +2,11 @@
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectVersion>7.0</ProjectVersion>
+    <ProjectVersion>6.2</ProjectVersion>
     <ToolchainName>com.Atmel.AVRGCC8.C</ToolchainName>
     <ProjectGuid>{f1f5acca-d17e-49f2-af4a-ce677484bb94}</ProjectGuid>
     <avrdevice>ATxmega128A3U</avrdevice>
-    <avrdeviceseries>xmegaau</avrdeviceseries>
+    <avrdeviceseries>none</avrdeviceseries>
     <OutputType>Executable</OutputType>
     <Language>C</Language>
     <OutputFileName>$(MSBuildProjectName)</OutputFileName>
@@ -27,60 +27,54 @@
     <eraseonlaunchrule>0</eraseonlaunchrule>
     <AsfFrameworkConfig>
       <framework-data>
-  <options>
-    <option id="common.boards" value="Add" config="" content-id="Atmel.ASF" />
-    <option id="common.services.basic.clock" value="Add" config="" content-id="Atmel.ASF" />
-    <option id="xmega.drivers.ioport" value="Add" config="" content-id="Atmel.ASF" />
-  </options>
-  <configurations />
-  <files>
-    <file path="src/ASF/common/utils/make/Makefile.avr.in" framework="" version="3.19.0" source="common\utils\make\Makefile.avr.in" changed="False" content-id="Atmel.ASF" />
-    <file path="src/ASF/xmega/drivers/cpu/ccp.s" framework="" version="3.19.0" source="xmega\drivers\cpu\ccp.s" changed="False" content-id="Atmel.ASF" />
-    <file path="src/ASF/xmega/drivers/cpu/xmega_reset_cause.h" framework="" version="3.19.0" source="xmega\drivers\cpu\xmega_reset_cause.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/ASF/xmega/drivers/cpu/ccp.h" framework="" version="3.19.0" source="xmega\drivers\cpu\ccp.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/ASF/xmega/drivers/nvm/nvm.c" framework="" version="3.19.0" source="xmega\drivers\nvm\nvm.c" changed="False" content-id="Atmel.ASF" />
-    <file path="src/ASF/xmega/drivers/nvm/nvm_asm.s" framework="" version="3.19.0" source="xmega\drivers\nvm\nvm_asm.s" changed="False" content-id="Atmel.ASF" />
-    <file path="src/ASF/xmega/drivers/nvm/nvm.h" framework="" version="3.19.0" source="xmega\drivers\nvm\nvm.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/ASF/common/services/clock/xmega/sysclk.c" framework="" version="3.19.0" source="common\services\clock\xmega\sysclk.c" changed="False" content-id="Atmel.ASF" />
-    <file path="src/ASF/common/services/clock/pll.h" framework="" version="3.19.0" source="common\services\clock\pll.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/ASF/common/services/clock/genclk.h" framework="" version="3.19.0" source="common\services\clock\genclk.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/ASF/common/services/clock/osc.h" framework="" version="3.19.0" source="common\services\clock\osc.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/ASF/common/services/clock/xmega/pll.h" framework="" version="3.19.0" source="common\services\clock\xmega\pll.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/ASF/common/services/clock/xmega/sysclk.h" framework="" version="3.19.0" source="common\services\clock\xmega\sysclk.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/ASF/common/services/clock/xmega/osc.h" framework="" version="3.19.0" source="common\services\clock\xmega\osc.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/ASF/common/services/clock/sysclk.h" framework="" version="3.19.0" source="common\services\clock\sysclk.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/Config/conf_clock.h" framework="" version="3.19.0" source="common\services\clock\xmega\module_config_usb\conf_clock.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/ASF/common/utils/interrupt.h" framework="" version="3.19.0" source="common\utils\interrupt.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/ASF/common/utils/interrupt/interrupt_avr8.h" framework="" version="3.19.0" source="common\utils\interrupt\interrupt_avr8.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/ASF/common/utils/parts.h" framework="" version="3.19.0" source="common\utils\parts.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/ASF/xmega/utils/progmem.h" framework="" version="3.19.0" source="xmega\utils\progmem.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/ASF/xmega/utils/assembler.h" framework="" version="3.19.0" source="xmega\utils\assembler.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/ASF/xmega/utils/bit_handling/clz_ctz.h" framework="" version="3.19.0" source="xmega\utils\bit_handling\clz_ctz.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/ASF/xmega/utils/preprocessor/preprocessor.h" framework="" version="3.19.0" source="xmega\utils\preprocessor\preprocessor.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/ASF/xmega/utils/preprocessor/stringz.h" framework="" version="3.19.0" source="xmega\utils\preprocessor\stringz.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/ASF/xmega/utils/preprocessor/tpaste.h" framework="" version="3.19.0" source="xmega\utils\preprocessor\tpaste.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/ASF/xmega/utils/compiler.h" framework="" version="3.19.0" source="xmega\utils\compiler.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/ASF/xmega/utils/status_codes.h" framework="" version="3.19.0" source="xmega\utils\status_codes.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/ASF/xmega/utils/preprocessor/mrepeat.h" framework="" version="3.19.0" source="xmega\utils\preprocessor\mrepeat.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/ASF/xmega/utils/assembler/gas.h" framework="" version="3.19.0" source="xmega\utils\assembler\gas.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/ASF/common/services/ioport/xmega/ioport_compat.c" framework="" version="3.19.0" source="common\services\ioport\xmega\ioport_compat.c" changed="False" content-id="Atmel.ASF" />
-    <file path="src/ASF/common/services/ioport/xmega/ioport_compat.h" framework="" version="3.19.0" source="common\services\ioport\xmega\ioport_compat.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/ASF/common/services/ioport/xmega/ioport.h" framework="" version="3.19.0" source="common\services\ioport\xmega\ioport.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/ASF/common/services/ioport/ioport.h" framework="" version="3.19.0" source="common\services\ioport\ioport.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/ASF/common/boards/board.h" framework="" version="3.19.0" source="common\boards\board.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/main.c" framework="" version="" source="common/applications/user_application/main.c" changed="False" content-id="Atmel.ASF" />
-    <file path="src/config/conf_board.h" framework="" version="" source="common/applications/user_application/user_board/config/conf_board.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/ASF/common/boards/user_board/init.c" framework="" version="" source="common/boards/user_board/init.c" changed="False" content-id="Atmel.ASF" />
-    <file path="src/ASF/common/boards/user_board/user_board.h" framework="" version="" source="common/boards/user_board/user_board.h" changed="False" content-id="Atmel.ASF" />
-  </files>
-  <documentation help="http://asf.atmel.com/docs/3.18.1/common.applications.user_application.user_board.xmegaau/html/index.html" />
-  <offline-documentation help="" />
-  <dependencies>
-    <content-extension eid="atmel.asf" uuidref="Atmel.ASF" version="3.18.1" />
-  </dependencies>
-  <project id="common.applications.user_application.user_board.xmegaau" value="Add" config="" content-id="Atmel.ASF" />
-  <board id="board.user_board.xmegaau" value="Add" config="" content-id="Atmel.ASF" />
-</framework-data>
+        <options>
+          <option id="common.boards" value="Add" config="" content-id="Atmel.ASF" />
+          <option id="common.services.basic.clock" value="Add" config="" content-id="Atmel.ASF" />
+          <option id="xmega.drivers.ioport" value="Add" config="" content-id="Atmel.ASF" />
+        </options>
+        <configurations />
+        <files>
+          <file path="src/ASF/common/utils/make/Makefile.avr.in" framework="" version="3.19.0" source="common\utils\make\Makefile.avr.in" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/xmega/drivers/cpu/ccp.s" framework="" version="3.19.0" source="xmega\drivers\cpu\ccp.s" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/xmega/drivers/cpu/xmega_reset_cause.h" framework="" version="3.19.0" source="xmega\drivers\cpu\xmega_reset_cause.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/xmega/drivers/cpu/ccp.h" framework="" version="3.19.0" source="xmega\drivers\cpu\ccp.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/xmega/drivers/nvm/nvm.c" framework="" version="3.19.0" source="xmega\drivers\nvm\nvm.c" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/xmega/drivers/nvm/nvm_asm.s" framework="" version="3.19.0" source="xmega\drivers\nvm\nvm_asm.s" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/xmega/drivers/nvm/nvm.h" framework="" version="3.19.0" source="xmega\drivers\nvm\nvm.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/common/services/clock/xmega/sysclk.c" framework="" version="3.19.0" source="common\services\clock\xmega\sysclk.c" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/common/services/clock/pll.h" framework="" version="3.19.0" source="common\services\clock\pll.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/common/services/clock/genclk.h" framework="" version="3.19.0" source="common\services\clock\genclk.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/common/services/clock/osc.h" framework="" version="3.19.0" source="common\services\clock\osc.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/common/services/clock/xmega/pll.h" framework="" version="3.19.0" source="common\services\clock\xmega\pll.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/common/services/clock/xmega/sysclk.h" framework="" version="3.19.0" source="common\services\clock\xmega\sysclk.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/common/services/clock/xmega/osc.h" framework="" version="3.19.0" source="common\services\clock\xmega\osc.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/common/services/clock/sysclk.h" framework="" version="3.19.0" source="common\services\clock\sysclk.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/Config/conf_clock.h" framework="" version="3.19.0" source="common\services\clock\xmega\module_config_usb\conf_clock.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/common/utils/interrupt.h" framework="" version="3.19.0" source="common\utils\interrupt.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/common/utils/interrupt/interrupt_avr8.h" framework="" version="3.19.0" source="common\utils\interrupt\interrupt_avr8.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/common/utils/parts.h" framework="" version="3.19.0" source="common\utils\parts.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/xmega/utils/progmem.h" framework="" version="3.19.0" source="xmega\utils\progmem.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/xmega/utils/assembler.h" framework="" version="3.19.0" source="xmega\utils\assembler.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/xmega/utils/bit_handling/clz_ctz.h" framework="" version="3.19.0" source="xmega\utils\bit_handling\clz_ctz.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/xmega/utils/preprocessor/preprocessor.h" framework="" version="3.19.0" source="xmega\utils\preprocessor\preprocessor.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/xmega/utils/preprocessor/stringz.h" framework="" version="3.19.0" source="xmega\utils\preprocessor\stringz.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/xmega/utils/preprocessor/tpaste.h" framework="" version="3.19.0" source="xmega\utils\preprocessor\tpaste.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/xmega/utils/compiler.h" framework="" version="3.19.0" source="xmega\utils\compiler.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/xmega/utils/status_codes.h" framework="" version="3.19.0" source="xmega\utils\status_codes.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/xmega/utils/preprocessor/mrepeat.h" framework="" version="3.19.0" source="xmega\utils\preprocessor\mrepeat.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/xmega/utils/assembler/gas.h" framework="" version="3.19.0" source="xmega\utils\assembler\gas.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/common/services/ioport/xmega/ioport_compat.c" framework="" version="3.19.0" source="common\services\ioport\xmega\ioport_compat.c" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/common/services/ioport/xmega/ioport_compat.h" framework="" version="3.19.0" source="common\services\ioport\xmega\ioport_compat.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/common/services/ioport/xmega/ioport.h" framework="" version="3.19.0" source="common\services\ioport\xmega\ioport.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/common/services/ioport/ioport.h" framework="" version="3.19.0" source="common\services\ioport\ioport.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/common/boards/board.h" framework="" version="3.19.0" source="common\boards\board.h" changed="False" content-id="Atmel.ASF" />
+        </files>
+        <documentation help="" />
+        <offline-documentation help="" />
+        <dependencies>
+          <content-extension eid="atmel.asf" uuidref="Atmel.ASF" version="3.10.1" />
+        </dependencies>
+      </framework-data>
     </AsfFrameworkConfig>
     <avrtool>com.atmel.avrdbg.tool.ispmk2</avrtool>
     <avrtoolinterface>PDI</avrtoolinterface>
@@ -110,156 +104,134 @@
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <ToolchainSettings>
       <AvrGcc>
-  <avrgcc.common.Device>-mmcu=atxmega128a3u -B "%24(PackRepoDir)\atmel\XMEGAA_DFP\1.0.36\gcc\dev\atxmega128a3u"</avrgcc.common.Device>
-  <avrgcc.common.optimization.RelaxBranches>True</avrgcc.common.optimization.RelaxBranches>
-  <avrgcc.common.outputfiles.hex>True</avrgcc.common.outputfiles.hex>
-  <avrgcc.common.outputfiles.lss>True</avrgcc.common.outputfiles.lss>
-  <avrgcc.common.outputfiles.eep>True</avrgcc.common.outputfiles.eep>
-  <avrgcc.common.outputfiles.srec>True</avrgcc.common.outputfiles.srec>
-  <avrgcc.common.outputfiles.usersignatures>False</avrgcc.common.outputfiles.usersignatures>
-  <avrgcc.compiler.symbols.DefSymbols>
-    <ListValues>
-      <Value>NDEBUG</Value>
-      <Value>IOPORT_XMEGA_COMPAT</Value>
-      <Value>BOARD=USER_BOARD</Value>
-    </ListValues>
-  </avrgcc.compiler.symbols.DefSymbols>
-  <avrgcc.compiler.directories.IncludePaths>
-    <ListValues>
-      <Value>../src/ASF/xmega/drivers/cpu</Value>
-      <Value>../src/ASF/xmega/drivers/nvm</Value>
-      <Value>../src/Config</Value>
-      <Value>../src/ASF/common/services/clock</Value>
-      <Value>../src/ASF/common/utils</Value>
-      <Value>../src/ASF/xmega/utils/preprocessor</Value>
-      <Value>../src/ASF/xmega/utils</Value>
-      <Value>../src/ASF/common/services/ioport</Value>
-      <Value>../src/ASF/common/boards</Value>
-      <Value>%24(PackRepoDir)\atmel\XMEGAA_DFP\1.0.36\include</Value>
-      <Value>../common/applications/user_application/user_board/config</Value>
-      <Value>../src</Value>
-      <Value>../src/ASF/common/boards/user_board</Value>
-    </ListValues>
-  </avrgcc.compiler.directories.IncludePaths>
-  <avrgcc.compiler.optimization.level>Optimize for size (-Os)</avrgcc.compiler.optimization.level>
-  <avrgcc.compiler.optimization.OtherFlags>-fdata-sections</avrgcc.compiler.optimization.OtherFlags>
-  <avrgcc.compiler.optimization.PackStructureMembers>True</avrgcc.compiler.optimization.PackStructureMembers>
-  <avrgcc.compiler.optimization.AllocateBytesNeededForEnum>True</avrgcc.compiler.optimization.AllocateBytesNeededForEnum>
-  <avrgcc.compiler.warnings.AllWarnings>True</avrgcc.compiler.warnings.AllWarnings>
-  <avrgcc.compiler.miscellaneous.OtherFlags>-std=gnu99 -fno-strict-aliasing -Wstrict-prototypes -Wmissing-prototypes -Werror-implicit-function-declaration -Wpointer-arith -mrelax</avrgcc.compiler.miscellaneous.OtherFlags>
-  <avrgcc.linker.libraries.Libraries>
-    <ListValues>
-      <Value>libm</Value>
-    </ListValues>
-  </avrgcc.linker.libraries.Libraries>
-  <avrgcc.linker.libraries.LibrarySearchPaths>
-    <ListValues>
-      <Value>C:\Users\klaxalk\Desktop\multirotor-control-board\software\CMatrixLib\CMatrixLib</Value>
-    </ListValues>
-  </avrgcc.linker.libraries.LibrarySearchPaths>
-  <avrgcc.linker.miscellaneous.LinkerFlags>-Wl,--relax</avrgcc.linker.miscellaneous.LinkerFlags>
-  <avrgcc.assembler.general.AssemblerFlags>-mrelax -DBOARD=USER_BOARD</avrgcc.assembler.general.AssemblerFlags>
-  <avrgcc.assembler.general.IncludePaths>
-    <ListValues>
-      <Value>../src/ASF/xmega/drivers/cpu</Value>
-      <Value>../src/ASF/xmega/drivers/nvm</Value>
-      <Value>../src/Config</Value>
-      <Value>../src/ASF/common/services/clock</Value>
-      <Value>../src/ASF/common/utils</Value>
-      <Value>../src/ASF/xmega/utils/preprocessor</Value>
-      <Value>../src/ASF/xmega/utils</Value>
-      <Value>../src/ASF/common/services/ioport</Value>
-      <Value>../src/ASF/common/boards</Value>
-      <Value>../common/applications/user_application/user_board/config</Value>
-      <Value>../src</Value>
-      <Value>../src/ASF/common/boards/user_board</Value>
-    </ListValues>
-  </avrgcc.assembler.general.IncludePaths>
-</AvrGcc>
+        <avrgcc.common.optimization.RelaxBranches>True</avrgcc.common.optimization.RelaxBranches>
+        <avrgcc.common.outputfiles.hex>True</avrgcc.common.outputfiles.hex>
+        <avrgcc.common.outputfiles.lss>True</avrgcc.common.outputfiles.lss>
+        <avrgcc.common.outputfiles.eep>True</avrgcc.common.outputfiles.eep>
+        <avrgcc.common.outputfiles.srec>True</avrgcc.common.outputfiles.srec>
+        <avrgcc.common.outputfiles.usersignatures>False</avrgcc.common.outputfiles.usersignatures>
+        <avrgcc.compiler.general.ChangeDefaultCharTypeUnsigned>True</avrgcc.compiler.general.ChangeDefaultCharTypeUnsigned>
+        <avrgcc.compiler.general.ChangeDefaultBitFieldUnsigned>True</avrgcc.compiler.general.ChangeDefaultBitFieldUnsigned>
+        <avrgcc.compiler.symbols.DefSymbols>
+          <ListValues>
+            <Value>NDEBUG</Value>
+            <Value>IOPORT_XMEGA_COMPAT</Value>
+          </ListValues>
+        </avrgcc.compiler.symbols.DefSymbols>
+        <avrgcc.compiler.directories.IncludePaths>
+          <ListValues>
+            <Value>../src/ASF/xmega/drivers/cpu</Value>
+            <Value>../src/ASF/xmega/drivers/nvm</Value>
+            <Value>../src/Config</Value>
+            <Value>../src/ASF/common/services/clock</Value>
+            <Value>../src/ASF/common/utils</Value>
+            <Value>../src/ASF/xmega/utils/preprocessor</Value>
+            <Value>../src/ASF/xmega/utils</Value>
+            <Value>../src/ASF/common/services/ioport</Value>
+            <Value>../src/ASF/common/boards</Value>
+          </ListValues>
+        </avrgcc.compiler.directories.IncludePaths>
+        <avrgcc.compiler.optimization.level>Optimize for size (-Os)</avrgcc.compiler.optimization.level>
+        <avrgcc.compiler.optimization.PackStructureMembers>True</avrgcc.compiler.optimization.PackStructureMembers>
+        <avrgcc.compiler.optimization.AllocateBytesNeededForEnum>True</avrgcc.compiler.optimization.AllocateBytesNeededForEnum>
+        <avrgcc.compiler.warnings.AllWarnings>True</avrgcc.compiler.warnings.AllWarnings>
+        <avrgcc.linker.libraries.Libraries>
+          <ListValues>
+            <Value>libm</Value>
+          </ListValues>
+        </avrgcc.linker.libraries.Libraries>
+        <avrgcc.linker.libraries.LibrarySearchPaths>
+          <ListValues>
+            <Value>C:\Users\klaxalk\Desktop\multirotor-control-board\software\CMatrixLib\CMatrixLib</Value>
+          </ListValues>
+        </avrgcc.linker.libraries.LibrarySearchPaths>
+        <avrgcc.assembler.general.IncludePaths>
+          <ListValues>
+            <Value>../src/ASF/xmega/drivers/cpu</Value>
+            <Value>../src/ASF/xmega/drivers/nvm</Value>
+            <Value>../src/Config</Value>
+            <Value>../src/ASF/common/services/clock</Value>
+            <Value>../src/ASF/common/utils</Value>
+            <Value>../src/ASF/xmega/utils/preprocessor</Value>
+            <Value>../src/ASF/xmega/utils</Value>
+            <Value>../src/ASF/common/services/ioport</Value>
+            <Value>../src/ASF/common/boards</Value>
+          </ListValues>
+        </avrgcc.assembler.general.IncludePaths>
+      </AvrGcc>
     </ToolchainSettings>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <ToolchainSettings>
       <AvrGcc>
-  <avrgcc.common.Device>-mmcu=atxmega128a3u -B "%24(PackRepoDir)\atmel\XMEGAA_DFP\1.0.36\gcc\dev\atxmega128a3u"</avrgcc.common.Device>
-  <avrgcc.common.optimization.RelaxBranches>True</avrgcc.common.optimization.RelaxBranches>
-  <avrgcc.common.outputfiles.hex>True</avrgcc.common.outputfiles.hex>
-  <avrgcc.common.outputfiles.lss>True</avrgcc.common.outputfiles.lss>
-  <avrgcc.common.outputfiles.eep>True</avrgcc.common.outputfiles.eep>
-  <avrgcc.common.outputfiles.srec>True</avrgcc.common.outputfiles.srec>
-  <avrgcc.common.outputfiles.usersignatures>False</avrgcc.common.outputfiles.usersignatures>
-  <avrgcc.compiler.symbols.DefSymbols>
-    <ListValues>
-      <Value>DEBUG</Value>
-      <Value>IOPORT_XMEGA_COMPAT</Value>
-      <Value>BOARD=USER_BOARD</Value>
-    </ListValues>
-  </avrgcc.compiler.symbols.DefSymbols>
-  <avrgcc.compiler.directories.IncludePaths>
-    <ListValues>
-      <Value>..</Value>
-      <Value>../AtmelDrivers</Value>
-      <Value>../FreeRTOS/Port</Value>
-      <Value>../FreeRTOS/Source/include</Value>
-      <Value>../FreeRTOS/Source</Value>
-      <Value>../FreeRTOS</Value>
-      <Value>../src/ASF/xmega/drivers/cpu</Value>
-      <Value>../src/ASF/xmega/drivers/nvm</Value>
-      <Value>../src/Config</Value>
-      <Value>../src/ASF/common/services/clock</Value>
-      <Value>../src/ASF/common/utils</Value>
-      <Value>../src/ASF/xmega/utils/preprocessor</Value>
-      <Value>../src/ASF/xmega/utils</Value>
-      <Value>../src/ASF/common/services/ioport</Value>
-      <Value>../MyDrivers</Value>
-      <Value>../src/ASF/common/boards</Value>
-      <Value>../gsl</Value>
-      <Value>../gsl/matrix</Value>
-      <Value>../gsl/block</Value>
-      <Value>../gsl/err</Value>
-      <Value>../gsl/vector</Value>
-      <Value>../matrixLib</Value>
-      <Value>../../CMatrixLib/CMatrixLib</Value>
-      <Value>%24(PackRepoDir)\atmel\XMEGAA_DFP\1.0.36\include</Value>
-      <Value>../common/applications/user_application/user_board/config</Value>
-      <Value>../src</Value>
-      <Value>../src/ASF/common/boards/user_board</Value>
-    </ListValues>
-  </avrgcc.compiler.directories.IncludePaths>
-  <avrgcc.compiler.optimization.level>Optimize (-O1)</avrgcc.compiler.optimization.level>
-  <avrgcc.compiler.optimization.OtherFlags>-fdata-sections</avrgcc.compiler.optimization.OtherFlags>
-  <avrgcc.compiler.optimization.PackStructureMembers>True</avrgcc.compiler.optimization.PackStructureMembers>
-  <avrgcc.compiler.optimization.AllocateBytesNeededForEnum>True</avrgcc.compiler.optimization.AllocateBytesNeededForEnum>
-  <avrgcc.compiler.optimization.DebugLevel>Maximum (-g3)</avrgcc.compiler.optimization.DebugLevel>
-  <avrgcc.compiler.warnings.AllWarnings>True</avrgcc.compiler.warnings.AllWarnings>
-  <avrgcc.compiler.miscellaneous.OtherFlags>-std=gnu99 -fno-strict-aliasing -Wstrict-prototypes -Wmissing-prototypes -Werror-implicit-function-declaration -Wpointer-arith -mrelax</avrgcc.compiler.miscellaneous.OtherFlags>
-  <avrgcc.linker.general.UseVprintfLibrary>True</avrgcc.linker.general.UseVprintfLibrary>
-  <avrgcc.linker.libraries.Libraries>
-    <ListValues>
-      <Value>libm</Value>
-      <Value>printf_flt</Value>
-    </ListValues>
-  </avrgcc.linker.libraries.Libraries>
-  <avrgcc.linker.miscellaneous.LinkerFlags>-Wl,--relax</avrgcc.linker.miscellaneous.LinkerFlags>
-  <avrgcc.assembler.general.AssemblerFlags>-mrelax -DBOARD=USER_BOARD</avrgcc.assembler.general.AssemblerFlags>
-  <avrgcc.assembler.general.IncludePaths>
-    <ListValues>
-      <Value>../src/ASF/xmega/drivers/cpu</Value>
-      <Value>../src/ASF/xmega/drivers/nvm</Value>
-      <Value>../src/Config</Value>
-      <Value>../src/ASF/common/services/clock</Value>
-      <Value>../src/ASF/common/utils</Value>
-      <Value>../src/ASF/xmega/utils/preprocessor</Value>
-      <Value>../src/ASF/xmega/utils</Value>
-      <Value>../src/ASF/common/services/ioport</Value>
-      <Value>../src/ASF/common/boards</Value>
-      <Value>../common/applications/user_application/user_board/config</Value>
-      <Value>../src</Value>
-      <Value>../src/ASF/common/boards/user_board</Value>
-    </ListValues>
-  </avrgcc.assembler.general.IncludePaths>
-  <avrgcc.assembler.debugging.DebugLevel>Default (-Wa,-g)</avrgcc.assembler.debugging.DebugLevel>
-</AvrGcc>
+        <avrgcc.common.optimization.RelaxBranches>True</avrgcc.common.optimization.RelaxBranches>
+        <avrgcc.common.outputfiles.hex>True</avrgcc.common.outputfiles.hex>
+        <avrgcc.common.outputfiles.lss>True</avrgcc.common.outputfiles.lss>
+        <avrgcc.common.outputfiles.eep>True</avrgcc.common.outputfiles.eep>
+        <avrgcc.common.outputfiles.srec>True</avrgcc.common.outputfiles.srec>
+        <avrgcc.common.outputfiles.usersignatures>False</avrgcc.common.outputfiles.usersignatures>
+        <avrgcc.compiler.general.ChangeDefaultCharTypeUnsigned>True</avrgcc.compiler.general.ChangeDefaultCharTypeUnsigned>
+        <avrgcc.compiler.general.ChangeDefaultBitFieldUnsigned>True</avrgcc.compiler.general.ChangeDefaultBitFieldUnsigned>
+        <avrgcc.compiler.symbols.DefSymbols>
+          <ListValues>
+            <Value>DEBUG</Value>
+            <Value>IOPORT_XMEGA_COMPAT</Value>
+          </ListValues>
+        </avrgcc.compiler.symbols.DefSymbols>
+        <avrgcc.compiler.directories.IncludePaths>
+          <ListValues>
+            <Value>..</Value>
+            <Value>../AtmelDrivers</Value>
+            <Value>../FreeRTOS/Port</Value>
+            <Value>../FreeRTOS/Source/include</Value>
+            <Value>../FreeRTOS/Source</Value>
+            <Value>../FreeRTOS</Value>
+            <Value>../src/ASF/xmega/drivers/cpu</Value>
+            <Value>../src/ASF/xmega/drivers/nvm</Value>
+            <Value>../src/Config</Value>
+            <Value>../src/ASF/common/services/clock</Value>
+            <Value>../src/ASF/common/utils</Value>
+            <Value>../src/ASF/xmega/utils/preprocessor</Value>
+            <Value>../src/ASF/xmega/utils</Value>
+            <Value>../src/ASF/common/services/ioport</Value>
+            <Value>../MyDrivers</Value>
+            <Value>../src/ASF/common/boards</Value>
+            <Value>../gsl</Value>
+            <Value>../gsl/matrix</Value>
+            <Value>../gsl/block</Value>
+            <Value>../gsl/err</Value>
+            <Value>../gsl/vector</Value>
+            <Value>../matrixLib</Value>
+            <Value>../../CMatrixLib/CMatrixLib</Value>
+          </ListValues>
+        </avrgcc.compiler.directories.IncludePaths>
+        <avrgcc.compiler.optimization.level>Optimize (-O1)</avrgcc.compiler.optimization.level>
+        <avrgcc.compiler.optimization.PackStructureMembers>True</avrgcc.compiler.optimization.PackStructureMembers>
+        <avrgcc.compiler.optimization.AllocateBytesNeededForEnum>True</avrgcc.compiler.optimization.AllocateBytesNeededForEnum>
+        <avrgcc.compiler.optimization.DebugLevel>Default (-g2)</avrgcc.compiler.optimization.DebugLevel>
+        <avrgcc.compiler.warnings.AllWarnings>True</avrgcc.compiler.warnings.AllWarnings>
+        <avrgcc.linker.general.UseVprintfLibrary>True</avrgcc.linker.general.UseVprintfLibrary>
+        <avrgcc.linker.libraries.Libraries>
+          <ListValues>
+            <Value>libm</Value>
+            <Value>printf_flt</Value>
+          </ListValues>
+        </avrgcc.linker.libraries.Libraries>
+        <avrgcc.assembler.general.IncludePaths>
+          <ListValues>
+            <Value>../src/ASF/xmega/drivers/cpu</Value>
+            <Value>../src/ASF/xmega/drivers/nvm</Value>
+            <Value>../src/Config</Value>
+            <Value>../src/ASF/common/services/clock</Value>
+            <Value>../src/ASF/common/utils</Value>
+            <Value>../src/ASF/xmega/utils/preprocessor</Value>
+            <Value>../src/ASF/xmega/utils</Value>
+            <Value>../src/ASF/common/services/ioport</Value>
+            <Value>../src/ASF/common/boards</Value>
+          </ListValues>
+        </avrgcc.assembler.general.IncludePaths>
+        <avrgcc.assembler.debugging.DebugLevel>Default (-Wa,-g)</avrgcc.assembler.debugging.DebugLevel>
+      </AvrGcc>
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
@@ -824,15 +796,6 @@
     <Compile Include="raspberryPi.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="src\ASF\common\boards\user_board\init.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <None Include="src\Config\conf_board.h">
-      <SubType>compile</SubType>
-    </None>
-    <None Include="src\ASF\common\boards\user_board\user_board.h">
-      <SubType>compile</SubType>
-    </None>
     <Compile Include="system.c">
       <SubType>compile</SubType>
     </Compile>
@@ -976,7 +939,6 @@
     <Folder Include="src\ASF\" />
     <Folder Include="src\ASF\common\" />
     <Folder Include="src\ASF\common\boards\" />
-    <Folder Include="src\ASF\common\boards\user_board\" />
     <Folder Include="src\ASF\common\services\" />
     <Folder Include="src\ASF\common\services\clock\" />
     <Folder Include="src\ASF\common\services\clock\xmega\" />

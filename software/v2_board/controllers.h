@@ -70,6 +70,7 @@ volatile float estimatedThrottlePos_prev;
 
 // for altitude controller
 volatile float throttleSetpoint;
+volatile float groundDistanceConfidence;
 
 /* -------------------------------------------------------------------- */
 /*	functions for turning controllers on/off							*/
@@ -89,5 +90,6 @@ void altitudeEstimator();
 void altitudeController();
 void altitudeEvaluateAndSendToKalman();
 void calculateNextThrottle();
+void resetThrottleKalman();
 
 #endif // _CONTROLLERS_H

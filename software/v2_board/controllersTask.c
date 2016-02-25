@@ -7,30 +7,38 @@
 
 #include "controllersTask.h"
 #include "controllers.h"
+#include "communication.h"
 #include "system.h"
-
 #include "mpcHandler.h"
 
 void controllersTask(void *p) {
 	
-	unsigned int startTimeMillis, endTimeMillis;
+	int16_t startTimeMillis, endTimeMillis;
+	char flightStarted = 0;
 	
 	while (1) {
 		
 		startTimeMillis = milisecondsTimer;
 
-		//altitudeEstimator();
-		altitudeEvaluateAndSendToKalman();
+		if (flightStarted) {
+			altitudeEvaluateAndSendToKalman();
 		
-		if (altitudeControllerEnabled == true)
-			//altitudeController();
-			calculateNextThrottle();
+			if (altitudeControllerEnabled == true) {
+				calculateNextThrottle();
+			}
+		} else {
+			resetThrottleKalman();
+		}
+			
+		if ((groundDistance > 0.4) && (RCchannel[THROTTLE] > 5500))
+			flightStarted = 1;
+			
 				
 		endTimeMillis = milisecondsTimer;
 		
-		if (startTimeMillis >= endTimeMillis) //timer overflowed
+		if (startTimeMillis > endTimeMillis) //timer overflowed
 			endTimeMillis += 1000;
 			
-		vTaskDelay(DT_MS - (endTimeMillis - startTimeMillis)); // makes the 20Hz loop
+		vTaskDelay((int16_t) ((int16_t) DT_MS - (endTimeMillis - startTimeMillis))); // makes the 20Hz loop
 	}
 }

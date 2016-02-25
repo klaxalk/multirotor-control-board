@@ -28,6 +28,8 @@ volatile int16_t kalmanRate = 0;
 /* -------------------------------------------------------------------- */
 main2commMessage_t main2commMessage;
 
+controller2commMessage_t controller2commMessage;
+
 /* -------------------------------------------------------------------- */
 /*	The message handler for STM	 										*/
 /* -------------------------------------------------------------------- */
@@ -106,7 +108,7 @@ void commTask(void *p) {
 				
 				// index for iterating the rxBuffer
 				int idx = 0;
-				
+
 				// messageId == '1'
 				// receive control actions computed by MPC
 				if (stmMessage.messageId == '1') {
@@ -167,7 +169,7 @@ void commTask(void *p) {
 					kalmanStates.throttle.velocity = readFloat(stmMessage.messageBuffer, &idx);
 					kalmanStates.throttle.acceleration = readFloat(stmMessage.messageBuffer, &idx);
 					kalmanStates.throttle.omega = readFloat(stmMessage.messageBuffer, &idx);
-										
+																			
 				}					
 			}
 		}
@@ -422,6 +424,18 @@ void commTask(void *p) {
 			} else if (main2commMessage.messageType == SET_TRAJECTORY) {
 				
 				stmSendTrajectory(main2commMessage.data.trajectory.elevatorTrajectory, main2commMessage.data.trajectory.aileronTrajectory);
+			}
+		}
+		
+		/* -------------------------------------------------------------------- */
+		/*	A message received from the controller Task							*/
+		/* -------------------------------------------------------------------- */
+		if (xQueueReceive(controller2commsQueue, &controller2commMessage, 0)) {
+			if (controller2commMessage.messageType == SEND_INPUTS) {
+				stmSendThrottleMeasurement(controller2commMessage.data.groundDistance, controller2commMessage.data.batteryLevel, controller2commMessage.data.throttleInput, controller2commMessage.data.groundDistanceConfidence);
+			} else {
+				stmResetThrottleKalman(main2commMessage.data.simpleSetpoint.throttle);
+				led_blue_toggle();	
 			}
 		}
 	}

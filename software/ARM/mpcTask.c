@@ -105,7 +105,7 @@ void mpcTask(void *p) {
 			// send outputs to commTask
 			xQueueOverwrite(mpc2commQueue, &mpc2commMessage);
 
-			led_toggle();
+			//led_toggle();
 		}
 	}
 }

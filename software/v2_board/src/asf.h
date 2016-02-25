@@ -52,27 +52,17 @@
  * running the ASF driver selector tool. Any changes will be discarded.
  */
 
-// From module: CPU specific features
-#include <ccp.h>
-#include <xmega_reset_cause.h>
+// From module: Common build items for user board support templates
+#include <user_board.h>
 
 // From module: Generic board support
 #include <board.h>
 
-// From module: IOPORT - General purpose I/O service
-#include <ioport.h>
-
 // From module: Interrupt management - XMEGA implementation
 #include <interrupt.h>
 
-// From module: NVM - Non Volatile Memory
-#include <nvm.h>
-
 // From module: Part identification macros
 #include <parts.h>
-
-// From module: System Clock Control - XMEGA A1U/A3U/A3BU/A4U/B/C implementation
-#include <sysclk.h>
 
 // From module: XMEGA compiler driver
 #include <compiler.h>

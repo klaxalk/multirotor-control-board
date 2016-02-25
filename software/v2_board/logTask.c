@@ -15,105 +15,55 @@
 #include "mpcHandler.h"
 #include "battery.h"
 
-#define DELAY_MILISECONDS 33
+#define DELAY_MILISECONDS 20
 
-void logTask(void *p) {
+void logTask(void *p) { // only logs throttle-relevant data
 	
 	char temp[20];
 	
+	int16_t startTimeMillis, endTimeMillis, delayMillis;
+	
 	vTaskDelay(2000);
 	
-	while (1) {
+	while (1) {		
+		startTimeMillis = milisecondsTimer;								
 		
-		sprintf(temp, "%2.3f, ", kalmanStates.elevator.position); // 1
+		sprintf(temp, "%d, ", RCchannel[THROTTLE]); //2
 		usartBufferPutString(usart_buffer_log, temp, 10);
 		
-		sprintf(temp, "%2.3f, ", kalmanStates.aileron.position); // 2
+		sprintf(temp, "%d, ", controllerThrottleOutput); //3
+		usartBufferPutString(usart_buffer_log, temp, 10);	
+		
+		sprintf(temp, "%2.3f, ", groundDistance); //4
+		usartBufferPutString(usart_buffer_log, temp, 10);						
+		
+		sprintf(temp, "%2.3f, ", getBatteryVoltage()); //5
 		usartBufferPutString(usart_buffer_log, temp, 10);
 		
-		sprintf(temp, "%2.3f, ", kalmanStates.elevator.velocity);
+		sprintf(temp, "%d, ", outputChannels[0]); //6
 		usartBufferPutString(usart_buffer_log, temp, 10);
 		
-		sprintf(temp, "%2.3f, ", kalmanStates.aileron.velocity);
+		sprintf(temp, "%2.3f, ", groundDistanceConfidence); //7
 		usartBufferPutString(usart_buffer_log, temp, 10);
 		
-		sprintf(temp, "%2.3f, ", kalmanStates.elevator.acceleration_error);
+		sprintf(temp, "%2.3f, ", kalmanStates.throttle.position); //8
 		usartBufferPutString(usart_buffer_log, temp, 10);
 		
-		sprintf(temp, "%2.3f, ", kalmanStates.aileron.acceleration_error);
+		sprintf(temp, "%2.3f, ", kalmanStates.throttle.velocity); //9
 		usartBufferPutString(usart_buffer_log, temp, 10);
 		
-		sprintf(temp, "%2.3f, ", mpcSetpoints.elevator);
+		sprintf(temp, "%2.3f, ", kalmanStates.throttle.acceleration); //10
 		usartBufferPutString(usart_buffer_log, temp, 10);
 		
-		sprintf(temp, "%2.3f, ", mpcSetpoints.aileron);
-		usartBufferPutString(usart_buffer_log, temp, 10);
+		usartBufferPutByte(usart_buffer_log, '\n', 10);//11
 		
-		sprintf(temp, "%2.3f, ", elevatorSpeed);
-		usartBufferPutString(usart_buffer_log, temp, 10);
+		endTimeMillis = milisecondsTimer;
+				
+		if (startTimeMillis > endTimeMillis) //timer overflowed
+			delayMillis = 1000 + endTimeMillis - startTimeMillis;
+		else
+			delayMillis = endTimeMillis - startTimeMillis;
 		
-		sprintf(temp, "%2.3f, ", aileronSpeed); //10
-		usartBufferPutString(usart_buffer_log, temp, 10);
-		
-		sprintf(temp, "%d, ", controllerElevatorOutput); //11
-		usartBufferPutString(usart_buffer_log, temp, 10);
-		
-		sprintf(temp, "%d, ", controllerAileronOutput); //12
-		usartBufferPutString(usart_buffer_log, temp, 10);
-		
-		sprintf(temp, "%2.3f, ", estimatedThrottlePos); //13
-		usartBufferPutString(usart_buffer_log, temp, 10);
-		
-		sprintf(temp, "%d, ", RCchannel[THROTTLE]); //14
-		usartBufferPutString(usart_buffer_log, temp, 10);
-		
-		sprintf(temp, "%d, ", controllerThrottleOutput); //15
-		usartBufferPutString(usart_buffer_log, temp, 10);
-		
-		sprintf(temp, "%d, ", altitudeControllerEnabled); //16
-		usartBufferPutString(usart_buffer_log, temp, 10);
-		
-		sprintf(temp, "%d, ", mpcControllerEnabled); //17
-		usartBufferPutString(usart_buffer_log, temp, 10);
-
-		sprintf(temp, "%d, ", opticalFlowData.quality);//18
-		usartBufferPutString(usart_buffer_log, temp, 10);
-		
-		sprintf(temp, "%2.3f, ", estimatedThrottleVel);//19
-		usartBufferPutString(usart_buffer_log, temp, 10);
-		
-		sprintf(temp, "%2.3f, ", estimatedThrottlePos_prev);//20
-		usartBufferPutString(usart_buffer_log, temp, 10);
-		
-		#ifdef MULTICON
-		sprintf(temp, "%d, ", numberOfDetectedBlobs); //21
-		usartBufferPutString(usart_buffer_log, temp, 10);
-		
-		sprintf(temp, "%2.3f, ", blobs[0].x);//22
-		usartBufferPutString(usart_buffer_log, temp, 10);
-		
-		sprintf(temp, "%2.3f, ", blobs[0].y);//23
-		usartBufferPutString(usart_buffer_log, temp, 10);
-		
-		sprintf(temp, "%2.3f, ", blobs[0].z);//24
-		usartBufferPutString(usart_buffer_log, temp, 10);
-		#endif
-		
-		sprintf(temp, "%2.3f, ", getBatteryVoltage()); //25
-		usartBufferPutString(usart_buffer_log, temp, 10);
-		
-		sprintf(temp, "%2.3f, ", kalmanStates.throttle.position); //26
-		usartBufferPutString(usart_buffer_log, temp, 10);
-		
-		sprintf(temp, "%2.3f, ", kalmanStates.throttle.velocity); //27
-		usartBufferPutString(usart_buffer_log, temp, 10);
-		
-		sprintf(temp, "%2.3f, ", kalmanStates.throttle.acceleration); //28
-		usartBufferPutString(usart_buffer_log, temp, 10);
-		
-		usartBufferPutByte(usart_buffer_log, '\n', 10);//29
-		
-		// makes the 50Hz loop
-		vTaskDelay(DELAY_MILISECONDS);
+		vTaskDelay((int16_t) ((int16_t) DELAY_MILISECONDS - delayMillis));// makes the 50Hz loop
 	}
 }

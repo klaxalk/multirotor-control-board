@@ -8,6 +8,7 @@
 #include "controllers.h"
 #include "communication.h"
 #include "battery.h"
+#include "commTask.h"
 #include "mpcHandler.h"
 
 /* -------------------------------------------------------------------- */
@@ -16,8 +17,8 @@
 
 volatile bool altitudeControllerEnabled;
 volatile bool mpcControllerEnabled;
-float lastGoodGroundDistance;
-float groundDistanceConfidence;
+volatile float lastGoodGroundDistance;
+volatile float groundDistanceConfidence;
 uint8_t cyclesSinceGoodDistance = 0;
 
 /* -------------------------------------------------------------------- */
@@ -141,6 +142,11 @@ void disableMpcController() {
 }
 
 void altitudeEvaluateAndSendToKalman() {
+	controller2commMessage_t message;
+	message.messageType = SEND_INPUTS;
+	message.data.groundDistance = groundDistance;
+	message.data.batteryLevel = batteryLevel;
+	message.data.throttleInput = outputChannels[0];
 	
 	if (lastGoodGroundDistance == groundDistance)  { //reject unchanged value
 		
@@ -167,8 +173,10 @@ void altitudeEvaluateAndSendToKalman() {
 			cyclesSinceGoodDistance = 0;
 			
 		}
-	}		
-	stmSendThrottleMeasurement(groundDistance, batteryLevel, outputChannels[0], groundDistanceConfidence);	
+	}	
+	message.data.groundDistanceConfidence = groundDistanceConfidence;
+	
+	xQueueSend(controller2commsQueue, &message, 0);	
 }
 
 void calculateNextThrottle() {
@@ -202,4 +210,11 @@ void calculateNextThrottle() {
 	portENTER_CRITICAL();
 	controllerThrottleOutput = (int16_t) temp;
 	portEXIT_CRITICAL();
+}
+
+void resetThrottleKalman() {
+	controller2commMessage_t message;
+	message.messageType = CLEAR_STATE;
+	message.data.groundDistance = groundDistance;
+	xQueueSend(controller2commsQueue, &message, 0);	
 }

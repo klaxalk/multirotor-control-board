@@ -399,7 +399,7 @@ void commTask(void *p) {
 			// clear the crc
 					crcOut = 0;
 			sendChar('a', &crcOut);			// this character initiates the transmission
-			sendChar(1+2*5*4, &crcOut);		// this will be the size of the message
+			sendChar(1+4*4, &crcOut);		// this will be the size of the message
 
 			sendChar('3', &crcOut);			// id of the message
 
@@ -409,6 +409,7 @@ void commTask(void *p) {
 			sendFloat(kalmanThrottleMessage.throttleData[3], &crcOut);
 
 			sendChar(crcOut, &crcOut);
+			led_toggle();
 		}
 	}
 }

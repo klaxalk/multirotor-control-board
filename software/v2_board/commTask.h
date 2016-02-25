@@ -39,6 +39,22 @@ typedef struct {
 	main2commMessagePayload data;
 } main2commMessage_t;
 
+enum controller2commMessageType_t {SEND_INPUTS, CLEAR_STATE};
+
+typedef struct {
+	
+	float groundDistance;
+	int16_t batteryLevel;
+	int16_t throttleInput;
+	float groundDistanceConfidence;
+} controller2commMessagePayload;
+
+typedef struct {
+	
+	enum controller2commMessageType_t messageType;
+	controller2commMessagePayload data;
+} controller2commMessage_t;
+
 int xbeeflag;
 
 /* -------------------------------------------------------------------- */

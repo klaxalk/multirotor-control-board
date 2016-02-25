@@ -152,6 +152,8 @@ volatile int16_t hoursTimer;
 /* -------------------------------------------------------------------- */
 xQueueHandle main2commsQueue;
 
+xQueueHandle controller2commsQueue;
+
 volatile int8_t auxSetpointFlag;
 
 /* Basic initialization of the MCU, peripherals and i/o */
