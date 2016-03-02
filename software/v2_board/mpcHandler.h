@@ -59,6 +59,7 @@ typedef struct {
 	volatile float velocity;
 	volatile float acceleration;
 	volatile float omega; //this stands for relative rotor rads
+	volatile float acceleration_error;
 	
 } throttleStates_t;
 

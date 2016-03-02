@@ -169,6 +169,7 @@ void commTask(void *p) {
 					kalmanStates.throttle.velocity = readFloat(stmMessage.messageBuffer, &idx);
 					kalmanStates.throttle.acceleration = readFloat(stmMessage.messageBuffer, &idx);
 					kalmanStates.throttle.omega = readFloat(stmMessage.messageBuffer, &idx);
+					kalmanStates.throttle.acceleration_error = readFloat(stmMessage.messageBuffer, &idx);
 																			
 				}					
 			}

@@ -25,44 +25,47 @@ void logTask(void *p) { // only logs throttle-relevant data
 	
 	vTaskDelay(2000);
 	
-	while (1) {		
-		startTimeMillis = milisecondsTimer;								
+	while (1) {
+		startTimeMillis = milisecondsTimer;
 		
-		sprintf(temp, "%d, ", RCchannel[THROTTLE]); //2
+		sprintf(temp, "%d, ", controllerThrottleOutput); //1
 		usartBufferPutString(usart_buffer_log, temp, 10);
 		
-		sprintf(temp, "%d, ", controllerThrottleOutput); //3
-		usartBufferPutString(usart_buffer_log, temp, 10);	
-		
-		sprintf(temp, "%2.3f, ", groundDistance); //4
-		usartBufferPutString(usart_buffer_log, temp, 10);						
-		
-		sprintf(temp, "%2.3f, ", getBatteryVoltage()); //5
+		sprintf(temp, "%2.3f, ", groundDistance); //2
 		usartBufferPutString(usart_buffer_log, temp, 10);
 		
-		sprintf(temp, "%d, ", outputChannels[0]); //6
+		sprintf(temp, "%2.3f, ", getBatteryVoltage()); //3
 		usartBufferPutString(usart_buffer_log, temp, 10);
 		
-		sprintf(temp, "%2.3f, ", groundDistanceConfidence); //7
+		sprintf(temp, "%d, ", outputChannels[0]); //4
 		usartBufferPutString(usart_buffer_log, temp, 10);
 		
-		sprintf(temp, "%2.3f, ", kalmanStates.throttle.position); //8
+		sprintf(temp, "%2.3f, ", groundDistanceConfidence); //5
 		usartBufferPutString(usart_buffer_log, temp, 10);
 		
-		sprintf(temp, "%2.3f, ", kalmanStates.throttle.velocity); //9
+		sprintf(temp, "%2.3f, ", kalmanStates.throttle.position); //6
 		usartBufferPutString(usart_buffer_log, temp, 10);
 		
-		sprintf(temp, "%2.3f, ", kalmanStates.throttle.acceleration); //10
+		sprintf(temp, "%2.3f, ", kalmanStates.throttle.velocity); //7
+		usartBufferPutString(usart_buffer_log, temp, 10);
+		
+		sprintf(temp, "%2.3f, ", kalmanStates.throttle.acceleration); //8
+		usartBufferPutString(usart_buffer_log, temp, 10);
+		
+		sprintf(temp, "%2.3f, ", kalmanStates.throttle.omega); //9
+		usartBufferPutString(usart_buffer_log, temp, 10);
+		
+		sprintf(temp, "%2.3f, ", kalmanStates.throttle.acceleration_error); //10
 		usartBufferPutString(usart_buffer_log, temp, 10);
 		
 		usartBufferPutByte(usart_buffer_log, '\n', 10);//11
 		
 		endTimeMillis = milisecondsTimer;
-				
+		
 		if (startTimeMillis > endTimeMillis) //timer overflowed
-			delayMillis = 1000 + endTimeMillis - startTimeMillis;
+		delayMillis = 1000 + endTimeMillis - startTimeMillis;
 		else
-			delayMillis = endTimeMillis - startTimeMillis;
+		delayMillis = endTimeMillis - startTimeMillis;
 		
 		vTaskDelay((int16_t) ((int16_t) DELAY_MILISECONDS - delayMillis));// makes the 50Hz loop
 	}

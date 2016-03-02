@@ -24,6 +24,17 @@ void kalmanTask(void *p) {
 	vector_float * measurement_1_state = vector_float_alloc(1, 0);
 
 	/* -------------------------------------------------------------------- */
+	/* Vector for throttle states											*/
+	/* -------------------------------------------------------------------- */
+	vector_float * throttle_states_default = vector_float_alloc(1, 0);
+
+	vector_float_set(throttle_states_default, 1, 0);
+	vector_float_set(throttle_states_default, 2, 0);
+	vector_float_set(throttle_states_default, 3, 0);
+	vector_float_set(throttle_states_default, 4, 0);
+	vector_float_set(throttle_states_default, 5, THROTTLE_INIT_ERROR);
+
+	/* -------------------------------------------------------------------- */
 	/* px4flow speed measurement noise matrix	(Q)	(1-state)				*/
 	/* -------------------------------------------------------------------- */
 	matrix_float * px4flow_Q_matrix_1_state = matrix_float_alloc(1, 1);
@@ -55,6 +66,7 @@ void kalmanTask(void *p) {
 	matrix_float_set(throttle_C_matrix_1_state, 1, 2, 0);
 	matrix_float_set(throttle_C_matrix_1_state, 1, 3, 0);
 	matrix_float_set(throttle_C_matrix_1_state, 1, 4, 0);
+	matrix_float_set(throttle_C_matrix_1_state, 1, 5, 0);
 
 	/* -------------------------------------------------------------------- */
 	/* Messages between tasks												*/
@@ -86,8 +98,8 @@ void kalmanTask(void *p) {
 
 		if (xQueueReceive(resetThrottleKalmanQueue, &resetThrottleKalmanMessage, 0)) {
 
-			// reset state vectors
-			vector_float_set_zero(throttleKalmanHandler->states);
+			// reset state vector
+			memcpy(&throttleKalmanHandler->states->data, throttle_states_default->data, NUMBER_OF_STATES_THROTTLE*sizeof(float));
 
 			// set the default position
 			vector_float_set(throttleKalmanHandler->states, 1, resetThrottleKalmanMessage.throttlePosition);
@@ -195,6 +207,10 @@ void kalmanTask(void *p) {
 				kalmanIteration(throttleKalmanHandler);
 			} else {
 				kalmanPredictionOnly(throttleKalmanHandler);
+			}
+
+			if (vector_float_get(throttleKalmanHandler->states, 1) < 0) {
+				vector_float_set(throttleKalmanHandler->states, 1, 0);
 			}
 
 			/* -------------------------------------------------------------------- */
