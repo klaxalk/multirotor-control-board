@@ -1,0 +1,11 @@
+data = load('LOG-0041.TXT');
+times = 0:0.02:0.02*(size(data, 1)-1);
+sensor = [times' data(:, 2)];
+voltage = [times' data(:, 3)];
+control = [times' data(:, 4)];
+confidence = [times' data(:, 5)];
+kalman_alt = [times' data(:, 6)];
+kalman_spd = [times' data(:, 7)];
+kalman_acc = [times' data(:, 8)];
+kalman_ohm = [times' data(:, 9)];
+kalman_err = [times' data(:, 10)];

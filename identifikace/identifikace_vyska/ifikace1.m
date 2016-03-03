@@ -1,0 +1,13 @@
+data = iddata(accel_ident, [cont_ident volt_ident const_ident], period);
+data.InputName  = {'Control' 'Voltage' 'Constant'};
+data.InputUnit  = {'-' 'V' '-'};
+data.OutputName = 'Acceleration';
+data.OutputUnit = 'm/s^2';
+data.TimeUnit   = 's';
+opt = ssestOptions('SearchMethod','lm');
+opt.SearchOption.MaxIter = 100;
+opt.Display = 'on';
+%plot(data);
+sys = ssest(data, 2, 'Ts', period, 'Form', 'canonical', opt);
+resid(sys, data);
+compare(data,sys);

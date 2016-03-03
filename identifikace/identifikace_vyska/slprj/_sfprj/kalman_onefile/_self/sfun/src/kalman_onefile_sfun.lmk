@@ -1,0 +1,38 @@
+CC     = "C:\Program Files\MATLAB\R2013b\sys\lcc64\lcc64\bin\lcc64.exe"
+LD     = "C:\Program Files\MATLAB\R2013b\sys\lcc64\lcc64\bin\lcclnk64.exe"
+LIBCMD = "C:\Program Files\MATLAB\R2013b\sys\lcc64\lcc64\bin\lcclib64.exe"
+CFLAGS = -dll -noregistrylookup  -c -Zp8 -DLCC_WIN64 -DMATLAB_MEX_FILE -DMX_COMPAT_32 -nodeclspec 
+LDFLAGS = -s -dll -L"C:\Program Files\MATLAB\R2013b\sys\lcc64\lcc64\lib64" -entry LibMain -map sfun.map 
+LIBFLAGS = 
+
+OBJECTS = \
+	"kalman_onefile_sfun.obj"\
+	"c2_kalman_onefile.obj"\
+	"kalman_onefile_sfun_registry.obj"\
+	"lccstub.obj"\
+	"kalman_onefile_sfun.def"\
+	"C:\Program Files\MATLAB\R2013b\stateflow\c\mex\lib\win64\sfc_mexlcc64.lib"\
+	"C:\Program Files\MATLAB\R2013b\stateflow\c\debugger\lib\win64\sfc_debuglcc64.lib"\
+	"C:\Program Files\MATLAB\R2013b\extern\lib\win64\microsoft\libmwblas.lib"\
+	"C:\Program Files\MATLAB\R2013b\extern\lib\win64\microsoft\libmx.lib"\
+	"C:\Program Files\MATLAB\R2013b\extern\lib\win64\microsoft\libmex.lib"\
+	"C:\Program Files\MATLAB\R2013b\extern\lib\win64\microsoft\libmat.lib"\
+	"C:\Program Files\MATLAB\R2013b\extern\lib\win64\microsoft\libfixedpoint.lib"\
+	"C:\Program Files\MATLAB\R2013b\extern\lib\win64\microsoft\libut.lib"\
+	"C:\Program Files\MATLAB\R2013b\extern\lib\win64\microsoft\libmwmathutil.lib"\
+	"C:\Program Files\MATLAB\R2013b\extern\lib\win64\microsoft\libemlrt.lib"\
+	"C:\Program Files\MATLAB\R2013b\lib\win64\libippmwipt.lib"\
+
+INCLUDE_PATH= -I"C:\Program Files\MATLAB\R2013b\sys\lcc64\lcc64\include64"  -I"C:\Program Files\MATLAB\R2013b\extern\include"  -I"C:\Program Files\MATLAB\R2013b\simulink\include"  -I"C:\Program Files\MATLAB\R2013b\rtw\c\src"  -I"C:\Program Files\MATLAB\R2013b\stateflow\c\mex\include"  -I"C:\Program Files\MATLAB\R2013b\stateflow\c\debugger\include"  -I"C:\Program Files\MATLAB\R2013b\toolbox\stateflow\src\sf_runtime\export\include\sf_runtime" 
+ 
+
+kalman_onefile_sfun.mexw64 : $(MAKEFILE) $(OBJECTS)
+	$(LD) $(LDFLAGS) -o kalman_onefile_sfun.mexw64 @kalman_onefile_sfun.lmko
+kalman_onefile_sfun.obj :	"kalman_onefile_sfun.c"
+	$(CC) $(CFLAGS) $(INCLUDE_PATH) "kalman_onefile_sfun.c"
+c2_kalman_onefile.obj :	"c2_kalman_onefile.c"
+	$(CC) $(CFLAGS) $(INCLUDE_PATH) "c2_kalman_onefile.c"
+kalman_onefile_sfun_registry.obj :	"kalman_onefile_sfun_registry.c"
+	$(CC) $(CFLAGS) $(INCLUDE_PATH) "kalman_onefile_sfun_registry.c"
+lccstub.obj :	"C:\Program Files\MATLAB\R2013b\sys\lcc64\lcc64\mex\lccstub.c"
+	$(CC) $(CFLAGS) $(INCLUDE_PATH) "C:\Program Files\MATLAB\R2013b\sys\lcc64\lcc64\mex\lccstub.c"
