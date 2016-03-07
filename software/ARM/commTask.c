@@ -184,18 +184,18 @@ void commTask(void *p) {
 				comm2kalmanMessage_t mes;
 
 				tempFloat = readFloat(messageBuffer, &idx);
-				if (tempFloat > 1.5)
-					mes.elevatorSpeed = 1.5;
-				else if (tempFloat < -1.5)
-					mes.elevatorSpeed = -1.5;
+				if (tempFloat > KALMAN_MEASURED_VELOCITY_SATURATION)
+					mes.elevatorSpeed = KALMAN_MEASURED_VELOCITY_SATURATION;
+				else if (tempFloat < -KALMAN_MEASURED_VELOCITY_SATURATION)
+					mes.elevatorSpeed = -KALMAN_MEASURED_VELOCITY_SATURATION;
 				else
 					mes.elevatorSpeed = tempFloat;
 
 				tempFloat = readFloat(messageBuffer, &idx);
-				if (tempFloat > 1.5)
-					mes.aileronSpeed = 1.5;
-				else if (tempFloat < -1.5)
-					mes.aileronSpeed = -1.5;
+				if (tempFloat > KALMAN_MEASURED_VELOCITY_SATURATION)
+					mes.aileronSpeed = KALMAN_MEASURED_VELOCITY_SATURATION;
+				else if (tempFloat < -KALMAN_MEASURED_VELOCITY_SATURATION)
+					mes.aileronSpeed = -KALMAN_MEASURED_VELOCITY_SATURATION;
 				else
 					mes.aileronSpeed = tempFloat;
 
