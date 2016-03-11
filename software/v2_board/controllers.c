@@ -21,8 +21,9 @@ volatile float lastGoodGroundDistance;
 volatile float groundDistanceConfidence;
 uint8_t cyclesSinceGoodDistance = 0;
 uint8_t position = 0;
+volatile char kalmanStarted = 0;
 float kalmanFit = 20;
-float differences[20] = {1 1 1 1 1 1 1 1 1 1  1 1 1 1 1 1 1 1 1 1};
+float differences[20] = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1,  1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
 
 /* -------------------------------------------------------------------- */
 /*	variables that support altitude controller and estimator			*/
@@ -198,7 +199,8 @@ void altitudeSendToKalman() {
 	message.data.groundDistance = groundDistance;
 	message.data.batteryLevel = batteryLevel;
 	message.data.throttleInput = outputChannels[0];
-	message.data.groundDistanceConfidence = (float) 1;
+	groundDistanceConfidence = (float) 1;
+	message.data.groundDistanceConfidence = groundDistanceConfidence;
 	
 	xQueueSend(controller2commsQueue, &message, 0);
 }
@@ -210,10 +212,13 @@ void kalmanStep() {
 	differences[position] = temp;
 	position = (position < 20) ? (position + 1) : 0;
 	
-	if(kalmanFit < KALMAN_FIT_THRESHOLD) {
+	if(kalmanStarted) {
 		altitudeEvaluateAndSendToKalman();
+		led_green_on();
 	} else {
 		altitudeSendToKalman();
+		kalmanStarted = (kalmanFit < KALMAN_FIT_THRESHOLD);
+		led_green_toggle();
 	}
 }
 

@@ -11,13 +11,11 @@
 #include "system.h"
 #include "mpcHandler.h"
 
+volatile char flightStarted = 0;
+
 void controllersTask(void *p) {
 	
-	uint8_t position = 0;
 	int16_t startTimeMillis, endTimeMillis;
-	float differences[20];
-	char flightStarted = 0;
-	float sum, temp;
 	
 	while (1) {
 		

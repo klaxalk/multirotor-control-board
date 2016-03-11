@@ -435,8 +435,7 @@ void commTask(void *p) {
 			if (controller2commMessage.messageType == SEND_INPUTS) {
 				stmSendThrottleMeasurement(controller2commMessage.data.groundDistance, controller2commMessage.data.batteryLevel, controller2commMessage.data.throttleInput, controller2commMessage.data.groundDistanceConfidence);
 			} else {
-				stmResetThrottleKalman(main2commMessage.data.simpleSetpoint.throttle);
-				led_blue_toggle();	
+				stmResetThrottleKalman(main2commMessage.data.simpleSetpoint.throttle);					
 			}
 		}
 	}

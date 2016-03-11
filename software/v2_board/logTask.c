@@ -8,6 +8,7 @@
 #include "logTask.h"
 #include "system.h"
 #include "controllers.h"
+#include "controllersTask.h"
 #include "communication.h"
 #include <stdio.h>
 
@@ -28,7 +29,7 @@ void logTask(void *p) { // only logs throttle-relevant data
 	while (1) {
 		startTimeMillis = milisecondsTimer;
 		
-		sprintf(temp, "%d, ", controllerThrottleOutput); //1
+		sprintf(temp, "%d, ", (flightStarted*2) + kalmanStarted); //1
 		usartBufferPutString(usart_buffer_log, temp, 10);
 		
 		sprintf(temp, "%2.3f, ", groundDistance); //2

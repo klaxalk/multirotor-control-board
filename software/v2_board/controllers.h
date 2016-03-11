@@ -20,6 +20,7 @@
 
 volatile bool altitudeControllerEnabled;
 volatile bool mpcControllerEnabled;
+volatile char kalmanStarted;
 
 /* -------------------------------------------------------------------- */
 /*	variables that support altitude controller and estimator			*/
