@@ -1,9 +1,9 @@
 /*
- * controllers.c
- *
- * Created: 11.9.2014 13:24:16
- *  Author: Tomas Baca
- */ 
+* controllers.c
+*
+* Created: 11.9.2014 13:24:16
+*  Author: Tomas Baca
+*/
 
 #include "controllers.h"
 #include "communication.h"
@@ -20,6 +20,9 @@ volatile bool mpcControllerEnabled;
 volatile float lastGoodGroundDistance;
 volatile float groundDistanceConfidence;
 uint8_t cyclesSinceGoodDistance = 0;
+uint8_t position = 0;
+float kalmanFit = 20;
+float differences[20] = {1 1 1 1 1 1 1 1 1 1  1 1 1 1 1 1 1 1 1 1};
 
 /* -------------------------------------------------------------------- */
 /*	variables that support altitude controller and estimator			*/
@@ -43,25 +46,25 @@ void altitudeEstimator() {
 	//new cycle
 	estimator_cycle++;
 	
-		// extreme filter
-		if(fabs(groundDistance - estimatedThrottlePos_prev) <= 0.2) {//limitation cca 3m/s
-			// compute new values
-			estimatedThrottleVel = ((groundDistance - estimatedThrottlePos_prev) / (7*DT));
-			estimatedThrottlePos      = groundDistance;
-			estimatedThrottlePos_prev = groundDistance;
-			estimator_cycle = 0;
-		}
+	// extreme filter
+	if(fabs(groundDistance - estimatedThrottlePos_prev) <= 0.2) {//limitation cca 3m/s
+		// compute new values
+		estimatedThrottleVel = ((groundDistance - estimatedThrottlePos_prev) / (7*DT));
+		estimatedThrottlePos      = groundDistance;
+		estimatedThrottlePos_prev = groundDistance;
+		estimator_cycle = 0;
+	}
+	
+	if (estimator_cycle >= 30) { //safety reset
 		
-		if (estimator_cycle >= 30) { //safety reset
-			
-			estimatedThrottleVel = 0;
-			estimatedThrottlePos = groundDistance;
-			estimatedThrottlePos_prev = groundDistance;
-			estimator_cycle = 0;
-			
+		estimatedThrottleVel = 0;
+		estimatedThrottlePos = groundDistance;
+		estimatedThrottlePos_prev = groundDistance;
+		estimator_cycle = 0;
+		
 		} else { //estimate position
-			estimatedThrottlePos += estimatedThrottleVel * DT;
-		}
+		estimatedThrottlePos += estimatedThrottleVel * DT;
+	}
 }
 
 /* -------------------------------------------------------------------- */
@@ -115,7 +118,7 @@ void enableAltitudeController() {
 }
 
 void disableAltitudeController() {
-		
+	
 	if (altitudeControllerEnabled == true) {
 		
 	}
@@ -141,47 +144,82 @@ void disableMpcController() {
 	mpcControllerEnabled = false;
 }
 
+/* -------------------------------------------------------------------- */
+/*	Altitude Evaluator - computes confidence and sends data to kalman	*/
+/* -------------------------------------------------------------------- */
+
 void altitudeEvaluateAndSendToKalman() {
 	controller2commMessage_t message;
 	message.messageType = SEND_INPUTS;
 	message.data.groundDistance = groundDistance;
 	message.data.batteryLevel = batteryLevel;
-	message.data.throttleInput = outputChannels[0];
+	message.data.throttleInput = outputChannels[0];	
 	
-	if (lastGoodGroundDistance == groundDistance)  { //reject unchanged value
+	if (lastGoodGroundDistance == groundDistance)  { //rate unchanged value
 		
-		groundDistanceConfidence = (float) 0;
+		groundDistanceConfidence = ((float) 1) - ((float) (cyclesSinceGoodDistance * cyclesSinceGoodDistance)) / 256;
 		
-	} else {
+		if (cyclesSinceGoodDistance++ >= 16) { //reject long unchanged value
+			
+			groundDistanceConfidence = (float) 0;
+			
+		}
+		
+		} else {
 		
 		if (fabs(lastGoodGroundDistance - groundDistance) > GRND_DIST_DIFF_MAX) { //reject likely erroneous reading based on difference
 			
-			groundDistanceConfidence = ((float) (1 << cyclesSinceGoodDistance)) / 65536; //full confidence after 16 cycles (0.8 s)
+			groundDistanceConfidence = ((float) (((uint16_t) 1) << cyclesSinceGoodDistance)) / 65536; //full confidence after 16 cycles (0.8 s)
 			
 			if (cyclesSinceGoodDistance++ >= 16) { //accept steady yet differentiated distance reading
-			
+				
 				lastGoodGroundDistance = groundDistance;
-				groundDistanceConfidence = (float) 1;	
+				groundDistanceConfidence = (float) 1;
 				cyclesSinceGoodDistance = 0;
 				
-		}
-				
-		} else { //accept good distance reading
+			}
+			
+			} else { //accept good distance reading
 			
 			lastGoodGroundDistance = groundDistance;
 			groundDistanceConfidence = (float) 1;
 			cyclesSinceGoodDistance = 0;
 			
 		}
-	}	
+	}
 	message.data.groundDistanceConfidence = groundDistanceConfidence;
 	
-	xQueueSend(controller2commsQueue, &message, 0);	
+	xQueueSend(controller2commsQueue, &message, 0);
+}
+
+void altitudeSendToKalman() {
+	controller2commMessage_t message;
+	message.messageType = SEND_INPUTS;
+	message.data.groundDistance = groundDistance;
+	message.data.batteryLevel = batteryLevel;
+	message.data.throttleInput = outputChannels[0];
+	message.data.groundDistanceConfidence = (float) 1;
+	
+	xQueueSend(controller2commsQueue, &message, 0);
+}
+
+void kalmanStep() {
+	float temp = fabs(kalmanStates.throttle.position - groundDistance);
+	
+	kalmanFit += (temp - differences[position]);
+	differences[position] = temp;
+	position = (position < 20) ? (position + 1) : 0;
+	
+	if(kalmanFit < KALMAN_FIT_THRESHOLD) {
+		altitudeEvaluateAndSendToKalman();
+	} else {
+		altitudeSendToKalman();
+	}
 }
 
 void calculateNextThrottle() {
-	float error;	
-	float temp = 0;		
+	float error;
+	float temp = 0;
 	
 	temp += (ALTITUDE_K1 * kalmanStates.throttle.position);
 	temp += (ALTITUDE_K2 * kalmanStates.throttle.velocity);
@@ -216,5 +254,5 @@ void resetThrottleKalman() {
 	controller2commMessage_t message;
 	message.messageType = CLEAR_STATE;
 	message.data.groundDistance = groundDistance;
-	xQueueSend(controller2commsQueue, &message, 0);	
+	xQueueSend(controller2commsQueue, &message, 0);
 }

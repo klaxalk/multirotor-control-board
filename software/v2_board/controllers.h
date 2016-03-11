@@ -26,6 +26,7 @@ volatile bool mpcControllerEnabled;
 /* -------------------------------------------------------------------- */
 
 #define CONTROLLER_THROTTLE_SATURATION 600
+#define KALMAN_FIT_THRESHOLD 1
 
 #ifdef MIKROKOPTER_KK2
 
@@ -89,6 +90,8 @@ void disableMpcController();
 void altitudeEstimator();
 void altitudeController();
 void altitudeEvaluateAndSendToKalman();
+void altitudeSendToKalman();
+void kalmanStep();
 void calculateNextThrottle();
 void resetThrottleKalman();
 

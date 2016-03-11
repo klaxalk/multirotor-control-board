@@ -87,11 +87,17 @@ void kalmanTask(void *p) {
 
 		if (xQueueReceive(resetThrottleKalmanQueue, &resetThrottleKalmanMessage, 0)) {
 
-			// reset state vector
-			vector_float_set_zero(throttleKalmanHandler->states);
-
 			// set the default position
 			vector_float_set(throttleKalmanHandler->states, 1, resetThrottleKalmanMessage.throttlePosition);
+
+			// set the default speed
+			vector_float_set(throttleKalmanHandler->states, 2, 0);
+
+			// set the default acceleration
+			vector_float_set(throttleKalmanHandler->states, 3, 0);
+
+			// set the default omega
+			vector_float_set(throttleKalmanHandler->states, 4, THROTTLE_INIT_OMEGA);
 
 			// set the default error
 			vector_float_set(throttleKalmanHandler->states, 5, THROTTLE_INIT_ERROR);

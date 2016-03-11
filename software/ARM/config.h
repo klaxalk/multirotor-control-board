@@ -42,6 +42,7 @@
 	#define THROTTLE_B42 -0.052414
 	#define THROTTLE_B43 -7.5757
     #define THROTTLE_Q 100
+	#define THROTTLE_INIT_OMEGA 1
 	#define THROTTLE_INIT_ERROR -3.3
 #endif
 
