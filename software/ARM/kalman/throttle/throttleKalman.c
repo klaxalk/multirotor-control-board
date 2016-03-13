@@ -60,45 +60,33 @@ kalmanHandler_t * initializeThrottleKalman() {
 	/* System B matrix														*/
 	/* -------------------------------------------------------------------- */
 
-	/*    --           --
-	      |  0   0   0  |
-          |  0   0   0  |
-	  B = | B31 B32 B33 |
-	      | B41 B32 B43 |
-	      |  0   0   0  |
-	      --           -- */
+	/*    --  --
+	      |  0 |
+          |  0 |
+	  B = | B3 |
+	      | B4 |
+	      |  0 |
+	      --  -- */
 
 	throttleKalmanHandler.system_B = matrix_float_alloc(NUMBER_OF_STATES_THROTTLE, NUMBER_OF_INPUTS_THROTTLE);
 
 	matrix_float_set(throttleKalmanHandler.system_B, 1, 1, 0);
-	matrix_float_set(throttleKalmanHandler.system_B, 1, 2, 0);
-	matrix_float_set(throttleKalmanHandler.system_B, 1, 3, 0);
 
 	matrix_float_set(throttleKalmanHandler.system_B, 2, 1, 0);
-	matrix_float_set(throttleKalmanHandler.system_B, 2, 2, 0);
-	matrix_float_set(throttleKalmanHandler.system_B, 2, 3, 0);
 
-	matrix_float_set(throttleKalmanHandler.system_B, 3, 1, THROTTLE_B31);
-	matrix_float_set(throttleKalmanHandler.system_B, 3, 2, THROTTLE_B32);
-	matrix_float_set(throttleKalmanHandler.system_B, 3, 3, THROTTLE_B33);
+	matrix_float_set(throttleKalmanHandler.system_B, 3, 1, THROTTLE_B3);
 
-	matrix_float_set(throttleKalmanHandler.system_B, 4, 1, THROTTLE_B41);
-	matrix_float_set(throttleKalmanHandler.system_B, 4, 2, THROTTLE_B42);
-	matrix_float_set(throttleKalmanHandler.system_B, 4, 3, THROTTLE_B43);
+	matrix_float_set(throttleKalmanHandler.system_B, 4, 1, THROTTLE_B4);
 
 	matrix_float_set(throttleKalmanHandler.system_B, 5, 1, 0);
-	matrix_float_set(throttleKalmanHandler.system_B, 5, 2, 0);
-	matrix_float_set(throttleKalmanHandler.system_B, 5, 3, 0);
 
 	/* -------------------------------------------------------------------- */
 	/*	Input vector														*/
 	/* -------------------------------------------------------------------- */
 
-	/*    --    --
-	      |  PPM |
-      u = | BATT |
-	      |    1 |
-	      --    -- */
+	/*    --     --
+      u = | INPUT |
+	      --     -- */
 
 	throttleKalmanHandler.input = vector_float_alloc(NUMBER_OF_INPUTS_THROTTLE, 0);
 

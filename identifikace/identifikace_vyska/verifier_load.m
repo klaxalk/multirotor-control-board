@@ -1,4 +1,4 @@
-data = load('LOG-0041.TXT');
+data = load('LOG-0027.TXT');
 times = 0:0.02:0.02*(size(data, 1)-1);
 sensor = [times' data(:, 2)];
 voltage = [times' data(:, 3)];

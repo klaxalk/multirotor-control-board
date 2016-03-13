@@ -27,7 +27,7 @@ volatile char kalmanStarted;
 /* -------------------------------------------------------------------- */
 
 #define CONTROLLER_THROTTLE_SATURATION 600
-#define KALMAN_FIT_THRESHOLD 1
+#define KALMAN_FIT_THRESHOLD 0.3
 
 #ifdef MIKROKOPTER_KK2
 

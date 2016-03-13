@@ -199,6 +199,7 @@ void altitudeSendToKalman() {
 	message.data.groundDistance = groundDistance;
 	message.data.batteryLevel = batteryLevel;
 	message.data.throttleInput = outputChannels[0];
+	lastGoodGroundDistance = groundDistance;
 	groundDistanceConfidence = (float) 1;
 	message.data.groundDistanceConfidence = groundDistanceConfidence;
 	

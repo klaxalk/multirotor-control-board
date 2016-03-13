@@ -110,7 +110,7 @@
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <ToolchainSettings>
       <AvrGcc>
-  <avrgcc.common.Device>-mmcu=atxmega128a3u -B "%24(PackRepoDir)\atmel\XMEGAA_DFP\1.0.36\gcc\dev\atxmega128a3u"</avrgcc.common.Device>
+  <avrgcc.common.Device>-mmcu=atxmega128a3u -B "%24(PackRepoDir)\atmel\XMEGAA_DFP\1.0.38\gcc\dev\atxmega128a3u"</avrgcc.common.Device>
   <avrgcc.common.optimization.RelaxBranches>True</avrgcc.common.optimization.RelaxBranches>
   <avrgcc.common.outputfiles.hex>True</avrgcc.common.outputfiles.hex>
   <avrgcc.common.outputfiles.lss>True</avrgcc.common.outputfiles.lss>
@@ -135,10 +135,10 @@
       <Value>../src/ASF/xmega/utils</Value>
       <Value>../src/ASF/common/services/ioport</Value>
       <Value>../src/ASF/common/boards</Value>
-      <Value>%24(PackRepoDir)\atmel\XMEGAA_DFP\1.0.36\include</Value>
       <Value>../common/applications/user_application/user_board/config</Value>
       <Value>../src</Value>
       <Value>../src/ASF/common/boards/user_board</Value>
+      <Value>%24(PackRepoDir)\atmel\XMEGAA_DFP\1.0.38\include</Value>
     </ListValues>
   </avrgcc.compiler.directories.IncludePaths>
   <avrgcc.compiler.optimization.level>Optimize for size (-Os)</avrgcc.compiler.optimization.level>
@@ -173,6 +173,7 @@
       <Value>../common/applications/user_application/user_board/config</Value>
       <Value>../src</Value>
       <Value>../src/ASF/common/boards/user_board</Value>
+      <Value>%24(PackRepoDir)\atmel\XMEGAA_DFP\1.0.38\include</Value>
     </ListValues>
   </avrgcc.assembler.general.IncludePaths>
 </AvrGcc>
@@ -181,7 +182,7 @@
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <ToolchainSettings>
       <AvrGcc>
-  <avrgcc.common.Device>-mmcu=atxmega128a3u -B "%24(PackRepoDir)\atmel\XMEGAA_DFP\1.0.36\gcc\dev\atxmega128a3u"</avrgcc.common.Device>
+  <avrgcc.common.Device>-mmcu=atxmega128a3u -B "%24(PackRepoDir)\atmel\XMEGAA_DFP\1.0.38\gcc\dev\atxmega128a3u"</avrgcc.common.Device>
   <avrgcc.common.optimization.RelaxBranches>True</avrgcc.common.optimization.RelaxBranches>
   <avrgcc.common.outputfiles.hex>True</avrgcc.common.outputfiles.hex>
   <avrgcc.common.outputfiles.lss>True</avrgcc.common.outputfiles.lss>
@@ -220,10 +221,10 @@
       <Value>../gsl/vector</Value>
       <Value>../matrixLib</Value>
       <Value>../../CMatrixLib/CMatrixLib</Value>
-      <Value>%24(PackRepoDir)\atmel\XMEGAA_DFP\1.0.36\include</Value>
       <Value>../common/applications/user_application/user_board/config</Value>
       <Value>../src</Value>
       <Value>../src/ASF/common/boards/user_board</Value>
+      <Value>%24(PackRepoDir)\atmel\XMEGAA_DFP\1.0.38\include</Value>
     </ListValues>
   </avrgcc.compiler.directories.IncludePaths>
   <avrgcc.compiler.optimization.level>Optimize (-O1)</avrgcc.compiler.optimization.level>
@@ -256,6 +257,7 @@
       <Value>../common/applications/user_application/user_board/config</Value>
       <Value>../src</Value>
       <Value>../src/ASF/common/boards/user_board</Value>
+      <Value>%24(PackRepoDir)\atmel\XMEGAA_DFP\1.0.38\include</Value>
     </ListValues>
   </avrgcc.assembler.general.IncludePaths>
   <avrgcc.assembler.debugging.DebugLevel>Default (-Wa,-g)</avrgcc.assembler.debugging.DebugLevel>

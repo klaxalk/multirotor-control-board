@@ -188,12 +188,12 @@ void kalmanTask(void *p) {
 			/* -------------------------------------------------------------------- */
 
 			// set the input vector
-			vector_float_set(throttleKalmanHandler->input, 1, comm2kalmanThrottle.throttleInput);
-			vector_float_set(throttleKalmanHandler->input, 2, comm2kalmanThrottle.batteryVoltage);
-			vector_float_set(throttleKalmanHandler->input, 3, (float) 1);
+			vector_float_set(throttleKalmanHandler->input, 1, (comm2kalmanThrottle.throttleInput/100) + (comm2kalmanThrottle.batteryVoltage*2.3));
 
 			// set the measurement vector
 			vector_float_set(measurement_1_state, 1, comm2kalmanThrottle.groundDistance);
+
+			// set the measurement covariance matrix
 			matrix_float_set(throttle_Q_matrix_1_state, 1, 1, (THROTTLE_Q / comm2kalmanThrottle.signalConfidence));
 
 			// set pointers to measurement related matrices
