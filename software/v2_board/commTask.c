@@ -103,6 +103,8 @@ void commTask(void *p) {
 		/* -------------------------------------------------------------------- */
 		if (usartBufferGetByte(usart_buffer_stm, &inChar, 0)) {
 
+			usartBufferPutByte(usart_buffer_3, inChar, 5);
+			
 			// parse it and handle the message if it is complete
 			if (stmParseChar(inChar, &stmMessage)) {
 				
@@ -240,6 +242,8 @@ void commTask(void *p) {
 		/*	A character received from Argos computer							*/
 		/* -------------------------------------------------------------------- */
 		if (usartBufferGetByte(usart_buffer_3, &inChar, 0)) {
+			
+			usartBufferPutByte(usart_buffer_stm, inChar, 5);
 
 			// parse it and handle the message if it is complete
 			if (argosParseChar(inChar, &argosMessage)) {

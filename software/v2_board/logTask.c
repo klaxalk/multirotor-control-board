@@ -59,7 +59,11 @@ void logTask(void *p) { // only logs throttle-relevant data
 		sprintf(temp, "%2.3f, ", kalmanStates.throttle.acceleration_error); //10
 		usartBufferPutString(usart_buffer_log, temp, 10);
 		
-		usartBufferPutByte(usart_buffer_log, '\n', 10);//11
+		sprintf(temp, "%2.3f, ", kalmanFit); //11
+		usartBufferPutString(usart_buffer_log, temp, 10);
+				
+		
+		usartBufferPutByte(usart_buffer_log, '\n', 10);//12
 		
 		endTimeMillis = milisecondsTimer;
 		

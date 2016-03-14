@@ -22,7 +22,7 @@ volatile float groundDistanceConfidence;
 uint8_t cyclesSinceGoodDistance = 0;
 uint8_t position = 0;
 volatile char kalmanStarted = 0;
-float kalmanFit = 20;
+volatile float kalmanFit = 20;
 float differences[20] = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1,  1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
 
 /* -------------------------------------------------------------------- */
@@ -207,11 +207,11 @@ void altitudeSendToKalman() {
 }
 
 void kalmanStep() {
-	float temp = fabs(kalmanStates.throttle.position - groundDistance);
 	
-	kalmanFit += (temp - differences[position]);
-	differences[position] = temp;
-	position = (position < 20) ? (position + 1) : 0;
+	kalmanFit -= differences[position];
+	differences[position] = fabs(kalmanStates.throttle.position - groundDistance);
+	kalmanFit += differences[position];
+	position = ((position < 19) ? (position + 1) : 0);
 	
 	if(kalmanStarted) {
 		altitudeEvaluateAndSendToKalman();

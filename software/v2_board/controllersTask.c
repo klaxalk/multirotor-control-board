@@ -16,6 +16,7 @@ volatile char flightStarted = 0;
 void controllersTask(void *p) {
 	
 	int16_t startTimeMillis, endTimeMillis;
+	flightStarted = 1;
 	
 	while (1) {
 		
