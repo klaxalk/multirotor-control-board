@@ -87,6 +87,15 @@ volatile uint16_t dt_identification = 0;
 
 xbeeMessageHandler_t xbeeMessage;
 
+void stmSendMessage(char outChar){
+	char crc = 0;
+	sendChar(usart_buffer_stm, 'a', &crc);
+	sendChar(usart_buffer_stm, 2, &crc);
+	sendChar(usart_buffer_stm, 'U', &crc);
+	sendChar(usart_buffer_stm, outChar, &crc);
+	sendChar(usart_buffer_stm, crc, &crc);
+}
+
 void commTask(void *p) {
 	
 	uint8_t inChar;
@@ -102,6 +111,7 @@ void commTask(void *p) {
 		/*	A character received from STM										*/
 		/* -------------------------------------------------------------------- */
 		if (usartBufferGetByte(usart_buffer_stm, &inChar, 0)) {
+
 
 			usartBufferPutByte(usart_buffer_3, inChar, 5);
 			
@@ -243,7 +253,9 @@ void commTask(void *p) {
 		/* -------------------------------------------------------------------- */
 		if (usartBufferGetByte(usart_buffer_3, &inChar, 0)) {
 			
-			usartBufferPutByte(usart_buffer_stm, inChar, 5);
+			stmSendMessage(inChar);
+			
+//			usartBufferPutByte(usart_buffer_stm, inChar, 5);
 
 			// parse it and handle the message if it is complete
 			if (argosParseChar(inChar, &argosMessage)) {

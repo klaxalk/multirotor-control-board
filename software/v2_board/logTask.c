@@ -61,9 +61,12 @@ void logTask(void *p) { // only logs throttle-relevant data
 		
 		sprintf(temp, "%2.3f, ", kalmanFit); //11
 		usartBufferPutString(usart_buffer_log, temp, 10);
+		
+		sprintf(temp, "%d, ", conoutput); //12
+		usartBufferPutString(usart_buffer_log, temp, 10);
 				
 		
-		usartBufferPutByte(usart_buffer_log, '\n', 10);//12
+		usartBufferPutByte(usart_buffer_log, '\n', 10);//13
 		
 		endTimeMillis = milisecondsTimer;
 		

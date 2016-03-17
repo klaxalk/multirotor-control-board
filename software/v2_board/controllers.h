@@ -20,15 +20,16 @@
 
 volatile bool altitudeControllerEnabled;
 volatile bool mpcControllerEnabled;
-volatile char kalmanStarted;
+volatile bool kalmanStarted;
 volatile float kalmanFit;
+volatile int16_t conoutput;
 
 /* -------------------------------------------------------------------- */
 /*	variables that support altitude controller and estimator			*/
 /* -------------------------------------------------------------------- */
 
 #define CONTROLLER_THROTTLE_SATURATION 600
-#define KALMAN_FIT_THRESHOLD 0.1
+#define KALMAN_FIT_THRESHOLD 0.5
 
 #ifdef MIKROKOPTER_KK2
 

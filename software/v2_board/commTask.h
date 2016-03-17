@@ -77,5 +77,6 @@ volatile uint16_t dt_identification;
 
 // the communication task
 void commTask(void *p);
+void stmSendMessage(char outChar);
 
 #endif /* COMMTASK_H_ */

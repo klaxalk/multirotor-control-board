@@ -17,12 +17,13 @@
 
 volatile bool altitudeControllerEnabled;
 volatile bool mpcControllerEnabled;
+volatile bool kalmanStarted = 0;
 volatile float lastGoodGroundDistance;
 volatile float groundDistanceConfidence;
+volatile int16_t conoutput;
+volatile float kalmanFit = 20;
 uint8_t cyclesSinceGoodDistance = 0;
 uint8_t position = 0;
-volatile char kalmanStarted = 0;
-volatile float kalmanFit = 20;
 float differences[20] = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1,  1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
 
 /* -------------------------------------------------------------------- */
@@ -214,12 +215,10 @@ void kalmanStep() {
 	position = ((position < 19) ? (position + 1) : 0);
 	
 	if(kalmanStarted) {
-		altitudeEvaluateAndSendToKalman();
-		led_green_on();
+		altitudeEvaluateAndSendToKalman();		
 	} else {
 		altitudeSendToKalman();
-		kalmanStarted = (kalmanFit < KALMAN_FIT_THRESHOLD);
-		led_green_toggle();
+		kalmanStarted = (kalmanFit < KALMAN_FIT_THRESHOLD);		
 	}
 }
 
@@ -251,9 +250,10 @@ void calculateNextThrottle() {
 		temp = -CONTROLLER_THROTTLE_SATURATION;
 	}
 	
-	portENTER_CRITICAL();
-	controllerThrottleOutput = (int16_t) temp;
-	portEXIT_CRITICAL();
+	conoutput = (int16_t) temp;
+	//portENTER_CRITICAL();
+	//controllerThrottleOutput = (int16_t) temp;
+	//portEXIT_CRITICAL();
 }
 
 void resetThrottleKalman() {

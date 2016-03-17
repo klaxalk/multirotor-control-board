@@ -16,7 +16,7 @@ volatile char flightStarted = 0;
 void controllersTask(void *p) {
 	
 	int16_t startTimeMillis, endTimeMillis;
-	flightStarted = 1;
+	flightStarted = 0;
 	
 	while (1) {
 		
@@ -26,16 +26,16 @@ void controllersTask(void *p) {
 
 			kalmanStep();
 			
-			if (altitudeControllerEnabled == true) {
+			//if (altitudeControllerEnabled == true) {
 				calculateNextThrottle();
-			}
-			
+			//}
 		} else {
 			resetThrottleKalman();
 		}
 		
-		if ((groundDistance > 0.4) && (RCchannel[THROTTLE] > 5500))
-		flightStarted = 1;
+		if ((groundDistance > 0.35) && (RCchannel[THROTTLE] > 6000)) {
+			flightStarted = 1;
+		}
 		
 		
 		endTimeMillis = milisecondsTimer;
