@@ -300,11 +300,11 @@ static void c4_chartstep_c4_kalman_verifier(SFc4_kalman_verifierInstanceStruct
   real_T c4_b_y;
   int32_T c4_i12;
   static real_T c4_b_a[25] = { 1.0, 0.0, 0.0, 0.0, 0.0, 0.05, 1.0, 0.0, 0.0, 0.0,
-    0.0, 0.05, 0.0, -0.74291, 0.0, 0.0, 0.0, 1.0, 1.67972, 0.0, 0.0, 0.0, 1.0,
+    0.0, 0.05, 0.0, -0.66953, 0.0, 0.0, 0.0, 1.0, 1.58995, 0.0, 0.0, 0.0, 1.0,
     0.0, 1.0 };
 
   int32_T c4_i13;
-  static real_T c4_c_a[5] = { 0.0, 0.0, 0.10454, 0.11146, 0.0 };
+  static real_T c4_c_a[5] = { 0.0, 0.0, 0.117, 0.1271, 0.0 };
 
   int32_T c4_i14;
   static real_T c4_d_a[5] = { 1.0, 0.0, 0.0, 0.0, 0.0 };
@@ -340,7 +340,7 @@ static void c4_chartstep_c4_kalman_verifier(SFc4_kalman_verifierInstanceStruct
   int32_T c4_i31;
   int32_T c4_i32;
   static real_T c4_d_b[25] = { 1.0, 0.05, 0.0, 0.0, 0.0, 0.0, 1.0, 0.05, 0.0,
-    0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0, -0.74291, 1.67972, 0.0, 0.0, 0.0,
+    0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0, -0.66953, 1.58995, 0.0, 0.0, 0.0,
     0.0, 0.0, 1.0 };
 
   int32_T c4_i33;
@@ -2439,10 +2439,10 @@ extern void utFree(void*);
 
 void sf_c4_kalman_verifier_get_check_sum(mxArray *plhs[])
 {
-  ((real_T *)mxGetPr((plhs[0])))[0] = (real_T)(856339798U);
-  ((real_T *)mxGetPr((plhs[0])))[1] = (real_T)(959445658U);
-  ((real_T *)mxGetPr((plhs[0])))[2] = (real_T)(4224115012U);
-  ((real_T *)mxGetPr((plhs[0])))[3] = (real_T)(743215398U);
+  ((real_T *)mxGetPr((plhs[0])))[0] = (real_T)(3389330226U);
+  ((real_T *)mxGetPr((plhs[0])))[1] = (real_T)(3618415576U);
+  ((real_T *)mxGetPr((plhs[0])))[2] = (real_T)(4222824283U);
+  ((real_T *)mxGetPr((plhs[0])))[3] = (real_T)(2863416576U);
 }
 
 mxArray *sf_c4_kalman_verifier_get_autoinheritance_info(void)
@@ -2454,7 +2454,7 @@ mxArray *sf_c4_kalman_verifier_get_autoinheritance_info(void)
     autoinheritanceFields);
 
   {
-    mxArray *mxChecksum = mxCreateString("C6HkeJMBKYXuSWqsxMWkOF");
+    mxArray *mxChecksum = mxCreateString("3rVDfIwSa49zJ5Gl8hdt5F");
     mxSetField(mxAutoinheritanceInfo,0,"checksum",mxChecksum);
   }
 
@@ -2708,8 +2708,8 @@ static void chart_debug_initialization(SimStruct *S, unsigned int
 
         /* Initialization of MATLAB Function Model Coverage */
         _SFD_CV_INIT_EML(0,1,1,1,0,0,0,0,0,0,0);
-        _SFD_CV_INIT_EML_FCN(0,0,"eML_blk_kernel",0,-1,596);
-        _SFD_CV_INIT_EML_IF(0,1,0,385,408,538,596);
+        _SFD_CV_INIT_EML_FCN(0,0,"eML_blk_kernel",0,-1,615);
+        _SFD_CV_INIT_EML_IF(0,1,0,387,410,540,615);
 
         {
           unsigned int dimVector[1];
@@ -2790,7 +2790,7 @@ static void chart_debug_initialization(SimStruct *S, unsigned int
 
 static const char* sf_get_instance_specialization(void)
 {
-  return "DPMQiQQkU5nw5Tlb2kztiE";
+  return "8JC65lwDb0QtCurqtWerp";
 }
 
 static void sf_opaque_initialize_c4_kalman_verifier(void *chartInstanceVar)
@@ -2967,10 +2967,10 @@ static void mdlSetWorkWidths_c4_kalman_verifier(SimStruct *S)
   }
 
   ssSetOptions(S,ssGetOptions(S)|SS_OPTION_WORKS_WITH_CODE_REUSE);
-  ssSetChecksum0(S,(1864489378U));
-  ssSetChecksum1(S,(299212257U));
-  ssSetChecksum2(S,(1759951110U));
-  ssSetChecksum3(S,(2644134579U));
+  ssSetChecksum0(S,(407198845U));
+  ssSetChecksum1(S,(3032689607U));
+  ssSetChecksum2(S,(930827027U));
+  ssSetChecksum3(S,(3961376698U));
   ssSetmdlDerivatives(S, NULL);
   ssSetExplicitFCSSCtrl(S,1);
   ssSupportsMultipleExecInstances(S,1);

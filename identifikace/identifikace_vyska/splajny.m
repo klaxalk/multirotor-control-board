@@ -4,7 +4,7 @@ data = load('LOG-9658.TXT');
 
 %spline and filter config
 splinestart = 9;
-splinestop = 50;
+splinestop = 200;
 period = 0.05;
 sensor_bottom = 0.4;
 sensor_top = 1.6;

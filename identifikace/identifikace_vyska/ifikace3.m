@@ -1,4 +1,4 @@
-data = iddata(accel_ident, ((cont_ident/100) + (volt_ident*2.3) -92.4), period);
+data = iddata(accel_ident, ((cont_ident/100) + (volt_ident*2.3) -92.37), period);
 data.InputName  = 'Some number';
 data.InputUnit  = '-';
 data.OutputName = 'Acceleration';
