@@ -224,14 +224,9 @@ void kalmanStep() {
 
 void calculateNextThrottle() {
 	float error;
-	float temp = 0;
+	float temp = 0;	
 	
-	temp += (ALTITUDE_K1 * kalmanStates.throttle.position);
-	temp += (ALTITUDE_K2 * kalmanStates.throttle.velocity);
-	temp += (ALTITUDE_K3 * kalmanStates.throttle.acceleration);
-	temp += (ALTITUDE_K4 * kalmanStates.throttle.omega);
-	
-	error = throttleSetpoint - kalmanStates.throttle.position;
+	error = kalmanStates.throttle.position - throttleSetpoint;
 	throttleIntegration += error * DT;
 	if (throttleIntegration > CONTROLLER_THROTTLE_SATURATION*2/3) {
 		throttleIntegration = CONTROLLER_THROTTLE_SATURATION*2/3;
@@ -239,7 +234,11 @@ void calculateNextThrottle() {
 	if (throttleIntegration <  -CONTROLLER_THROTTLE_SATURATION*2/3) {
 		throttleIntegration = -CONTROLLER_THROTTLE_SATURATION*2/3;
 	}
-	temp += (ALTITUDE_K5 * throttleIntegration);
+	temp += (ALTITUDE_K1 * throttleIntegration);
+	temp += (ALTITUDE_K2 * kalmanStates.throttle.position);
+	temp += (ALTITUDE_K3 * kalmanStates.throttle.velocity);
+	temp += (ALTITUDE_K4 * kalmanStates.throttle.acceleration);
+	temp += (ALTITUDE_K5 * kalmanStates.throttle.omega);
 	
 	
 	if (temp > CONTROLLER_THROTTLE_SATURATION) {

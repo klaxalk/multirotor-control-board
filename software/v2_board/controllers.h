@@ -74,6 +74,7 @@ volatile float estimatedThrottlePos_prev;
 
 // for altitude controller
 volatile float throttleSetpoint;
+volatile float throttleIntegration;
 volatile float groundDistanceConfidence;
 
 /* -------------------------------------------------------------------- */
