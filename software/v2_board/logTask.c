@@ -16,7 +16,7 @@
 #include "mpcHandler.h"
 #include "battery.h"
 
-#define DELAY_MILISECONDS 20
+#define DELAY_MILISECONDS 50
 
 void logTask(void *p) { // only logs throttle-relevant data
 	
@@ -28,6 +28,42 @@ void logTask(void *p) { // only logs throttle-relevant data
 	
 	while (1) {
 		startTimeMillis = milisecondsTimer;
+		
+		sprintf(temp, "%2.3f, ", kalmanStates.elevator.position);
+		usartBufferPutString(usart_buffer_log, temp, 10);
+		
+		sprintf(temp, "%2.3f, ", kalmanStates.aileron.position);
+		usartBufferPutString(usart_buffer_log, temp, 10);
+		
+		sprintf(temp, "%2.3f, ", kalmanStates.elevator.velocity);
+		usartBufferPutString(usart_buffer_log, temp, 10);
+		
+		sprintf(temp, "%2.3f, ", kalmanStates.aileron.velocity);
+		usartBufferPutString(usart_buffer_log, temp, 10);
+		
+		sprintf(temp, "%2.3f, ", kalmanStates.elevator.acceleration_error);
+		usartBufferPutString(usart_buffer_log, temp, 10);
+		
+		sprintf(temp, "%2.3f, ", kalmanStates.aileron.acceleration_error);
+		usartBufferPutString(usart_buffer_log, temp, 10);
+		
+		sprintf(temp, "%2.3f, ", mpcSetpoints.elevator);
+		usartBufferPutString(usart_buffer_log, temp, 10);
+		
+		sprintf(temp, "%2.3f, ", mpcSetpoints.aileron);
+		usartBufferPutString(usart_buffer_log, temp, 10);
+		
+		sprintf(temp, "%2.3f, ", elevatorSpeed);
+		usartBufferPutString(usart_buffer_log, temp, 10);
+		
+		sprintf(temp, "%2.3f, ", aileronSpeed); //10
+		usartBufferPutString(usart_buffer_log, temp, 10);
+		
+		sprintf(temp, "%d, ", controllerElevatorOutput); //11
+		usartBufferPutString(usart_buffer_log, temp, 10);
+		
+		sprintf(temp, "%d, ", controllerAileronOutput); //12
+		usartBufferPutString(usart_buffer_log, temp, 10);
 		
 		sprintf(temp, "%d, ", (flightStarted*2) + kalmanStarted); //1
 		usartBufferPutString(usart_buffer_log, temp, 10);
@@ -62,9 +98,11 @@ void logTask(void *p) { // only logs throttle-relevant data
 		sprintf(temp, "%2.3f, ", kalmanFit); //11
 		usartBufferPutString(usart_buffer_log, temp, 10);
 		
-		sprintf(temp, "%d, ", conoutput); //12
+		sprintf(temp, "%d, ", controllerThrottleOutput); //12
 		usartBufferPutString(usart_buffer_log, temp, 10);
 				
+		sprintf(temp, "%2.3f, ", opticalFlowData.ground_distance); //13
+		usartBufferPutString(usart_buffer_log, temp, 10);				
 		
 		usartBufferPutByte(usart_buffer_log, '\n', 10);//13
 		
@@ -75,6 +113,6 @@ void logTask(void *p) { // only logs throttle-relevant data
 		else
 		delayMillis = endTimeMillis - startTimeMillis;
 		
-		vTaskDelay((int16_t) ((int16_t) DELAY_MILISECONDS - delayMillis));// makes the 50Hz loop
+		vTaskDelay((int16_t) ((int16_t) DELAY_MILISECONDS - delayMillis));// makes the 20Hz loop
 	}
 }

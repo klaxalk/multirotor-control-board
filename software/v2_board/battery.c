@@ -11,7 +11,7 @@
 #include "system.h"
 #include "TC_driver.h"
 
-volatile int16_t batteryLevel = 0;
+volatile int16_t batteryLevel = 2721;
 
 uint8_t ReadCalibrationByte(uint8_t index) {
 	
@@ -72,5 +72,6 @@ float getBatteryVoltage() {
 
 ISR(ADCA_CH0_vect) {
 	
-	batteryLevel = ADCA.CH0RES;	
+	batteryLevel = 2721;
+	//batteryLevel = ADCA.CH0RES;	
 }

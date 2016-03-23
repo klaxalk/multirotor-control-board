@@ -26,9 +26,9 @@ void controllersTask(void *p) {
 
 			kalmanStep();
 			
-			//if (altitudeControllerEnabled == true) {
+			if (altitudeControllerEnabled == true) {
 				calculateNextThrottle();
-			//}
+			}
 		} else {
 			resetThrottleKalman();
 		}

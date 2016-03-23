@@ -296,7 +296,7 @@ void stmResetThrottleKalman(float initThrottle) {
 	char crc = 0;
 	
 	sendChar(usart_buffer_stm, 'a', &crc);		// this character initiates the transmission
-	sendChar(usart_buffer_stm, 1 + 2*4, &crc);		// this will be the size of the message
+	sendChar(usart_buffer_stm, 1 + 4, &crc);		// this will be the size of the message
 	
 	sendChar(usart_buffer_stm, '5', &crc);		// id of the message
 	
@@ -314,7 +314,7 @@ void stmSetThrottleKalmanPosition(float throttlePos) {
 	char crc = 0;
 	
 	sendChar(usart_buffer_stm, 'a', &crc);		// this character initiates the transmission
-	sendChar(usart_buffer_stm, 1 + 2*4, &crc);		// this will be the size of the message
+	sendChar(usart_buffer_stm, 1 + 4, &crc);		// this will be the size of the message
 	
 	sendChar(usart_buffer_stm, '6', &crc);		// id of the message
 	

@@ -90,6 +90,7 @@ void mainTask(void *p) {
 				
 				setpointChangeTrigger = 1;
 		
+		        // up
 				if ((aux2filtered > (PPM_IN_MIDDLE_LENGTH + 300))) {
 			
 					main2commMessage.messageType = SET_SETPOINT;
@@ -100,62 +101,18 @@ void mainTask(void *p) {
 					AUX2_previous = 1;
 					led_orange_off();
 			
+			    // down
 				} else if ((aux2filtered < (PPM_IN_MIDDLE_LENGTH - 300))) {
-					
-					main2commMessage.messageType = SET_TRAJECTORY;
-
-					// when the trajectory is over
-					if (++currentSetpointIdx >= TRAJECTORY_LENGTH)
-						currentSetpointIdx = TRAJECTORY_LENGTH-1; // reset it and go again
-						
-					int16_t futureSetpointIdx = currentSetpointIdx;
-					
-					// calculate the setpoint correction based on the multicon blob detection
-					#ifdef MULTICON
-		
-					if (numberOfDetectedBlobs >= 1) {
-			
-						correctionX = kalmanStates.elevator.position + blobs[0].x - pgm_read_float(&(elevatorDiff[currentSetpointIdx])) - pgm_read_float(&(elevator[currentSetpointIdx]));
-						correctionY = kalmanStates.aileron.position + blobs[0].y - pgm_read_float(&(aileronDiff[currentSetpointIdx])) - pgm_read_float(&(aileron[currentSetpointIdx]));
-				
-					}
-		
-					#endif
-					
-					// calculate the setpoint correction based on the multicon blob detection
-					#ifdef RASPBERRY_PI
-					
-					if (rpiOk == 1) {
-						
-						correctionX = kalmanStates.elevator.position + rpix - 0.5 - pgm_read_float(&(elevator[currentSetpointIdx]));
-						correctionY = kalmanStates.aileron.position + rpiy - pgm_read_float(&(aileron[currentSetpointIdx]));
-					}
-					
-					#endif
-					
-					int i;
-					for (i = 0; i < 5; i++) {
-						
-						#if defined (MULTICON) || defined (RASPBERRY_PI)
-
-							main2commMessage.data.trajectory.elevatorTrajectory[i] = correctionX + pgm_read_float(&(elevator[futureSetpointIdx]));
-							main2commMessage.data.trajectory.aileronTrajectory[i] = correctionY + pgm_read_float(&(aileron[futureSetpointIdx]));
-						
-						#else	
-
-							main2commMessage.data.trajectory.elevatorTrajectory[i] = pgm_read_float(&(elevator[futureSetpointIdx]));
-							main2commMessage.data.trajectory.aileronTrajectory[i] = pgm_read_float(&(aileron[futureSetpointIdx]));
-						
-						#endif
-
-						futureSetpointIdx = futureSetpointIdx + 15;
-					}
-
+								
+					main2commMessage.messageType = SET_SETPOINT;
+					main2commMessage.data.simpleSetpoint.elevator = 0;
+					main2commMessage.data.simpleSetpoint.aileron = 0;
 					xQueueSend(main2commsQueue, &main2commMessage, 0);
 					
 					AUX2_previous = 2;
 					led_orange_on();
 
+				// mid
 				} else if ((abs(aux2filtered - PPM_IN_MIDDLE_LENGTH) <= 300)) {
 			
 					main2commMessage.messageType = SET_SETPOINT;

@@ -117,6 +117,7 @@ void enableAltitudeController() {
 	}
 	
 	altitudeControllerEnabled = true;
+	throttleIntegration = 0;
 }
 
 void disableAltitudeController() {
@@ -126,6 +127,7 @@ void disableAltitudeController() {
 	}
 	
 	altitudeControllerEnabled = false;
+	throttleIntegration = 0;
 }
 
 void enableMpcController() {
@@ -234,25 +236,25 @@ void calculateNextThrottle() {
 	if (throttleIntegration <  -CONTROLLER_THROTTLE_SATURATION*2/3) {
 		throttleIntegration = -CONTROLLER_THROTTLE_SATURATION*2/3;
 	}
-	temp += (ALTITUDE_K1 * throttleIntegration);
-	temp += (ALTITUDE_K2 * kalmanStates.throttle.position);
-	temp += (ALTITUDE_K3 * kalmanStates.throttle.velocity);
-	temp += (ALTITUDE_K4 * kalmanStates.throttle.acceleration);
-	temp += (ALTITUDE_K5 * kalmanStates.throttle.omega);
-	
+	temp -= (ALTITUDE_K1 * throttleIntegration);
+	temp -= (ALTITUDE_K2 * error);
+	temp -= (ALTITUDE_K3 * kalmanStates.throttle.velocity);
+	temp -= (ALTITUDE_K4 * kalmanStates.throttle.acceleration);
+	temp -= (ALTITUDE_K5 * kalmanStates.throttle.omega);
 	
 	if (temp > CONTROLLER_THROTTLE_SATURATION) {
 		temp = CONTROLLER_THROTTLE_SATURATION;
+		throttleIntegration -= error * DT;
 	}
 	
 	if (temp < -CONTROLLER_THROTTLE_SATURATION) {
 		temp = -CONTROLLER_THROTTLE_SATURATION;
+		throttleIntegration -= error * DT;
 	}
 	
-	conoutput = (int16_t) temp;
-	//portENTER_CRITICAL();
-	//controllerThrottleOutput = (int16_t) temp;
-	//portEXIT_CRITICAL();
+	portENTER_CRITICAL();
+	controllerThrottleOutput = (int16_t) (temp);
+	portEXIT_CRITICAL();
 }
 
 void resetThrottleKalman() {

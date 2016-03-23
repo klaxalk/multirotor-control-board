@@ -53,11 +53,11 @@ volatile int16_t conoutput;
 #define ALTITUDE_KI 70
 #define ALTITUDE_KV 2000
 
-#define ALTITUDE_K1 240
-#define ALTITUDE_K2 507
-#define ALTITUDE_K3 -253
-#define ALTITUDE_K4 594
-#define ALTITUDE_K5 1
+#define ALTITUDE_K1 37.6
+#define ALTITUDE_K2 204.3
+#define ALTITUDE_K3 361.6
+#define ALTITUDE_K4 0.0
+#define ALTITUDE_K5 0.0
 
 #endif
 
@@ -65,7 +65,7 @@ volatile int16_t conoutput;
 #define ALTITUDE_MAXIMUM	2.00 // used to crop values from PX4Flow
 #define ALTITUDE_MINIMUM	0.35 // used for landing (must be > 0.3)
 #define ALTITUDE_SPEED_MAX	0.8 // in m/s, must be positive!
-#define GRND_DIST_DIFF_MAX	0.4 // maximum allowed difference between two measurements
+#define GRND_DIST_DIFF_MAX	0.3 // maximum allowed difference between two measurements
 
 // for altitude estimator
 volatile float estimatedThrottlePos;
