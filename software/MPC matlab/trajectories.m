@@ -1,12 +1,20 @@
 %% circle
+clear all
 
 dt = 0.0101;
 
-k = 0.007;
-speed = 0.2;
+k = 0.0025;
+speed = 0.25;
 
-elevator_vel = [speed*sin(0:k:2*pi) -speed*sin(0:k:2*pi)];
-aileron_vel = [-speed*cos(0:k:2*pi) -speed*cos(0:k:2*pi)];
+% osmicka
+% elevator_vel = [speed*sin(0:k:2*pi) -speed*sin(0:k:2*pi)];
+% aileron_vel = [-speed*cos(0:k:2*pi) -speed*cos(0:k:2*pi)];
+
+elevator_vel = [zeros(1, 600) speed*ones(1, 2000) zeros(1, 600) -speed*ones(1, 2000) zeros(1, 600)];
+aileron_vel = [elevator_vel.*0];
+
+% aileron_vel = [zeros(1, 600) -speed*ones(1, 600) speed*ones(1, 400) -speed*ones(1, 400) speed*ones(1, 400) -speed*ones(1, 400) speed*sin(0:k:pi) zeros(1, 600)];
+% elevator_vel = aileron_vel.*0;
 
 elevator_pos = integrate(elevator_vel, dt);
 aileron_pos = integrate(aileron_vel, dt);
@@ -45,9 +53,9 @@ axis equal;
 
 %%
 
-fid = fopen('trajectories.c', 'w');
+fid = fopen('trajectoryCircle.c', 'w');
 
-fprintf(fid, '#include "trajectories.h"\n');
+fprintf(fid, '#include "trajectoryCircle.h"\n');
 fprintf(fid, '#include <avr/pgmspace.h>');
 
 fprintf(fid, '\n\n');

@@ -24,7 +24,7 @@ typedef struct {
 
 magnetometerData_t magnetometerData;
 
-void magnetometerInit();
-void magnetometerRead();
+void magnetometerInit(void);
+void magnetometerRead(void);
 
 #endif /* MAGNETOMETER_H_ */

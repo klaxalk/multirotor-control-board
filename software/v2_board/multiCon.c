@@ -10,6 +10,8 @@
 #include "multiCon.h"
 #include "communication.h"
 #include "mpcHandler.h"
+#include "xbee.h"
+#include "commTask.h"
 
 uint8_t numberOfDetectedBlobs = 0;
 uint8_t multiconErrorState = 0;
@@ -33,7 +35,11 @@ uint8_t multiconCrcIn = 0;
 /*	Variables for bluetooth RSSI										*/
 /* -------------------------------------------------------------------- */
 
-volatile float bluetooth_RSSI = 0;
+#ifdef MATOUS
+
+btradio_t radios[NUMBER_OF_RADIOS];
+
+#endif
 
 /* -------------------------------------------------------------------- */
 /*	Fetch the incoming char into a buffer, completes the message		*/
@@ -147,7 +153,7 @@ void sendBlobs(uint64_t address) {
 	writeFloatToBuffer(buffer, mpcSetpoints.aileron, idx);
 	idx += 4;
 	
-	uint8_t i, j;
+	uint8_t i;
 	for (i = 0; i < numberOfDetectedBlobs; i++) {
 		
 		writeFloatToBuffer(buffer, blobs[i].x, idx);

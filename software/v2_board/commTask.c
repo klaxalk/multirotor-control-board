@@ -91,6 +91,7 @@ volatile uint16_t dt_identification = 0;
 xbeeMessageHandler_t xbeeMessage;
 volatile uint8_t RSSI;
 volatile uint64_t respondTo = 0;
+volatile uint32_t timeStamp = 0;
 
 void commTask(void *p) {
 	
@@ -143,12 +144,16 @@ void commTask(void *p) {
 						mpcAileronOutput = tempInt;
 					}
 				
+					#ifdef MPC_POSITION_CONTROLLER
+				
 					// copy the saturated values
 					controllerElevatorOutput = mpcElevatorOutput;
 					controllerAileronOutput = mpcAileronOutput;
 					
 					mpcSetpoints.elevator = readFloat(stmMessage.messageBuffer, &idx);
 					mpcSetpoints.aileron = readFloat(stmMessage.messageBuffer, &idx);
+					
+					#endif
 				
 					portEXIT_CRITICAL();
 					
@@ -167,69 +172,63 @@ void commTask(void *p) {
 					kalmanStates.aileron.acceleration = readFloat(stmMessage.messageBuffer, &idx);
 					kalmanStates.aileron.acceleration_input = readFloat(stmMessage.messageBuffer, &idx);
 					kalmanStates.aileron.acceleration_error = readFloat(stmMessage.messageBuffer, &idx);
-					
-					kalmanStates.elevatorPositionCovariance = readFloat(stmMessage.messageBuffer, &idx);
-					kalmanStates.aileronPositionCovariance = readFloat(stmMessage.messageBuffer, &idx);
 				}
 			}
 		}
 		
 #ifdef RASPBERRY_PI
 
-		/* -------------------------------------------------------------------- */
-		/*	A character received from raspberry									*/
-		/* -------------------------------------------------------------------- */
-		if (usartBufferGetByte(usart_buffer_2, &inChar, 0)) {
+/* -------------------------------------------------------------------- */
+/*	A character received from raspberry									*/
+/* -------------------------------------------------------------------- */
+if (usartBufferGetByte(usart_buffer_2, &inChar, 0)) {
+	
+	#ifdef RASPBERRY_DOWNWARD
+	float tempx, tempy, tempz;
+	#endif
+
+	// parse it and handle the message if it is complete
+	if (rpiParseChar(inChar, &rpiMessage)) {
+		
+		// index for iterating the rxBuffer
+		int idx = 0;
+		
+		switch (rpiMessage.messageId) {
+			
+			case 'p':
+			
+			#ifdef RASPBERRY_FORWARD
+			rpiy = -readFloat(rpiMessage.messageBuffer, &idx);
+			rpiz = readFloat(rpiMessage.messageBuffer, &idx);
+			rpix = readFloat(rpiMessage.messageBuffer, &idx);
+			#endif
 			
 			#ifdef RASPBERRY_DOWNWARD
-			float tempx, tempy, tempz;
-			#endif
-
-			// parse it and handle the message if it is complete
-			if (rpiParseChar(inChar, &rpiMessage, &rpiReceiver)) {
-				
-				// index for iterating the rxBuffer
-				int idx = 0;
-				
-				switch (rpiMessage.messageId) {
-					
-					case 'p':
-					
-						#ifdef RASPBERRY_FORWARD
-						rpiy = -readFloat(rpiMessage.messageBuffer, &idx);
-						rpiz = readFloat(rpiMessage.messageBuffer, &idx);
-						rpix = readFloat(rpiMessage.messageBuffer, &idx);
-						#endif
-						
-						#ifdef RASPBERRY_DOWNWARD
-						tempy = readFloat(rpiMessage.messageBuffer, &idx);
-						tempz = readFloat(rpiMessage.messageBuffer, &idx);
-						tempx = readFloat(rpiMessage.messageBuffer, &idx);
-						
-						rpiy = tempy;
-						rpix = 0.9*tempz + (1 - 0.9)*tempx;
-						rpiz = (1 - 0.9)*tempz + 0.9*tempx;
-						#endif
-						
-						rpiOk = 1;
-					
-						led_green_on();
-						
-					break;
-					
-					case '0':
-					
-						rpiOk = 0;
-						
-						led_green_off();
-						
-					break;
-				}
+			tempy = readFloat(rpiMessage.messageBuffer, &idx);
+			tempz = readFloat(rpiMessage.messageBuffer, &idx);
+			tempx = readFloat(rpiMessage.messageBuffer, &idx);
 			
-				// free the buffer of the receiver
-				rpiReceiver.receiverState = NOT_RECEIVING;
-			}
+			rpiy = tempy;
+			rpix = 0.9*tempz + (1 - 0.9)*tempx;
+			rpiz = (1 - 0.9)*tempz + 0.9*tempx;
+			#endif
+			
+			rpiOk = 1;
+			
+			led_green_on();
+			
+			break;
+			
+			case '0':
+			
+			rpiOk = 0;
+			
+			led_green_off();
+			
+			break;
 		}
+	}
+}
 
 #endif
 
@@ -274,6 +273,7 @@ void commTask(void *p) {
 				// index for iterating the rxBuffer
 				int idx = 0;
 				uint8_t blobId;
+				float tempFloat;
 				
 				switch (multiconMessage.messageId) {
 					
@@ -284,8 +284,8 @@ void commTask(void *p) {
 						if (blobId < NUMBER_OF_BLOBS) {
 							
 							blobs[blobId].y = readFloat(multiconMessage.messageBuffer, &idx);
-							blobs[blobId].z  = readFloat(multiconMessage.messageBuffer, &idx);
-							blobs[blobId].x  = readFloat(multiconMessage.messageBuffer, &idx);
+							blobs[blobId].z = readFloat(multiconMessage.messageBuffer, &idx);
+							blobs[blobId].x = readFloat(multiconMessage.messageBuffer, &idx);
 							
 							/*
 							uint8_t temp[32];
@@ -320,7 +320,15 @@ void commTask(void *p) {
 					case 'M':
 					
 						// led_green_toggle();
-						bluetooth_RSSI = readFloat(multiconMessage.messageBuffer, &idx);
+						tempFloat = readFloat(multiconMessage.messageBuffer, &idx);
+						blobId = readUint8(multiconMessage.messageBuffer, &idx);
+					
+						#ifdef MATOUS
+						radios[blobId].RSSI = tempFloat;
+						radios[blobId].timer++;
+						#endif
+						
+						led_orange_toggle();
 					
 					break;
 				}
@@ -337,29 +345,56 @@ void commTask(void *p) {
 			if (xbeeParseChar(inChar, &xbeeMessage, &xbeeReceiver)) {
 				
 				if (xbeeMessage.apiId == XBEE_API_PACKET_RECEIVE) {
+					
+					int idx = 0;
 
 					switch (xbeeMessage.content.receiveResponse.messageId) {
+						
+						#ifdef MULTICON
 						
 						case 'R':
 
 							respondTo = xbeeMessage.content.receiveResponse.address64;
-							xbeeGetRSSI();
+							
+							// led_green_toggle();
+							uint8_t temp[32];
+												
+							writeUint8ToBuffer(&temp, (uint8_t) 'M', 0);
+							writeFloatToBuffer(&temp, (float) kalmanStates.elevator.position, 1);
+							writeFloatToBuffer(&temp, (float) kalmanStates.aileron.position, 5);
+							writeFloatToBuffer(&temp, (float) 0, 9);
+							writeFloatToBuffer(&temp, (float) 0, 13);
+							// writeFloatToBuffer(&temp, (float) bluetooth_RSSI, 17);
+							
+							xbeeSendMessageTo(temp, 18, respondTo);
 						
 						break;
 						
+						#endif
+						
 						case 'M':
 						
+							// timeStamp = xbeeMessage.content.receiveResponse.payloadSize;
+							timeStamp = readUint32(xbeeMessage.content.receiveResponse.payload, &idx);
+						
+							#ifdef RASPBERRY_PI
+							sendPiBlob(xbeeMessage.content.receiveResponse.address64);
+							#endif
+							
+							#ifdef MULTICON
 							sendBlobs(xbeeMessage.content.receiveResponse.address64);
+							#endif
 						
 						break;
 					}
 					
 				} else if (xbeeMessage.apiId == XBEE_API_PACKET_AT_RESPONSE) {
 				
+					/*
+				
 					// led_green_toggle();
 					uint8_t temp[32];
 					
-					/*
 					writeUint8ToBuffer(&temp, (uint8_t) 'M', 0);
 					writeFloatToBuffer(&temp, (float) kalmanStates.elevator.position, 1);
 					writeFloatToBuffer(&temp, (float) kalmanStates.aileron.position, 5);
@@ -367,8 +402,7 @@ void commTask(void *p) {
 					writeFloatToBuffer(&temp, (float) kalmanStates.aileronPositionCovariance, 13);
 					writeFloatToBuffer(&temp, (float) bluetooth_RSSI, 17);
 					writeUint8ToBuffer(&temp, (uint8_t) xbeeMessage.content.atReponse.cmdData, 21);
-
-					xbeeSendMessageTo(&temp, 22, respondTo);
+					
 					*/
 				
 				}

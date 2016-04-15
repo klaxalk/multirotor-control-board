@@ -8,7 +8,7 @@ clear all
 
 global COM;
 
-COM = serial('COM19');
+COM = serial('COM3');
 set(COM,'BaudRate', 115200);
 COM.DataBits = 8;
 COM.Parity = 'none';
@@ -32,16 +32,11 @@ end
 
 timeStamps(1, 1:4) = 0;
 
-startTime = posixtime(datetime);
-
 while true
-    
-    actualTime = posixtime(datetime) - startTime;
     
     for i=1:3
         if ((posixtime(datetime) - (4+i*0.5)) > timeStamps(i))
-
-            packet = createTRPacket(xbeeAdresses{i}, ['M' typecast(uint32(actualTime), 'uint8')]);
+            packet = createTRPacket(xbeeAdresses{i}, ['M']);
             
             fprintf('UAV %d is out\n', i);
             
@@ -76,6 +71,8 @@ while true
         
    if COM.bytesavailable > 0
        
+       33
+       
         packetIN = fread(COM, 1); 
         
         if packetIN==hex2dec('7E')
@@ -93,7 +90,7 @@ while true
                continue; 
             end
             
-            numOfBlobs = data(2);
+            numOfBlobs = data(2)
 
             idx = 3;
             
@@ -107,23 +104,51 @@ while true
             sety = typecast(uint8(data(idx:idx+3)), 'single');
             idx = idx + 4;
             
+            % pro Cibulku             
+%             pes = uint8(data(idx))
+%             idx = idx + 3;
+%             
+%             kocka = typecast(uint8(data(idx:idx+3)), 'single');
+%             idx = idx + 4;
+%             
+%             mtb_target(1) = typecast(uint8(data(idx:idx+3)), 'single');
+%             idx = idx + 4;
+%             mtb_target(2) = typecast(uint8(data(idx:idx+3)), 'single');
+%             idx = idx + 4;
+%             mtb_heli_1(1) = typecast(uint8(data(idx:idx+3)), 'single');
+%             idx = idx + 4;
+%             mtb_heli_1(2) = typecast(uint8(data(idx:idx+3)), 'single');
+%             idx = idx + 4;
+%             mtb_heli_2(1) = typecast(uint8(data(idx:idx+3)), 'single');
+%             idx = idx + 4;
+%             mtb_heli_2(2) = typecast(uint8(data(idx:idx+3)), 'single');
+%             idx = idx + 4;
+            
+            setx;
+            sety;
+            
+            figure(1);
+            
             if (from == hex2dec('B4'))
                 subplot(1, 3, 1);
-                packet = createTRPacket(xbeeAdresses{2}, ['M' typecast(uint32(actualTime), 'uint8')]);
+                packet = createTRPacket(xbeeAdresses{2}, ['M']);
                 timeStamps(2) = posixtime(datetime);
                 fprintf('received telemetry\n');
             elseif (from == hex2dec('BD'))
                 subplot(1, 3, 3);
-                packet = createTRPacket(xbeeAdresses{3}, ['M' typecast(uint32(actualTime), 'uint8')]);
+                packet = createTRPacket(xbeeAdresses{3}, ['M']);
                 timeStamps(3) = posixtime(datetime);
+                fprintf('prislo R\n');
             elseif (from == hex2dec('BF'))
                 subplot(1, 3, 2);
-                packet = createTRPacket(xbeeAdresses{1}, ['M' typecast(uint32(actualTime), 'uint8')]);
+                packet = createTRPacket(xbeeAdresses{1}, ['M']);
                 timeStamps(1) = posixtime(datetime);
+                fprintf('prislo pse\n');
             elseif (from == hex2dec('BB'))
                 subplot(1, 3, 2);
-                packet = createTRPacket(xbeeAdresses{4}, ['M' typecast(uint32(actualTime), 'uint8')]);
+                packet = createTRPacket(xbeeAdresses{4}, ['M']);
                 timeStamps(4) = posixtime(datetime);
+                fprintf('prislo M\n');
             end
             
             hold off
@@ -131,6 +156,12 @@ while true
             hold on
             drawUAV(-posy, posx, numOfBlobs);
 
+            circle(-mtb_target(2), mtb_target(1), 0.4)
+            circle(-mtb_heli_1(2), mtb_heli_1(1), 0.4)
+            circle(-mtb_heli_2(2), mtb_heli_2(1), 0.4)
+            circle(-mtb_heli_1(2), mtb_heli_1(1), 3)
+            circle(-mtb_heli_2(2), mtb_heli_2(1), 3)
+            
             blobs = zeros(2, numOfBlobs);
             for i=1:numOfBlobs
                for j=1:2
@@ -145,14 +176,13 @@ while true
                elseif (i == 3)
                 blobColor = 'k';
                end
-             
                scatter(-blobs(2, i)-posy, blobs(1, i)+posx, 150, blobColor, 'filled'); 
             end
             
-            scatter(-sety, setx, 75, 'k', 'filled'); 
+            scatter(-sety, setx, 75, 'g', 'filled'); 
             
             blobs;
-            osy = 4;
+            osy = 5;
             axis([-posy-osy, -posy+osy, posx-osy, posx+osy]);
             axis equal;
             set(gca,'xtick',[(round(-posy)-2*osy):1:(round(-posy)+2*osy)]);
@@ -167,4 +197,3 @@ while true
    end     
    
 end
-

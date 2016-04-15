@@ -56,8 +56,6 @@ typedef struct {
 
 	oneAxisStates_t elevator;
 	oneAxisStates_t aileron;
-	float elevatorPositionCovariance;
-	float aileronPositionCovariance;
 	
 } kalmanStates_t;
 
@@ -78,6 +76,14 @@ float readFloat(char * message, int * indexFrom);
  * @param index in the buffer where the value starts
  */
 int16_t readInt16(char * message, int * indexFrom);
+
+/**
+ * @brief read a uint32_t value from a message starting at indexFrom
+ *
+ * @param message pointer to a buffer with the message
+ * @param index in the buffer where the value starts
+ */
+uint32_t readUint32(char * message, int * indexFrom);
 
 /**
  * @brief read a char value from a message starting at indexFrom
@@ -141,7 +147,7 @@ void stmSendTrajectory(float elevatorTrajectory[5], float aileronTrajectory[5]);
 /**
  * @brief initialize the LOCAL copy of kalman states to ZERO
  */
-void initializeKalmanStates();
+void initializeKalmanStates(void);
 
 /**
  * @brief parse an incoming char from the STM u-controller

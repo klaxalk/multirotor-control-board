@@ -51,6 +51,15 @@ void writeFloatToBuffer(char * buffer, const float input, uint16_t position) {
 	*(buffer+position+3) = *(tempPtr+3);
 }
 
+// write 2 bytes of int16_t number to the buffer on position
+void writeint16tToBuffer(char * buffer, const int16_t input, uint16_t position) {
+	
+	uint8_t * tempPtr = (uint8_t *) &input;
+	
+	*(buffer+position) = *tempPtr;
+	*(buffer+position+1) = *(tempPtr+1);
+}
+
 // write 4 bytes of float number to the buffer on position
 void writeUint64ToBuffer(char * buffer, const uint64_t input, uint16_t position) {
 	

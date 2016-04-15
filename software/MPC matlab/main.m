@@ -4,7 +4,7 @@ clear all;
 
 dt = 0.0101;
 
-uav = 2;
+uav = 1;
 % 1 = 250tka, KK2
 % 2 = Mikrokopter, KK2, ss = 15
 % 3 = Tricopter, KK2 
@@ -106,6 +106,7 @@ for i=1:horizon_len
     end
 end
 
+BBB = B_roof;
 B_roof = B_roof*U;
 
 %% Matice Q_roof
@@ -183,7 +184,7 @@ end
 for i=11:19
     P_roof(i, i) = 10*P; 
 end
-
+% 
 P_roof(20, 20) = 100*P;
 
 %% Matice H
@@ -195,24 +196,30 @@ H_inv = (0.5*H)^(-1);
 %% ?ídicí smy?ka s MPC
 
 % delka simulace
-simu_len = 2000;
+simu_len = 800;
 
 time(1) = 0;
 
-elevator_vel = 0.25*cos(0:0.003:2*pi*20);
-aileron_vel = 0.25*sin(0:0.003:2*pi*20);
+% elevator_vel = 0.25*cos(0:0.003:2*pi*20);
+% aileron_vel = 0.25*sin(0:0.003:2*pi*20);
+% 
+% elevator_pos = integrate(elevator_vel, dt)*0;
+% aileron_pos = integrate(aileron_vel, dt)*0;
+% aileron_pos = aileron_pos - mean(aileron_pos)*0;
 
-elevator_pos = integrate(elevator_vel, dt)*0;
-aileron_pos = integrate(aileron_vel, dt)*0;
-aileron_pos = aileron_pos - mean(aileron_pos)*0;
+k = 0.0033;
+speed = 0.25;
+aileron_vel = [zeros(1, 200) -speed*ones(1, 600) speed*ones(1, 400) -speed*ones(1, 400) speed*ones(1, 400) -speed*ones(1, 400) speed*sin(0:k:pi) zeros(1, 200)];
+aileron_pos = integrate(aileron_vel, dt);
 
 % reference position
-x_ref = elevator_pos;
+x_ref = [zeros(200, 1); 1*ones(50000, 1)];
+x_ref = aileron_pos*.0;
 
 % x_ref((simu_len+horizon_len)/2+1:end) = 1 + 0.2*sin(linspace(1, 20, (simu_len+horizon_len)/2))';
     
 % initial conditions
-x(:, 1) = [1.2; 0; 0; 0; 0];
+x(:, 1) = [0.4; 0; 0; 0; 0];
 
 % vektor akcnich zasahu
 u = zeros(horizon_len, u_size);
@@ -224,14 +231,14 @@ u_hist(1) = 0;
 saturace = 800;
 
 % max speed
-max_speed = 0.28;
+max_speed = 1;
 
 u_sat = 0;
 
 % kalman variables
 
 kalmanCovariance = eye(5);
-estimate(:, 1) = [1; 0; 0; 0; 0];
+estimate(:, 1) = [0.4; 0; 0; 0; 0];
 
 xd_pure_integration(1) = x(1, 1);
 
@@ -246,6 +253,20 @@ Q_kalman = diag([120]);
 % measurement distribution
 C_kalman = [0, 1, 0, 0, 0];
 
+%% for PID
+
+KP = 300;
+KI = 0.05;
+KD = 800;
+
+integration = 0;
+
+PID = 0;
+error = [0 0];
+error_prev = [0 0];
+
+%% 
+
 for i=2:simu_len
     
     time(i) = time(i-1)+dt;
@@ -257,52 +278,82 @@ for i=2:simu_len
     xd_pure_integration(i) = xd_pure_integration(i-1) + measurement(2, i-1)*dt;
 
     [estimate(:, i), kalmanCovariance] = kalman(estimate(:, i-1), kalmanCovariance, measurement(2, i-1), u_sat, A, B, R_kalman, Q_kalman, C_kalman); 
+    
+    if PID == 0
+    
+        reference = estimate(1, i);
+        for j=2:horizon_len
+            diference = reference(j-1) - x_ref(j+i-1);
+
+            if (diference > max_speed*dt)
+                diference = max_speed*dt;
+            elseif (diference < -max_speed*dt)
+                diference = -max_speed*dt;
+            end
+
+            reference(j) = reference(j-1) - diference;
+        end
+
+        my_ref = zeros(n_states*horizon_len, 1);
+        my_ref(1:n_states:n_states*horizon_len, 1) = reference;
+
+        X_0 = A_roof*(estimate(:, i)) - my_ref;
+        c = (X_0'*Q_roof*B_roof)';
+
+        u_cf = H_inv*(c./(-2));
+
+        % stretch the action vector to the whole horizon     
+        u_cf = U*u_cf;
+
+        % simulace predikce z aktualniho vektoru akcnich zasahu
+        x_cf(:, 1) = estimate(:, i);
+        for j=2:horizon_len
+            x_cf(:, j) = A*x_cf(:, j-1) + B*u_cf(j-1);
+        end
+
+        % take the first action
+        u_sat = u_cf(1);
+    
+    elseif PID == 1
+
+        error(i) = (x_ref(i) - estimate(1, i))*0.1 + error(i-1)*0.9;
+       
+        u_sat = KP*error(i) + KD*((error(i) - error(i-1))/dt) + KI*integration;
         
-    reference = estimate(1, i);
-    for j=2:horizon_len
-        diference = reference(j-1) - x_ref(j+i-1);
-        
-        if (diference > max_speed*dt)
-            diference = max_speed*dt;
-        elseif (diference < -max_speed*dt)
-            diference = -max_speed*dt;
+        if (abs(u_sat) < saturace)
+            integration = integration + sign(error(i));
         end
         
-        reference(j) = reference(j-1) - diference;
-    end
-
-    my_ref = zeros(n_states*horizon_len, 1);
-    my_ref(1:n_states:n_states*horizon_len, 1) = reference;
-    
-    X_0 = A_roof*(estimate(:, i)) - my_ref;
-    c = (X_0'*Q_roof*B_roof)';
-    
-    u_cf = H_inv*(c./(-2));
+        u_hist(i) = u_sat;
+        int_hist(i) = integration;
         
-    % stretch the action vector to the whole horizon     
-    u_cf = U*u_cf;
-    
-    % simulace predikce z aktualniho vektoru akcnich zasahu
-    x_cf(:, 1) = estimate(:, i);
-    for j=2:horizon_len
-        x_cf(:, j) = A*x_cf(:, j-1) + B*u_cf(j-1);
     end
-
-    % take the first action
-    u_sat = u_cf(1);
     
     % saturuj akcni zasah     
     if (u_sat > saturace)
         u_sat = saturace;
     elseif (u_sat < -saturace)
         u_sat = -saturace;
-    end
+    end 
     
     u_hist(i) = u_sat;
 
     % Compute new states     
     x(:, i) = A*x(:, i-1) + (B*u_sat);
     
+%     figure(2);
+%     subplot(1, 2, 2);
+%     hold off
+%     plot(linspace(0, dt*simu_len, simu_len), x_ref(1:simu_len), 'r');
+%     hold on
+%     plot(time, estimate(1, 1:i), 'b');
+%     plot(linspace(time(end), dt, horizon_len), x_cf, 'r--');
+%     drawnow;
+    
+%     subplot(1, 2, 2);
+%     hold off
+%     
+%     hold on
 end
 
 figure(1);
@@ -319,7 +370,7 @@ ylabel('Position [m]');
 
 subplot(2, 2, 2);
 hold off
-plot(time, u_hist, 'r');
+plot(u_hist, 'r');
 hold on
 plot(time, 0*(1:simu_len), 'b');
 title('Predicted action');
@@ -332,7 +383,7 @@ plot(time(1:end-1), estimate(1, 1:(i-1)), 'r');
 hold on
 plot(time, x(1, 1:i), 'b');
 plot(time, xd_pure_integration, 'g');
-axis([0, dt*simu_len, -0.25, 1.25]);
+axis([0, dt*simu_len, -2, 0.5]);
 
 subplot(2, 2, 4);
 hold off
@@ -340,6 +391,3 @@ plot(time(1:end-1), measurement(2, 1:(i-1)), 'r');
 hold on
 plot(time(1:end-1), estimate(2, 1:(i-1)), 'b');
 axis([0, dt*simu_len, -1, 1]);
-
-figure(2);
-plot(estimate(5, :));

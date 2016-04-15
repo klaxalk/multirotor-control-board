@@ -250,6 +250,9 @@ uint8_t xbeeParseChar(uint8_t inChar, xbeeMessageHandler_t * messageHandler, xbe
 						
 					break;
 					
+					case XBEE_MESSAGE_RECEIVED:
+					break;
+					
 				}
 				
 				return 1;
@@ -259,6 +262,9 @@ uint8_t xbeeParseChar(uint8_t inChar, xbeeMessageHandler_t * messageHandler, xbe
 			
 				receiver->receiverState = XBEE_NOT_RECEIVING;
 			}
+		break;
+		
+		case XBEE_MESSAGE_RECEIVED:
 		break;
 	}
 		
@@ -307,7 +313,7 @@ void xbeeSendMessageTo(const uint8_t * message, const uint16_t length, const uin
 	xbeeSendUint8(usart_buffer_xbee, checkSum, &checkSum);
 }
 
-void xbeeGetRSSI() {
+void xbeeGetRSSI(void) {
 	
 	uint8_t checkSum = 0;
 	

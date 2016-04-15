@@ -35,4 +35,10 @@ int8_t px4flowParseChar(uint8_t incomingChar);
 uint8_t readUint8(char * message, int * indexFrom);
 void writeUint64ToBuffer(char * buffer, const uint64_t input, uint16_t position);
 
+// write 4 bytes of float number to the buffer on position
+void writeUint8ToBuffer(char * buffer, const uint8_t input, uint16_t position);
+
+// write 2 bytes of int16_t number to the buffer on position
+void writeint16tToBuffer(char * buffer, const int16_t input, uint16_t position);
+
 #endif // COMMUNICATION_H

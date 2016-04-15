@@ -101,6 +101,17 @@ uint8_t xbeeParseChar(uint8_t inChar, xbeeMessageHandler_t * messageHandler, xbe
 void xbeeSendMessageTo(const uint8_t * message, const uint16_t length, const uint64_t address);
 
 // sends request to xbee for RSSI of the last packet
-void xbeeGetRSSI();
+void xbeeGetRSSI(void);
+
+void xbeeSendChar(UsartBuffer * usartBuffer, const char var, uint8_t * checkSum);
+void xbeeSendFloat(UsartBuffer * usartBuffer, const float var, uint8_t * checkSum);
+void xbeeSendInt16(UsartBuffer * usartBuffer, const int16_t var, uint8_t * checkSum);
+void xbeeSendUint16(UsartBuffer * usartBuffer, const uint16_t var, uint8_t * checkSum);
+void xbeeSendUint8(UsartBuffer * usartBuffer, const uint8_t var, uint8_t * checkSum);
+void xbeeSendDataBlob(uint8_t * pointer, uint8_t length, uint8_t * checkSum);
+void sendHex(uint8_t zn);
+
+uint16_t xbeeReadUint16(const uint8_t * pointer);
+uint64_t xbeeReadUint64(const uint8_t * pointer);
 
 #endif /* XBEE_H_ */

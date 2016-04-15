@@ -30,6 +30,10 @@
 #define	YELLOW	IOPORT_CREATE_PIN(PORTB, 7)
 #define	OUT1	IOPORT_CREATE_PIN(PORTD, 5)
 
+#ifdef GRIPPER
+#define	GRIP_PIN	IOPORT_CREATE_PIN(PORTA, 2)
+#endif
+
 /* -------------------------------------------------------------------- */
 /*	LED macros															*/
 /* -------------------------------------------------------------------- */
@@ -80,6 +84,12 @@
 #define PPM_FRAME_LENGTH		80000
 #define PPM_PULSE				1600
 
+/* -------------------------------------------------------------------- */
+/*	Controller saturation												*/
+/* -------------------------------------------------------------------- */
+
+#define CONTROLLER_SATURATION	800
+ 
 /* -------------------------------------------------------------------- */
 /*	Constants for USART aliases											*/
 /* -------------------------------------------------------------------- */
@@ -155,17 +165,17 @@ xQueueHandle main2commsQueue;
 volatile int8_t auxSetpointFlag;
 
 /* Basic initialization of the MCU, peripherals and i/o */
-void boardInit();
+void boardInit(void);
 
 /* Merge signals from RC Receiver with the controller outputs */
-void mergeSignalsToOutput();
+void mergeSignalsToOutput(void);
 
-void disableController();
+void disableController(void);
 
-void enableController();
+void enableController(void);
 
-void disablePositionController();
+void disablePositionController(void);
 
-void enablePositionController();
+void enablePositionController(void);
 
 #endif /* SYSTEM_H_ */

@@ -84,7 +84,7 @@ volatile int8_t auxSetpointFlag = 0;
 /* -------------------------------------------------------------------- */
 /*	Basic initialization of the MCU, peripherals and i/o				*/
 /* -------------------------------------------------------------------- */
-void boardInit() {
+void boardInit(void) {
 	
 	/* -------------------------------------------------------------------- */
 	/*	Setup GPIO for LEDs and PPM i/o										*/
@@ -201,16 +201,27 @@ void boardInit() {
 
 	#endif
 	
+	#ifdef PRASE
+	
+	#ifdef GRIPPER
+	
+	ioport_set_pin_dir(GRIP_PIN, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_level(GRIP_PIN, false);
+	
+	#endif
+	
+	#endif
+	
 	/* -------------------------------------------------------------------- */
 	/*	Initialize USARTs													*/
 	/* -------------------------------------------------------------------- */
-	usart_buffer_1 = usartBufferInitialize(&USART_1, USART_1_BAUDRATE, 128);
-	usart_buffer_2 = usartBufferInitialize(&USART_2, USART_2_BAUDRATE, 128);
-	usart_buffer_3 = usartBufferInitialize(&USART_3, USART_3_BAUDRATE, 128);
-	usart_buffer_4 = usartBufferInitialize(&USART_4, USART_4_BAUDRATE, 128);
-	usart_buffer_stm = usartBufferInitialize(&USART_STM, USART_STM_BAUDRATE, 128);
-	usart_buffer_xbee = usartBufferInitialize(&USART_XBEE, USART_XBEE_BAUDRATE, 128);
-	usart_buffer_log = usartBufferInitialize(&USART_LOG, USART_LOG_BAUDRATE, 128);
+	usart_buffer_1 = usartBufferInitialize(&USART_1, USART_1_BAUDRATE, 64);
+	usart_buffer_2 = usartBufferInitialize(&USART_2, USART_2_BAUDRATE, 64);
+	usart_buffer_3 = usartBufferInitialize(&USART_3, USART_3_BAUDRATE, 64);
+	usart_buffer_4 = usartBufferInitialize(&USART_4, USART_4_BAUDRATE, 64);
+	usart_buffer_stm = usartBufferInitialize(&USART_STM, USART_STM_BAUDRATE, 64);
+	usart_buffer_xbee = usartBufferInitialize(&USART_XBEE, USART_XBEE_BAUDRATE, 64);
+	usart_buffer_log = usartBufferInitialize(&USART_LOG, USART_LOG_BAUDRATE, 64);
 	
 	/* -------------------------------------------------------------------- */
 	/*	enable low-level interrupts											*/
@@ -233,7 +244,7 @@ void boardInit() {
 /* -------------------------------------------------------------------- */
 /*	Merge signals from RC Receiver with the controller outputs			*/
 /* -------------------------------------------------------------------- */
-void mergeSignalsToOutput() {
+void mergeSignalsToOutput(void) {
 	
 	int16_t outputThrottle;
 	int16_t outputElevator;
@@ -260,11 +271,26 @@ void mergeSignalsToOutput() {
 	// add altitude controller to output
 	if (altitudeControllerEnabled == true) {
 
+		if (controllerThrottleOutput > CONTROLLER_SATURATION)
+			controllerThrottleOutput = CONTROLLER_SATURATION;
+		else if (controllerThrottleOutput < -CONTROLLER_SATURATION)
+			controllerThrottleOutput = -CONTROLLER_SATURATION;
+		
 		outputThrottle += controllerThrottleOutput;
 	}
 	
 	// add mpc controller controller to output
-	if (mpcControllerEnabled == true) {
+	if (positionControllerEnabled == true) {
+		
+		if (controllerElevatorOutput > CONTROLLER_SATURATION)
+			controllerElevatorOutput = CONTROLLER_SATURATION;
+		else if (controllerElevatorOutput < -CONTROLLER_SATURATION)
+			controllerElevatorOutput = -CONTROLLER_SATURATION;
+			
+		if (controllerAileronOutput > CONTROLLER_SATURATION)
+			controllerAileronOutput = CONTROLLER_SATURATION;
+		else if (controllerAileronOutput < -CONTROLLER_SATURATION)
+			controllerAileronOutput = -CONTROLLER_SATURATION;
 
 		outputElevator += controllerElevatorOutput;
 		outputAileron += controllerAileronOutput;
@@ -452,7 +478,7 @@ ISR(TCD0_CCA_vect) {
 
 #ifdef PWM_INPUT
 
-void capture_pwm_inputs() {
+void capture_pwm_inputs(void) {
 	
     // PWM input capture
 	uint8_t j;
@@ -495,7 +521,7 @@ void capture_pwm_inputs() {
 /* -------------------------------------------------------------------- */
 /*	Failsave for NOT receiving RC channels								*/
 /* -------------------------------------------------------------------- */
-void RCInputFailsave() {
+void RCInputFailsave(void) {
 	
 	uint8_t i;
 	
@@ -508,7 +534,7 @@ void RCInputFailsave() {
 			led_red_on();
 			inFailsave = 1;
 			altitudeControllerEnabled = 0;
-			mpcControllerEnabled = 0;
+			positionControllerEnabled = 0;
 			
 		} else {
 			

@@ -9,12 +9,22 @@
 #include "ioport.h"
 #include "raspberryPi.h"
 #include "communication.h"
+#include "mpcHandler.h"
+#include "xbee.h"
 
 /* -------------------------------------------------------------------- */
 /*	Variables for data reception from RPi								*/
 /* -------------------------------------------------------------------- */
 
-receiverStateMachine_t rpiReceiver;
+char rpiRxBuffer[RPI_BUFFER_SIZE];
+
+int16_t rpiPayloadSize = 0;
+int16_t rpiBytesReceived;
+
+char rpiMessageReceived = 0;
+char rpiReceivingMessage = 0;
+char rpiReceiverState = 0;
+char rpiCrcIn = 0;
 
 volatile float rpix = 0;
 volatile float rpiy = 0;
@@ -24,66 +34,104 @@ volatile char rpiOk = 0;
 /* -------------------------------------------------------------------- */
 /*	Fetch the incoming char into a buffer, completes the message		*/
 /* -------------------------------------------------------------------- */
-int8_t rpiParseChar(char inChar, rpiMessageHandler_t * messageHandler, receiverStateMachine_t * receiver) {
-	
-	// following byte should contain the payload size
-	if (receiver->receiverState == RECEIVING_PAYLOAD_SIZE) {
-		
-		// does the message fit into our buffer?
-		if (inChar >= 0 && inChar < RPI_BUFFER_SIZE) {
-			
-			receiver->payloadSize = inChar;
-			receiver->receiverState = RECEIVING_PAYLOAD;
-			receiver->checksum += inChar;
-			
-		} else {
-			
-			// restart the state machine
-			receiver->receiverState = NOT_RECEIVING;
-		}
-	}
-	
-	// the new byte is the payload byte
-	if (receiver->receiverState == RECEIVING_PAYLOAD) {
-		
-		receiver->rxBuffer[receiver->bytesReceived++] = inChar;
-		receiver->checksum += inChar;
-		
-		// the payload is successfully received
-		if (receiver->bytesReceived >= receiver->payloadSize) {
-			
-			receiver->receiverState = RECEIVING_CHECKSUM;
-		}
-	}
-	
-	if (receiver->receiverState == RECEIVING_CHECKSUM) {
-		
-		// if the checksum is correct
-		if (receiver->checksum == inChar) {
-			
-			messageHandler->messageBuffer = receiver->rxBuffer+1;
-			messageHandler->messageId = receiver->rxBuffer[0];
-			receiver->receiverState = MESSAGE_RECEIVED;
-			return 1;
+int8_t rpiParseChar(char inChar, rpiMessageHandler_t * messageHandler) {
 
-		// if it is not correct, restart the receiver			
+	if (rpiReceivingMessage) {
+
+		// expecting to receive the payload size
+		if (rpiReceiverState == 0) {
+
+			// check the message length
+			if (inChar >= 0 && inChar < RPI_BUFFER_SIZE) {
+
+				rpiPayloadSize = inChar;
+				rpiReceiverState = 1;
+				rpiCrcIn += inChar;
+				
+				// the receiving message is over the buffer size
+			} else {
+
+				rpiReceivingMessage = 0;
+				rpiReceiverState = 0;
+			}
+
+			// expecting to receive the payload
+		} else if (rpiReceiverState == 1) {
+
+			// put the char in the buffer
+			rpiRxBuffer[rpiBytesReceived++] = inChar;
+			// add crc
+			rpiCrcIn += inChar;
+
+			// if the message should end, change state
+			if (rpiBytesReceived >= rpiPayloadSize)
+			rpiReceiverState = 2;
+
+			// expecting to receive the crc
+		} else if (rpiReceiverState == 2) {
+
+			if (rpiCrcIn == inChar) {
+
+				rpiMessageReceived = 1;
+				rpiReceivingMessage = 0;
+			} else {
+
+				rpiReceivingMessage = 0;
+				rpiReceiverState = 0;
+			}
+		}
+
 		} else {
-			
-			receiver->receiverState = NOT_RECEIVING;
+
+		// this character precedes every message
+		if (inChar == 'a') {
+
+			rpiCrcIn = inChar;
+
+			rpiReceivingMessage = 1;
+			rpiReceiverState = 0;
+			rpiBytesReceived = 0;
 		}
 	}
 	
-	// waiting for the first byte of the message
-	if (receiver->receiverState == NOT_RECEIVING) {
+	if (rpiMessageReceived) {
 		
-		// we received the starting byte
-		if (inChar == RPI_INIT_BYTE) {
-
-			receiver->checksum = inChar;
-			receiver->bytesReceived = 0;
-			receiver->receiverState = RECEIVING_PAYLOAD_SIZE;
-		}
+		messageHandler->messageBuffer = rpiRxBuffer+1;
+		messageHandler->messageId = rpiRxBuffer[0];
+		rpiMessageReceived = 0;
+		return 1;
 	}
 	
 	return 0;
+}
+
+/* -------------------------------------------------------------------- */
+/*	Create a message with the blob										*/
+/* -------------------------------------------------------------------- */
+
+void sendPiBlob(uint64_t address) {
+	
+	uint8_t buffer[64];
+	
+	uint8_t idx = 0;
+	
+	buffer[idx++] = 'N';
+	buffer[idx++] = rpiOk;
+	
+	writeFloatToBuffer(buffer, kalmanStates.elevator.position, idx);
+	idx += 4;
+	writeFloatToBuffer(buffer, kalmanStates.aileron.position, idx);
+	idx += 4;
+	
+	writeFloatToBuffer(buffer, mpcSetpoints.elevator, idx);
+	idx += 4;
+	writeFloatToBuffer(buffer, mpcSetpoints.aileron, idx);
+	idx += 4;
+
+	writeFloatToBuffer(buffer, rpix, idx);
+	idx += 4;
+	writeFloatToBuffer(buffer, rpiy, idx);
+	idx += 4;
+	
+	xbeeSendMessageTo(&buffer, idx, address);
 }
