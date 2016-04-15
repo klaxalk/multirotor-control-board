@@ -12,9 +12,6 @@
 #include "system.h"
 #include <avr/pgmspace.h>
 
-#define TRAJECTORY_CIRCLE_LENGTH 1796
 
-const float elevatorCircle[TRAJECTORY_CIRCLE_LENGTH] PROGMEM;
-const float aileronCircle[TRAJECTORY_CIRCLE_LENGTH] PROGMEM;
 
 #endif /* TRAJECTORIES_H_ */

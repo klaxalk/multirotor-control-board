@@ -156,6 +156,19 @@ int16_t readInt16(char * message, int * indexFrom) {
 	return tempInt;
 }
 
+uint32_t readUint32(char * message, int * indexFrom) {
+
+	uint32_t tempInt;
+
+	char * ukazatel = (char*) &tempInt;
+	uint8_t i;
+	for (i = 0; i < 4; i++) {
+		*(ukazatel++) = message[(*indexFrom)++];
+	}
+
+	return tempInt;
+}
+
 char readChar(char * message, int * indexFrom) {
 
 	char tempChar = message[(*indexFrom)++];

@@ -9,13 +9,16 @@
 #include "ioport.h"
 #include "multiCon.h"
 #include "communication.h"
+#include "mpcHandler.h"
+#include "xbee.h"
+#include "commTask.h"
 
 uint8_t numberOfDetectedBlobs = 0;
 uint8_t multiconErrorState = 0;
 blob_t blobs[NUMBER_OF_BLOBS];
 
 /* -------------------------------------------------------------------- */
-/*	Variables for data reception from multicon								*/
+/*	Variables for data reception from multicon							*/
 /* -------------------------------------------------------------------- */
 
 char multiconRxBuffer[MULTICON_BUFFER_SIZE];
@@ -27,6 +30,16 @@ uint8_t multiconMessageReceived = 0;
 uint8_t multiconReceivingMessage = 0;
 uint8_t multiconReceiverState = 0;
 uint8_t multiconCrcIn = 0;
+
+/* -------------------------------------------------------------------- */
+/*	Variables for bluetooth RSSI										*/
+/* -------------------------------------------------------------------- */
+
+#ifdef MATOUS
+
+btradio_t radios[NUMBER_OF_RADIOS];
+
+#endif
 
 /* -------------------------------------------------------------------- */
 /*	Fetch the incoming char into a buffer, completes the message		*/
@@ -115,4 +128,40 @@ int8_t multiconParseChar(char inChar, multiconMessageHandler_t * messageHandler)
 	}
 	
 	return 0;
+}
+
+/* -------------------------------------------------------------------- */
+/*	Create a message with all blobs to send								*/
+/* -------------------------------------------------------------------- */
+
+void sendBlobs(uint64_t address) {
+	
+	uint8_t buffer[64];
+	
+	uint8_t idx = 0;
+	
+	buffer[idx++] = 'N';
+	buffer[idx++] = numberOfDetectedBlobs;
+	
+	writeFloatToBuffer(buffer, kalmanStates.elevator.position, idx);
+	idx += 4;
+	writeFloatToBuffer(buffer, kalmanStates.aileron.position, idx);
+	idx += 4;
+	
+	writeFloatToBuffer(buffer, mpcSetpoints.elevator, idx);
+	idx += 4;
+	writeFloatToBuffer(buffer, mpcSetpoints.aileron, idx);
+	idx += 4;
+	
+	uint8_t i;
+	for (i = 0; i < numberOfDetectedBlobs; i++) {
+		
+		writeFloatToBuffer(buffer, blobs[i].x, idx);
+		idx += 4;
+		
+		writeFloatToBuffer(buffer, blobs[i].y, idx);
+		idx += 4;
+	}
+	
+	xbeeSendMessageTo(&buffer, idx, address);
 }

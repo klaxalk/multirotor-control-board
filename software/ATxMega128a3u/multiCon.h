@@ -29,8 +29,28 @@ typedef struct {
 	float x, y, z;
 } blob_t;
 
+#ifdef MATOUS
+
+#define NUMBER_OF_RADIOS 3
+
+// this structure holds a message received from STM
+typedef struct {
+
+	float RSSI;
+	uint16_t timer;
+} btradio_t;
+
+#endif
+
 blob_t blobs[NUMBER_OF_BLOBS];
 
+#ifdef MATOUS
+
+btradio_t radios[NUMBER_OF_RADIOS];
+
+#endif
+
 int8_t multiconParseChar(char inChar, multiconMessageHandler_t * messageHandler);
+void sendBlobs(uint64_t address);
 
 #endif /* MULTICON_H_ */

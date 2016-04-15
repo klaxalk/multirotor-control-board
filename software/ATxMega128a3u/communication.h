@@ -14,21 +14,6 @@
 uint8_t hex2bin(const uint8_t * ptr);
 
 /* -------------------------------------------------------------------- */
-/*	Variables for data reception from RPi								*/
-/* -------------------------------------------------------------------- */
-
-#define RPI_BUFFER_SIZE 24
-
-// this structure holds a message received from STM
-typedef struct {
-
-	char messageId;
-	char * messageBuffer;
-} rpiMessageHandler_t;
-
-int8_t rpiParseChar(char inChar, rpiMessageHandler_t * messageHandler);
-
-/* -------------------------------------------------------------------- */
 /*	px4flow receiver support											*/
 /* -------------------------------------------------------------------- */
 
@@ -43,7 +28,17 @@ volatile uint8_t px4Confidence;
 
 extern int8_t opticalFlowDataFlag;
 
+uint8_t readUint8(char * message, int * indexFrom);
+void writeFloatToBuffer(char * buffer, const float input, uint16_t position);
+
 int8_t px4flowParseChar(uint8_t incomingChar);
 uint8_t readUint8(char * message, int * indexFrom);
+void writeUint64ToBuffer(char * buffer, const uint64_t input, uint16_t position);
+
+// write 4 bytes of float number to the buffer on position
+void writeUint8ToBuffer(char * buffer, const uint8_t input, uint16_t position);
+
+// write 2 bytes of int16_t number to the buffer on position
+void writeint16tToBuffer(char * buffer, const int16_t input, uint16_t position);
 
 #endif // COMMUNICATION_H

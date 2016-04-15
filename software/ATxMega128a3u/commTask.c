@@ -11,8 +11,14 @@
 #include "controllers.h"
 #include "config.h"
 #include "mpcHandler.h"
-#include "argos3D.h"
-#include "multiCon.h"
+#include "trajectories.h"
+#include "xbee.h"
+
+/* -------------------------------------------------------------------- */
+/*	Execution rate of this task	is vital								*/
+/* -------------------------------------------------------------------- */
+volatile uint16_t commTaskRate = 0;
+volatile uint16_t commTaskCounter = 0;
 
 /* -------------------------------------------------------------------- */
 /*	For calculating rate of MPC and Kalman								*/
@@ -34,15 +40,31 @@ stmMessageHandler_t stmMessage;
 
 #ifdef RASPBERRY_PI
 
+#include "raspberryPi.h"
+
 /* -------------------------------------------------------------------- */
 /*	The message handler for raspberry									*/
 /* -------------------------------------------------------------------- */
 rpiMessageHandler_t rpiMessage;
 
-volatile float rpix = 1.5;
-volatile float rpiy = 0;
-volatile float rpiz = 0;
-volatile char rpiOk = 0;
+#endif
+
+#ifdef ARGOS
+
+#include "argos3D.h"
+
+/* -------------------------------------------------------------------- */
+/*	The message handler for ARGOS										*/
+/* -------------------------------------------------------------------- */
+argosMessageHandler_t argosMessage;
+
+#endif
+
+#ifdef MULTICON
+
+#include "multiCon.h"
+multiconMessageHandler_t multiconMessage;
+
 volatile float curSetX = 0;
 volatile float curSetY = 0;
 volatile float lastPositionX = 0;
@@ -50,29 +72,18 @@ volatile float lastPositionY = 0;
 
 #endif
 
-#ifdef ARGOS
+/* -------------------------------------------------------------------- */
+/*	Xbee																*/
+/* -------------------------------------------------------------------- */
 
-argosMessageHandler_t argosMessage;
-
-#endif
-
-#ifdef MULTICON
-
-multiconMessageHandler_t multiconMessage;
-
-#endif
-
-#ifdef IDENTIFICATION
-
-volatile uint16_t dt_identification = 0;
-
-#endif
-
-char temp[40];
+xbeeMessageHandler_t xbeeMessage;
+volatile uint8_t RSSI;
+volatile uint64_t respondTo = 0;
+volatile uint32_t timeStamp = 0;
 
 void commTask(void *p) {
 	
-	unsigned char inChar;
+	uint8_t inChar;
 	
 	initializeKalmanStates();
 	
@@ -80,6 +91,8 @@ void commTask(void *p) {
 	mpcSetpoints.aileron = 0;
 		
 	while (1) {
+		
+		commTaskCounter++;
 				
 		/* -------------------------------------------------------------------- */
 		/*	A character received from STM										*/
@@ -119,12 +132,16 @@ void commTask(void *p) {
 						mpcAileronOutput = tempInt;
 					}
 				
+					#ifdef MPC_POSITION_CONTROLLER
+				
 					// copy the saturated values
 					controllerElevatorOutput = mpcElevatorOutput;
 					controllerAileronOutput = mpcAileronOutput;
 					
 					mpcSetpoints.elevator = readFloat(stmMessage.messageBuffer, &idx);
 					mpcSetpoints.aileron = readFloat(stmMessage.messageBuffer, &idx);
+					
+					#endif
 				
 					portEXIT_CRITICAL();
 					
@@ -149,41 +166,57 @@ void commTask(void *p) {
 		
 #ifdef RASPBERRY_PI
 
-		/* -------------------------------------------------------------------- */
-		/*	A character received from raspberry									*/
-		/* -------------------------------------------------------------------- */
-		if (usartBufferGetByte(usart_buffer_2, &inChar, 0)) {
+/* -------------------------------------------------------------------- */
+/*	A character received from raspberry									*/
+/* -------------------------------------------------------------------- */
+if (usartBufferGetByte(usart_buffer_2, &inChar, 0)) {
+	
+	#ifdef RASPBERRY_DOWNWARD
+	float tempx, tempy, tempz;
+	#endif
 
-			// parse it and handle the message if it is complete
-			if (rpiParseChar(inChar, &rpiMessage)) {
-				
-				// index for iterating the rxBuffer
-				int idx = 0;
-				
-				switch (rpiMessage.messageId) {
-					
-					case 'p':
-					
-						// saturate the incoming elevator output
-						rpiy = -readFloat(rpiMessage.messageBuffer, &idx);
-						rpiz = readFloat(rpiMessage.messageBuffer, &idx);
-						rpix = readFloat(rpiMessage.messageBuffer, &idx);
-						rpiOk = 1;
-					
-						led_green_on();
-						
-					break;
-					
-					case '0':
-					
-						rpiOk = 0;
-						
-						led_green_off();
-						
-					break;
-				}
-			}
+	// parse it and handle the message if it is complete
+	if (rpiParseChar(inChar, &rpiMessage)) {
+		
+		// index for iterating the rxBuffer
+		int idx = 0;
+		
+		switch (rpiMessage.messageId) {
+			
+			case 'p':
+			
+			#ifdef RASPBERRY_FORWARD
+			rpiy = -readFloat(rpiMessage.messageBuffer, &idx);
+			rpiz = readFloat(rpiMessage.messageBuffer, &idx);
+			rpix = readFloat(rpiMessage.messageBuffer, &idx);
+			#endif
+			
+			#ifdef RASPBERRY_DOWNWARD
+			tempy = readFloat(rpiMessage.messageBuffer, &idx);
+			tempz = readFloat(rpiMessage.messageBuffer, &idx);
+			tempx = readFloat(rpiMessage.messageBuffer, &idx);
+			
+			rpiy = tempy;
+			rpix = 0.9*tempz + (1 - 0.9)*tempx;
+			rpiz = (1 - 0.9)*tempz + 0.9*tempx;
+			#endif
+			
+			rpiOk = 1;
+			
+			led_green_on();
+			
+			break;
+			
+			case '0':
+			
+			rpiOk = 0;
+			
+			led_green_off();
+			
+			break;
 		}
+	}
+}
 
 #endif
 
@@ -228,6 +261,7 @@ void commTask(void *p) {
 				// index for iterating the rxBuffer
 				int idx = 0;
 				uint8_t blobId;
+				float tempFloat;
 				
 				switch (multiconMessage.messageId) {
 					
@@ -237,12 +271,16 @@ void commTask(void *p) {
 						
 						if (blobId < NUMBER_OF_BLOBS) {
 							
+							blobs[blobId].y = readFloat(multiconMessage.messageBuffer, &idx);
+							blobs[blobId].z = readFloat(multiconMessage.messageBuffer, &idx);
 							blobs[blobId].x = readFloat(multiconMessage.messageBuffer, &idx);
-							blobs[blobId].y  = readFloat(multiconMessage.messageBuffer, &idx);
-							blobs[blobId].z  = readFloat(multiconMessage.messageBuffer, &idx);
 							
+							/*
+							uint8_t temp[32];
 							sprintf(temp, "Blob %d [%2.3f %2.3f %2.3f]\n\r", blobId, blobs[blobId].x, blobs[blobId].y, blobs[blobId].z);
 							usartBufferPutString(usart_buffer_3, temp, 10);
+							*/
+							led_green_on();
 						}
 						
 					break;
@@ -252,10 +290,33 @@ void commTask(void *p) {
 						multiconErrorState = readUint8(multiconMessage.messageBuffer, &idx);
 						numberOfDetectedBlobs = readUint8(multiconMessage.messageBuffer, &idx);
 						
+						/*
+						uint8_t temp[32];
 						sprintf(temp, "Num. blobs = %d, Error = %d\n\r", numberOfDetectedBlobs, multiconErrorState);
 						usartBufferPutString(usart_buffer_3, temp, 10);
+						*/
 						
 						led_green_toggle();
+						
+						if (numberOfDetectedBlobs == 0) {
+							
+							led_green_off();
+						}
+					
+					break;
+					
+					case 'M':
+					
+						// led_green_toggle();
+						tempFloat = readFloat(multiconMessage.messageBuffer, &idx);
+						blobId = readUint8(multiconMessage.messageBuffer, &idx);
+					
+						#ifdef MATOUS
+						radios[blobId].RSSI = tempFloat;
+						radios[blobId].timer++;
+						#endif
+						
+						led_orange_toggle();
 					
 					break;
 				}
@@ -269,21 +330,72 @@ void commTask(void *p) {
 		/* -------------------------------------------------------------------- */
 		if (usartBufferGetByte(usart_buffer_xbee, &inChar, 0)) {
 
-			// send a simple telemetry
-			if (inChar == 'b') {
-
-				char crc = 0;
-
-				sendFloat(usart_buffer_xbee, kalmanStates.elevator.position, &crc);
-				sendFloat(usart_buffer_xbee, kalmanStates.aileron.position, &crc);
+			if (xbeeParseChar(inChar, &xbeeMessage, &xbeeReceiver)) {
 				
-				sendFloat(usart_buffer_xbee, mpcSetpoints.elevator, &crc);
-				sendFloat(usart_buffer_xbee, mpcSetpoints.aileron, &crc);
+				if (xbeeMessage.apiId == XBEE_API_PACKET_RECEIVE) {
 					
-				sendInt16(usart_buffer_xbee, mpcElevatorOutput, &crc);
-				sendInt16(usart_buffer_xbee, mpcAileronOutput, &crc);
+					int idx = 0;
 
-				usartBufferPutString(usart_buffer_xbee, "\r\n", 10);
+					switch (xbeeMessage.content.receiveResponse.messageId) {
+						
+						#ifdef MULTICON
+						
+						case 'R':
+
+							respondTo = xbeeMessage.content.receiveResponse.address64;
+							
+							// led_green_toggle();
+							uint8_t temp[32];
+												
+							writeUint8ToBuffer(&temp, (uint8_t) 'M', 0);
+							writeFloatToBuffer(&temp, (float) kalmanStates.elevator.position, 1);
+							writeFloatToBuffer(&temp, (float) kalmanStates.aileron.position, 5);
+							writeFloatToBuffer(&temp, (float) 0, 9);
+							writeFloatToBuffer(&temp, (float) 0, 13);
+							// writeFloatToBuffer(&temp, (float) bluetooth_RSSI, 17);
+							
+							xbeeSendMessageTo(temp, 18, respondTo);
+						
+						break;
+						
+						#endif
+						
+						case 'M':
+						
+							// timeStamp = xbeeMessage.content.receiveResponse.payloadSize;
+							timeStamp = readUint32(xbeeMessage.content.receiveResponse.payload, &idx);
+						
+							#ifdef RASPBERRY_PI
+							sendPiBlob(xbeeMessage.content.receiveResponse.address64);
+							#endif
+							
+							#ifdef MULTICON
+							sendBlobs(xbeeMessage.content.receiveResponse.address64);
+							#endif
+						
+						break;
+					}
+					
+				} else if (xbeeMessage.apiId == XBEE_API_PACKET_AT_RESPONSE) {
+				
+					/*
+				
+					// led_green_toggle();
+					uint8_t temp[32];
+					
+					writeUint8ToBuffer(&temp, (uint8_t) 'M', 0);
+					writeFloatToBuffer(&temp, (float) kalmanStates.elevator.position, 1);
+					writeFloatToBuffer(&temp, (float) kalmanStates.aileron.position, 5);
+					writeFloatToBuffer(&temp, (float) kalmanStates.elevatorPositionCovariance, 9);
+					writeFloatToBuffer(&temp, (float) kalmanStates.aileronPositionCovariance, 13);
+					writeFloatToBuffer(&temp, (float) bluetooth_RSSI, 17);
+					writeUint8ToBuffer(&temp, (uint8_t) xbeeMessage.content.atReponse.cmdData, 21);
+					
+					*/
+				
+				}
+							
+				xbeeReceiver.receiverState = XBEE_NOT_RECEIVING;
 			}
 		}
 	
@@ -320,37 +432,6 @@ void commTask(void *p) {
 				opticalFlowDataFlag = 0;			
 				
 				portEXIT_CRITICAL();
-				
-				#ifdef IDENTIFICATION
-				
-				char temp[30];
-				
-				sprintf(temp, "%1.2f, ", ((float) dt_identification)/1000);
-				usartBufferPutString(usart_buffer_log, temp, 10);
-				
-				sprintf(temp, "%2.5f, ", elevatorSpeed);
-				usartBufferPutString(usart_buffer_log, temp, 10);
-				
-				sprintf(temp, "%2.5f, ", aileronSpeed);
-				usartBufferPutString(usart_buffer_log, temp, 10);
-				
-				sprintf(temp, "%2.5f, ", opticalFlowData.ground_distance);
-				usartBufferPutString(usart_buffer_log, temp, 10);
-				
-				sprintf(temp, "%d, ", RCchannel[ELEVATOR]);
-				usartBufferPutString(usart_buffer_log, temp, 10);
-				
-				sprintf(temp, "%d, ", RCchannel[AILERON]);
-				usartBufferPutString(usart_buffer_log, temp, 10);
-				
-				sprintf(temp, "%d, ", RCchannel[THROTTLE]);
-				usartBufferPutString(usart_buffer_log, temp, 10);
-				
-				usartBufferPutByte(usart_buffer_log, '\n', 10);
-				
-				dt_identification = 0;
-				
-				#endif
 					
 				/* -------------------------------------------------------------------- */
 				/*	Send data to ARM													*/
@@ -366,45 +447,7 @@ void commTask(void *p) {
 		/*	A message received from the main Task								*/
 		/* -------------------------------------------------------------------- */
 		if (xQueueReceive(main2commsQueue, &main2commMessage, 0)) {
-						
-#ifdef RASPBERRY_PI
-
-			// send message to STM to reset its Kalman filter
-			if (main2commMessage.messageType == CLEAR_STATES) {
-				
-				stmResetKalman(main2commMessage.data.simpleSetpoint.elevator, main2commMessage.data.simpleSetpoint.aileron);
-				
-				curSetX = 0;
-				curSetY = 0;
-				rpix = 1.5;
-				rpiy = 0;
-				rpiOk = 0;
-				
-			} else if (main2commMessage.messageType == SET_SETPOINT) {
-				
-				if (rpiOk) {
-					
-					curSetX = kalmanStates.elevator.position + rpix - 1.5;
-					curSetY = kalmanStates.aileron.position - rpiy;
-					
-					lastPositionX = kalmanStates.elevator.position;
-					lastPositionY = kalmanStates.aileron.position;
-					
-				} else {
-					
-					curSetX = lastPositionX + main2commMessage.data.simpleSetpoint.elevator;
-					curSetY = lastPositionY + main2commMessage.data.simpleSetpoint.aileron;
-					
-				}
-				
-				stmSendSetpoint(curSetX, curSetY);
-
-			} else if (main2commMessage.messageType == SET_TRAJECTORY) {
-				
-				stmSendTrajectory(main2commMessage.data.trajectory.elevatorTrajectory, main2commMessage.data.trajectory.aileronTrajectory);
-			}
-			
-#else					
+		
 			// send message to STM to reset its Kalman filter			
 			if (main2commMessage.messageType == CLEAR_STATES) {
 	
@@ -418,8 +461,6 @@ void commTask(void *p) {
 				
 				stmSendTrajectory(main2commMessage.data.trajectory.elevatorTrajectory, main2commMessage.data.trajectory.aileronTrajectory);
 			}
-			
-#endif
 		}
 	}
 }

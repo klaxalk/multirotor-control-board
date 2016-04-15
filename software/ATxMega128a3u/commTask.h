@@ -8,6 +8,9 @@
 #ifndef COMMTASK_H_
 #define COMMTASK_H_
 
+volatile uint16_t commTaskRate;
+volatile uint16_t commTaskCounter;
+
 /* -------------------------------------------------------------------- */
 /*	message from mainTask to commTask									*/
 /* -------------------------------------------------------------------- */
@@ -38,6 +41,14 @@ typedef struct {
 	main2commMessagePayload data;
 } main2commMessage_t;
 
+int xbeeflag;
+
+/* -------------------------------------------------------------------- */
+/*	Time stamp from Matlab												*/
+/* -------------------------------------------------------------------- */
+
+volatile uint32_t timeStamp;
+
 /* -------------------------------------------------------------------- */
 /*	Variables for measuring MPC and kalman rates						*/
 /* -------------------------------------------------------------------- */
@@ -45,12 +56,6 @@ volatile int16_t mpcCounter;
 volatile int16_t mpcRate;
 volatile int16_t kalmanCounter;
 volatile int16_t kalmanRate;
-
-#ifdef IDENTIFICATION
-
-volatile uint16_t dt_identification;
-
-#endif
 
 /* -------------------------------------------------------------------- */
 /*	methods in commTask													*/
