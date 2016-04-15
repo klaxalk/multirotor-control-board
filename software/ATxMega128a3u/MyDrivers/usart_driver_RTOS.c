@@ -211,27 +211,33 @@ UsartBuffer * usartBufferInitialize(USART_t * usart, Baudrate_enum baudrate ,cha
 	//http://prototalk.net/forums/showthread.php?t=188
 	switch (baudrate) {
 		case BAUDPX4FLOW:
-			USART_Baudrate_Set(usartBuffer->usart, 2234 , -7);
+		USART_Baudrate_Set(usartBuffer->usart, 2234 , -7);
 		break;
-			case BAUD115200:
-			USART_Baudrate_Set(usartBuffer->usart, 2094 , -7);
+		case BAUD460800:
+		USART_Baudrate_Set(usartBuffer->usart, 428 , -7);
 		break;
-			case BAUD57600:
-			USART_Baudrate_Set(usartBuffer->usart, 2158 , -6);
+		case BAUD230400:
+		USART_Baudrate_Set(usartBuffer->usart, 983 , -7);
 		break;
-			case BAUD38400:
-			USART_Baudrate_Set(usartBuffer->usart, 3269 , -6);
+		case BAUD115200:
+		USART_Baudrate_Set(usartBuffer->usart, 2094 , -7);
+		break;
+		case BAUD57600:
+		USART_Baudrate_Set(usartBuffer->usart, 2158 , -6);
+		break;
+		case BAUD38400:
+		USART_Baudrate_Set(usartBuffer->usart, 3269 , -6);
 		break;
 		case BAUD19200:
-			USART_Baudrate_Set(usartBuffer->usart, 3301 , -5);
-			break;
+		USART_Baudrate_Set(usartBuffer->usart, 3301 , -5);
+		break;
 		case BAUD9600:
-			USART_Baudrate_Set(usartBuffer->usart, 3317 , -4);
-			break;
+		USART_Baudrate_Set(usartBuffer->usart, 3317 , -4);
+		break;
 		default:
-			//9600
-			USART_Baudrate_Set(usartBuffer->usart, 3317 , -4);
-			break;
+		//9600
+		USART_Baudrate_Set(usartBuffer->usart, 3317 , -4);
+		break;
 	}
 
 	/* Enable both RX and TX. */
