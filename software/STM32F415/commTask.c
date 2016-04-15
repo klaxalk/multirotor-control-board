@@ -11,6 +11,7 @@
 #include <stdlib.h>
 #include "kalman/aileron/aileronKalman.h"
 #include "kalman/elevator/elevatorKalman.h"
+#include "config.h"
 
 float readFloat(char * message, int * indexFrom) {
 
@@ -183,19 +184,35 @@ void commTask(void *p) {
 				comm2kalmanMessage_t mes;
 
 				tempFloat = readFloat(messageBuffer, &idx);
-				if (fabs(tempFloat) < 1)
+				if (tempFloat > KALMAN_MEASURED_VELOCITY_SATURATION)
+					mes.elevatorSpeed = KALMAN_MEASURED_VELOCITY_SATURATION;
+				else if (tempFloat < -KALMAN_MEASURED_VELOCITY_SATURATION)
+					mes.elevatorSpeed = -KALMAN_MEASURED_VELOCITY_SATURATION;
+				else
 					mes.elevatorSpeed = tempFloat;
 
 				tempFloat = readFloat(messageBuffer, &idx);
-				if (fabs(tempFloat) < 1)
+				if (tempFloat > KALMAN_MEASURED_VELOCITY_SATURATION)
+					mes.aileronSpeed = KALMAN_MEASURED_VELOCITY_SATURATION;
+				else if (tempFloat < -KALMAN_MEASURED_VELOCITY_SATURATION)
+					mes.aileronSpeed = -KALMAN_MEASURED_VELOCITY_SATURATION;
+				else
 					mes.aileronSpeed = tempFloat;
 
 				tempInt = readInt16(messageBuffer, &idx);
-				if (abs(tempInt) < 300)
+				if (tempInt > KALMAN_INPUT_SATURATION)
+					mes.elevatorInput = (float) KALMAN_INPUT_SATURATION;
+				else if (tempInt < -KALMAN_INPUT_SATURATION)
+					mes.elevatorInput = (float) -KALMAN_INPUT_SATURATION;
+				else
 					mes.elevatorInput = (float) tempInt;
 
 				tempInt = readInt16(messageBuffer, &idx);
-				if (abs(tempInt) < 300)
+				if (tempInt > KALMAN_INPUT_SATURATION)
+					mes.aileronInput = (float) KALMAN_INPUT_SATURATION;
+				else if (tempInt < -KALMAN_INPUT_SATURATION)
+					mes.aileronInput = (float) -KALMAN_INPUT_SATURATION;
+				else
 					mes.aileronInput = (float) tempInt;
 
 				xQueueSend(comm2kalmanQueue, &mes, 0);
@@ -318,7 +335,7 @@ void commTask(void *p) {
 			// clear the crc
 			crcOut = 0;
 			sendChar('a', &crcOut);			// this character initiates the transmission
-			sendChar(1+2*5*4, &crcOut);		// this will be the size of the message
+			sendChar(1 + 2*5*4 + 2*4, &crcOut);		// this will be the size of the message
 
 			sendChar('2', &crcOut);			// id of the message
 
@@ -333,6 +350,9 @@ void commTask(void *p) {
 			sendFloat(kalmanMessage.aileronData[2], &crcOut);
 			sendFloat(kalmanMessage.aileronData[3], &crcOut);
 			sendFloat(kalmanMessage.aileronData[4], &crcOut);
+
+			sendFloat(kalmanMessage.elevatorPositionCovariance, &crcOut);
+			sendFloat(kalmanMessage.aileronPositionCovariance, &crcOut);
 
 			sendChar(crcOut, &crcOut);
 		}

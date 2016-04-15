@@ -97,6 +97,8 @@ typedef struct {
 
 	float elevatorData[NUMBER_OF_STATES_ELEVATOR];
 	float aileronData[NUMBER_OF_STATES_AILERON];
+	float elevatorPositionCovariance;
+	float aileronPositionCovariance;
 } kalman2commMessage_t;
 
 /* -------------------------------------------------------------------- */

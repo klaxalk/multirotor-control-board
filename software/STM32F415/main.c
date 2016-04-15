@@ -11,7 +11,7 @@
 
 int main(void) {
 
-	// this line is one ******* SUNDAY
+	// Important for setting interrupts
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_4);
 
 	// initialize the hardware
