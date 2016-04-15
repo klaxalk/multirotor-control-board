@@ -1,6 +1,6 @@
 clear all;
 
-%% Matice systemu
+%% System matrices
 
 dt = 0.0101;
 
@@ -9,7 +9,7 @@ uav = 2;
 % 2 = Mikrokopter, KK2, ss = 15
 % 3 = Tricopter, KK2 
 
-%% 250tka, KK2 
+%% 250 (prase), KK2 
 if uav == 1
     A = [1 dt   0  0            0;
          0 1    dt 0            0;
@@ -42,22 +42,20 @@ if uav == 3
     B = [0; 0; 0; 4.4279e-05; 0];    
 end
 
-%% Kovariancni matice mereni
+%%  aux variables
 
 measurement_covariance = diag([0.0058, 0.19, 0, 0, 0]);
 
-% pocet stavu systemu 
+% number of system states
 n_states = size(A, 1);
 
-% pocet vstupu do systemu
+% number of inputs
 u_size = size(B, 2);
 
-%% Pomocne promenne
-
-% delka predikcniho horizontu
+% prediction horizon length
 horizon_len = 200;
 
-%% Matice U
+%% U matrix
 
 n_variables = 20;
 
@@ -75,8 +73,8 @@ U(81:90, 18) = 1;
 U(91:100, 19) = 1;
 U(101:200, 20) = 1;
  
-%% Matice A_roof
-% n = delka predikcniho horizontu
+%% A_roof matrix
+% n = prediction horizon length
 % A_roof = [A;
 %           A^2;
 %           A^3;
@@ -89,8 +87,8 @@ for i=1:horizon_len
    A_roof(((i-1)*n_states+1):(n_states*i), :) = A^i; 
 end
 
-%% Matice B_roof
-% n = delka predikcniho horizontu
+%% B_roof matrix
+% n = prediction horizon length
 % B_roof = [B,        0,        0,   0;
 %           AB,       B,        0,   0;
 %           A^2B,     AB,       B,   0;
@@ -108,18 +106,18 @@ end
 
 B_roof = B_roof*U;
 
-%% Matice Q_roof
-% n = pocet stavu
+%% Q_roof matrix
+% n = number of system states
 % Q = n*n
-%     diagonala, penalizace odchylek stavu
+%     diagonal, penalizing control errors
 % S = n*n
-%     penalizace odchylky posledniho stavu
+%     penalizing last error
 % Q_roof = [Q,   0,   ...,  0;
 %           0,   Q,   ...,  0;
 %           ..., ..., Q,    0;
 %           0,   ..., ...,  S];
 
-% 250tka, KK2
+% 250 (prase), KK2
 if uav == 1
    
     Q = [1.07, 0, 0, 0, 0;
@@ -141,6 +139,7 @@ if uav == 2
      
 end
 
+% tricopter
 if uav == 3
     
     Q = [1.07, 0, 0, 0, 0;
@@ -165,14 +164,14 @@ end
 
 Q_roof(end-n_states+1:end, end-n_states+1:end) = S;
 
-%% Matice P_roof
-% penalizace akcnich zasahu
+%% P_roof matrix
+% penalizing control actions
 % P_roof = [P,   0,   ...,  0;
 %           0,   P,   ...,  0;
 %           ..., ..., P,    0;
 %           0,   ..., ...,  P];
 
-P = 0.0000025;
+P = 0.00000025;
 
 P_roof = zeros(n_variables, n_variables);
 
@@ -186,35 +185,31 @@ end
 
 P_roof(20, 20) = 100*P;
 
-%% Matice H
-% matice kvadratickeho clenu kvadraticke formy QP
+%% H matrix
+% the main matrix of the quadratic form
 
 H = B_roof'*Q_roof*B_roof + P_roof;
 H_inv = (0.5*H)^(-1);
 
-%% ?ídicí smy?ka s MPC
+%% the control loop
 
-% delka simulace
+% simulation length
 simu_len = 2000;
 
 time(1) = 0;
 
-elevator_vel = 0.25*cos(0:0.003:2*pi*20);
-aileron_vel = 0.25*sin(0:0.003:2*pi*20);
+% set the reference velocities
 
-elevator_pos = integrate(elevator_vel, dt)*0;
-aileron_pos = integrate(aileron_vel, dt)*0;
-aileron_pos = aileron_pos - mean(aileron_pos)*0;
+reference_vel = 0.25*cos(0:0.01:2*pi*20);
+reference_pos = integrate(reference_vel, dt);
 
 % reference position
-x_ref = elevator_pos;
+x_ref = reference_pos;
 
-% x_ref((simu_len+horizon_len)/2+1:end) = 1 + 0.2*sin(linspace(1, 20, (simu_len+horizon_len)/2))';
-    
 % initial conditions
-x(:, 1) = [1.2; 0; 0; 0; 0];
+x(:, 1) = [1; 0; 0; 0; 0];
 
-% vektor akcnich zasahu
+% prepare the vector of actions
 u = zeros(horizon_len, u_size);
 
 % history of used actions
@@ -224,7 +219,7 @@ u_hist(1) = 0;
 saturace = 800;
 
 % max speed
-max_speed = 0.28;
+max_speed = 100;
 
 u_sat = 0;
 
@@ -257,7 +252,7 @@ for i=2:simu_len
     xd_pure_integration(i) = xd_pure_integration(i-1) + measurement(2, i-1)*dt;
 
     [estimate(:, i), kalmanCovariance] = kalman(estimate(:, i-1), kalmanCovariance, measurement(2, i-1), u_sat, A, B, R_kalman, Q_kalman, C_kalman); 
-        
+    
     reference = estimate(1, i);
     for j=2:horizon_len
         diference = reference(j-1) - x_ref(j+i-1);
@@ -282,7 +277,7 @@ for i=2:simu_len
     % stretch the action vector to the whole horizon     
     u_cf = U*u_cf;
     
-    % simulace predikce z aktualniho vektoru akcnich zasahu
+    % predict the system using the whole control horizon
     x_cf(:, 1) = estimate(:, i);
     for j=2:horizon_len
         x_cf(:, j) = A*x_cf(:, j-1) + B*u_cf(j-1);
@@ -291,7 +286,7 @@ for i=2:simu_len
     % take the first action
     u_sat = u_cf(1);
     
-    % saturuj akcni zasah     
+    % saturate the control action
     if (u_sat > saturace)
         u_sat = saturace;
     elseif (u_sat < -saturace)
@@ -303,9 +298,24 @@ for i=2:simu_len
     % Compute new states     
     x(:, i) = A*x(:, i-1) + (B*u_sat);
     
+    % plot during the simulation
+    if (mod(i, 3) == 0)
+    figure(2);
+    hold off
+    plot(linspace(0, dt*(i+horizon_len), i+horizon_len), x_ref(1:(i+horizon_len)), 'r');
+    hold on
+    plot(linspace(0, dt*i, i), estimate(1, 1:i), 'b');
+    plot(linspace(dt*i, dt*(i+horizon_len), horizon_len), x_cf(1, 1:horizon_len), 'g--');
+    drawnow;
+    end
+        
 end
 
+%% Plot the final results 
+
 figure(1);
+
+% plot the reference and estimate
 
 subplot(2, 2, 1);
 hold off
@@ -313,18 +323,25 @@ plot(linspace(0, dt*simu_len, simu_len), x_ref(1:simu_len), 'r');
 hold on
 plot(time, estimate(1, 1:i), 'b');
 plot(linspace(i*dt, dt*(i+horizon_len), horizon_len), x_cf(1, :),'--r');
-title('Position in time');
+title('Position estimate');
 ylabel('Position [m]');
-% axis([0, dt*simu_len, -0.25, 1.25]);
+xlabel('Time [s]');
+legend('Reference', 'KF Estimate');
+
+% plot the control action
 
 subplot(2, 2, 2);
 hold off
 plot(time, u_hist, 'r');
 hold on
 plot(time, 0*(1:simu_len), 'b');
-title('Predicted action');
-ylabel('Desired angle [deg]');
+title('Control action');
+ylabel('Control acton []');
+xlabel('Time [s]');
 axis([0, dt*simu_len, -saturace, saturace]);
+legend('Control action');
+
+% plot the position estimates
 
 subplot(2, 2, 3);
 hold off
@@ -332,14 +349,19 @@ plot(time(1:end-1), estimate(1, 1:(i-1)), 'r');
 hold on
 plot(time, x(1, 1:i), 'b');
 plot(time, xd_pure_integration, 'g');
-axis([0, dt*simu_len, -0.25, 1.25]);
+xlabel('Time [s]');
+ylabel('Position [m]');
+legend('KF estimate', 'Simulation ground truth', 'Pure integration');
+title('Position estimates');
+
+% plot the velocities
 
 subplot(2, 2, 4);
 hold off
 plot(time(1:end-1), measurement(2, 1:(i-1)), 'r');
 hold on
 plot(time(1:end-1), estimate(2, 1:(i-1)), 'b');
-axis([0, dt*simu_len, -1, 1]);
-
-figure(2);
-plot(estimate(5, :));
+xlabel('Time [s]');
+ylabel('Speed [m/s]');
+legend('Measurement', 'KF Estimate');
+title('Velocities');
