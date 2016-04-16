@@ -1,20 +1,13 @@
-% % A_roof matrix
-% dlmwrite('A_roof.txt', A_roof, 'precision', '%15.10f');
-% 
-% % diagonal of Q_roof matrix
-% dlmwrite('Q_roof_diag.txt', diag(Q_roof), 'precision', '%3.1f');
-% 
-% % B_roof matrix
-% dlmwrite('B_roof.txt', B_roof, 'precision', '%15.10f');
-% 
-% % H_inv matrix
-% dlmwrite('H_inv.txt', H_inv, 'precision', '%20.10f');
+% This script creates ANSI C code with pregenerated matrices for MPC. It
+% should be run after tunning and simulation by "main.m" which initializes
+% these matrices.
 
 fid = fopen('elevAileMpcMatrices.c', 'w');
 
 fprintf(fid, '#include "CMatrixLib.h"\n');
 fprintf(fid, '#include "elevAileMpcMatrices.h"\n\n');
 
+% print comment which identifies these matrices (model?)
 fprintf(fid, '// tricopter, KK2, stick scaling = 10\n\n');
 
 fprintf(fid, '/*\n');

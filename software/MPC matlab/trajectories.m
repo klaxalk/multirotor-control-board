@@ -1,49 +1,42 @@
-%% circle
+% This script generates simple 2D trajectories for development and testing of
+% MPC embedded control. It generates ANSI C file which should be included
+% in the xMega source project.
 
+% what sampling time to use?
 dt = 0.0101;
 
-k = 0.007;
-speed = 0.2;
+% fly with speed ()..
+speed = 1.5;
 
-elevator_vel = [speed*sin(0:k:2*pi) -speed*sin(0:k:2*pi)];
-aileron_vel = [-speed*cos(0:k:2*pi) -speed*cos(0:k:2*pi)];
+k = 0.01;
+
+elevator_vel = [speed*sin(0:k:2*pi)];
+aileron_vel = [-speed*cos(0:k:2*pi)];
 
 elevator_pos = integrate(elevator_vel, dt);
 aileron_pos = integrate(aileron_vel, dt);
 
+% plot the created 2D trajectory 
+
 figure(20);
-subplot(2, 1, 1);
-plot(elevator_pos);
-subplot(2, 1, 2);
-plot(aileron_pos);
 
-% elevator_vel = 0.25*cos(0:0.006:2*pi);
-% aileron_vel = 0.25*sin(0:0.006:2*pi);
-% 
-% elevator_pos = integrate(elevator_vel, dt);
-% aileron_pos = integrate(aileron_vel, dt);
-% aileron_pos = aileron_pos - mean(aileron_pos);
-
-figure(1);
-subplot(3, 1, 1);
-% hold off
-% plot(integrate(ones(1, length(elevator_vel)).*dt), elevator_vel);
-% hold on
-% plot(integrate(ones(1, length(aileron_vel)).*dt), aileron_vel, 'r');
-% title('Velocities');
-
-subplot(3, 1, 2);   
+subplot(2, 1, 1);   
 hold off
 plot(integrate(ones(1, length(elevator_pos)).*dt), elevator_pos);
 hold on
 plot(integrate(ones(1, length(aileron_pos)).*dt), aileron_pos, 'r');
 title('Positions');
+xlabel('Time [s]');
+ylabel('Position [m]');
 
-subplot(3, 1, 3);
+subplot(2, 1, 2);
 scatter(-aileron_pos, elevator_pos);
 axis equal;
+xlabel('X [m]');
+ylabel('Y [m]');
+title('Top-down view');
 
-%%
+%% generate the ANSI C file with the trajectories
 
 fid = fopen('trajectories.c', 'w');
 
