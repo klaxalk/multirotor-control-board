@@ -2,8 +2,10 @@ clear all;
 
 %% System matrices
 
+% the system (and simulation) sampling time
 dt = 0.0101;
 
+% choose the uav model
 uav = 2;
 % 1 = 250tka, KK2
 % 2 = Mikrokopter, KK2, ss = 15
@@ -218,17 +220,20 @@ u_hist(1) = 0;
 % saturace akcnich zasahu
 saturace = 800;
 
-% max speed
+% max speed for input preshaper
 max_speed = 100;
 
-u_sat = 0;
-
-% kalman variables
-
+% initialize the Kalmans covariance
 kalmanCovariance = eye(5);
-estimate(:, 1) = [1; 0; 0; 0; 0];
 
+% initialize the estimated states
+estimate(:, 1) = x(:, 1);
+
+% initialize the pure integration 
 xd_pure_integration(1) = x(1, 1);
+
+% initialize the saturated input
+u_sat = 0;
 
 %% support matrices
 
@@ -241,8 +246,10 @@ Q_kalman = diag([120]);
 % measurement distribution
 C_kalman = [0, 1, 0, 0, 0];
 
+% do the simulation
 for i=2:simu_len
     
+    % integrate time     
     time(i) = time(i-1)+dt;
     
     % create the sensor measurement     
@@ -251,12 +258,14 @@ for i=2:simu_len
     % pure integration of px4flow velocity     
     xd_pure_integration(i) = xd_pure_integration(i-1) + measurement(2, i-1)*dt;
 
+    % rune the kalman step     
     [estimate(:, i), kalmanCovariance] = kalman(estimate(:, i-1), kalmanCovariance, measurement(2, i-1), u_sat, A, B, R_kalman, Q_kalman, C_kalman); 
     
+    % prepare the reference by input preshaper     
     reference = estimate(1, i);
     for j=2:horizon_len
         diference = reference(j-1) - x_ref(j+i-1);
-        
+                 
         if (diference > max_speed*dt)
             diference = max_speed*dt;
         elseif (diference < -max_speed*dt)
@@ -266,12 +275,15 @@ for i=2:simu_len
         reference(j) = reference(j-1) - diference;
     end
 
+    % prepare the reference (create the vector of all states from the position reference)     
     my_ref = zeros(n_states*horizon_len, 1);
     my_ref(1:n_states:n_states*horizon_len, 1) = reference;
     
+    % prepare the lineare part of the qudratic function     
     X_0 = A_roof*(estimate(:, i)) - my_ref;
     c = (X_0'*Q_roof*B_roof)';
     
+    % find the global optimum     
     u_cf = H_inv*(c./(-2));
         
     % stretch the action vector to the whole horizon     
@@ -301,11 +313,14 @@ for i=2:simu_len
     % plot during the simulation
     if (mod(i, 3) == 0)
     figure(2);
+    subplot(1, 2, 1);
     hold off
     plot(linspace(0, dt*(i+horizon_len), i+horizon_len), x_ref(1:(i+horizon_len)), 'r');
     hold on
     plot(linspace(0, dt*i, i), estimate(1, 1:i), 'b');
     plot(linspace(dt*i, dt*(i+horizon_len), horizon_len), x_cf(1, 1:horizon_len), 'g--');
+    subplot(1, 2, 2);
+    plot(u_cf);
     drawnow;
     end
         
