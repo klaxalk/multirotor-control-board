@@ -49,8 +49,8 @@ fprintf(fid, '// length = %d', length(elevator_pos));
 
 fprintf(fid, '\n\n');
 
-printMatrixC(fid, 'const float elevatorCircle[TRAJECTORY_CIRCLE_LENGTH] PROGMEM', '%3.3f', elevator_pos);
+printMatrixC(fid, 'const float trajectoryElevator[TRAJECTORY_LENGTH] PROGMEM', '%3.3f', elevator_pos);
 
-printMatrixC(fid, 'const float aileronCircle[TRAJECTORY_CIRCLE_LENGTH] PROGMEM', '%3.3f', aileron_pos);
+printMatrixC(fid, 'const float trajectoryAileron[TRAJECTORY_LENGTH] PROGMEM', '%3.3f', aileron_pos);
 
 fclose(fid);
