@@ -6,7 +6,7 @@ clear all;
 dt = 0.0101;
 
 % choose the uav model
-uav = 2;
+uav = 1;
 % 1 = 250tka, KK2
 % 2 = Mikrokopter, KK2, ss = 15
 % 3 = Tricopter, KK2 
@@ -173,7 +173,7 @@ Q_roof(end-n_states+1:end, end-n_states+1:end) = S;
 %           ..., ..., P,    0;
 %           0,   ..., ...,  P];
 
-P = 0.00000025;
+P = 0.0000025;
 
 P_roof = zeros(n_variables, n_variables);
 
@@ -196,20 +196,20 @@ H_inv = (0.5*H)^(-1);
 %% the control loop
 
 % simulation length
-simu_len = 2000;
+simu_len = 2500;
 
 time(1) = 0;
 
 % set the reference velocities
 
 reference_vel = 0.25*cos(0:0.01:2*pi*20);
-reference_pos = integrate(reference_vel, dt);
+reference_pos = [zeros(1000, 1); integrate(reference_vel, dt)];
 
 % reference position
 x_ref = reference_pos;
 
 % initial conditions
-x(:, 1) = [1; 0; 0; 0; 0];
+x(:, 1) = [3; 0; 0; 0; 0];
 
 % prepare the vector of actions
 u = zeros(horizon_len, u_size);
@@ -217,11 +217,11 @@ u = zeros(horizon_len, u_size);
 % history of used actions
 u_hist(1) = 0;
 
-% saturace akcnich zasahu
-saturace = 800;
+% saturation akcnich zasahu
+saturation = 1200;
 
 % max speed for input preshaper
-max_speed = 100;
+max_speed = 2.0;
 
 % initialize the Kalmans covariance
 kalmanCovariance = eye(5);
@@ -299,10 +299,10 @@ for i=2:simu_len
     u_sat = u_cf(1);
     
     % saturate the control action
-    if (u_sat > saturace)
-        u_sat = saturace;
-    elseif (u_sat < -saturace)
-        u_sat = -saturace;
+    if (u_sat > saturation)
+        u_sat = saturation;
+    elseif (u_sat < -saturation)
+        u_sat = -saturation;
     end
     
     u_hist(i) = u_sat;
@@ -353,7 +353,7 @@ plot(time, 0*(1:simu_len), 'b');
 title('Control action');
 ylabel('Control acton []');
 xlabel('Time [s]');
-axis([0, dt*simu_len, -saturace, saturace]);
+axis([0, dt*simu_len, -saturation, saturation]);
 legend('Control action');
 
 % plot the position estimates
