@@ -275,11 +275,6 @@ if (usartBufferGetByte(usart_buffer_2, &inChar, 0)) {
 							blobs[blobId].z = readFloat(multiconMessage.messageBuffer, &idx);
 							blobs[blobId].x = readFloat(multiconMessage.messageBuffer, &idx);
 							
-							/*
-							uint8_t temp[32];
-							sprintf(temp, "Blob %d [%2.3f %2.3f %2.3f]\n\r", blobId, blobs[blobId].x, blobs[blobId].y, blobs[blobId].z);
-							usartBufferPutString(usart_buffer_3, temp, 10);
-							*/
 							led_green_on();
 						}
 						
@@ -289,12 +284,6 @@ if (usartBufferGetByte(usart_buffer_2, &inChar, 0)) {
 					
 						multiconErrorState = readUint8(multiconMessage.messageBuffer, &idx);
 						numberOfDetectedBlobs = readUint8(multiconMessage.messageBuffer, &idx);
-						
-						/*
-						uint8_t temp[32];
-						sprintf(temp, "Num. blobs = %d, Error = %d\n\r", numberOfDetectedBlobs, multiconErrorState);
-						usartBufferPutString(usart_buffer_3, temp, 10);
-						*/
 						
 						led_green_toggle();
 						
@@ -310,11 +299,6 @@ if (usartBufferGetByte(usart_buffer_2, &inChar, 0)) {
 						// led_green_toggle();
 						tempFloat = readFloat(multiconMessage.messageBuffer, &idx);
 						blobId = readUint8(multiconMessage.messageBuffer, &idx);
-					
-						#ifdef MATOUS
-						radios[blobId].RSSI = tempFloat;
-						radios[blobId].timer++;
-						#endif
 						
 						led_orange_toggle();
 					
@@ -330,39 +314,19 @@ if (usartBufferGetByte(usart_buffer_2, &inChar, 0)) {
 		/* -------------------------------------------------------------------- */
 		if (usartBufferGetByte(usart_buffer_xbee, &inChar, 0)) {
 
+			// push the byte into the parsing function
 			if (xbeeParseChar(inChar, &xbeeMessage, &xbeeReceiver)) {
 				
+				// the packet is a valid API packet
 				if (xbeeMessage.apiId == XBEE_API_PACKET_RECEIVE) {
 					
 					int idx = 0;
-
-					switch (xbeeMessage.content.receiveResponse.messageId) {
-						
-						#ifdef MULTICON
-						
-						case 'R':
-
-							respondTo = xbeeMessage.content.receiveResponse.address64;
-							
-							// led_green_toggle();
-							uint8_t temp[32];
-												
-							writeUint8ToBuffer(&temp, (uint8_t) 'M', 0);
-							writeFloatToBuffer(&temp, (float) kalmanStates.elevator.position, 1);
-							writeFloatToBuffer(&temp, (float) kalmanStates.aileron.position, 5);
-							writeFloatToBuffer(&temp, (float) 0, 9);
-							writeFloatToBuffer(&temp, (float) 0, 13);
-							// writeFloatToBuffer(&temp, (float) bluetooth_RSSI, 17);
-							
-							xbeeSendMessageTo(temp, 18, respondTo);
-						
-						break;
-						
-						#endif
+					
+					// check the message id 
+					switch (xbeeMessage.content.receiveResponse.messageId) 
 						
 						case 'M':
 						
-							// timeStamp = xbeeMessage.content.receiveResponse.payloadSize;
 							timeStamp = readUint32(xbeeMessage.content.receiveResponse.payload, &idx);
 						
 							#ifdef RASPBERRY_PI
@@ -376,24 +340,13 @@ if (usartBufferGetByte(usart_buffer_2, &inChar, 0)) {
 						break;
 					}
 					
-				} else if (xbeeMessage.apiId == XBEE_API_PACKET_AT_RESPONSE) {
-				
-					/*
-				
-					// led_green_toggle();
-					uint8_t temp[32];
-					
-					writeUint8ToBuffer(&temp, (uint8_t) 'M', 0);
-					writeFloatToBuffer(&temp, (float) kalmanStates.elevator.position, 1);
-					writeFloatToBuffer(&temp, (float) kalmanStates.aileron.position, 5);
-					writeFloatToBuffer(&temp, (float) kalmanStates.elevatorPositionCovariance, 9);
-					writeFloatToBuffer(&temp, (float) kalmanStates.aileronPositionCovariance, 13);
-					writeFloatToBuffer(&temp, (float) bluetooth_RSSI, 17);
-					writeUint8ToBuffer(&temp, (uint8_t) xbeeMessage.content.atReponse.cmdData, 21);
-					
-					*/
-				
-				}
+				// the packet is a valid AT packet (probably response)
+				// }
+				// else if (xbeeMessage.apiId == XBEE_API_PACKET_AT_RESPONSE) {
+				//
+				//	// process the potential response to AT command to XBEE
+				//	// xbeeMessage.content.atReponse.cmdData contains the response)
+				//}
 							
 				xbeeReceiver.receiverState = XBEE_NOT_RECEIVING;
 			}
@@ -434,8 +387,8 @@ if (usartBufferGetByte(usart_buffer_2, &inChar, 0)) {
 					aileronSpeedSaturated  = opticalFlowData.flow_comp_m_y;
 
 				// rotate the coordinates
-				elevatorSpeed = -elevatorSpeed;
-				aileronSpeed = aileronSpeed;
+				elevatorSpeed = -elevatorSpeedSaturated;
+				aileronSpeed = aileronSpeedSaturated;
 
 				// saturate the ground distance
 				if (opticalFlowData.ground_distance < ALTITUDE_MAXIMUM && opticalFlowData.ground_distance > 0.3) {
@@ -463,18 +416,20 @@ if (usartBufferGetByte(usart_buffer_2, &inChar, 0)) {
 		/*	A message received from the main Task								*/
 		/* -------------------------------------------------------------------- */
 		if (xQueueReceive(main2commsQueue, &main2commMessage, 0)) {
-		
-			// send message to STM to reset its Kalman filter			
+			
 			if (main2commMessage.messageType == CLEAR_STATES) {
 	
+				// send message to STM to reset Kalman filter
 				stmResetKalman(main2commMessage.data.simpleSetpoint.elevator, main2commMessage.data.simpleSetpoint.aileron);
 			
 			} else if (main2commMessage.messageType == SET_SETPOINT) {
 				
+				// send message to STM to set a single-point setpoint
 				stmSendSetpoint(main2commMessage.data.simpleSetpoint.elevator, main2commMessage.data.simpleSetpoint.aileron);
 
 			} else if (main2commMessage.messageType == SET_TRAJECTORY) {
 				
+				// send message to STM to set a 5-point trajectory
 				stmSendTrajectory(main2commMessage.data.trajectory.elevatorTrajectory, main2commMessage.data.trajectory.aileronTrajectory);
 			}
 		}

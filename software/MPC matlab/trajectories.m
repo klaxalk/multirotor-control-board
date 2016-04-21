@@ -10,8 +10,8 @@ speed = 1.5;
 
 k = 0.01;
 
-elevator_vel = [speed*sin(0:k:2*pi)];
-aileron_vel = [-speed*cos(0:k:2*pi)];
+elevator_vel = [zeros(1, round(3/dt)) speed*ones(1, round(4/dt)) zeros(1, round(6/dt)) -speed*ones(1, round(4/dt)) zeros(1, round(3/dt))];
+aileron_vel = [zeros(length(elevator_vel), 1)];
 
 elevator_pos = integrate(elevator_vel, dt);
 aileron_pos = integrate(aileron_vel, dt);

@@ -121,7 +121,7 @@ void mainTask(void *p) {
 				} else if ((abs(aux2filtered - PPM_IN_MIDDLE_LENGTH) <= 300)) {
 					
 					main2commMessage.messageType = SET_SETPOINT;
-					main2commMessage.data.simpleSetpoint.elevator = 2;
+					main2commMessage.data.simpleSetpoint.elevator = 0;
 					main2commMessage.data.simpleSetpoint.aileron = 0;
 					xQueueSend(main2commsQueue, &main2commMessage, 0);
 					
@@ -134,7 +134,7 @@ void mainTask(void *p) {
 
 					// when the trajectory is over
 					if (++currentSetpointIdx >= TRAJECTORY_LENGTH-1)
-					currentSetpointIdx = 0; // reset it and go again
+						currentSetpointIdx = 0; // reset it and go again
 				
 					int16_t futureSetpointIdx = currentSetpointIdx;
 				
@@ -147,7 +147,7 @@ void mainTask(void *p) {
 						futureSetpointIdx = futureSetpointIdx + 50;
 					
 						if (futureSetpointIdx > (TRAJECTORY_LENGTH-1))
-						futureSetpointIdx -= TRAJECTORY_LENGTH;
+							futureSetpointIdx -= TRAJECTORY_LENGTH;
 					}
 
 					xQueueSend(main2commsQueue, &main2commMessage, 0);

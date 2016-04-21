@@ -11,7 +11,7 @@
 #include "system.h"
 #include <avr/pgmspace.h>
 
-#define TRAJECTORY_LENGTH 629
+#define TRAJECTORY_LENGTH 1980
 
 const float trajectoryElevator[TRAJECTORY_LENGTH] PROGMEM;
 const float trajectoryAileron[TRAJECTORY_LENGTH] PROGMEM;

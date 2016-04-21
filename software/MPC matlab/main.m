@@ -173,7 +173,7 @@ Q_roof(end-n_states+1:end, end-n_states+1:end) = S;
 %           ..., ..., P,    0;
 %           0,   ..., ...,  P];
 
-P = 0.0000025;
+P = 0.0000018;
 
 P_roof = zeros(n_variables, n_variables);
 
