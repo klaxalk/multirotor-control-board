@@ -88,7 +88,7 @@
 /*	Controller saturation												*/
 /* -------------------------------------------------------------------- */
 
-#define CONTROLLER_SATURATION	800
+#define CONTROLLER_SATURATION	1200
  
 /* -------------------------------------------------------------------- */
 /*	Constants for USART aliases											*/

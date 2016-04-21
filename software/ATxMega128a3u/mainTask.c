@@ -119,27 +119,10 @@ void mainTask(void *p) {
 				
 				// switch is in the MIDDLE
 				} else if ((abs(aux2filtered - PPM_IN_MIDDLE_LENGTH) <= 300)) {
-			
-					main2commMessage.messageType = SET_TRAJECTORY;
-
-					// when the trajectory is over
-					if (++currentSetpointIdx >= TRAJECTORY_LENGTH-1)
-					currentSetpointIdx = 0; // reset it and go again
 					
-					int16_t futureSetpointIdx = currentSetpointIdx;
-					
-					int i;
-					for (i = 0; i < 5; i++) {
-
-						main2commMessage.data.trajectory.elevatorTrajectory[i] = pgm_read_float(&(trajectoryElevator[futureSetpointIdx]));
-						main2commMessage.data.trajectory.aileronTrajectory[i] = pgm_read_float(&(trajectoryAileron[futureSetpointIdx]));
-						
-						futureSetpointIdx = futureSetpointIdx + 50;
-						
-						if (futureSetpointIdx > (TRAJECTORY_LENGTH-1))
-							futureSetpointIdx -= TRAJECTORY_LENGTH;
-					}
-
+					main2commMessage.messageType = SET_SETPOINT;
+					main2commMessage.data.simpleSetpoint.elevator = 2;
+					main2commMessage.data.simpleSetpoint.aileron = 0;
 					xQueueSend(main2commsQueue, &main2commMessage, 0);
 					
 					led_orange_on();
@@ -147,9 +130,26 @@ void mainTask(void *p) {
 				// switch is UP
 				} else if ((aux2filtered > (PPM_IN_MIDDLE_LENGTH + 300))) {
 				
-					main2commMessage.messageType = SET_SETPOINT;
-					main2commMessage.data.simpleSetpoint.elevator = 0;
-					main2commMessage.data.simpleSetpoint.aileron = 0;
+					main2commMessage.messageType = SET_TRAJECTORY;
+
+					// when the trajectory is over
+					if (++currentSetpointIdx >= TRAJECTORY_LENGTH-1)
+					currentSetpointIdx = 0; // reset it and go again
+				
+					int16_t futureSetpointIdx = currentSetpointIdx;
+				
+					int i;
+					for (i = 0; i < 5; i++) {
+
+						main2commMessage.data.trajectory.elevatorTrajectory[i] = pgm_read_float(&(trajectoryElevator[futureSetpointIdx]));
+						main2commMessage.data.trajectory.aileronTrajectory[i] = pgm_read_float(&(trajectoryAileron[futureSetpointIdx]));
+					
+						futureSetpointIdx = futureSetpointIdx + 50;
+					
+						if (futureSetpointIdx > (TRAJECTORY_LENGTH-1))
+						futureSetpointIdx -= TRAJECTORY_LENGTH;
+					}
+
 					xQueueSend(main2commsQueue, &main2commMessage, 0);
 					
 					led_orange_toggle();

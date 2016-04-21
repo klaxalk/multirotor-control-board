@@ -20,8 +20,7 @@
 void logTask(void *p) {
 	
 	char temp[20];
-	uint8_t i;
-	
+
 	vTaskDelay(2000);
 	
 	while (1) {

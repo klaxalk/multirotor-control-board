@@ -403,6 +403,8 @@ if (usartBufferGetByte(usart_buffer_2, &inChar, 0)) {
 		/*	A character received from px4flow									*/
 		/* -------------------------------------------------------------------- */
 		if (usartBufferGetByte(usart_buffer_1, &inChar, 0)) {
+			
+			float elevatorSpeedSaturated, aileronSpeedSaturated;
 
 			px4flowParseChar((uint8_t) inChar);
 		
@@ -415,11 +417,25 @@ if (usartBufferGetByte(usart_buffer_2, &inChar, 0)) {
 				
 				portENTER_CRITICAL();
 				
-				if (fabs(opticalFlowData.flow_comp_m_x) <= 1)
-					elevatorSpeed = -opticalFlowData.flow_comp_m_x;
+				// saturate the elevator speed
+				if (opticalFlowData.flow_comp_m_x > PX4FLOW_SPEED_SATURATION)
+					elevatorSpeedSaturated = PX4FLOW_SPEED_SATURATION;
+				else if (opticalFlowData.flow_comp_m_x < -PX4FLOW_SPEED_SATURATION)
+					elevatorSpeedSaturated = -PX4FLOW_SPEED_SATURATION;
+				else
+					elevatorSpeedSaturated = opticalFlowData.flow_comp_m_x;
 				
-				if (fabs(opticalFlowData.flow_comp_m_y) <= 1)
-					aileronSpeed  = +opticalFlowData.flow_comp_m_y;
+				// saturate the aileron speed
+				if (opticalFlowData.flow_comp_m_y > PX4FLOW_SPEED_SATURATION)
+					aileronSpeedSaturated = PX4FLOW_SPEED_SATURATION;
+				else if (opticalFlowData.flow_comp_m_y < -PX4FLOW_SPEED_SATURATION)
+					aileronSpeedSaturated = -PX4FLOW_SPEED_SATURATION;
+				else
+					aileronSpeedSaturated  = opticalFlowData.flow_comp_m_y;
+
+				// rotate the coordinates
+				elevatorSpeed = -elevatorSpeed;
+				aileronSpeed = aileronSpeed;
 
 				// saturate the ground distance
 				if (opticalFlowData.ground_distance < ALTITUDE_MAXIMUM && opticalFlowData.ground_distance > 0.3) {

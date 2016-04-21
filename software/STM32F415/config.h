@@ -8,12 +8,12 @@
 #define CONFIG_H_
 
 // chose the correct UAV model
-#define MIKROKOPTER_KK2	1
+// #define MIKROKOPTER_KK2	1
 // #define TRICOPTER		1
-// #define PRASE			1
+#define PRASE			1
 
-#define KALMAN_INPUT_SATURATION				800
-#define KALMAN_MEASURED_VELOCITY_SATURATION 1.5
+#define KALMAN_INPUT_SATURATION				1200
+#define KALMAN_MEASURED_VELOCITY_SATURATION 3.0
 
 #ifdef	MIKROKOPTER_KK2
 

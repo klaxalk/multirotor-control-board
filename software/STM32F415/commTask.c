@@ -242,14 +242,10 @@ void commTask(void *p) {
 				tempFloat = readFloat(messageBuffer, &idx);
 				if (fabs(tempFloat) < 200)
 					mes.elevatorPosition = tempFloat;
-				else
-					continue;
 
 				tempFloat = readFloat(messageBuffer, &idx);
 				if (fabs(tempFloat) < 200)
 					mes.aileronPosition = tempFloat;
-				else
-					continue;
 
 				xQueueSend(setKalmanQueue, &mes, 0);
 
