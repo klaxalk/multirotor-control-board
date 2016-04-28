@@ -9,6 +9,8 @@
 #include "ioport.h"
 #include "multiCon.h"
 #include "communication.h"
+#include "mpcHandler.h"
+#include "xbee.h"
 
 uint8_t numberOfDetectedBlobs = 0;
 uint8_t multiconErrorState = 0;
@@ -115,4 +117,33 @@ int8_t multiconParseChar(char inChar, multiconMessageHandler_t * messageHandler)
 	}
 	
 	return 0;
+}
+
+/* -------------------------------------------------------------------- */
+/*	Create a message with all blobs to send								*/
+/* -------------------------------------------------------------------- */
+
+void sendBlobs(uint64_t address) {
+	
+	uint8_t buffer[64];
+	
+	uint8_t idx = 0;
+	
+	buffer[idx++] = 'N';
+	
+	writeFloatToBuffer(buffer, kalmanStates.elevator.position, idx);
+	idx += 4;
+	writeFloatToBuffer(buffer, kalmanStates.aileron.position, idx);
+	idx += 4;
+	writeFloatToBuffer(buffer, groundDistance, idx);
+	idx += 4;
+	
+	writeFloatToBuffer(buffer, (float) controllerElevatorOutput, idx);
+	idx += 4;
+	writeFloatToBuffer(buffer, (float) controllerAileronOutput, idx);
+	idx += 4;
+	writeFloatToBuffer(buffer, (float) controllerThrottleOutput, idx);
+	idx += 4;
+	
+	xbeeSendMessageTo(&buffer, idx, address);
 }

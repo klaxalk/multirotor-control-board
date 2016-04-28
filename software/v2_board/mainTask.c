@@ -116,36 +116,9 @@ void mainTask(void *p) {
 				} else if ((abs(aux2filtered - PPM_IN_MIDDLE_LENGTH) <= 300)) {
 			
 					main2commMessage.messageType = SET_SETPOINT;
-					
-					#if defined (MULTICON)
-					
-						if (numberOfDetectedBlobs >= 1) {
-							
-							correctionX = kalmanStates.elevator.position + blobs[0].x;
-							correctionY = kalmanStates.aileron.position + blobs[0].y;
-							
-						}
-					
-						main2commMessage.data.simpleSetpoint.elevator = -pgm_read_float(&(elevatorDiff[0])) + correctionX;
-						main2commMessage.data.simpleSetpoint.aileron = -pgm_read_float(&(aileronDiff[0])) + correctionY;
-					
-					#elif defined (RASPBERRY_PI)
-					
-						if (rpiOk >= 1) {
-							
-							correctionX = kalmanStates.elevator.position + rpix;
-							correctionY = kalmanStates.aileron.position + rpiy;
-						}
-					
-						main2commMessage.data.simpleSetpoint.elevator = 0 + correctionX;
-						main2commMessage.data.simpleSetpoint.aileron = 0 + correctionY;
-					
-					#else
-					
-						main2commMessage.data.simpleSetpoint.elevator = 0;
-						main2commMessage.data.simpleSetpoint.aileron = 0;
-					
-					#endif
+					main2commMessage.data.simpleSetpoint.elevator = 0;
+					main2commMessage.data.simpleSetpoint.aileron = 0;
+					xQueueSend(main2commsQueue, &main2commMessage, 0);
 					
 					xQueueSend(main2commsQueue, &main2commMessage, 0);
 					

@@ -187,19 +187,19 @@ void commTask(void *p) {
 				comm2kalmanMessage_t mes;
 
 				tempFloat = readFloat(messageBuffer, &idx);
-				if (fabs(tempFloat) < 1)
+				if (fabs(tempFloat) < 3)
 					mes.elevatorSpeed = tempFloat;
 
 				tempFloat = readFloat(messageBuffer, &idx);
-				if (fabs(tempFloat) < 1)
+				if (fabs(tempFloat) < 3)
 					mes.aileronSpeed = tempFloat;
 
 				tempInt = readInt16(messageBuffer, &idx);
-				if (abs(tempInt) < 300)
+				if (abs(tempInt) < 800)
 					mes.elevatorInput = (float) tempInt;
 
 				tempInt = readInt16(messageBuffer, &idx);
-				if (abs(tempInt) < 300)
+				if (abs(tempInt) < 800)
 					mes.aileronInput = (float) tempInt;
 
 				xQueueSend(comm2kalmanQueue, &mes, 0);
@@ -229,14 +229,11 @@ void commTask(void *p) {
 				tempFloat = readFloat(messageBuffer, &idx);
 				if (fabs(tempFloat) < 200)
 					mes.elevatorPosition = tempFloat;
-				else
-					continue;
 
 				tempFloat = readFloat(messageBuffer, &idx);
 				if (fabs(tempFloat) < 200)
 					mes.aileronPosition = tempFloat;
-				else
-					continue;
+
 
 				xQueueSend(setKalmanQueue, &mes, 0);
 
@@ -269,22 +266,22 @@ void commTask(void *p) {
 				mes.throttlePosition = 0;
 
 				tempFloat = readFloat(messageBuffer, &idx);
-				if (fabs(tempFloat) < 5)
-					mes.throttlePosition = tempFloat;
+				if (fabs(tempFloat) < 5) {
 
-				xQueueSend(resetThrottleKalmanQueue, &mes, 0);
+					mes.throttlePosition = tempFloat;
+					xQueueSend(resetThrottleKalmanQueue, &mes, 0);
+				}
 
 			} else if (messageId == '6') {
 
 				resetThrottleKalmanMessage_t mes;
 
 				tempFloat = readFloat(messageBuffer, &idx);
-				if (fabs(tempFloat) < 200)
-					mes.throttlePosition = tempFloat;
-				else
-					continue;
+				if (fabs(tempFloat) < 200) {
 
-				xQueueSend(setThrottleKalmanQueue, &mes, 0);
+					mes.throttlePosition = tempFloat;
+					xQueueSend(setThrottleKalmanQueue, &mes, 0);
+				}
 
 			} else if (messageId == 's') {
 

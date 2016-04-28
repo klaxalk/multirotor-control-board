@@ -14,6 +14,7 @@
 #include "trajectories.h"
 #include "xbee.h"
 #include "battery.h"
+#include "multiCon.h"
 
 /* -------------------------------------------------------------------- */
 /*	For calculating rate of MPC and Kalman								*/
@@ -338,9 +339,28 @@ void commTask(void *p) {
 		/*	A character received from XBee										*/
 		/* -------------------------------------------------------------------- */
 		if (usartBufferGetByte(usart_buffer_xbee, &inChar, 0)) {
+			
+			uint8_t buffer[32];
+			uint32_t timeStamp;
+			uint8_t idx = 0;
 
 			if (xbeeParseChar(inChar, &xbeeMessage, &xbeeReceiver)) {
 				
+				if (xbeeMessage.apiId == XBEE_API_PACKET_RECEIVE) {
+					
+					int idx = 0;
+
+					switch (xbeeMessage.content.receiveResponse.messageId) {
+												
+						case 'M':
+						
+							sendBlobs(xbeeMessage.content.receiveResponse.address64);
+						
+						break;
+					}
+					
+				}
+							
 				xbeeReceiver.receiverState = XBEE_NOT_RECEIVING;
 			}
 		}
@@ -448,6 +468,7 @@ void commTask(void *p) {
 		/*	A message received from the controller Task							*/
 		/* -------------------------------------------------------------------- */
 		if (xQueueReceive(controller2commsQueue, &controller2commMessage, 0)) {
+			
 			if (controller2commMessage.messageType == SEND_INPUTS) {
 				stmSendThrottleMeasurement(controller2commMessage.data.groundDistance, controller2commMessage.data.batteryLevel, controller2commMessage.data.throttleInput, controller2commMessage.data.groundDistanceConfidence);
 			} else {
