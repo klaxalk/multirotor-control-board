@@ -63,7 +63,7 @@ void mainTask(void *p) {
 				main2commMessage.messageType = CLEAR_STATES;
 				main2commMessage.data.simpleSetpoint.elevator = 0;
 				main2commMessage.data.simpleSetpoint.aileron = 0;
-				main2commMessage.data.simpleSetpoint.throttle = 0;
+				main2commMessage.data.simpleSetpoint.throttle = 1;
 				xQueueSend(main2commsQueue, &main2commMessage, 0);
 				
 				// wait between reseting the kalman and starting the controller
@@ -96,6 +96,7 @@ void mainTask(void *p) {
 					main2commMessage.messageType = SET_SETPOINT;
 					main2commMessage.data.simpleSetpoint.elevator = 0;
 					main2commMessage.data.simpleSetpoint.aileron = 0;
+					main2commMessage.data.simpleSetpoint.throttle = 1;
 					xQueueSend(main2commsQueue, &main2commMessage, 0);
 			
 					AUX2_previous = 1;
@@ -107,6 +108,7 @@ void mainTask(void *p) {
 					main2commMessage.messageType = SET_SETPOINT;
 					main2commMessage.data.simpleSetpoint.elevator = 0;
 					main2commMessage.data.simpleSetpoint.aileron = 0;
+					main2commMessage.data.simpleSetpoint.throttle = 1;
 					xQueueSend(main2commsQueue, &main2commMessage, 0);
 					
 					AUX2_previous = 2;
@@ -128,7 +130,6 @@ void mainTask(void *p) {
 					
 						main2commMessage.data.simpleSetpoint.elevator = -pgm_read_float(&(elevatorDiff[0])) + correctionX;
 						main2commMessage.data.simpleSetpoint.aileron = -pgm_read_float(&(aileronDiff[0])) + correctionY;
-					
 					#elif defined (RASPBERRY_PI)
 					
 						if (rpiOk >= 1) {
@@ -147,6 +148,7 @@ void mainTask(void *p) {
 					
 					#endif
 					
+					main2commMessage.data.simpleSetpoint.throttle = 1;
 					xQueueSend(main2commsQueue, &main2commMessage, 0);
 					
 					AUX2_previous = 3;

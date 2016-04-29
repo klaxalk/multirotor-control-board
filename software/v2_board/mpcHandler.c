@@ -39,7 +39,6 @@ volatile mpcSetpoints_t mpcSetpoints;
 
 volatile int16_t mpcElevatorOutput = 0;
 volatile int16_t mpcAileronOutput = 0;
-volatile int16_t mpcThrottleOutput = 0;
 
 /* -------------------------------------------------------------------- */
 /*	Initialize the local copy of kalman states to ZERO					*/
@@ -62,6 +61,7 @@ void initializeKalmanStates() {
 	kalmanStates.throttle.velocity = 0;
 	kalmanStates.throttle.acceleration = 0;
 	kalmanStates.throttle.omega = 0;
+	kalmanStates.throttle.acceleration_error = 0;
 }
 
 /* -------------------------------------------------------------------- */
