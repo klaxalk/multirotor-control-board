@@ -40,6 +40,17 @@ uint8_t readUint8(char * message, int * indexFrom) {
 	return tempChar;
 }
 
+// write 4 bytes of float number to the buffer on position
+void writeFloatToBuffer(char * buffer, const float input, uint16_t position) {
+	
+	uint8_t * tempPtr = (uint8_t *) &input;
+	
+	*(buffer+position) = *tempPtr;
+	*(buffer+position+1) = *(tempPtr+1);
+	*(buffer+position+2) = *(tempPtr+2);
+	*(buffer+position+3) = *(tempPtr+3);
+}
+
 //~ --------------------------------------------------------------------
 //~ Processes message from px4flow
 //~ --------------------------------------------------------------------
