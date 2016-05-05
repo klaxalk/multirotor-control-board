@@ -12,7 +12,7 @@
 #include "mpcHandler.h"
 
 /* -------------------------------------------------------------------- */
-/*	variables that supports controllers in general						*/
+/*	variables that support controllers in general						*/
 /* -------------------------------------------------------------------- */
 
 volatile bool altitudeControllerEnabled;
@@ -25,10 +25,18 @@ volatile float kalmanFit = 20;
 uint8_t cyclesSinceGoodDistance = 0;
 uint8_t position = 0;
 float differences[20] = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1,  1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+	
+/* -------------------------------------------------------------------- */
+/*	variables that support altitude controller							*/
+/* -------------------------------------------------------------------- */
 
-/* -------------------------------------------------------------------- */
-/*	variables that support altitude controller and estimator			*/
-/* -------------------------------------------------------------------- */
+// for altitude controller
+volatile float throttleIntegration = 0;
+volatile float throttleSetpoint = 1;
+
+/* ---------------------------------------------------------------------------- */
+/*	OBSOLETE - variables that supported old altitude controller and estimator	*/
+/* ---------------------------------------------------------------------------- */
 
 // for altitude estimator
 volatile float estimatedThrottlePos = 0;
@@ -36,13 +44,9 @@ volatile float estimatedThrottleVel = 0;
 volatile uint8_t estimator_cycle = 0;
 volatile float   estimatedThrottlePos_prev = 0;
 
-// for altitude controller
-volatile float throttleIntegration = 0;
-volatile float throttleSetpoint = 1;
-
-/* -------------------------------------------------------------------- */
-/*	Altitude Estimator - interpolates the data from PX4Flow				*/
-/* -------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------ */
+/*	OBSOLETE - Old Altitude Estimator - interpolates the data from PX4Flow	*/
+/* ------------------------------------------------------------------------ */
 
 void altitudeEstimator() {
 	//new cycle
@@ -70,7 +74,7 @@ void altitudeEstimator() {
 }
 
 /* -------------------------------------------------------------------- */
-/*	Altitude Controller - stabilizes throttle							*/
+/*	OBSOLETE - Old Altitude Controller - stabilizes throttle			*/
 /* -------------------------------------------------------------------- */
 
 void altitudeController() {
@@ -149,7 +153,7 @@ void disableMpcController() {
 }
 
 /* -------------------------------------------------------------------- */
-/*	Altitude Evaluator - computes confidence and sends data to kalman	*/
+/*	Altitude Evaluator - computes confidence and sends data to ARM		*/
 /* -------------------------------------------------------------------- */
 
 void altitudeEvaluateAndSendToKalman() {
@@ -168,8 +172,8 @@ void altitudeEvaluateAndSendToKalman() {
 			groundDistanceConfidence = (float) 0;
 			
 		}
-		
-		} else {
+		 
+	} else {
 		
 		if (fabs(lastGoodGroundDistance - groundDistance) > GRND_DIST_DIFF_MAX) { //reject likely erroneous reading based on difference
 			
@@ -183,7 +187,7 @@ void altitudeEvaluateAndSendToKalman() {
 				
 			}
 			
-			} else { //accept good distance reading
+		} else { //accept good distance reading
 			
 			lastGoodGroundDistance = groundDistance;
 			groundDistanceConfidence = (float) 1;
@@ -195,6 +199,10 @@ void altitudeEvaluateAndSendToKalman() {
 	
 	xQueueSend(controller2commsQueue, &message, 0);
 }
+
+/* -------------------------------------------------------------------- */
+/*	Altitude Sender - sends data to ARM	without computing confidence	*/
+/* -------------------------------------------------------------------- */
 
 void altitudeSendToKalman() {
 	controller2commMessage_t message;
@@ -208,6 +216,10 @@ void altitudeSendToKalman() {
 	
 	xQueueSend(controller2commsQueue, &message, 0);
 }
+
+/* -------------------------------------------------------------------- */
+/*	Kalman Step - calls Altitude Evaluator or Altitude Sender			*/
+/* -------------------------------------------------------------------- */
 
 void kalmanStep() {
 	
@@ -223,6 +235,10 @@ void kalmanStep() {
 		kalmanStarted = (kalmanFit < KALMAN_FIT_THRESHOLD);		
 	}
 }
+
+/* -------------------------------------------------------------------- */
+/*	LQR state feedback - calculates next value to send to motors		*/
+/* -------------------------------------------------------------------- */
 
 void calculateNextThrottle() {
 	float error;
@@ -256,6 +272,10 @@ void calculateNextThrottle() {
 	controllerThrottleOutput = (int16_t) (temp);
 	portEXIT_CRITICAL();
 }
+
+/* -------------------------------------------------------------------- */
+/*	Reset Throttle Kalman on ARM										*/
+/* -------------------------------------------------------------------- */
 
 void resetThrottleKalman() {
 	controller2commMessage_t message;

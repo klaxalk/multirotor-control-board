@@ -1,9 +1,9 @@
 /*
- * mainTask.c
- *
- * Created: 11.9.2014 11:05:32
- *  Author: Tomas Baca
- */ 
+* mainTask.c
+*
+* Created: 11.9.2014 11:05:32
+*  Author: Tomas Baca
+*/
 
 #include "mainTask.h"
 #include "system.h"
@@ -20,18 +20,18 @@ volatile int16_t currentSetpointIdx = 0;
 
 #ifdef MULTICON
 
-	#include "multiCon.h"
-	float correctionX = 0;
-	float correctionY = 0;
+#include "multiCon.h"
+float correctionX = 0;
+float correctionY = 0;
 
 #endif
 
 #ifdef RASPBERRY_PI
 
-	#include "raspberryPi.h"
-	float correctionX = -0.5;
-	float correctionY = 0;
-	
+#include "raspberryPi.h"
+float correctionX = -0.5;
+float correctionY = 0;
+
 #endif
 
 void mainTask(void *p) {
@@ -42,21 +42,22 @@ void mainTask(void *p) {
 
 	vTaskDelay(50);
 	
-	int16_t aux2filtered = PPM_IN_MIDDLE_LENGTH; 
-		
+	int16_t aux2filtered = PPM_IN_MIDDLE_LENGTH;
+	int16_t aux3filtered = PPM_IN_MIDDLE_LENGTH;
+	
 	while (1) {
 		
 		// controller on/off
 		if (abs(RCchannel[AUX1] - PPM_IN_MIDDLE_LENGTH) < 500) {
-		
+			
 			if (AUX1_previous == 0) {
 				enableAltitudeController();
 			}
-		
+			
 			disableMpcController();
 			AUX1_previous = 1;
 			
-		} else if (RCchannel[AUX1] > (PPM_IN_MIDDLE_LENGTH + 500)) {
+			} else if (RCchannel[AUX1] > (PPM_IN_MIDDLE_LENGTH + 500)) {
 			
 			if (AUX1_previous == 1) {
 				
@@ -71,11 +72,11 @@ void mainTask(void *p) {
 				
 				enableMpcController();
 			}
-		
+			
 			AUX1_previous = 2;
-		
-		} else {
-		
+			
+			} else {
+			
 			disableAltitudeController();
 			disableMpcController();
 			AUX1_previous = 0;
@@ -89,22 +90,22 @@ void mainTask(void *p) {
 			if (setpointChangeTrigger++ == 30) {
 				
 				setpointChangeTrigger = 1;
-		
-		        // up
+				
+				// up
 				if ((aux2filtered > (PPM_IN_MIDDLE_LENGTH + 300))) {
-			
+					
 					main2commMessage.messageType = SET_SETPOINT;
 					main2commMessage.data.simpleSetpoint.elevator = 0;
 					main2commMessage.data.simpleSetpoint.aileron = 0;
 					main2commMessage.data.simpleSetpoint.throttle = 1;
 					xQueueSend(main2commsQueue, &main2commMessage, 0);
-			
+					
 					AUX2_previous = 1;
 					led_orange_off();
-			
-			    // down
-				} else if ((aux2filtered < (PPM_IN_MIDDLE_LENGTH - 300))) {
-								
+					
+					// down
+					} else if ((aux2filtered < (PPM_IN_MIDDLE_LENGTH - 300))) {
+					
 					main2commMessage.messageType = SET_SETPOINT;
 					main2commMessage.data.simpleSetpoint.elevator = 0;
 					main2commMessage.data.simpleSetpoint.aileron = 0;
@@ -114,37 +115,37 @@ void mainTask(void *p) {
 					AUX2_previous = 2;
 					led_orange_on();
 
-				// mid
-				} else if ((abs(aux2filtered - PPM_IN_MIDDLE_LENGTH) <= 300)) {
-			
+					// mid
+					} else if ((abs(aux2filtered - PPM_IN_MIDDLE_LENGTH) <= 300)) {
+					
 					main2commMessage.messageType = SET_SETPOINT;
 					
 					#if defined (MULTICON)
 					
-						if (numberOfDetectedBlobs >= 1) {
-							
-							correctionX = kalmanStates.elevator.position + blobs[0].x;
-							correctionY = kalmanStates.aileron.position + blobs[0].y;
-							
-						}
+					if (numberOfDetectedBlobs >= 1) {
+						
+						correctionX = kalmanStates.elevator.position + blobs[0].x;
+						correctionY = kalmanStates.aileron.position + blobs[0].y;
+						
+					}
 					
-						main2commMessage.data.simpleSetpoint.elevator = -pgm_read_float(&(elevatorDiff[0])) + correctionX;
-						main2commMessage.data.simpleSetpoint.aileron = -pgm_read_float(&(aileronDiff[0])) + correctionY;
+					main2commMessage.data.simpleSetpoint.elevator = -pgm_read_float(&(elevatorDiff[0])) + correctionX;
+					main2commMessage.data.simpleSetpoint.aileron = -pgm_read_float(&(aileronDiff[0])) + correctionY;
 					#elif defined (RASPBERRY_PI)
 					
-						if (rpiOk >= 1) {
-							
-							correctionX = kalmanStates.elevator.position + rpix;
-							correctionY = kalmanStates.aileron.position + rpiy;
-						}
+					if (rpiOk >= 1) {
+						
+						correctionX = kalmanStates.elevator.position + rpix;
+						correctionY = kalmanStates.aileron.position + rpiy;
+					}
 					
-						main2commMessage.data.simpleSetpoint.elevator = 0 + correctionX;
-						main2commMessage.data.simpleSetpoint.aileron = 0 + correctionY;
+					main2commMessage.data.simpleSetpoint.elevator = 0 + correctionX;
+					main2commMessage.data.simpleSetpoint.aileron = 0 + correctionY;
 					
 					#else
 					
-						main2commMessage.data.simpleSetpoint.elevator = 0;
-						main2commMessage.data.simpleSetpoint.aileron = 0;
+					main2commMessage.data.simpleSetpoint.elevator = 0;
+					main2commMessage.data.simpleSetpoint.aileron = 0;
 					
 					#endif
 					
@@ -155,8 +156,30 @@ void mainTask(void *p) {
 					led_orange_off();
 				}
 			}
-		
+			
 			auxSetpointFlag = 0;
 		}
+		
+		// aux stick for setting the altitude setpoint
+		aux3filtered = aux3filtered*0.997 + RCchannel[AUX3]*0.003;
+		
+		if (setpointChangeTrigger == 29) {			
+			
+			// up (2m)
+			if ((aux3filtered > (PPM_IN_MIDDLE_LENGTH + 300))) {
+				throttleSetpoint = 2;
+				throttleIntegration = 0;
+				
+			// down (1m)
+			} else if ((aux3filtered < (PPM_IN_MIDDLE_LENGTH - 300))) {
+				throttleSetpoint = 1;
+				throttleIntegration = 0;
+
+			// mid (1.5m)
+			} else if ((abs(aux3filtered - PPM_IN_MIDDLE_LENGTH) <= 300)) {
+				throttleSetpoint = 1.5;
+				throttleIntegration = 0;	//Smoke mid everyday. watch?v=dSeDMjfjVGo
+			}
+		}		
 	}
 }
