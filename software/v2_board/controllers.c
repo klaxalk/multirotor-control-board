@@ -257,6 +257,7 @@ void calculateNextThrottle() {
 	temp -= (ALTITUDE_K3 * kalmanStates.throttle.velocity);
 	temp -= (ALTITUDE_K4 * kalmanStates.throttle.acceleration);
 	temp -= (ALTITUDE_K5 * kalmanStates.throttle.omega);
+	temp -= (ALTITUDE_K6 * (kalmanStates.throttle.acceleration_error - ACCEL_ERROR_SETPOINT));
 	
 	if (temp > CONTROLLER_THROTTLE_SATURATION) {
 		temp = CONTROLLER_THROTTLE_SATURATION;

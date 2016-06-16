@@ -6,6 +6,7 @@
  */ 
 
 #include "mpcHandler.h"
+#include "controllers.h"
 
 /* -------------------------------------------------------------------- */
 /*	Variables for data reception from STM u-controller					*/
@@ -61,7 +62,7 @@ void initializeKalmanStates() {
 	kalmanStates.throttle.velocity = 0;
 	kalmanStates.throttle.acceleration = 0;
 	kalmanStates.throttle.omega = 0;
-	kalmanStates.throttle.acceleration_error = 0;
+	kalmanStates.throttle.acceleration_error = ACCEL_ERROR_SETPOINT;
 }
 
 /* -------------------------------------------------------------------- */
