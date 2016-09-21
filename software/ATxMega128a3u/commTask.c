@@ -49,6 +49,17 @@ rpiMessageHandler_t rpiMessage;
 
 #endif
 
+#ifdef GUMSTIX
+
+#include "gumstix.h"
+
+/* -------------------------------------------------------------------- */
+/*	The message handler for gumstix									*/
+/* -------------------------------------------------------------------- */
+gumstixMessageHandler_t gumstixMessage;
+
+#endif
+
 #ifdef ARGOS
 
 #include "argos3D.h"
@@ -220,6 +231,53 @@ if (usartBufferGetByte(usart_buffer_2, &inChar, 0)) {
 
 #endif
 
+#ifdef GUMSTIX
+
+/* -------------------------------------------------------------------- */
+/*	A character received from gumstix									*/
+/* -------------------------------------------------------------------- */
+if (usartBufferGetByte(usart_buffer_2, &inChar, 0))  {
+
+	// parse it and handle the message if it is complete
+	if (gumstixParseChar(inChar, &gumstixMessage)) {
+		
+		// index for iterating the rxBuffer
+		int idx = 0;
+		
+		switch (gumstixMessage.messageId) {
+			
+			case 'x':
+				
+			
+			break;
+			case 'y':
+			
+			
+			break;
+			case 'z':
+
+			
+			break;
+			case 'v':
+			
+				if (readInt16(gumstixMessage.messageBuffer, &idx) == 1) {
+					
+					gumstix_ok = 1;
+					
+				} else {
+				
+					gumstix_ok = 0;
+					
+					led_green_toggle();
+				}
+			
+			break;
+		}
+	}
+}
+
+#endif
+
 #ifdef ARGOS
 
 		/* -------------------------------------------------------------------- */
@@ -323,7 +381,7 @@ if (usartBufferGetByte(usart_buffer_2, &inChar, 0)) {
 					int idx = 0;
 					
 					// check the message id 
-					switch (xbeeMessage.content.receiveResponse.messageId) 
+					switch (xbeeMessage.content.receiveResponse.messageId) {
 						
 						case 'M':
 						
@@ -434,4 +492,6 @@ if (usartBufferGetByte(usart_buffer_2, &inChar, 0)) {
 			}
 		}
 	}
+}
+
 }

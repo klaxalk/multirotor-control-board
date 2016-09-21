@@ -358,6 +358,12 @@
     <Compile Include="FreeRTOS\Source\timers.c">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="gumstix.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gumstix.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="logTask.c">
       <SubType>compile</SubType>
     </Compile>

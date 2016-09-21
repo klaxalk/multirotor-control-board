@@ -15,6 +15,7 @@
 #define RASPBERRY_PI		1
 // #define ARGOS			1
 // #define MULTICON			1
+// #define GUMSTIX			1
 
 /* -------------------------------------------------------------------- */
 /*	Choose position controller											*/
