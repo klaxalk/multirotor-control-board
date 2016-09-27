@@ -60,7 +60,7 @@ volatile int16_t conoutput;
 #define ALTITUDE_K5 0.0
 #define ALTITUDE_K6 -1000
 
-#define ACCEL_ERROR_SETPOINT 9.05
+#define ACCEL_ERROR_THRESHOLD 0.005
 
 #endif
 

@@ -33,6 +33,8 @@ float differences[20] = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1,  1, 1, 1, 1, 1, 1, 1, 1, 
 // for altitude controller
 volatile float throttleIntegration = 0;
 volatile float throttleSetpoint = 1;
+volatile float accel_error_setpoint = 0;
+volatile float previous_accel_error = 0;
 
 /* ---------------------------------------------------------------------------- */
 /*	OBSOLETE - variables that supported old altitude controller and estimator	*/
@@ -246,6 +248,8 @@ void calculateNextThrottle() {
 	
 	error = kalmanStates.throttle.position - throttleSetpoint;
 	throttleIntegration += error * DT;
+	
+		//anti-windup
 	if (throttleIntegration > CONTROLLER_THROTTLE_SATURATION*2/3) {
 		throttleIntegration = CONTROLLER_THROTTLE_SATURATION*2/3;
 	}
@@ -257,8 +261,15 @@ void calculateNextThrottle() {
 	temp -= (ALTITUDE_K3 * kalmanStates.throttle.velocity);
 	temp -= (ALTITUDE_K4 * kalmanStates.throttle.acceleration);
 	temp -= (ALTITUDE_K5 * kalmanStates.throttle.omega);
-	temp -= (ALTITUDE_K6 * (kalmanStates.throttle.acceleration_error - ACCEL_ERROR_SETPOINT));
+		//deny too quickly changing acceleration error
+	if (abs(kalmanStates.throttle.acceleration_error - previous_accel_error) < ACCEL_ERROR_THRESHOLD) { 
+		temp -= (ALTITUDE_K6 * (kalmanStates.throttle.acceleration_error - accel_error_setpoint));
+	} else {
+		accel_error_setpoint = kalmanStates.throttle.acceleration_error;
+	}
+	previous_accel_error = kalmanStates.throttle.acceleration_error;
 	
+		//anti-saturation
 	if (temp > CONTROLLER_THROTTLE_SATURATION) {
 		temp = CONTROLLER_THROTTLE_SATURATION;
 		throttleIntegration -= error * DT;

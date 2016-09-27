@@ -65,46 +65,46 @@ void logTask(void *p) { // only logs throttle-relevant data
 		sprintf(temp, "%d, ", controllerAileronOutput); //12
 		usartBufferPutString(usart_buffer_log, temp, 10);
 		
-		sprintf(temp, "%d, ", (flightStarted*2) + kalmanStarted); //1
+		sprintf(temp, "%d, ", (flightStarted*2) + kalmanStarted); //13
 		usartBufferPutString(usart_buffer_log, temp, 10);
 		
-		sprintf(temp, "%2.3f, ", groundDistance); //2
+		sprintf(temp, "%2.3f, ", groundDistance); //14
 		usartBufferPutString(usart_buffer_log, temp, 10);
 		
-		sprintf(temp, "%2.3f, ", getBatteryVoltage()); //3
+		sprintf(temp, "%2.3f, ", getBatteryVoltage()); //15
 		usartBufferPutString(usart_buffer_log, temp, 10);
 		
-		sprintf(temp, "%d, ", outputChannels[0]); //4
+		sprintf(temp, "%d, ", outputChannels[0]); //16
 		usartBufferPutString(usart_buffer_log, temp, 10);
 		
-		sprintf(temp, "%2.3f, ", groundDistanceConfidence); //5
+		sprintf(temp, "%2.3f, ", groundDistanceConfidence); //17
 		usartBufferPutString(usart_buffer_log, temp, 10);
 		
-		sprintf(temp, "%2.3f, ", kalmanStates.throttle.position); //6
+		sprintf(temp, "%2.3f, ", kalmanStates.throttle.position); //18
 		usartBufferPutString(usart_buffer_log, temp, 10);
 		
-		sprintf(temp, "%2.3f, ", kalmanStates.throttle.velocity); //7
+		sprintf(temp, "%2.3f, ", kalmanStates.throttle.velocity); //19
 		usartBufferPutString(usart_buffer_log, temp, 10);
 		
-		sprintf(temp, "%2.3f, ", kalmanStates.throttle.acceleration); //8
+		sprintf(temp, "%2.3f, ", kalmanStates.throttle.acceleration); //20
 		usartBufferPutString(usart_buffer_log, temp, 10);
 		
-		sprintf(temp, "%2.3f, ", kalmanStates.throttle.omega); //9
+		sprintf(temp, "%2.3f, ", kalmanStates.throttle.omega); //21
 		usartBufferPutString(usart_buffer_log, temp, 10);
 		
-		sprintf(temp, "%2.3f, ", kalmanStates.throttle.acceleration_error); //10
+		sprintf(temp, "%2.3f, ", kalmanStates.throttle.acceleration_error); //22
 		usartBufferPutString(usart_buffer_log, temp, 10);
 		
-		sprintf(temp, "%2.3f, ", kalmanFit); //11
+		sprintf(temp, "%2.3f, ", kalmanFit); //23
 		usartBufferPutString(usart_buffer_log, temp, 10);
 		
-		sprintf(temp, "%d, ", controllerThrottleOutput); //12
+		sprintf(temp, "%d, ", controllerThrottleOutput); //24
 		usartBufferPutString(usart_buffer_log, temp, 10);
 				
-		sprintf(temp, "%2.3f, ", opticalFlowData.ground_distance); //13
+		sprintf(temp, "%2.3f, ", opticalFlowData.ground_distance); //25
 		usartBufferPutString(usart_buffer_log, temp, 10);				
 		
-		usartBufferPutByte(usart_buffer_log, '\n', 10);//13
+		usartBufferPutByte(usart_buffer_log, '\n', 10);//end
 		
 		endTimeMillis = milisecondsTimer;
 		
